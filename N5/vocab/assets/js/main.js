@@ -1,11 +1,10 @@
-randomInput = true;
+randomYesNo = true;
 qChoiceInput = "hi";
 aChoiceInput = "en";
 flashYesNo = "false";
 noOfAnswers = 4;
 
-let randomYesNo = randomInput;
-let qChoice = qChoiceInput;
+let correctAnswer;
 
 function assignLanguage(sectionBlock, lang) {
   sectionBlock.setAttribute("lang", lang);
@@ -23,16 +22,12 @@ function randomNo(min, max) {
 }
 
 function log(variable, label) {
-  label ? console.log(`${label}: ${variable}`) : console.log(`${variable}: ${variable}`);
+  label ? console.log(`${label}: ${variable}`) : console.log(`${variable}`);
 }
 
 function start() {
-  displayQuestion(vocabArray, randomYesNo, qChoice);
-  displayAnswers(aChoiceInput, noOfAnswers);
-  //fetchOneCategory(vocabArray, kaVocab, ka);
-  //fetchOneCategory(vocabArray, hiVocab, hi);
-  //fetchOneCategory(vocabArray, enVocab, en);
-  //displayContent(sectionQuestion, "dynamic question");
+  correctAnswer = displayQuestion(vocabArray, randomYesNo, qChoiceInput, aChoiceInput);
+  displayAnswers(aChoiceInput, noOfAnswers, correctAnswer);
   assignLanguage(sectionQuestion, enLang);
   assignLanguage(sectionAnswer, jpLang);
 }

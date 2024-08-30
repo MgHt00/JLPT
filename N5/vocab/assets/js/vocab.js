@@ -21,26 +21,28 @@ fetch('assets/data/n5-vocab.json')
   .catch(error => console.error('Error loading vocab JSON file:', error));
 
 
-function displayQuestion(array_in, random, qChoice) {
-  let i = randomNo(0, (array_in.length-1));
+function displayQuestion(arr, random, qChoice, aChoice) {
+  let i = randomNo(0, (arr.length-1));
+  let selectedQuestionObj = {}; // to store the question obj temporarily
 
   if (random) {
-    displayContent(sectionQuestion, array_in[i][qChoice]);
+    selectedQuestionObj = arr[i];
+    displayContent(sectionQuestion, arr[i][qChoice]);
   }
   else {
-    displayContent(sectionQuestion, array_in[qNo][qChoice]);
+    selectedQuestionObj = arr[qNo];
+    displayContent(sectionQuestion, arr[qNo][qChoice]);
     qNo++;
   }
+  return selectedQuestionObj[aChoice];  
 }
 
-function displayAnswers(aChoice, choiceNum) {
+function displayAnswers(aChoice, choiceNum, correctAns) {
   let selectedArray = vocabMapping[aChoice];
-  
-  //log(selectedArray, "selectedArray: ");
-  //log(selectedArray.length, "selectedArray length: ");
+  let tempAnsArray = [];
+  let checkedAnsArray = [];
 
-  //console.log("Type of selectedArray: ", typeof selectedArray);
-  //console.log("Is selectedArray an array?: ", Array.isArray(selectedArray));
+  tempAnsArray[0] = correctAns; // add correct answer in index. 0
   
   if (!selectedArray) {
     console.error(`No vocab array found for choice: ${aChoice}`);
@@ -54,15 +56,34 @@ function displayAnswers(aChoice, choiceNum) {
 
   choiceNum = Math.min(choiceNum, selectedArray.length);
 
-  for (let loopI = 0; loopI < choiceNum; loopI++) {
+  for (let i = 1; i < (choiceNum); i++) { // loop is reduced 1 time than choicNum to include the correct answer
     let randomIndex = randomNo(0, (selectedArray.length-1));
-    let answerLocalArr = [selectedArray[randomIndex]];
-    log(answerLocalArr, `Answer${loopI}`);
+    tempAnsArray[i] = [selectedArray[randomIndex]];
   }
+  log(tempAnsArray, "tempAnsArray");
+  checkedAnsArray = checkDuplicates(tempAnsArray);
+  log(checkedAnsArray, "checkedAnsArray");
 }
 
-function checkDuplications() {
+function checkDuplicates(ansArray) {
+  let checkedAnsArr = [];
+  checkedAnsArr[0] = ansArray[0].toString(); // The correct answer is intact.
+  log(checkedAnsArr[0], "correct ans: ");
 
+  for(let i = 1; i < ansArray.length; i++) {
+    let checkingAns = ansArray[i].toString();
+    console.log("Checking answer: ", checkingAns);
+
+    // Check if sourceAns already exists in checkedAnsArr
+    if (!checkedAnsArr.includes(checkingAns)) {
+      checkedAnsArr.push(checkingAns); // Add unique answers to checkedAnsArr
+    } else {
+      console.log("Duplicate found: ", checkingAns);
+      // Handle duplicates if needed (e.g., skip, replace, etc.)
+    }
+  }
+
+  return checkedAnsArr;
 }
 
 function fetchOneCategory(source, target, catName) {
