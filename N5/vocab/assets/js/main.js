@@ -1,19 +1,11 @@
-const sectionQuestion = document.querySelector("#section-question");
-const sectionAnswer = document.querySelector("#section-answer");
-let vocabArray = [];
+randomInput = true;
+qChoiceInput = "hi";
+aChoiceInput = "en";
+flashYesNo = "false";
+noOfAnswers = 4;
 
-let randomInput = true;
-let qChoiceInput = "hi";
-let aChoiceInput = "en";
-let flashYesNo = "false";
-let noOfAnswers = 4;
-
-let ka = "ka";
-let hi = "hi";
-let en = "en"
-
-let enLang = "en";
-let jpLang = "jp";
+let randomYesNo = randomInput;
+let qChoice = qChoiceInput;
 
 function assignLanguage(sectionBlock, lang) {
   sectionBlock.setAttribute("lang", lang);

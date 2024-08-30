@@ -1,8 +1,3 @@
-let kaVocab = [];
-let hiVocab = [];
-let enVocab = [];
-let randomYesNo = randomInput;
-let qChoice = qChoiceInput;
 let qNo = 0;
 
 const vocabMapping = {
