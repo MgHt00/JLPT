@@ -13,10 +13,10 @@ Random no. ထုတ်
 ## fetchOneCategory(source, target, catName)
 `source` ရဲ့ `catName` (ka/hi/en) တစ်မျိုးတည်းရဲ့ ရှိသမျှကို `target` ထဲကူး
 
-## displayQuestion(section, vocab, randomYesNo, qChoice)
+## prepareQuestion(section, vocab, randomYesNo, qChoice)
 `randomYesNo` အတိုင်း `vocab` array ရဲ့ `qChoice` ကို `section` မှာပြ
 
-## function displayAnswers(aChoice, noOfChoice, correctAns)
+## function prepareAnswers(aChoice, noOfChoice, correctAns)
 pass လုပ်ထားတဲ့ noOfChoice အရေအတွက်အတိုင်း answer ပြနိုင်ဖို့ correct answer + မထပ်တဲ့ answer တွေ ပြင်ဆင်
 
 ## checkTotalAns(ansArray, noOfAnswers)

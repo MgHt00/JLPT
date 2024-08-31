@@ -21,27 +21,26 @@ fetch('assets/data/n5-vocab.json')
   .catch(error => console.error('Error loading vocab JSON file:', error));
 
 function fetchOneCategory(source, target, catName) {
-    let i = 0;
-    source.forEach(element => {
-      target[i] = element[catName];
-      i++;
-    });
-  }
+  let i = 0;
+  source.forEach(element => {
+    target[i] = element[catName];
+    i++;
+  });
+}
 
-function prepareQuestion(arr, random, qChoice, aChoice) {
+function prepareQuestion(arr, random) {
   let i = randomNo(0, (arr.length-1));
   let selectedQuestionObj = {}; // to store the question obj temporarily
 
   if (random) {
     selectedQuestionObj = arr[i];
-    displayContent(sectionQuestion, arr[i][qChoice]);
   }
   else {
     selectedQuestionObj = arr[qNo];
-    displayContent(sectionQuestion, arr[qNo][qChoice]);
     qNo++;
   }
-  return selectedQuestionObj[aChoice];  
+  console.log(selectedQuestionObj);
+  return selectedQuestionObj;
 }
 
 function prepareAnswers(aChoice, noOfChoice, correctAns) {
@@ -49,7 +48,7 @@ function prepareAnswers(aChoice, noOfChoice, correctAns) {
   let tempAnsArray = [];
   let checkedAnsArray = [];
 
-  tempAnsArray[0] = correctAns; // add correct answer in index. 0
+  tempAnsArray[0] = correctAns[aChoice]; // add correct answer in index. 0
   
   if (!selectedArray) {
     console.error(`No vocab array found for choice: ${aChoice}`);
@@ -76,6 +75,7 @@ function prepareAnswers(aChoice, noOfChoice, correctAns) {
     tempAnsArray[i] = randomWord;
   }
 
+  console.log(tempAnsArray);
   return tempAnsArray;
 }
 

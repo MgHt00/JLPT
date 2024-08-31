@@ -4,7 +4,7 @@ aChoiceInput = "en";
 flashYesNo = "false";
 noOfAnswers = 4;
 
-let correctAnswer;
+let questionObj = {};
 let ansArray = [];
 
 function assignLanguage(sectionBlock, lang) {
@@ -26,12 +26,20 @@ function log(variable, label) {
   label ? console.log(`${label}: ${variable}`) : console.log(`${variable}`);
 }
 
+function buildDOM(parent, child, content) {
+  
+}
+
 function start() {
   assignLanguage(sectionQuestion, enLang);
   assignLanguage(sectionAnswer, jpLang);
 
-  correctAnswer = prepareQuestion(vocabArray, randomYesNo, qChoiceInput, aChoiceInput);
-  ansArray = prepareAnswers(aChoiceInput, noOfAnswers, correctAnswer);
+  //questionObj = prepareQuestion(vocabArray, randomYesNo, qChoiceInput, aChoiceInput);
+  questionObj = prepareQuestion(vocabArray, randomYesNo);
+  displayContent(sectionQuestion, questionObj[qChoiceInput]);
+
+  ansArray = prepareAnswers(aChoiceInput, noOfAnswers, questionObj);
+  displayContent(sectionAnswer, ansArray);
 
   //checkTotalAns(ansArray, noOfAnswers);
 }
