@@ -20,6 +20,13 @@ fetch('assets/data/n5-vocab.json')
   })
   .catch(error => console.error('Error loading vocab JSON file:', error));
 
+function fetchOneCategory(source, target, catName) {
+    let i = 0;
+    source.forEach(element => {
+      target[i] = element[catName];
+      i++;
+    });
+  }
 
 function displayQuestion(arr, random, qChoice, aChoice) {
   let i = randomNo(0, (arr.length-1));
@@ -37,7 +44,7 @@ function displayQuestion(arr, random, qChoice, aChoice) {
   return selectedQuestionObj[aChoice];  
 }
 
-function displayAnswers(aChoice, choiceNum, correctAns) {
+function displayAnswers(aChoice, noOfChoice, correctAns) {
   let selectedArray = vocabMapping[aChoice];
   let tempAnsArray = [];
   let checkedAnsArray = [];
@@ -54,43 +61,50 @@ function displayAnswers(aChoice, choiceNum, correctAns) {
     return;
   }
 
-  choiceNum = Math.min(choiceNum, selectedArray.length);
+  noOfChoice = Math.min(noOfChoice, selectedArray.length);
 
-  for (let i = 1; i < (choiceNum); i++) { // loop is reduced 1 time than choicNum to include the correct answer
-    let randomIndex = randomNo(0, (selectedArray.length-1));
-    tempAnsArray[i] = [selectedArray[randomIndex]];
+  for (let i = 1; i < noOfChoice; i++) {
+    let randomIndex;
+    let randomWord;
+
+    // [le3] Loop to ensure no duplicates are added 
+    do {
+      randomIndex = randomNo(0, selectedArray.length - 1);
+      randomWord = selectedArray[randomIndex];
+    } while (tempAnsArray.includes(randomWord));
+
+    tempAnsArray[i] = randomWord;
   }
-  log(tempAnsArray, "tempAnsArray");
-  checkedAnsArray = checkDuplicates(tempAnsArray);
-  log(checkedAnsArray, "checkedAnsArray");
+
+  return tempAnsArray;
 }
 
+/*
 function checkDuplicates(ansArray) {
   let checkedAnsArr = [];
   checkedAnsArr[0] = ansArray[0].toString(); // The correct answer is intact.
-  log(checkedAnsArr[0], "correct ans: ");
 
   for(let i = 1; i < ansArray.length; i++) {
     let checkingAns = ansArray[i].toString();
-    console.log("Checking answer: ", checkingAns);
 
     // Check if sourceAns already exists in checkedAnsArr
     if (!checkedAnsArr.includes(checkingAns)) {
       checkedAnsArr.push(checkingAns); // Add unique answers to checkedAnsArr
-    } else {
-      console.log("Duplicate found: ", checkingAns);
-      // Handle duplicates if needed (e.g., skip, replace, etc.)
-    }
+    } 
   }
 
   return checkedAnsArr;
 }
 
-function fetchOneCategory(source, target, catName) {
-  let i = 0;
-  source.forEach(element => {
-    target[i] = element[catName];
-    i++;
-  });
-  log(target);
+*/
+
+function checkTotalAns(ansArray, noOfAnswers) {
+  log(ansArray);
+  if (ansArray.length < noOfAnswers) {
+    // Handle the case where the array is shorter than expected
+    console.log("The ansArray has fewer items than expected. Handling...");
+  } else {
+    // Proceed with the next steps if the array length is correct
+    console.log("The ansArray is correct in length.");
+  }
 }

@@ -5,6 +5,7 @@ flashYesNo = "false";
 noOfAnswers = 4;
 
 let correctAnswer;
+let ansArray = [];
 
 function assignLanguage(sectionBlock, lang) {
   sectionBlock.setAttribute("lang", lang);
@@ -26,8 +27,11 @@ function log(variable, label) {
 }
 
 function start() {
-  correctAnswer = displayQuestion(vocabArray, randomYesNo, qChoiceInput, aChoiceInput);
-  displayAnswers(aChoiceInput, noOfAnswers, correctAnswer);
   assignLanguage(sectionQuestion, enLang);
   assignLanguage(sectionAnswer, jpLang);
+
+  correctAnswer = displayQuestion(vocabArray, randomYesNo, qChoiceInput, aChoiceInput);
+  ansArray = displayAnswers(aChoiceInput, noOfAnswers, correctAnswer);
+
+  checkTotalAns(ansArray, noOfAnswers);
 }
