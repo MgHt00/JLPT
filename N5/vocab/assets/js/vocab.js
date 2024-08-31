@@ -72,36 +72,14 @@ function prepareAnswers(aChoice, noOfChoice, correctAns) {
 
     tempAnsArray[i] = randomWord;
   }
-
+  tempAnsArray = shuffleArray(tempAnsArray);
   return tempAnsArray;
 }
 
-/*
-function checkDuplicates(ansArray) {
-  let checkedAnsArr = [];
-  checkedAnsArr[0] = ansArray[0].toString(); // The correct answer is intact.
-
-  for(let i = 1; i < ansArray.length; i++) {
-    let checkingAns = ansArray[i].toString();
-
-    // Check if sourceAns already exists in checkedAnsArr
-    if (!checkedAnsArr.includes(checkingAns)) {
-      checkedAnsArr.push(checkingAns); // Add unique answers to checkedAnsArr
-    } 
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
   }
-
-  return checkedAnsArr;
-}
-
-*/
-
-function checkTotalAns(ansArray, noOfAnswers) {
-  log(ansArray);
-  if (ansArray.length < noOfAnswers) {
-    // Handle the case where the array is shorter than expected
-    console.log("The ansArray has fewer items than expected. Handling...");
-  } else {
-    // Proceed with the next steps if the array length is correct
-    console.log("The ansArray is correct in length.");
-  }
+  return array;
 }
