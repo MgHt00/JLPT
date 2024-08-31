@@ -30,8 +30,8 @@ function start() {
   assignLanguage(sectionQuestion, enLang);
   assignLanguage(sectionAnswer, jpLang);
 
-  correctAnswer = displayQuestion(vocabArray, randomYesNo, qChoiceInput, aChoiceInput);
-  ansArray = displayAnswers(aChoiceInput, noOfAnswers, correctAnswer);
+  correctAnswer = prepareQuestion(vocabArray, randomYesNo, qChoiceInput, aChoiceInput);
+  ansArray = prepareAnswers(aChoiceInput, noOfAnswers, correctAnswer);
 
-  checkTotalAns(ansArray, noOfAnswers);
+  //checkTotalAns(ansArray, noOfAnswers);
 }

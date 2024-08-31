@@ -28,7 +28,7 @@ function fetchOneCategory(source, target, catName) {
     });
   }
 
-function displayQuestion(arr, random, qChoice, aChoice) {
+function prepareQuestion(arr, random, qChoice, aChoice) {
   let i = randomNo(0, (arr.length-1));
   let selectedQuestionObj = {}; // to store the question obj temporarily
 
@@ -44,7 +44,7 @@ function displayQuestion(arr, random, qChoice, aChoice) {
   return selectedQuestionObj[aChoice];  
 }
 
-function displayAnswers(aChoice, noOfChoice, correctAns) {
+function prepareAnswers(aChoice, noOfChoice, correctAns) {
   let selectedArray = vocabMapping[aChoice];
   let tempAnsArray = [];
   let checkedAnsArray = [];
