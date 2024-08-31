@@ -21,3 +21,6 @@ pass လုပ်ထားတဲ့ noOfChoice အရေအတွက်အတိ
 
 ## checkTotalAns(ansArray, noOfAnswers)
 (ရေရှည်သုံးဖြစ် ၊ မဖြစ် မသေချာသေး) အဆင့်သင့် လုပ်ထားတဲ့ answer အရေအတွက်က user ရွေထားတဲ့ အရေအတွက်တိုင်း ရှိ ၊ မရှိ စစ်
+
+## buildDOM(parent, child, content, className)
+pass လုပ်လိုက်တဲ့ content နဲ့ className ကို ဇယားတွေရှုပ်နေမှာစိုးလို့ array ဖြစ်အောင် တန်းပြောင်းပြီး screen ပေါ် တစ်ခုချင်းစီတင်။  check sn2 for more detail.

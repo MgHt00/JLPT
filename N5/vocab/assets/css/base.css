@@ -35,3 +35,11 @@ section.jp {
   font-weight: 500;
   font-style: normal;
 }
+
+.dummy-class-1 {
+  color: inherit;
+}
+
+.dummy-class-2 {
+  color: inherit;
+}

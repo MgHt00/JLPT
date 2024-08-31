@@ -39,14 +39,12 @@ function prepareQuestion(arr, random) {
     selectedQuestionObj = arr[qNo];
     qNo++;
   }
-  console.log(selectedQuestionObj);
   return selectedQuestionObj;
 }
 
 function prepareAnswers(aChoice, noOfChoice, correctAns) {
   let selectedArray = vocabMapping[aChoice];
   let tempAnsArray = [];
-  let checkedAnsArray = [];
 
   tempAnsArray[0] = correctAns[aChoice]; // add correct answer in index. 0
   
@@ -75,7 +73,6 @@ function prepareAnswers(aChoice, noOfChoice, correctAns) {
     tempAnsArray[i] = randomWord;
   }
 
-  console.log(tempAnsArray);
   return tempAnsArray;
 }
 
