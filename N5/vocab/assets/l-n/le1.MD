@@ -27,6 +27,7 @@
 <br><br><br>
 ---------
 # dom.js
+
 ### buildDOM(parent, child, content, className, id)
 - pass လုပ်လိုက်တဲ့ content နဲ့ className ကို ဇယားတွေရှုပ်နေမှာစိုးလို့ array ဖြစ်အောင် တန်းပြောင်းပြီး screen ပေါ် တစ်ခုချင်းစီတင်။  check sn2 for more detail.
 

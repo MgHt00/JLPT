@@ -39,13 +39,34 @@ function storeOrContinue(event) { // sn4
   }
 }
 
-function clearScreen() {
-  sectionQuestion.innerHTML = "";
-  sectionAnswer.innerHTML = "";
+function multipleChoice(event) {
+  const btnText = event.currentTarget.textContent;
+  if (correctAns === btnText) {
+    console.log("bingo!");
+    //console.log(event.currentTarget.id); 
+    clearScreen([sectionQuestion, sectionAnswer]);
+
+    buildDOM(sectionAnswer, "div", "Correct!", "answer-message", "answer-message");
+    buildDOM(sectionAnswer, "div", "Next", "answer-btn", "choice-btn", newQuestion);
+
+  } else {
+    console.log("keep going");
+  }
+}
+
+function clearScreen(elements) {
+  // Ensure `elements` is treated as an array
+  elements = Array.isArray(elements) ? elements : [elements];
+
+  elements.forEach(element => {
+    if (element) {
+      element.innerHTML = ""; // Clear the content of the element
+    }
+  });
 }
 
 function newQuestion() {
-  clearScreen();
+  clearScreen([sectionQuestion, sectionAnswer]);
 
   questionObj = prepareQuestion(vocabArray, randomYesNo);
   correctAns = questionObj[aChoiceInput]; // store correct answer
@@ -56,7 +77,6 @@ function newQuestion() {
 }
 
 function start() {
-  console.log("start() is called.");
   loadDefaults();
   newQuestion(); 
 }
