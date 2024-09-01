@@ -1,5 +1,3 @@
-let qNo = 0;
-
 const vocabMapping = {
   ka: kaVocab,
   hi: hiVocab,

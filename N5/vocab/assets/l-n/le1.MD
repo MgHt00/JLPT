@@ -1,34 +1,74 @@
-## assignLanguage(sectionBlock, lang)
-HTML tag မှာ `lang` နဲ့ `class` attribute ထည့်
+# main.js
+### loadDefaults()
+- Input ရှိရင် input ကို variable တွေထဲထည့် ၊ input မရှိရင် defaults တွေ load
 
-## displayContent(sectionBlock, content)
-`content` ပါတဲ့ `div` တစ်ခု ဆောက်ပြီး `sectionBlock` မှာပေါင်းထည့်
+### assignLanguage(sectionBlock, lang)
+- HTML tag မှာ `lang` နဲ့ `class` attribute ထည့်
 
-## randomNo(min, max)
-Random no. ထုတ်
+### displayContent(sectionBlock, content)
+- `content` ပါတဲ့ `div` တစ်ခု ဆောက်ပြီး `sectionBlock` မှာပေါင်းထည့်
 
-## function log(variable, label)
-`consol.log` ထုတ်
+### randomNo(min, max)
+- Random no. ထုတ်
 
-## fetchOneCategory(source, target, catName)
-`source` ရဲ့ `catName` (ka/hi/en) တစ်မျိုးတည်းရဲ့ ရှိသမျှကို `target` ထဲကူး
+### function log(variable, label)
+- `consol.log` ထုတ်
 
-## prepareQuestion(section, vocab, randomYesNo, qChoice)
-`randomYesNo` အတိုင်း `vocab` array ရဲ့ `qChoice` ကို `section` မှာပြ
+### storeOrContinue(event)
+- click လုပ်လိုက်တဲ့ event id ကို ယူ
+- yes ဆိုရင် ရှေဆက့်
+- no ဆိုရင် localStorage ထဲသိမ်း
 
-## function prepareAnswers(aChoice, noOfChoice, correctAns)
-pass လုပ်ထားတဲ့ noOfChoice အရေအတွက်အတိုင်း answer ပြနိုင်ဖို့ correct answer + မထပ်တဲ့ answer တွေ ပြင်ဆင်
+### clearScreen()
+- `sectionQuestion` နဲ့ `sectionAnswer` ကို ရှင်း
 
-## checkTotalAns(ansArray, noOfAnswers)
-(ရေရှည်သုံးဖြစ် ၊ မဖြစ် မသေချာသေး) အဆင့်သင့် လုပ်ထားတဲ့ answer အရေအတွက်က user ရွေထားတဲ့ အရေအတွက်တိုင်း ရှိ ၊ မရှိ စစ်
+### newQuestion()
+- question အသစ်ကို load လုပ်
+<br><br><br>
+---------
+# dom.js
+### buildDOM(parent, child, content, className, id)
+- pass လုပ်လိုက်တဲ့ content နဲ့ className ကို ဇယားတွေရှုပ်နေမှာစိုးလို့ array ဖြစ်အောင် တန်းပြောင်းပြီး screen ပေါ် တစ်ခုချင်းစီတင်။  check sn2 for more detail.
 
-## buildDOM(parent, child, content, className)
-pass လုပ်လိုက်တဲ့ content နဲ့ className ကို ဇယားတွေရှုပ်နေမှာစိုးလို့ array ဖြစ်အောင် တန်းပြောင်းပြီး screen ပေါ် တစ်ခုချင်းစီတင်။  check sn2 for more detail.
+### buildAnswers() 
+- `ansArray` ထဲကို shuffled လုပ်ထားတဲ့ answers တွေထည့်
+- answer button တွေဆောက်
 
-## shuffleArray(array)
-to shuffle an array
+### showAnswer() 
+- ရှိပြီးသား answer button တွေကိုဖျက်
+- correct answer ပြ
+- လိုအပ်ရင် ထပ်သွားဖို့ button တွေထပ်ပြ
 
+<br><br>
+----
+# vocab.js
+### fetchOneCategory(source, target, catName)
+- `source` ရဲ့ `catName` (ka/hi/en) တစ်မျိုးတည်းရဲ့ ရှိသမျှကို `target` ထဲကူး
 
+### prepareQuestion(section, vocab, randomYesNo, qChoice)
+- `randomYesNo` အတိုင်း `vocab` array ရဲ့ `qChoice` ကို `section` မှာပြ
+
+### function prepareAnswers(aChoice, noOfChoice, correctAns)
+- pass လုပ်ထားတဲ့ noOfChoice အရေအတွက်အတိုင်း answer ပြနိုင်ဖို့ correct answer + မထပ်တဲ့ answer တွေ ပြင်ဆင်
+
+### shuffleArray(array)
+- to shuffle an array
+
+<br><br>
+---
+
+# localstorage.js
+### storeToPractice(objToStore)
+- မှားတဲ့ questions တွေကို object လိုက် လက်ခံပြီး localStorage ထဲ သိမ်း
+
+### loadIncorrectAnswers()
+- localStorage ထဲက ဆွဲထုတ်
+
+### clearIncorrectAnswers()
+- localStorage ကို ရှင်း
+
+<br><br>
+----------
 # unused functions
 ```javascript
 function checkDuplicates(ansArray) {

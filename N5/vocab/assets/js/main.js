@@ -1,11 +1,13 @@
-randomYesNo = true;
-qChoiceInput = "hi";
-aChoiceInput = "en";
-flashYesNo = "false";
-noOfAnswers = 4;
+function loadDefaults() {
+  randomYesNo = true;
+  qChoiceInput = "hi";
+  aChoiceInput = "en";
+  flashYesNo = false;
+  noOfAnswers = 4;
 
-let questionObj = {};
-let ansArray = [];
+  qChoiceInput === "hi" ? assignLanguage(sectionQuestion, jpLang) : assignLanguage(sectionQuestion, enLang);
+  aChoiceInput === "hi" ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
+}
 
 function assignLanguage(sectionBlock, lang) {
   sectionBlock.setAttribute("lang", lang);
@@ -26,38 +28,35 @@ function log(variable, label) {
   label ? console.log(`${label}: ${variable}`) : console.log(`${variable}`);
 }
 
-function buildDOM(parent, child, content, className, idName) { // [sn2]
-  // Ensure className is always treated as an array
-  className = Array.isArray(className) ? className : className.split(' ');
 
-  // Ensure content is always treated as an array
-  content = Array.isArray(content) ? content : [content];
+function storeOrContinue(event) { // sn4
+  const btnID = event.currentTarget.id;
+  if (btnID === "choice-btn-0") {
+    newQuestion();
+  } else if (btnID === "choice-btn-1") {
+    storeToPractice(questionObj);
+    newQuestion();
+  }
+}
 
-  content.forEach((contentItem, contentIndex) => {
-    let newChild = document.createElement(child);
-    newChild.textContent = contentItem;
+function clearScreen() {
+  sectionQuestion.innerHTML = "";
+  sectionAnswer.innerHTML = "";
+}
 
-    // Add all classes from className array
-    className.forEach((classItem, arrIndex) => {
-      newChild.classList.add(classItem);
-    });
+function newQuestion() {
+  clearScreen();
 
-    // Add an ID by combining `idName` and content's index
-    newChild.id = `${idName}-${contentIndex}`;
+  questionObj = prepareQuestion(vocabArray, randomYesNo);
+  correctAns = questionObj[aChoiceInput]; // store correct answer
+  
+  displayContent(sectionQuestion, questionObj[qChoiceInput]);
 
-    parent.appendChild(newChild);
-  });
+  buildAnswers();
 }
 
 function start() {
-  assignLanguage(sectionQuestion, enLang);
-  assignLanguage(sectionAnswer, jpLang);
-
-  questionObj = prepareQuestion(vocabArray, randomYesNo);
-  displayContent(sectionQuestion, questionObj[qChoiceInput]);
-
-  ansArray = prepareAnswers(aChoiceInput, noOfAnswers, questionObj);
-  //if (!flashYesNo) {
-    buildDOM(sectionAnswer, "div", ansArray, "answer-btn", "answer-btn"); // (arg1, arg2, arg3, class name, id)
-  //}
+  console.log("start() is called.");
+  loadDefaults();
+  newQuestion(); 
 }

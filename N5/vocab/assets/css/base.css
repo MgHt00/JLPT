@@ -36,6 +36,11 @@ section.jp {
   font-style: normal;
 }
 
+.answer-message {
+  text-align: center;
+  padding: 20px;
+}
+
 .answer-btn {
   padding: 20px;
   margin: 10px;

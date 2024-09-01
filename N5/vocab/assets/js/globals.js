@@ -18,3 +18,9 @@ let noOfAnswers;
 let kaVocab = [];
 let hiVocab = [];
 let enVocab = [];
+
+let questionObj = {};
+let ansArray = [];
+let correctAns;
+
+let qNo = 0;
