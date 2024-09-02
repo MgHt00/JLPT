@@ -19,8 +19,11 @@
 - yes ဆိုရင် ရှေဆက့်
 - no ဆိုရင် localStorage ထဲသိမ်း
 
-### clearScreen()
-- `sectionQuestion` နဲ့ `sectionAnswer` ကို ရှင်း
+### multipleChoice(event)
+- click လုပ်တဲ့ အဖြေမှန်ရင် `clearScreen()` ပြီး `buildDOM()` ၂ ခါခေါ်
+
+### clearScreen(elements)
+- pass လုပ်ထားတဲ့ element တွေကို loop ပတ်ပြီး ရှင်း
 
 ### newQuestion()
 - question အသစ်ကို load လုပ်

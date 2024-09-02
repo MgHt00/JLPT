@@ -1,14 +1,3 @@
-function loadDefaults() {
-  randomYesNo = true;
-  qChoiceInput = "hi";
-  aChoiceInput = "en";
-  flashYesNo = false;
-  noOfAnswers = 4;
-
-  qChoiceInput === "hi" ? assignLanguage(sectionQuestion, jpLang) : assignLanguage(sectionQuestion, enLang);
-  aChoiceInput === "hi" ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
-}
-
 function assignLanguage(sectionBlock, lang) {
   sectionBlock.setAttribute("lang", lang);
   sectionBlock.classList.add(lang);
@@ -46,8 +35,8 @@ function multipleChoice(event) {
     //console.log(event.currentTarget.id); 
     clearScreen([sectionQuestion, sectionAnswer]);
 
-    buildDOM(sectionAnswer, "div", "Correct!", "answer-message", "answer-message");
-    buildDOM(sectionAnswer, "div", "Next", "answer-btn", "choice-btn", newQuestion);
+    buildNode(sectionAnswer, "div", "Correct!", "answer-message", "answer-message");
+    buildNode(sectionAnswer, "div", "Next", "answer-btn", "choice-btn", newQuestion);
 
   } else {
     console.log("keep going");
@@ -77,6 +66,5 @@ function newQuestion() {
 }
 
 function start() {
-  loadDefaults();
   newQuestion(); 
 }

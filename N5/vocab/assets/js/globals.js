@@ -10,6 +10,7 @@ let enLang = "en";
 let jpLang = "jp";
 
 let randomInput;
+let syllableChoice = [];
 let qChoiceInput;
 let aChoiceInput;
 let flashYesNo;

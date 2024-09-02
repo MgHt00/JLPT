@@ -4,20 +4,6 @@ const vocabMapping = {
   en: enVocab
 };
 
-// Fetch questions from JSON file
-fetch('assets/data/n5-vocab.json')
-  .then(response => response.json())
-  .then(data => {
-    vocabArray = data;
-    fetchOneCategory(vocabArray, kaVocab, ka); // le2
-    fetchOneCategory(vocabArray, hiVocab, hi);
-    fetchOneCategory(vocabArray, enVocab, en);
-
-    // Call start() after the data is loaded (sn1.MD)
-    start();
-  })
-  .catch(error => console.error('Error loading vocab JSON file:', error));
-
 function fetchOneCategory(source, target, catName) {
   let i = 0;
   source.forEach(element => {
