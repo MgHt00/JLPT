@@ -66,5 +66,5 @@ function newQuestion() {
 }
 
 function start() {
-  newQuestion(); 
+  //newQuestion(); 
 }

@@ -1,3 +1,28 @@
+Your code structure looks solid, and you've implemented the core functionalities well. Here's a summary and a few pointers for further improvement:
+
+### Summary of the Flow:
+1. **HTML Structure**:
+   - Simple HTML structure with `section-question` and `section-answer` sections.
+   
+2. **Global Variables**:
+   - Defined in `globals.js` for various purposes like storing vocab arrays, question and answer states, etc.
+
+3. **Main Logic** (`main.js`):
+   - Handles the core interactions such as assigning languages, displaying content, generating random numbers, and handling multiple-choice logic.
+   
+4. **Vocabulary Handling** (`vocab.js`):
+   - Manages vocab data, including fetching from JSON files, preparing questions and answers, and shuffling options.
+
+5. **Data Loading** (`load.js`):
+   - Responsible for loading the JSON files based on syllable choices, merging them, and triggering the start of the game.
+
+6. **DOM Manipulation** (`dom.js`):
+   - Defines reusable functions like `buildNode` for creating and appending elements dynamically to the DOM.
+
+7. **Local Storage** (`localstorage.js`):
+   - Handles storing and retrieving incorrectly answered questions for future practice.
+<br><br>
+---
 # main.js
 ### loadDefaults()
 - Input ရှိရင် input ကို variable တွေထဲထည့် ၊ input မရှိရင် defaults တွေ load
@@ -29,22 +54,7 @@
 - question အသစ်ကို load လုပ်
 <br><br><br>
 ---------
-# dom.js
 
-### buildDOM(parent, child, content, className, id)
-- pass လုပ်လိုက်တဲ့ content နဲ့ className ကို ဇယားတွေရှုပ်နေမှာစိုးလို့ array ဖြစ်အောင် တန်းပြောင်းပြီး screen ပေါ် တစ်ခုချင်းစီတင်။  check sn2 for more detail.
-
-### buildAnswers() 
-- `ansArray` ထဲကို shuffled လုပ်ထားတဲ့ answers တွေထည့်
-- answer button တွေဆောက်
-
-### showAnswer() 
-- ရှိပြီးသား answer button တွေကိုဖျက်
-- correct answer ပြ
-- လိုအပ်ရင် ထပ်သွားဖို့ button တွေထပ်ပြ
-
-<br><br>
-----
 # vocab.js
 ### fetchOneCategory(source, target, catName)
 - `source` ရဲ့ `catName` (ka/hi/en) တစ်မျိုးတည်းရဲ့ ရှိသမျှကို `target` ထဲကူး
@@ -61,6 +71,31 @@
 <br><br>
 ---
 
+# load.js
+loadData()
+- to load user's choice from the interface
+
+prepareJSON(syllables)
+- user practice လုပ်ချင်တဲ့ syllable အတိုင်း json file တွေ fetch လုပ်
+<br><br>
+---
+# dom.js
+
+### buildDOM(parent, child, content, className, id)
+- pass လုပ်လိုက်တဲ့ content နဲ့ className ကို ဇယားတွေရှုပ်နေမှာစိုးလို့ array ဖြစ်အောင် တန်းပြောင်းပြီး screen ပေါ် တစ်ခုချင်းစီတင်။  check sn2 for more detail.
+
+### buildAnswers() 
+- `ansArray` ထဲကို shuffled လုပ်ထားတဲ့ answers တွေထည့်
+- answer button တွေဆောက်
+
+### showAnswer() 
+- ရှိပြီးသား answer button တွေကိုဖျက်
+- correct answer ပြ
+- လိုအပ်ရင် ထပ်သွားဖို့ button တွေထပ်ပြ
+
+<br><br>
+
+---
 # localstorage.js
 ### storeToPractice(objToStore)
 - မှားတဲ့ questions တွေကို object လိုက် လက်ခံပြီး localStorage ထဲ သိမ်း

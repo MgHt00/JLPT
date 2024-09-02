@@ -1,3 +1,4 @@
+const body = document.querySelector("#section-body");
 const sectionQuestion = document.querySelector("#section-question");
 const sectionAnswer = document.querySelector("#section-answer");
 let vocabArray = [];

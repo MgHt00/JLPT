@@ -8,8 +8,8 @@ function loadData() {
 
   prepareJSON(syllableChoice);
   
-  qChoiceInput === "hi" ? assignLanguage(sectionQuestion, jpLang) : assignLanguage(sectionQuestion, enLang);
-  aChoiceInput === "hi" ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
+  qChoiceInput === ("hi" || "ka") ? assignLanguage(sectionQuestion, jpLang) : assignLanguage(sectionQuestion, enLang);
+  aChoiceInput === ("hi" || "ka") ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
 }
 
 const syllableMapping = {
@@ -42,23 +42,5 @@ function prepareJSON(syllables) {
     })
     .catch(error => console.error('Error loading vocab JSON files:', error));
 }
-
-
-/*
-// Fetch questions from JSON file
-fetch("assets/data/n5-vocab-a.json")
-  .then(response => response.json())
-  .then(data => {
-    vocabArray = data;
-    fetchOneCategory(vocabArray, kaVocab, ka); // le2
-    fetchOneCategory(vocabArray, hiVocab, hi);
-    fetchOneCategory(vocabArray, enVocab, en);
-
-    // Call start() after the data is loaded (sn1.MD)
-    start();
-  })
-  .catch(error => console.error('Error loading vocab JSON file:', error));
-*/
-
 
 loadData();
