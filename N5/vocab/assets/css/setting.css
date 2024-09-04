@@ -1,0 +1,3 @@
+#settingsForm > div[id^="settings"] {
+  margin-bottom: 5px;
+}
