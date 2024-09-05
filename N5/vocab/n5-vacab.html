@@ -18,10 +18,20 @@
       <input type="radio" id="randomNo" name="randomYesNo" value="false">
       <label for="randomNo">No</label>
     </div>
+
+    <!-- Flash Card Yes/No -->
+    <div id="settings-flashYesNo">
+      <label for="flashYesNo">Flashcard Mode:</label><br>
+      <input type="radio" id="flashYes" name="flashYesNo" value="true" checked>
+      <label for="flashYes">Yes</label><br>
+
+      <input type="radio" id="flashNo" name="flashYesNo" value="false">
+      <label for="flashNo">No</label><br>
+    </div>
   
     <!-- Syllable Choice Checkboxes -->
     <div id="settings-syllableChoice">
-    <fieldset id="syllable-fieldset">
+    <fieldset id="fieldset-syllable">
       <legend>Choose Syllables:</legend>
       <input type="checkbox" id="syllableAll" name="syllableChoice" value="all" checked class="dummy-1 dummy-2">
       <label for="syllableA">All</label><br>
@@ -46,21 +56,14 @@
     <!-- Answer Choice Input -->
      <div id="settings-aChoiceInput">
       <label for="aChoiceInput">Answer Language:</label>
-      <select id="aChoiceInput" name="aChoiceInput">
+      <select id="aChoiceInput" name="aChoiceInput" disabled>
         <option value="kanji">Kanji</option>
         <option value="hi">Hiragana</option>
         <option value="en">English</option>
       </select>
      </div>
   
-    <!-- Flash Card Yes/No -->
-    <div id="settings-flashYesNo">
-      <label for="flashYesNo">Flashcard Mode:</label>
-      <select id="flashYesNo" name="flashYesNo">
-        <option value="true">Yes</option>
-        <option value="false">No</option>
-      </select>
-    </div>
+    
 
   
     <!-- Number of Answers -->
