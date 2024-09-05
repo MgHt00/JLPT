@@ -1,4 +1,8 @@
 const settingForm = document.querySelector("#settingsForm");
+const fieldsetSyllable = document.querySelector("#fieldset-syllable");
+const aChoiceSelector = document.querySelector("#aChoiceInput");
+const noOfAnsSelector = document.querySelector("#noOfAnswers");
+const submitBtn = document.querySelector("#submit-btn");
 
 function loadData(e) {
   e.preventDefault(); // Prevent form from submitting the usual way
@@ -6,33 +10,37 @@ function loadData(e) {
   randomYesNo = document.querySelector('input[name="randomYesNo"]:checked').value;
   flashYesNo = document.querySelector('input[name="flashYesNo"]:checked').value;
   syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
-  qChoiceInput = document.getElementById('qChoiceInput').value;
-  aChoiceInput = document.getElementById('aChoiceInput').value;
-  noOfAnswers = document.getElementById('noOfAnswers').value;
+  qChoiceInput = document.querySelector('#qChoiceInput').value;
+  aChoiceInput = document.querySelector('#aChoiceInput').value;
+  noOfAnswers = document.querySelector('#noOfAnswers').value;
 
   console.log("randomYesNo: ", randomYesNo, " | syllableChoice: ", syllableChoice, " | qChoiceInput: ", qChoiceInput, 
     " | aChoiceInput: ", aChoiceInput, " | flashYesNo: ",flashYesNo, " | noOfAnswers: ",noOfAnswers);
 
-  //IMPORTANT FIX IS NEEDED prepareJSON(syllableChoice);
+  prepareJSON(syllableChoice);
 
   qChoiceInput === ("hi" || "ka") ? assignLanguage(sectionQuestion, jpLang) : assignLanguage(sectionQuestion, enLang);
   aChoiceInput === ("hi" || "ka") ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
 
 }
 
-const syllableMapping = {
-  a: "assets/data/n5-vocab-a.json",
-  i: "assets/data/n5-vocab-i.json",
-};
+function prepareJSON(syllableChoice) {
+  const syllableMapping = {
+    a: "assets/data/n5-vocab-a.json",
+    i: "assets/data/n5-vocab-i.json",
+  };
 
-function prepareJSON(syllables) {
-  //console.log(syllables);
-
+  // if user selects "all", load all property names from `syllableMapping`
+  if (syllableChoice.includes("all")) {
+    // Dynamically get all syllable keys from syllableMapping
+    syllableChoice = Object.keys(syllableMapping); // [sn9] This replaces syllableChoice with all syllables
+  }
+  
   // Create an array of Promises
-  const promises = syllables.map(element => {
+  const promises = syllableChoice.map(element => {
     //console.log(element);
     let selectedJSON = syllableMapping[element];
-    //console.log(selectedJSON);
+    console.log(selectedJSON);
     return fetch(selectedJSON).then(response => response.json());
   });
 
@@ -52,34 +60,6 @@ function prepareJSON(syllables) {
 }
 
 
-const fieldset = document.getElementById('fieldset-syllable');
-const allCheckbox = document.getElementById('syllableAll');
-const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
-                             .filter(checkbox => checkbox !== allCheckbox);
-
-fieldset.addEventListener('change', function(event) { // [le4]
-    if (event.target === allCheckbox) {
-        if (allCheckbox.checked) {
-            otherCheckboxes.forEach(checkbox => {
-                checkbox.disabled = true;
-                checkbox.checked = false; // Uncheck the others if "All" is checked
-            });
-        } else {
-            otherCheckboxes.forEach(checkbox => checkbox.disabled = false);
-        }
-    } else {
-        if (event.target.checked) { //[sn8]
-            allCheckbox.disabled = true;
-            allCheckbox.checked = false; // Uncheck "All" if any other is checked
-        } else {
-            const anyChecked = otherCheckboxes.some(checkbox => checkbox.checked);
-            if (!anyChecked) {
-                allCheckbox.disabled = false;
-            }
-        }
-    }
-});
-
 function checkBoxToArray(nodeList) {
   let convertedArray;
   convertedArray = Array.from(document.querySelectorAll(nodeList))
@@ -87,10 +67,47 @@ function checkBoxToArray(nodeList) {
   return convertedArray;
 }
 
-function changeState(node) {
-  console.log(node);
-  console.log(node.disabled.value);
+function fieldsetChanges(event) { // [le4]
+  const allCheckbox = document.getElementById('syllableAll');
+  const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
+                               .filter(checkbox => checkbox !== allCheckbox);
+
+  if (event.target === allCheckbox) {
+    if (allCheckbox.checked) {
+        otherCheckboxes.forEach(checkbox => {
+            checkbox.disabled = true;
+            checkbox.checked = false; // Uncheck the others if "All" is checked
+        });
+    } else {
+        otherCheckboxes.forEach(checkbox => checkbox.disabled = false);
+    }
+} else {
+    if (event.target.checked) { //[sn8]
+        allCheckbox.disabled = true;
+        allCheckbox.checked = false; // Uncheck "All" if any other is checked
+    } else {
+        const anyChecked = otherCheckboxes.some(checkbox => checkbox.checked);
+        if (!anyChecked) {
+            allCheckbox.disabled = false;
+        }
+    }
+}
 }
 
-//loadData();
+function flipNodeState(node) {
+  //console.log(node);
+  //console.log(node.disabled);
+  //console.log(!node.disabled);
+  node.disabled = !node.disabled;
+}
+
+function defaultState() {
+  flipNodeState(submitBtn);
+  flipNodeState(aChoiceSelector);
+  flipNodeState(noOfAnsSelector);
+}
+
+// Event Listeners
 settingForm.addEventListener('submit', loadData);
+fieldsetSyllable.addEventListener('change', fieldsetChanges);  
+defaultState();
