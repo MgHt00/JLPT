@@ -1,8 +1,10 @@
 const settingForm = document.querySelector("#settingsForm");
 const fieldsetSyllable = document.querySelector("#fieldset-syllable");
+const qChoiceSelector = document.querySelector("#qChoiceInput");
 const aChoiceSelector = document.querySelector("#aChoiceInput");
 const noOfAnsSelector = document.querySelector("#noOfAnswers");
 const submitBtn = document.querySelector("#submit-btn");
+const tempAns = document.querySelector('#a-hi');
 
 function loadData(e) {
   e.preventDefault(); // Prevent form from submitting the usual way
@@ -21,7 +23,6 @@ function loadData(e) {
 
   qChoiceInput === ("hi" || "ka") ? assignLanguage(sectionQuestion, jpLang) : assignLanguage(sectionQuestion, enLang);
   aChoiceInput === ("hi" || "ka") ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
-
 }
 
 function prepareJSON(syllableChoice) {
@@ -94,20 +95,35 @@ function fieldsetChanges(event) { // [le4]
 }
 }
 
-function flipNodeState(node) {
-  //console.log(node);
-  //console.log(node.disabled);
-  //console.log(!node.disabled);
-  node.disabled = !node.disabled;
+function qChanges(e) {
+  const ansMapping = {
+    ka: document.querySelector('#a-ka'),
+    hi: document.querySelector('#a-hi'),
+    en: document.querySelector('#a-en'),
+  };
+
+  const qChoice = document.querySelector("#qChoiceInput").value;
+  flipNodeState(aChoiceSelector, ansMapping[qChoice]);
 }
 
+function flipNodeState(...nodes) { //[sn10]
+  // Iterate over the nodes and toggle the disabled state
+  nodes.forEach(node => {
+    if (node instanceof HTMLElement) {
+      node.disabled = !node.disabled;
+    }
+  });
+}
+
+
 function defaultState() {
-  flipNodeState(submitBtn);
-  flipNodeState(aChoiceSelector);
-  flipNodeState(noOfAnsSelector);
+  flipNodeState(submitBtn, aChoiceSelector, noOfAnsSelector);
+  //flipNodeState(tempAns);
 }
 
 // Event Listeners
 settingForm.addEventListener('submit', loadData);
-fieldsetSyllable.addEventListener('change', fieldsetChanges);  
+fieldsetSyllable.addEventListener('change', fieldsetChanges);
+qChoiceSelector.addEventListener('change', qChanges);
+
 defaultState();
