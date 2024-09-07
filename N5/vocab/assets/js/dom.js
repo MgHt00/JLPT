@@ -25,6 +25,35 @@ function buildNode(parent, child, content, className, idName, eventFunction) { /
   });
 }
 
+function buildNodeObj({parent, child, content, className = "", idName = "", eventFunction =""}) {
+  // Ensure className is always treated as an array
+  className = Array.isArray(className) ? className : className.split(' ');
+
+  // Ensure content is always treated as an array
+  content = Array.isArray(content) ? content : [content];
+
+  content.forEach((contentItem, contentIndex) => {
+    let newChild = document.createElement(child);
+    newChild.textContent = contentItem;
+
+    // Add all classes from className array
+    if (className.length > 0) { // if the className array contains one or more items
+      className.forEach(classItem => {
+        newChild.classList.add(classItem);
+      });
+    }
+
+    // Add an ID by combining `idName` and content's index
+    newChild.id = `${idName}-${contentIndex}`;
+
+    // And an event listern (if any)
+    if (eventFunction && (eventFunction !== "")){
+      newChild.addEventListener("click", eventFunction);
+    }
+    parent.appendChild(newChild);
+  });
+}
+
 function buildAnswers() {
   ansArray = prepareAnswers(aChoiceInput, noOfAnswers, questionObj);
 
