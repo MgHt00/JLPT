@@ -106,6 +106,20 @@ function qChanges(e) {
   flipNodeState(aChoiceSelector, ansMapping[qChoice]);
 }
 
+function dynamicAnswer() {
+  const ansMapping = {
+    ka: { parent: 'aChoiceSelector', child: 'option', content: 'Kanji', className: '', idName: 'a-ka', eventFunction: '' },
+    hi: { parent: 'aChoiceSelector', child: 'option', content: 'Hiragana', className: '', idName: 'a-hi', eventFunction: '' },
+    en: { parent: 'aChoiceSelector', child: 'option', content: 'English', className: '', idName: 'a-en', eventFunction: '' },
+  };
+
+  // Loop through the ansMapping object and call buildNode
+  Object.values(ansMapping).forEach(params => { // [sn11]
+    buildNode(params.parent, params.child, params.content, params.className, params.idName, params.eventFunction);
+  });
+}
+
+
 function flipNodeState(...nodes) { //[sn10]
   // Iterate over the nodes and toggle the disabled state
   nodes.forEach(node => {
@@ -127,3 +141,4 @@ fieldsetSyllable.addEventListener('change', fieldsetChanges);
 qChoiceSelector.addEventListener('change', qChanges);
 
 defaultState();
+dynamicAnswer();
