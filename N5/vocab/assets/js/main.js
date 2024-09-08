@@ -65,9 +65,10 @@ function newQuestion() {
   buildAnswers();
 }
 
-function buildNodeObj({parent, child, content, className = "", idName = "", eventFunction =""}) {
+function buildNodeObj({ parent, child, content, className = "", idName = "", eventFunction = "" }) {
   // Ensure className is always treated as an array
-  className = Array.isArray(className) ? className : className.split(' ');
+  className = Array.isArray(className) ? className : className.split(' ').filter(c => c.trim() !== ''); // 1) split with ' '; 2) remove excess spaces; 3) store if only it is not empty.
+  console.log("className after processing: ", className);
 
   // Ensure content is always treated as an array
   content = Array.isArray(content) ? content : [content];
@@ -77,21 +78,27 @@ function buildNodeObj({parent, child, content, className = "", idName = "", even
     newChild.textContent = contentItem;
 
     // Add all classes from className array (only non-empty)
+   if (className.length > 0) {
     className.forEach(classItem => {
       if (classItem.trim()) { // Ensure it's not empty
         newChild.classList.add(classItem);
       }
     });
+  }
 
-    // Add an ID by combining `idName` and content's index
     newChild.id = `${idName}-${contentIndex}`;
 
-    // And an event listern (if any)
-    if (eventFunction && (eventFunction !== "")){
+    // Add an event listener (if any)
+    if (eventFunction) {
       newChild.addEventListener("click", eventFunction);
     }
-    parent.appendChild(newChild);
+    
+    // Append the new element to the parent
+    if (parent instanceof HTMLElement) {
+      parent.appendChild(newChild);
+    }
   });
+  
 }
 
 function start() {

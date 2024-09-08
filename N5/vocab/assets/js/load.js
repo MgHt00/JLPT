@@ -103,19 +103,31 @@ function qChanges(e) {
   };
 
   const qChoice = document.querySelector("#qChoiceInput").value;
-  flipNodeState(aChoiceSelector, ansMapping[qChoice]);
+  flipNodeState(aChoiceSelector);
 }
 
 function dynamicAnswer() {
-  const ansMapping = {
-    ka: { parent: 'aChoiceSelector', child: 'option', content: 'Kanji', className: '', idName: 'a-ka', eventFunction: '' },
-    hi: { parent: 'aChoiceSelector', child: 'option', content: 'Hiragana', className: '', idName: 'a-hi', eventFunction: '' },
-    en: { parent: 'aChoiceSelector', child: 'option', content: 'English', className: '', idName: 'a-en', eventFunction: '' },
+  //flipNodeState(aChoiceSelector);
+
+  // Get the user's question choice
+  const qChoice = document.querySelector('#qChoiceInput').value;
+  console.log(qChoice);
+
+  const ansMapping = { // [sn11]
+    ka: { parent: aChoiceSelector, child: 'option', content: 'Kanji', idName: 'a-ka'},
+    hi: { parent: aChoiceSelector, child: 'option', content: 'Hiragana', idName: 'a-hi'},
+    en: { parent: aChoiceSelector, child: 'option', content: 'English', idName: 'a-en'},
   };
 
-  // Loop through the ansMapping object and call buildNode
-  Object.values(ansMapping).forEach(params => { // [sn11]
-    buildNode(params.parent, params.child, params.content, params.className, params.idName, params.eventFunction);
+  // Loop through the ansMapping object and call buildNodeObj
+  Object.entries(ansMapping).forEach(([key, params]) => { // [sn13]
+    // Log params to see if the className is being passed correctly
+    console.log("params before buildNodeObj: ", params);
+
+    // Exclude the option if it matches the user's question choice
+    if (key !== qChoice) {
+      buildNodeObj(params);
+    }
   });
 }
 
@@ -131,14 +143,14 @@ function flipNodeState(...nodes) { //[sn10]
 
 
 function defaultState() {
-  flipNodeState(submitBtn, aChoiceSelector, noOfAnsSelector);
+  //flipNodeState(submitBtn, aChoiceSelector, noOfAnsSelector);
   //flipNodeState(tempAns);
 }
 
 // Event Listeners
 settingForm.addEventListener('submit', loadData);
 fieldsetSyllable.addEventListener('change', fieldsetChanges);
-qChoiceSelector.addEventListener('change', qChanges);
+qChoiceSelector.addEventListener('change', dynamicAnswer);
 
 defaultState();
-dynamicAnswer();
+//dynamicAnswer();

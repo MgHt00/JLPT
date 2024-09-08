@@ -25,6 +25,7 @@ function buildNode(parent, child, content, className, idName, eventFunction) { /
   });
 }
 
+/*
 function buildNodeObj({parent, child, content, className = "", idName = "", eventFunction =""}) {
   // Ensure className is always treated as an array
   className = Array.isArray(className) ? className : className.split(' ');
@@ -53,6 +54,7 @@ function buildNodeObj({parent, child, content, className = "", idName = "", even
     parent.appendChild(newChild);
   });
 }
+*/
 
 function buildAnswers() {
   ansArray = prepareAnswers(aChoiceInput, noOfAnswers, questionObj);
