@@ -52,7 +52,21 @@ Your code structure looks solid, and you've implemented the core functionalities
 
 ### newQuestion()
 - question အသစ်ကို load လုပ်
-<br><br><br>
+
+### buildDOM(parent, child, content, className, id)
+- pass လုပ်လိုက်တဲ့ content နဲ့ className ကို ဇယားတွေရှုပ်နေမှာစိုးလို့ array ဖြစ်အောင် တန်းပြောင်းပြီး screen ပေါ် တစ်ခုချင်းစီတင်။  check sn2 for more detail.
+
+### buildAnswers() 
+- `ansArray` ထဲကို shuffled လုပ်ထားတဲ့ answers တွေထည့်
+- answer button တွေဆောက်
+
+### showAnswer() 
+- ရှိပြီးသား answer button တွေကိုဖျက်
+- correct answer ပြ
+- လိုအပ်ရင် ထပ်သွားဖို့ button တွေထပ်ပြ
+
+<br><br>
+
 ---------
 
 # vocab.js
@@ -79,23 +93,7 @@ prepareJSON(syllables)
 - user practice လုပ်ချင်တဲ့ syllable အတိုင်း json file တွေ fetch လုပ်
 <br><br>
 ---
-# dom.js
 
-### buildDOM(parent, child, content, className, id)
-- pass လုပ်လိုက်တဲ့ content နဲ့ className ကို ဇယားတွေရှုပ်နေမှာစိုးလို့ array ဖြစ်အောင် တန်းပြောင်းပြီး screen ပေါ် တစ်ခုချင်းစီတင်။  check sn2 for more detail.
-
-### buildAnswers() 
-- `ansArray` ထဲကို shuffled လုပ်ထားတဲ့ answers တွေထည့်
-- answer button တွေဆောက်
-
-### showAnswer() 
-- ရှိပြီးသား answer button တွေကိုဖျက်
-- correct answer ပြ
-- လိုအပ်ရင် ထပ်သွားဖို့ button တွေထပ်ပြ
-
-<br><br>
-
----
 # localstorage.js
 ### storeToPractice(objToStore)
 - မှားတဲ့ questions တွေကို object လိုက် လက်ခံပြီး localStorage ထဲ သိမ်း

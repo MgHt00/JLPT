@@ -2,9 +2,8 @@ const settingForm = document.querySelector("#settingsForm");
 const fieldsetSyllable = document.querySelector("#fieldset-syllable");
 const qChoiceSelector = document.querySelector("#qChoiceInput");
 const aChoiceSelector = document.querySelector("#aChoiceInput");
-const noOfAnsSelector = document.querySelector("#noOfAnswers");
+const noOfAnsSelector = document.querySelectorAll("[id^=noOfAnswers]");
 const submitBtn = document.querySelector("#submit-btn");
-const tempAns = document.querySelector('#a-hi');
 
 function loadData(e) {
   e.preventDefault(); // Prevent form from submitting the usual way
@@ -135,6 +134,7 @@ function dynamicAnswer() {
 function flipNodeState(...nodes) { //[sn10]
   // Iterate over the nodes and toggle the disabled state
   nodes.forEach(node => {
+    console.log(node);
     if (node instanceof HTMLElement) {
       node.disabled = !node.disabled;
     }
@@ -143,8 +143,8 @@ function flipNodeState(...nodes) { //[sn10]
 
 
 function defaultState() {
-  //flipNodeState(submitBtn, aChoiceSelector, noOfAnsSelector);
-  //flipNodeState(tempAns);
+  flipNodeState(submitBtn, aChoiceSelector);
+  flipNodeState(...noOfAnsSelector);
 }
 
 // Event Listeners

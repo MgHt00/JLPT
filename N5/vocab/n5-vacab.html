@@ -22,13 +22,28 @@
     <!-- Flash Card Yes/No -->
     <div id="settings-flashYesNo">
       <label for="flashYesNo">Flashcard Mode:</label><br>
+
       <input type="radio" id="flashYes" name="flashYesNo" value="true" checked>
       <label for="flashYes">Yes</label><br>
 
       <input type="radio" id="flashNo" name="flashYesNo" value="false">
       <label for="flashNo">No</label><br>
     </div>
-  
+
+    <!-- Number of Answers -->
+    <div id="settings-noOfAnswers">
+      <label for="noOfAnswers">Number of Answers:</label>
+
+      <input type="radio" id="noOfAnswers-2" name="noOfAnswers">
+      <label for="noOfAnswers-2">2</label>
+
+      <input type="radio" id="noOfAnswers-3" name="noOfAnswers">
+      <label for="noOfAnswers-2">3</label>
+
+      <input type="radio" id="noOfAnswers-4" name="noOfAnswers" checked>
+      <label for="noOfAnswers-2">4</label>
+    </div>
+
     <!-- Syllable Choice Checkboxes -->
     <div id="settings-syllableChoice">
     <fieldset id="fieldset-syllable">
@@ -57,21 +72,9 @@
      <div id="settings-aChoiceInput">
       <label for="aChoiceInput">Answer Language:</label>
       <select id="aChoiceInput" name="aChoiceInput">
-        <!--option value="ka" id="a-ka">Kanji</option>
-        <option value="hi" id="a-hi">Hiragana</option>
-        <option value="en" id="a-en">English</option-->
       </select>
      </div>
   
-    <!-- Number of Answers -->
-    <div id="settings-noOfAnswers">
-      <label for="noOfAnswers">Number of Answers:</label>
-      <select id="noOfAnswers" name="noOfAnswers">
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4">4</option>
-      </select>
-    </div>
     
     <div id="setting-btn">
       <button type="submit" id="submit-btn">Submit</button>
@@ -89,6 +92,5 @@
 <script src="assets/js/main.js"></script>
 <script src="assets/js/vocab.js"></script>
 <script src="assets/js/load.js"></script>
-<script src="assets/js/dom.js"></script>
 <script src="assets/js/localstorage.js"></script>
 </html>
