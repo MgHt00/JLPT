@@ -128,6 +128,29 @@ function buildNode(parent, child, content, className, idName, eventFunction) { /
   });
 }
 
+function flipNodeState(...nodes) { //[sn10]
+  // Iterate over the nodes and toggle the disabled state
+  nodes.forEach(node => {
+    if (node instanceof HTMLElement) {
+      node.disabled = !node.disabled;
+      toggleClass("disabled", node);
+    }
+  });
+}
+
+
+function toggleClass(className = "", ...nodes) {
+  console.log(className);
+  console.log(nodes);
+  if(!className.trim()) return; // Prevent adding an empty or whitespace-only class
+
+  nodes.forEach(node => {
+    if (node instanceof HTMLElement) {
+      node.classList.toggle(className); // Toggle the class
+    }
+  });
+}
+
 function buildAnswers() {
   ansArray = prepareAnswers(aChoiceInput, noOfAnswers, questionObj);
 

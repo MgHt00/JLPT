@@ -1,8 +1,8 @@
 const settingForm = document.querySelector("#settingsForm");
 const fieldsetSyllable = document.querySelector("#fieldset-syllable");
 const qChoiceSelector = document.querySelector("#qChoiceInput");
-const aChoiceSelector = document.querySelector("#aChoiceInput");
-const noOfAnsSelector = document.querySelectorAll("[id^=noOfAnswers]");
+const aChoiceSelector = document.querySelectorAll("[id^='aChoiceInput']");
+const noOfAnsSelector = document.querySelectorAll("[id^='noOfAnswers']");
 const submitBtn = document.querySelector("#submit-btn");
 
 function loadData(e) {
@@ -131,20 +131,10 @@ function dynamicAnswer() {
 }
 
 
-function flipNodeState(...nodes) { //[sn10]
-  // Iterate over the nodes and toggle the disabled state
-  nodes.forEach(node => {
-    console.log(node);
-    if (node instanceof HTMLElement) {
-      node.disabled = !node.disabled;
-    }
-  });
-}
-
-
 function defaultState() {
-  flipNodeState(submitBtn, aChoiceSelector);
-  flipNodeState(...noOfAnsSelector);
+  flipNodeState(submitBtn);
+  flipNodeState(...aChoiceSelector); // [sn14] aChoiceSelector is a NodeList. Need to spread before passing to a function
+  flipNodeState(...noOfAnsSelector); 
 }
 
 // Event Listeners

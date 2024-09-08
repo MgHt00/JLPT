@@ -1,3 +1,7 @@
 #settingsForm > div[id^="settings"] {
   margin-bottom: 5px;
 }
+
+.disabled {
+  opacity: 0.3;
+}
