@@ -1,7 +1,9 @@
 const settingForm = document.querySelector("#settingsForm");
+const settingFlashYesNo = document.querySelector("#settings-flashYesNo");
 const fieldsetSyllable = document.querySelector("#fieldset-syllable");
 const qChoiceSelector = document.querySelector("#qChoiceInput");
-const aChoiceSelector = document.querySelectorAll("[id^='aChoiceInput']");
+const aChoiceSelector = document.querySelector("#aChoiceInput");
+const aChoiceSelectorAll = document.querySelectorAll("[id^='aChoiceInput']");
 const noOfAnsSelector = document.querySelectorAll("[id^='noOfAnswers']");
 const submitBtn = document.querySelector("#submit-btn");
 
@@ -67,7 +69,7 @@ function checkBoxToArray(nodeList) {
   return convertedArray;
 }
 
-function fieldsetChanges(event) { // [le4]
+function syllableChanges(event) { // [le4]
   const allCheckbox = document.getElementById('syllableAll');
   const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
                                .filter(checkbox => checkbox !== allCheckbox);
@@ -94,17 +96,6 @@ function fieldsetChanges(event) { // [le4]
 }
 }
 
-function qChanges(e) {
-  const ansMapping = {
-    ka: document.querySelector('#a-ka'),
-    hi: document.querySelector('#a-hi'),
-    en: document.querySelector('#a-en'),
-  };
-
-  const qChoice = document.querySelector("#qChoiceInput").value;
-  flipNodeState(aChoiceSelector);
-}
-
 function dynamicAnswer() {
   //flipNodeState(aChoiceSelector);
 
@@ -128,19 +119,29 @@ function dynamicAnswer() {
       buildNodeObj(params);
     }
   });
+
+  //flipNodeState(...document.querySelectorAll("[id|='a']"));
+  flipNodeState(...aChoiceSelectorAll); 
+  flipNodeState(submitBtn);
+}
+
+function flashmodeChanges(e) {
+  console.log(e.target.value);
+  flipNodeState(...noOfAnsSelector); 
 }
 
 
 function defaultState() {
   flipNodeState(submitBtn);
-  flipNodeState(...aChoiceSelector); // [sn14] aChoiceSelector is a NodeList. Need to spread before passing to a function
+  flipNodeState(...aChoiceSelectorAll); // [sn14] aChoiceSelector is a NodeList. Need to spread before passing to a function
   flipNodeState(...noOfAnsSelector); 
 }
 
 // Event Listeners
 settingForm.addEventListener('submit', loadData);
-fieldsetSyllable.addEventListener('change', fieldsetChanges);
+fieldsetSyllable.addEventListener('change', syllableChanges);
 qChoiceSelector.addEventListener('change', dynamicAnswer);
+settingFlashYesNo.addEventListener('change', flashmodeChanges);
 
 defaultState();
 //dynamicAnswer();
