@@ -65,26 +65,32 @@ function newQuestion() {
   buildAnswers();
 }
 
-function buildNodeObj({ parent, child, content, className = "", idName = "", eventFunction = "" }) {
+function buildNodeObj({parent, child, content, childValues = [], className = "", idName = "", eventFunction = "" }) {
   // Ensure className is always treated as an array
   className = Array.isArray(className) ? className : className.split(' ').filter(c => c.trim() !== ''); // 1) split with ' '; 2) remove excess spaces; 3) store if only it is not empty.
-  console.log("className after processing: ", className);
 
   // Ensure content is always treated as an array
   content = Array.isArray(content) ? content : [content];
+
+  // Ensure value is always treated as an array
+  childValues = Array.isArray(childValues) ? childValues : [childValues]
+  console.log(childValues);
 
   content.forEach((contentItem, contentIndex) => {
     let newChild = document.createElement(child);
     newChild.textContent = contentItem;
 
+    // Assign value if childValues is provided and has enough entries
+    if (childValues[contentIndex]) {
+      newChild.value = childValues[contentIndex];
+    }
+
     // Add all classes from className array (only non-empty)
    if (className.length > 0) {
     className.forEach(classItem => {
-      if (classItem.trim()) { // Ensure it's not empty
         newChild.classList.add(classItem);
-      }
-    });
-  }
+      });
+    }
 
     newChild.id = `${idName}-${contentIndex}`;
 
@@ -97,8 +103,11 @@ function buildNodeObj({ parent, child, content, className = "", idName = "", eve
     if (parent instanceof HTMLElement) {
       parent.appendChild(newChild);
     }
-  });
-  
+  }); 
+}
+
+function clearNode({parent, child}) {
+  parent.remove(child);
 }
 
 function buildNode(parent, child, content, className, idName, eventFunction) { // [sn2]
