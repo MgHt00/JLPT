@@ -106,8 +106,16 @@ function buildNodeObj({parent, child, content, childValues = [], className = "",
   }); 
 }
 
-function clearNode({parent, child}) {
-  parent.remove(child);
+function clearNode({ parent, children = [] }) {
+  if (children.length > 0) {
+    children.forEach(child => {
+      if (parent.contains(child)) { // Ensure the child exists within the parent before removing
+        parent.removeChild(child);
+      }
+    });
+  } else {
+    parent.innerHTML = ''; // Clears all children of the parent
+  }
 }
 
 function buildNode(parent, child, content, className, idName, eventFunction) { // [sn2]

@@ -4,6 +4,8 @@ const fieldsetSyllable = document.querySelector("#fieldset-syllable");
 const qChoiceSelector = document.querySelector("#qChoiceInput");
 const aChoiceSelector = document.querySelector("#aChoiceInput");
 const aChoiceSelectorAll = document.querySelectorAll("[id^='aChoiceInput']");
+const aChoiceOptionAll = document.querySelector('select[id="aChoiceInput"]').options;
+const aDefaultChoice = document.querySelector('select[name="aChoiceInput"]').options[1];
 const noOfAnsSelector = document.querySelectorAll("[id^='noOfAnswers']");
 const submitBtn = document.querySelector("#submit-btn");
 
@@ -12,10 +14,15 @@ function loadData(e) {
 
   randomYesNo = document.querySelector('input[name="randomYesNo"]:checked').value;
   flashYesNo = document.querySelector('input[name="flashYesNo"]:checked').value;
+  noOfAnswers = document.querySelector('#noOfAnswers').value;
+  
   syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
+  if (syllableChoice.length === 0) {
+    return;
+  }
+  
   qChoiceInput = document.querySelector('#qChoiceInput').value;
   aChoiceInput = document.querySelector('#aChoiceInput').value;
-  noOfAnswers = document.querySelector('#noOfAnswers').value;
 
   console.log("randomYesNo: ", randomYesNo, " | syllableChoice: ", syllableChoice, " | qChoiceInput: ", qChoiceInput, 
     " | aChoiceInput: ", aChoiceInput, " | flashYesNo: ",flashYesNo, " | noOfAnswers: ",noOfAnswers);
@@ -65,7 +72,7 @@ function prepareJSON(syllableChoice) {
 function checkBoxToArray(nodeList) {
   let convertedArray;
   convertedArray = Array.from(document.querySelectorAll(nodeList))
-                        .map(cb => cb.value); // [sn7]
+                        .map(eachCheckBox => eachCheckBox.value); // [sn7]
   return convertedArray;
 }
 
@@ -73,6 +80,11 @@ function syllableChanges(event) { // [le4]
   const allCheckbox = document.getElementById('syllableAll');
   const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
                                .filter(checkbox => checkbox !== allCheckbox);
+
+  /*if (!allCheckbox.checked && otherCheckboxes.every(checkbox => !checkbox.checked)) { //checks if every checkbox in otherCheckboxes is also unchecked.
+    console.log("buddy, we need something here.");
+    buildNodeObj({parent: fieldsetSyllable, child: "div", content: "Select at least one."});
+  }*/
 
   if (event.target === allCheckbox) {
     if (allCheckbox.checked) {
@@ -91,38 +103,35 @@ function syllableChanges(event) { // [le4]
         const anyChecked = otherCheckboxes.some(checkbox => checkbox.checked);
         if (!anyChecked) {
             allCheckbox.disabled = false;
+            allCheckbox.checked = true; // check "All" if nothing is checked
         }
     }
 }
 }
 
 function dynamicAnswer() {
-  //flipNodeState(aChoiceSelector);
-
   // Get the user's question choice
   const qChoice = document.querySelector('#qChoiceInput').value;
   console.log(qChoice);
 
   const ansMapping = { // [sn11]
-    ka: { parent: aChoiceSelector, child: 'option', content: 'Kanji', idName: 'a-ka'},
-    hi: { parent: aChoiceSelector, child: 'option', content: 'Hiragana', idName: 'a-hi'},
-    en: { parent: aChoiceSelector, child: 'option', content: 'English', idName: 'a-en'},
+    ka: { parent: aChoiceSelector, child: 'option', content: 'Kanji', childValues: 'ka', idName: 'a-ka'},
+    hi: { parent: aChoiceSelector, child: 'option', content: 'Hiragana', childValues: 'hi', idName: 'a-hi'},
+    en: { parent: aChoiceSelector, child: 'option', content: 'English', childValues:'en', idName: 'a-en'},
   };
+
+  clearNode({ parent: aChoiceSelector, children: Array.from(aChoiceOptionAll) }); // Array.from(aChoiceSelectorAll): Converts the NodeList (which is similar to an array but doesn't have all array methods) into a true array
 
   // Loop through the ansMapping object and call buildNodeObj
   Object.entries(ansMapping).forEach(([key, params]) => { // [sn13]
-    // Log params to see if the className is being passed correctly
-    console.log("params before buildNodeObj: ", params);
-
     // Exclude the option if it matches the user's question choice
     if (key !== qChoice) {
       buildNodeObj(params);
     }
   });
 
-  //flipNodeState(...document.querySelectorAll("[id|='a']"));
-  flipNodeState(...aChoiceSelectorAll); 
-  flipNodeState(submitBtn);
+  //flipNodeState(...aChoiceSelectorAll);
+  //flipNodeState(submitBtn);
 }
 
 function flashmodeChanges(e) {
@@ -130,16 +139,27 @@ function flashmodeChanges(e) {
   flipNodeState(...noOfAnsSelector); 
 }
 
+function constructQuestion() {
+  clearNode({ parent: qChoiceSelector, child: document.querySelector("#qChoiceDummy") });
+  buildNodeObj({ parent: qChoiceSelector, child: "option", content: ['Kanji', 'Hiragana', 'English'], childValues: ['ka', 'hi', 'en'] });
+  qChoiceSelector.removeEventListener('click', constructQuestion);
+
+  //flipNodeState(...document.querySelectorAll("[id|='a']"));
+  flipNodeState(...aChoiceSelectorAll);
+  //flipNodeState(submitBtn);
+}
+
 
 function defaultState() {
-  flipNodeState(submitBtn);
-  flipNodeState(...aChoiceSelectorAll); // [sn14] aChoiceSelector is a NodeList. Need to spread before passing to a function
+  //flipNodeState(submitBtn);
+  //flipNodeState(...aChoiceSelectorAll); // [sn14] aChoiceSelector is a NodeList. Need to spread before passing to a function
   flipNodeState(...noOfAnsSelector); 
 }
 
 // Event Listeners
 settingForm.addEventListener('submit', loadData);
 fieldsetSyllable.addEventListener('change', syllableChanges);
+//qChoiceSelector.addEventListener('click', constructQuestion);
 qChoiceSelector.addEventListener('change', dynamicAnswer);
 settingFlashYesNo.addEventListener('change', flashmodeChanges);
 
