@@ -5,3 +5,7 @@
 .disabled {
   opacity: 0.3;
 }
+
+.setting-error {
+  color: red;
+}

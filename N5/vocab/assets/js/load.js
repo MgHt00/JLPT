@@ -14,18 +14,26 @@ function loadData(e) {
 
   randomYesNo = document.querySelector('input[name="randomYesNo"]:checked').value;
   flashYesNo = document.querySelector('input[name="flashYesNo"]:checked').value;
-  noOfAnswers = document.querySelector('#noOfAnswers').value;
+  noOfAnswers = document.querySelector('input[name="noOfAnswers"]:checked').value;
   
   syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
+
   if (syllableChoice.length === 0) {
+    buildNode({
+      parent: fieldsetSyllable, 
+      child: 'div', 
+      content: 'Select at least one syllables', 
+      className: 'setting-error', 
+      idName: 'syllable-error',
+    });
     return;
   }
   
   qChoiceInput = document.querySelector('#qChoiceInput').value;
   aChoiceInput = document.querySelector('#aChoiceInput').value;
 
-  console.log("randomYesNo: ", randomYesNo, " | syllableChoice: ", syllableChoice, " | qChoiceInput: ", qChoiceInput, 
-    " | aChoiceInput: ", aChoiceInput, " | flashYesNo: ",flashYesNo, " | noOfAnswers: ",noOfAnswers);
+  console.log("randomYesNo: ", randomYesNo, "| flashYesNo: ",flashYesNo, " | noOfAnswers: ",noOfAnswers, " | syllableChoice: ", syllableChoice, " | qChoiceInput: ", qChoiceInput, 
+    " | aChoiceInput: ", aChoiceInput);
 
   prepareJSON(syllableChoice);
 
@@ -81,10 +89,12 @@ function syllableChanges(event) { // [le4]
   const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
                                .filter(checkbox => checkbox !== allCheckbox);
 
-  /*if (!allCheckbox.checked && otherCheckboxes.every(checkbox => !checkbox.checked)) { //checks if every checkbox in otherCheckboxes is also unchecked.
-    console.log("buddy, we need something here.");
-    buildNode({parent: fieldsetSyllable, child: "div", content: "Select at least one."});
-  }*/
+    if (checkNode({ idName: 'syllable-error' })) {
+      clearNode({
+        parent: fieldsetSyllable, 
+        children: Array.from(document.querySelectorAll('div[id^="syllable-error"]'))
+      });
+    }
 
   if (event.target === allCheckbox) {
     if (allCheckbox.checked) {
@@ -129,9 +139,6 @@ function dynamicAnswer() {
       buildNode(params);
     }
   });
-
-  //flipNodeState(...aChoiceSelectorAll);
-  //flipNodeState(submitBtn);
 }
 
 function flashmodeChanges(e) {
@@ -139,16 +146,15 @@ function flashmodeChanges(e) {
   flipNodeState(...noOfAnsSelector); 
 }
 
+/*
 function constructQuestion() {
   clearNode({ parent: qChoiceSelector, child: document.querySelector("#qChoiceDummy") });
   buildNode({ parent: qChoiceSelector, child: "option", content: ['Kanji', 'Hiragana', 'English'], childValues: ['ka', 'hi', 'en'] });
   qChoiceSelector.removeEventListener('click', constructQuestion);
 
-  //flipNodeState(...document.querySelectorAll("[id|='a']"));
   flipNodeState(...aChoiceSelectorAll);
-  //flipNodeState(submitBtn);
 }
-
+*/
 
 function defaultState() {
   //flipNodeState(submitBtn);
@@ -164,4 +170,3 @@ qChoiceSelector.addEventListener('change', dynamicAnswer);
 settingFlashYesNo.addEventListener('change', flashmodeChanges);
 
 defaultState();
-//dynamicAnswer();

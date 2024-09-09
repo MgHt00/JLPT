@@ -118,6 +118,10 @@ function clearNode({ parent, children = [] }) {
   }
 }
 
+function checkNode({idName}) {
+  return document.querySelectorAll(`[id^=${idName}]`).length > 0;
+}
+
 /*
 function buildNode(parent, child, content, className, idName, eventFunction) { // [sn2]
   // Ensure className is always treated as an array
@@ -159,8 +163,6 @@ function flipNodeState(...nodes) { //[sn10]
 
 
 function toggleClass(className = "", ...nodes) {
-  //console.log(className);
-  //console.log(nodes);
   if(!className.trim()) return; // Prevent adding an empty or whitespace-only class
 
   nodes.forEach(node => {
