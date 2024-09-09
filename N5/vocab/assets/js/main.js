@@ -65,7 +65,7 @@ function newQuestion() {
   buildAnswers();
 }
 
-function buildNodeObj({parent, child, content, childValues = [], className = "", idName = "", eventFunction = "" }) {
+function buildNode({parent, child, content, childValues = [], className = "", idName = "", eventFunction = "" }) {
   // Ensure className is always treated as an array
   className = Array.isArray(className) ? className : className.split(' ').filter(c => c.trim() !== ''); // 1) split with ' '; 2) remove excess spaces; 3) store if only it is not empty.
 
@@ -118,6 +118,7 @@ function clearNode({ parent, children = [] }) {
   }
 }
 
+/*
 function buildNode(parent, child, content, className, idName, eventFunction) { // [sn2]
   // Ensure className is always treated as an array
   className = Array.isArray(className) ? className : className.split(' ');
@@ -144,6 +145,7 @@ function buildNode(parent, child, content, className, idName, eventFunction) { /
     parent.appendChild(newChild);
   });
 }
+*/
 
 function flipNodeState(...nodes) { //[sn10]
   // Iterate over the nodes and toggle the disabled state
@@ -172,9 +174,11 @@ function buildAnswers() {
   ansArray = prepareAnswers(aChoiceInput, noOfAnswers, questionObj);
 
   if (flashYesNo) { // if it is a flash card game
-    buildNode(sectionAnswer, "div", "Show Answer", "answer-btn", "answer-btn", showAnswer); // (arg1, arg2, arg3, class name, id)
+    //buildNode(sectionAnswer, "div", "Show Answer", "answer-btn", "answer-btn", showAnswer); // (arg1, arg2, arg3, class name, id)
+    buildNode({parent: sectionAnswer, child: 'div', content: 'Show Answer', className: 'answer-btn', idName: showAnswer});
   } else { // if it is a multiple choice game
-    buildNode(sectionAnswer, "div", ansArray , "answer-btn", "answer-btn", multipleChoice);
+    //buildNode(sectionAnswer, "div", ansArray , "answer-btn", "answer-btn", multipleChoice);
+    buildNode({parent: sectionAnswer, child: 'div', content: ansArray, className: 'answer-btn', idName: multipleChoice});
   }
 }
 

@@ -83,7 +83,7 @@ function syllableChanges(event) { // [le4]
 
   /*if (!allCheckbox.checked && otherCheckboxes.every(checkbox => !checkbox.checked)) { //checks if every checkbox in otherCheckboxes is also unchecked.
     console.log("buddy, we need something here.");
-    buildNodeObj({parent: fieldsetSyllable, child: "div", content: "Select at least one."});
+    buildNode({parent: fieldsetSyllable, child: "div", content: "Select at least one."});
   }*/
 
   if (event.target === allCheckbox) {
@@ -122,11 +122,11 @@ function dynamicAnswer() {
 
   clearNode({ parent: aChoiceSelector, children: Array.from(aChoiceOptionAll) }); // Array.from(aChoiceSelectorAll): Converts the NodeList (which is similar to an array but doesn't have all array methods) into a true array
 
-  // Loop through the ansMapping object and call buildNodeObj
+  // Loop through the ansMapping object and call buildNode
   Object.entries(ansMapping).forEach(([key, params]) => { // [sn13]
     // Exclude the option if it matches the user's question choice
     if (key !== qChoice) {
-      buildNodeObj(params);
+      buildNode(params);
     }
   });
 
@@ -141,7 +141,7 @@ function flashmodeChanges(e) {
 
 function constructQuestion() {
   clearNode({ parent: qChoiceSelector, child: document.querySelector("#qChoiceDummy") });
-  buildNodeObj({ parent: qChoiceSelector, child: "option", content: ['Kanji', 'Hiragana', 'English'], childValues: ['ka', 'hi', 'en'] });
+  buildNode({ parent: qChoiceSelector, child: "option", content: ['Kanji', 'Hiragana', 'English'], childValues: ['ka', 'hi', 'en'] });
   qChoiceSelector.removeEventListener('click', constructQuestion);
 
   //flipNodeState(...document.querySelectorAll("[id|='a']"));
