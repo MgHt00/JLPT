@@ -8,9 +8,29 @@ const aChoiceOptionAll = document.querySelector('select[id="aChoiceInput"]').opt
 const aDefaultChoice = document.querySelector('select[name="aChoiceInput"]').options[1];
 const noOfAnsSelector = document.querySelectorAll("[id^='noOfAnswers']");
 const submitBtn = document.querySelector("#submit-btn");
+const allSettingSelector = document.querySelectorAll("[id|='settings']");
+const bringBackBtn = document.querySelector("#bring-back-btn");
+
+defaultState();
+
+// Event Listeners
+settingForm.addEventListener('submit', loadData);
+fieldsetSyllable.addEventListener('change', syllableChanges);
+qChoiceSelector.addEventListener('change', dynamicAnswer);
+settingFlashYesNo.addEventListener('change', flashmodeChanges);
+
+// Wrap the moveForm function with debounce
+const debouncedMoveForm = debounce(moveForm, 300); // 300ms delay
+
+bringBackBtn.addEventListener('click', (event) => {
+  event.stopPropagation(); // Prevent event from bubbling up
+  debouncedMoveForm(event); // Pass the event to the debounced function
+});
 
 function loadData(e) {
   e.preventDefault(); // Prevent form from submitting the usual way
+
+  moveForm();
 
   randomYesNo = document.querySelector('input[name="randomYesNo"]:checked').value;
   flashYesNo = document.querySelector('input[name="flashYesNo"]:checked').value;
@@ -39,6 +59,8 @@ function loadData(e) {
 
   qChoiceInput === ("hi" || "ka") ? assignLanguage(sectionQuestion, jpLang) : assignLanguage(sectionQuestion, enLang);
   aChoiceInput === ("hi" || "ka") ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
+
+  //newQuestion(); // ERROR - Check console
 }
 
 function prepareJSON(syllableChoice) {
@@ -160,13 +182,34 @@ function defaultState() {
   //flipNodeState(submitBtn);
   //flipNodeState(...aChoiceSelectorAll); // [sn14] aChoiceSelector is a NodeList. Need to spread before passing to a function
   flipNodeState(...noOfAnsSelector); 
+  toggleClass('hide', bringBackBtn);
 }
 
-// Event Listeners
-settingForm.addEventListener('submit', loadData);
-fieldsetSyllable.addEventListener('change', syllableChanges);
-//qChoiceSelector.addEventListener('click', constructQuestion);
-qChoiceSelector.addEventListener('change', dynamicAnswer);
-settingFlashYesNo.addEventListener('change', flashmodeChanges);
+// The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
+function debounce(func, delay) {
+  let timeoutId;
+  return function(event, ...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(this, [event, ...args]);
+    }, delay);
+  };
+}
 
-defaultState();
+let isMoving = false; // Flag to prevent multiple movements
+
+function moveForm() {
+  if (isMoving) return; // If the form is already moving, exit the function
+
+  // Set the flag to prevent further calls
+  isMoving = true;
+
+  toggleClass('moved', settingForm);
+  toggleClass('dim', ...allSettingSelector);
+  toggleClass('hide', submitBtn, bringBackBtn);
+
+  // Add an event listener for the transition end to reset the flag
+  settingForm.addEventListener('transitionend', () => {
+    isMoving = false; // Allow future movement after the transition completes
+  }, { once: true }); // Ensure the event listener is called only once per transition
+}

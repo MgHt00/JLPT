@@ -162,7 +162,7 @@ function flipNodeState(...nodes) { //[sn10]
 }
 
 
-function toggleClass(className = "", ...nodes) {
+function toggleClass(className = "", ...nodes) { // [sn15]
   if(!className.trim()) return; // Prevent adding an empty or whitespace-only class
 
   nodes.forEach(node => {
