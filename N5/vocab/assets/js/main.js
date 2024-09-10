@@ -58,6 +58,7 @@ function newQuestion() {
   clearScreen([sectionQuestion, sectionAnswer]);
 
   questionObj = prepareQuestion(vocabArray, randomYesNo);
+  console.log(questionObj);
   correctAns = questionObj[aChoiceInput]; // store correct answer
   
   displayContent(sectionQuestion, questionObj[qChoiceInput]);
@@ -177,14 +178,15 @@ function buildAnswers() {
 
   if (flashYesNo) { // if it is a flash card game
     //buildNode(sectionAnswer, "div", "Show Answer", "answer-btn", "answer-btn", showAnswer); // (arg1, arg2, arg3, class name, id)
-    buildNode({parent: sectionAnswer, child: 'div', content: 'Show Answer', className: 'answer-btn', idName: showAnswer});
+    buildNode({parent: sectionAnswer, child: 'div', content: 'Show Answer', className: 'answer-btn', eventFunction: showAnswer});
   } else { // if it is a multiple choice game
     //buildNode(sectionAnswer, "div", ansArray , "answer-btn", "answer-btn", multipleChoice);
-    buildNode({parent: sectionAnswer, child: 'div', content: ansArray, className: 'answer-btn', idName: multipleChoice});
+    buildNode({parent: sectionAnswer, child: 'div', content: ansArray, className: 'answer-btn', eventFunction: multipleChoice});
   }
 }
 
 function showAnswer(){
+  console.log("inside showAnswer()");
   // Remove exiting buttons
   const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
   answerButtons.forEach(button => {
@@ -192,17 +194,13 @@ function showAnswer(){
   });
 
   // Show correct answer
-  buildNode(sectionAnswer, "div", correctAns, "answer-message", "answer-message");
+  buildNode({parent: sectionAnswer, child: 'div', content: correctAns, className: 'answer-message', idName: 'answer-message'});
 
   // Show buttons
   if (flashYesNo) { // if it is a flash card game
-    buildNode(sectionAnswer, "div", "Did you get it right?", "answer-message", "answer-message");
-    buildNode(sectionAnswer, "div", ["Yes", "No"], "answer-btn", "choice-btn", storeOrContinue);
+    buildNode({parent: sectionAnswer, child: 'div', content: 'Did you get it right?', className: 'answer-message', idName: 'answer-message'});
+    buildNode({parent: sectionAnswer, child: 'div', content: ['Yes', 'No'], className: 'answer-btn', idName: 'choice-btn', eventFunction: storeOrContinue});
   } else {
-    buildNode(sectionAnswer, "div", "Next", "answer-message", "next-btn","");
+    buildNode({parent: sectionAnswer, child: 'div', content: 'Next', className: 'answer-message', idName: 'next-btn'});
   }
-}
-
-function start() {
-  //newQuestion(); 
 }

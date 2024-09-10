@@ -52,15 +52,12 @@ function loadData(e) {
   qChoiceInput = document.querySelector('#qChoiceInput').value;
   aChoiceInput = document.querySelector('#aChoiceInput').value;
 
-  console.log("randomYesNo: ", randomYesNo, "| flashYesNo: ",flashYesNo, " | noOfAnswers: ",noOfAnswers, " | syllableChoice: ", syllableChoice, " | qChoiceInput: ", qChoiceInput, 
-    " | aChoiceInput: ", aChoiceInput);
-
-  prepareJSON(syllableChoice);
+  //console.log("randomYesNo: ", randomYesNo, "| flashYesNo: ",flashYesNo, " | noOfAnswers: ",noOfAnswers, " | syllableChoice: ", syllableChoice, " | qChoiceInput: ", qChoiceInput, " | aChoiceInput: ", aChoiceInput);
 
   qChoiceInput === ("hi" || "ka") ? assignLanguage(sectionQuestion, jpLang) : assignLanguage(sectionQuestion, enLang);
   aChoiceInput === ("hi" || "ka") ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
 
-  //newQuestion(); // ERROR - Check console
+  prepareJSON(syllableChoice);
 }
 
 function prepareJSON(syllableChoice) {
@@ -79,7 +76,7 @@ function prepareJSON(syllableChoice) {
   const promises = syllableChoice.map(element => {
     //console.log(element);
     let selectedJSON = syllableMapping[element];
-    console.log(selectedJSON);
+    //console.log(selectedJSON);
     return fetch(selectedJSON).then(response => response.json());
   });
 
@@ -87,13 +84,13 @@ function prepareJSON(syllableChoice) {
   Promise.all(promises)
     .then(results => {
       vocabArray = results.flat(); // Combine all arrays into one
-      //console.log(vocabArray); // Now this should show the full combined array
+      console.log(vocabArray); // Now this should show the full combined array
       fetchOneCategory(vocabArray, kaVocab, ka); // le2
       fetchOneCategory(vocabArray, hiVocab, hi);
       fetchOneCategory(vocabArray, enVocab, en);
 
-      // Call start() after the data is loaded (sn1.MD)
-      start();
+      // Call newQuestion();  after the data is loaded (sn1.MD)
+      newQuestion(); 
     })
     .catch(error => console.error('Error loading vocab JSON files:', error));
 }
@@ -182,7 +179,7 @@ function defaultState() {
   //flipNodeState(submitBtn);
   //flipNodeState(...aChoiceSelectorAll); // [sn14] aChoiceSelector is a NodeList. Need to spread before passing to a function
   flipNodeState(...noOfAnsSelector); 
-  toggleClass('hide', bringBackBtn);
+  toggleClass('hide', bringBackBtn, sectionQuestion, sectionAnswer);
 }
 
 // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
@@ -206,7 +203,7 @@ function moveForm() {
 
   toggleClass('moved', settingForm);
   toggleClass('dim', ...allSettingSelector);
-  toggleClass('hide', submitBtn, bringBackBtn);
+  toggleClass('hide', sectionQuestion, sectionAnswer, submitBtn, bringBackBtn);
 
   // Add an event listener for the transition end to reset the flag
   settingForm.addEventListener('transitionend', () => {
