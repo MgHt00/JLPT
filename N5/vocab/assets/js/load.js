@@ -28,8 +28,9 @@ bringBackBtn.addEventListener('click', (event) => {
 });
 
 function loadData(e) {
-  e.preventDefault(); // Prevent form from submitting the usual way
+  let syllableChoice;
 
+  e.preventDefault(); // Prevent form from submitting the usual way
   moveForm();
 
   // Convert the string values "true"/"false" to boolean values [sn16]
@@ -53,10 +54,11 @@ function loadData(e) {
   qChoiceInput = document.querySelector('#qChoiceInput').value;
   aChoiceInput = document.querySelector('#aChoiceInput').value;
 
-  console.log("randomYesNo: ", randomYesNo, "| flashYesNo: ",flashYesNo, " | noOfAnswers: ",noOfAnswers, " | syllableChoice: ", syllableChoice, " | qChoiceInput: ", qChoiceInput, " | aChoiceInput: ", aChoiceInput);
+  //console.log("randomYesNo: ", randomYesNo, "| flashYesNo: ",flashYesNo, " | noOfAnswers: ",noOfAnswers, " | syllableChoice: ", syllableChoice, " | qChoiceInput: ", qChoiceInput, " | aChoiceInput: ", aChoiceInput);
 
   qChoiceInput === ("hi" || "ka") ? assignLanguage(sectionQuestion, jpLang) : assignLanguage(sectionQuestion, enLang);
   aChoiceInput === ("hi" || "ka") ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
+  assignLanguage(sectionMessage, enLang);
 
   prepareJSON(syllableChoice);
 }
@@ -75,23 +77,21 @@ function prepareJSON(syllableChoice) {
   
   // Create an array of Promises
   const promises = syllableChoice.map(element => {
-    //console.log(element);
     let selectedJSON = syllableMapping[element];
-    //console.log(selectedJSON);
     return fetch(selectedJSON).then(response => response.json());
   });
 
   // Wait for all Promises to resolve and then merge the results into vocabArray
   Promise.all(promises)
     .then(results => {
-      vocabArray = results.flat(); // Combine all arrays into one
+      let vocabArray = results.flat(); // Combine all arrays into one
       console.log("Inside prepareJSON(), vocabArray: ", vocabArray); // Now this should show the full combined array
       fetchOneCategory(vocabArray, kaVocab, ka); // le2
       fetchOneCategory(vocabArray, hiVocab, hi);
       fetchOneCategory(vocabArray, enVocab, en);
 
       // Call newQuestion();  after the data is loaded (sn1.MD)
-      newQuestion(); 
+      newQuestion(vocabArray); 
     })
     .catch(error => console.error('Error loading vocab JSON files:', error));
 }
@@ -177,9 +177,7 @@ function constructQuestion() {
 */
 
 function defaultState() {
-  //flipNodeState(submitBtn);
-  //flipNodeState(...aChoiceSelectorAll); // [sn14] aChoiceSelector is a NodeList. Need to spread before passing to a function
-  flipNodeState(...noOfAnsSelector); 
+  flipNodeState(...noOfAnsSelector); // [sn14]
   toggleClass('hide', bringBackBtn, sectionQuestion, sectionAnswer);
 }
 

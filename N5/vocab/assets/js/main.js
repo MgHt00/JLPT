@@ -3,11 +3,13 @@ function assignLanguage(sectionBlock, lang) {
   sectionBlock.classList.add(lang);
 }
 
+/*
 function displayContent(sectionBlock, content) {
   let divBlock = document.createElement("div");
   divBlock.textContent = content;
   sectionBlock.appendChild(divBlock);
 }
+*/
 
 function randomNo(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -15,32 +17,6 @@ function randomNo(min, max) {
 
 function log(variable, label) {
   label ? console.log(`${label}: ${variable}`) : console.log(`${variable}`);
-}
-
-
-function storeOrContinue(event) { // sn4
-  const btnID = event.currentTarget.id;
-  if (btnID === "choice-btn-0") {
-    newQuestion();
-  } else if (btnID === "choice-btn-1") {
-    storeToPractice(questionObj);
-    newQuestion();
-  }
-}
-
-function multipleChoice(event) {
-  const btnText = event.currentTarget.textContent;
-  if (correctAns === btnText) {
-    console.log("bingo!");
-    //console.log(event.currentTarget.id); 
-    clearScreen([sectionQuestion, sectionAnswer]);
-
-    buildNode(sectionAnswer, "div", "Correct!", "answer-message", "answer-message");
-    buildNode(sectionAnswer, "div", "Next", "answer-btn", "choice-btn", newQuestion);
-
-  } else {
-    console.log("keep going");
-  }
 }
 
 function clearScreen(elements) {
@@ -54,7 +30,6 @@ function clearScreen(elements) {
   });
 }
 
-
 function buildNode({parent, child, content, childValues = [], className = "", idName = "", eventFunction = "" }) {
   // Ensure className is always treated as an array
   className = Array.isArray(className) ? className : className.split(' ').filter(c => c.trim() !== ''); // 1) split with ' '; 2) remove excess spaces; 3) store if only it is not empty.
@@ -64,7 +39,6 @@ function buildNode({parent, child, content, childValues = [], className = "", id
 
   // Ensure value is always treated as an array
   childValues = Array.isArray(childValues) ? childValues : [childValues]
-  console.log(childValues);
 
   content.forEach((contentItem, contentIndex) => {
     let newChild = document.createElement(child);
@@ -160,40 +134,4 @@ function toggleClass(className = "", ...nodes) { // [sn15]
       node.classList.toggle(className); // Toggle the class
     }
   });
-}
-
-function buildAnswers() {
-  ansArray = prepareAnswers(aChoiceInput, noOfAnswers, questionObj);
-  console.log("Inside buildAnswers(); ansArray: ", ansArray);
-  console.log("Inside buildAnswers(); flashYesNo: ", flashYesNo);
-
-  if (flashYesNo) { // if it is a flash card game
-    console.log("Inside `if` of buildAnswers()");
-    //buildNode(sectionAnswer, "div", "Show Answer", "answer-btn", "answer-btn", showAnswer); // (arg1, arg2, arg3, class name, id)
-    buildNode({parent: sectionAnswer, child: 'div', content: 'Show Answer', className: 'answer-btn', eventFunction: showAnswer});
-  } else { // if it is a multiple choice game
-    //buildNode(sectionAnswer, "div", ansArray , "answer-btn", "answer-btn", multipleChoice);
-    console.log("Inside `else` of buildAnswers()");
-    buildNode({parent: sectionAnswer, child: 'div', content: ansArray, className: 'answer-btn', eventFunction: multipleChoice});
-  }
-}
-
-function showAnswer(){
-  console.log("inside showAnswer()");
-  // Remove exiting buttons
-  const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
-  answerButtons.forEach(button => {
-    button.remove(); 
-  });
-
-  // Show correct answer
-  buildNode({parent: sectionAnswer, child: 'div', content: correctAns, className: 'answer-message', idName: 'answer-message'});
-
-  // Show buttons
-  if (flashYesNo) { // if it is a flash card game
-    buildNode({parent: sectionAnswer, child: 'div', content: 'Did you get it right?', className: 'answer-message', idName: 'answer-message'});
-    buildNode({parent: sectionAnswer, child: 'div', content: ['Yes', 'No'], className: 'answer-btn', idName: 'choice-btn', eventFunction: storeOrContinue});
-  } else {
-    buildNode({parent: sectionAnswer, child: 'div', content: 'Next', className: 'answer-message', idName: 'next-btn'});
-  }
 }

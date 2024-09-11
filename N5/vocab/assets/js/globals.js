@@ -1,7 +1,8 @@
 const body = document.querySelector("#section-body");
 const sectionQuestion = document.querySelector("#section-question");
+const sectionMessage = document.querySelector("#section-message");
 const sectionAnswer = document.querySelector("#section-answer");
-let vocabArray = [];
+//let vocabArray = [];
 
 let ka = "ka";
 let hi = "hi";
@@ -11,7 +12,7 @@ let enLang = "en";
 let jpLang = "jp";
 
 let randomYesNo;
-let syllableChoice = [];
+//let syllableChoice = [];
 let qChoiceInput;
 let aChoiceInput;
 let flashYesNo;
@@ -24,5 +25,7 @@ let enVocab = [];
 let questionObj = {};
 let ansArray = [];
 let correctAns;
+
+let rePractice = [];
 
 let qNo = 0;
