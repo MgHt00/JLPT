@@ -56,9 +56,10 @@ function clearScreen(elements) {
 
 function newQuestion() {
   clearScreen([sectionQuestion, sectionAnswer]);
-
+  //console.log("Inside newQuestion(), ramdomYesNo: ", randomYesNo);
   questionObj = prepareQuestion(vocabArray, randomYesNo);
-  console.log(questionObj);
+  console.log("inside newQuestion(), questionObj: ", questionObj);
+
   correctAns = questionObj[aChoiceInput]; // store correct answer
   
   displayContent(sectionQuestion, questionObj[qChoiceInput]);
@@ -175,12 +176,16 @@ function toggleClass(className = "", ...nodes) { // [sn15]
 
 function buildAnswers() {
   ansArray = prepareAnswers(aChoiceInput, noOfAnswers, questionObj);
+  console.log("Inside buildAnswers(); ansArray: ", ansArray);
+  console.log("Inside buildAnswers(); flashYesNo: ", flashYesNo);
 
   if (flashYesNo) { // if it is a flash card game
+    console.log("Inside `if` of buildAnswers()");
     //buildNode(sectionAnswer, "div", "Show Answer", "answer-btn", "answer-btn", showAnswer); // (arg1, arg2, arg3, class name, id)
     buildNode({parent: sectionAnswer, child: 'div', content: 'Show Answer', className: 'answer-btn', eventFunction: showAnswer});
   } else { // if it is a multiple choice game
     //buildNode(sectionAnswer, "div", ansArray , "answer-btn", "answer-btn", multipleChoice);
+    console.log("Inside `else` of buildAnswers()");
     buildNode({parent: sectionAnswer, child: 'div', content: ansArray, className: 'answer-btn', eventFunction: multipleChoice});
   }
 }

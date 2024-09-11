@@ -32,10 +32,11 @@ function loadData(e) {
 
   moveForm();
 
-  randomYesNo = document.querySelector('input[name="randomYesNo"]:checked').value;
-  flashYesNo = document.querySelector('input[name="flashYesNo"]:checked').value;
-  noOfAnswers = document.querySelector('input[name="noOfAnswers"]:checked').value;
-  
+  // Convert the string values "true"/"false" to boolean values [sn16]
+  randomYesNo = document.querySelector('input[name="randomYesNo"]:checked').value === 'true';
+  flashYesNo = document.querySelector('input[name="flashYesNo"]:checked').value === 'true';
+  noOfAnswers = parseInt(document.querySelector('input[name="noOfAnswers"]:checked').value, 10); // Ensure this is an integer
+
   syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
 
   if (syllableChoice.length === 0) {
@@ -52,7 +53,7 @@ function loadData(e) {
   qChoiceInput = document.querySelector('#qChoiceInput').value;
   aChoiceInput = document.querySelector('#aChoiceInput').value;
 
-  //console.log("randomYesNo: ", randomYesNo, "| flashYesNo: ",flashYesNo, " | noOfAnswers: ",noOfAnswers, " | syllableChoice: ", syllableChoice, " | qChoiceInput: ", qChoiceInput, " | aChoiceInput: ", aChoiceInput);
+  console.log("randomYesNo: ", randomYesNo, "| flashYesNo: ",flashYesNo, " | noOfAnswers: ",noOfAnswers, " | syllableChoice: ", syllableChoice, " | qChoiceInput: ", qChoiceInput, " | aChoiceInput: ", aChoiceInput);
 
   qChoiceInput === ("hi" || "ka") ? assignLanguage(sectionQuestion, jpLang) : assignLanguage(sectionQuestion, enLang);
   aChoiceInput === ("hi" || "ka") ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
@@ -84,7 +85,7 @@ function prepareJSON(syllableChoice) {
   Promise.all(promises)
     .then(results => {
       vocabArray = results.flat(); // Combine all arrays into one
-      console.log(vocabArray); // Now this should show the full combined array
+      console.log("Inside prepareJSON(), vocabArray: ", vocabArray); // Now this should show the full combined array
       fetchOneCategory(vocabArray, kaVocab, ka); // le2
       fetchOneCategory(vocabArray, hiVocab, hi);
       fetchOneCategory(vocabArray, enVocab, en);
@@ -161,7 +162,7 @@ function dynamicAnswer() {
 }
 
 function flashmodeChanges(e) {
-  console.log(e.target.value);
+  //console.log(e.target.value);
   flipNodeState(...noOfAnsSelector); 
 }
 

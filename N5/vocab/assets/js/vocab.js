@@ -27,6 +27,8 @@ function prepareQuestion(arr, random) {
 }
 
 function prepareAnswers(aChoice, noOfChoice, correctAns) {
+  console.log("Inside prepareAnswers(); aChoice: ", aChoice, "| noOfChoice: ", noOfChoice, " | correctAns: ", correctAns);
+
   let selectedArray = vocabMapping[aChoice];
   let tempAnsArray = [];
 
