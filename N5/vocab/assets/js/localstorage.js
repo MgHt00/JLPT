@@ -19,7 +19,7 @@ function storeToPractice(objToStore) { // [sn5]
 
 function loadIncorrectAnswers() {
   let incorrectAnswers = JSON.parse(localStorage.getItem("toPractice")) || [];
-  console.log(incorrectAnswers);
+  console.log("Inside loadIncorrectAnswers(): ", incorrectAnswers);
   // You can use the `incorrectAnswers` array for further processing
 }
 

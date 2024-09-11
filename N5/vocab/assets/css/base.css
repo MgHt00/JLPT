@@ -19,8 +19,18 @@ body {
 }
 
 section {
-  font-size: 40px;
+  font-size: 30px;
   margin-bottom: 2em;
+  text-align: center;
+}
+
+#section-question {
+  font-size: 40px;
+}
+
+#section-message {
+  font-size: 20px;
+  margin: 15px;
 }
 
 section.en {
@@ -55,4 +65,8 @@ section.jp {
 
 .dummy-class-2 {
   color: inherit;
+}
+
+.wrong-answer {
+  color: red;
 }

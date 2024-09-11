@@ -6,17 +6,24 @@ function fetchOneCategory(source, target, catName) {
   });
 }
 
+newQuestion.counter = 3; // Initialize newQuestion() own property. Check the book p. 202 for more detail
+
 function newQuestion() {
-  clearScreen([sectionQuestion, sectionAnswer]);
-  //console.log("Inside newQuestion(), ramdomYesNo: ", randomYesNo);
+  clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
   questionObj = prepareQuestion(vocabArray, randomYesNo);
-  console.log("inside newQuestion(), questionObj: ", questionObj);
-
   correctAns = questionObj[aChoiceInput]; // store correct answer
-  
-  displayContent(sectionQuestion, questionObj[qChoiceInput]);
 
+  //console.log("inside newQuestion(); ramdomYesNo: ", randomYesNo, "| questionObj: ", questionObj, "| correctAns: ", correctAns);
+
+  if (newQuestion.counter >=0 ){
+    buildNode({parent: sectionQuestion, child: 'div', content: questionObj[qChoiceInput]});
+  } else {
+
+  }
+  
   buildAnswers();
+
+  if (newQuestion.counter >= 0) newQuestion.counter--;
 }
 
 function prepareQuestion(arr, random) {
@@ -40,7 +47,7 @@ const vocabMapping = {
 };
 
 function prepareAnswers(aChoice, noOfChoice, correctAns) {
-  console.log("Inside prepareAnswers(); aChoice: ", aChoice, "| noOfChoice: ", noOfChoice, " | correctAns: ", correctAns);
+  //console.log("Inside prepareAnswers(); aChoice: ", aChoice, "| noOfChoice: ", noOfChoice, " | correctAns: ", correctAns);
 
   let selectedArray = vocabMapping[aChoice];
   let tempAnsArray = [];
@@ -85,18 +92,16 @@ function shuffleArray(array) {
 
 function buildAnswers() {
   ansArray = prepareAnswers(aChoiceInput, noOfAnswers, questionObj);
-  console.log("Inside buildAnswers(); ansArray: ", ansArray);
-  console.log("Inside buildAnswers(); flashYesNo: ", flashYesNo);
+  //console.log("Inside buildAnswers(); ansArray: ", ansArray, "Inside buildAnswers(); flashYesNo: ", flashYesNo);
 
   if (flashYesNo) { // if it is a flash card game
-    buildNode({parent: sectionAnswer, child: 'div', content: 'Show Answer', className: 'answer-btn', eventFunction: showAnswer});
+    buildNode({parent: sectionAnswer, child: 'div', content: 'Show Answer', className: 'answer-btn', idName: 'answer-btn', eventFunction: showAnswer});
   } else { // if it is a multiple choice game
     buildNode({parent: sectionAnswer, child: 'div', content: ansArray, className: 'answer-btn', eventFunction: multipleChoice});
   }
 }
 
 function showAnswer(){
-  console.log("inside showAnswer()");
   // Remove exiting buttons
   const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
   answerButtons.forEach(button => {
@@ -108,7 +113,7 @@ function showAnswer(){
 
   // Show buttons
   if (flashYesNo) { // if it is a flash card game
-    buildNode({parent: sectionAnswer, child: 'div', content: 'Did you get it right?', className: 'answer-message', idName: 'answer-message'});
+    buildNode({parent: sectionMessage, child: 'div', content: 'Did you get it right?', className: 'answer-message', idName: 'answer-message'});
     buildNode({parent: sectionAnswer, child: 'div', content: ['Yes', 'No'], className: 'answer-btn', idName: 'choice-btn', eventFunction: storeOrContinue});
   } else {
     buildNode({parent: sectionAnswer, child: 'div', content: 'Next', className: 'answer-message', idName: 'next-btn'});
@@ -118,16 +123,28 @@ function showAnswer(){
 function multipleChoice(event) {
   const btnText = event.currentTarget.textContent;
   if (correctAns === btnText) {
-    console.log("bingo!");
-    //console.log(event.currentTarget.id); 
     clearScreen([sectionQuestion, sectionAnswer]);
 
-    //buildNode(sectionAnswer, "div", "Correct!", "answer-message", "answer-message");
     buildNode({parent: sectionAnswer, child: 'div', content: 'Correct!', className: 'answer-message', idName: 'answer-message'});
-    //buildNode(sectionAnswer, "div", "Next", "answer-btn", "choice-btn", newQuestion);
     buildNode({parent: sectionAnswer, child: 'div', content: 'Next', className: 'answer-btn', idName: 'choice-btn', eventFunction: newQuestion});
 
   } else {
-    console.log("keep going");
+    buildNode({parent: sectionMessage, child: 'div', content: 'Keep Trying', className: 'wrong-answer'});
   }
+}
+
+function storeOrContinue(event) { // sn4
+  const btnID = event.currentTarget.id;
+  if (btnID === "choice-btn-0") {
+    newQuestion();
+  } else if (btnID === "choice-btn-1") {
+    storeToPractice(questionObj);
+    practiceAgain(questionObj);
+    newQuestion();
+  }
+}
+
+function practiceAgain(questionObj) {
+  console.log("Inside showQuestionAgain(); questionObj: ", questionObj);
+  rePractice.push(questionObj);
 }
