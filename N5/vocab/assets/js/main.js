@@ -54,18 +54,6 @@ function clearScreen(elements) {
   });
 }
 
-function newQuestion() {
-  clearScreen([sectionQuestion, sectionAnswer]);
-  //console.log("Inside newQuestion(), ramdomYesNo: ", randomYesNo);
-  questionObj = prepareQuestion(vocabArray, randomYesNo);
-  console.log("inside newQuestion(), questionObj: ", questionObj);
-
-  correctAns = questionObj[aChoiceInput]; // store correct answer
-  
-  displayContent(sectionQuestion, questionObj[qChoiceInput]);
-
-  buildAnswers();
-}
 
 function buildNode({parent, child, content, childValues = [], className = "", idName = "", eventFunction = "" }) {
   // Ensure className is always treated as an array
