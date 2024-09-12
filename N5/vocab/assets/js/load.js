@@ -28,7 +28,7 @@ bringBackBtn.addEventListener('click', (event) => {
 });
 
 function loadData(e) {
-  let syllableChoice;
+  let syllableChoice = [];
 
   e.preventDefault(); // Prevent form from submitting the usual way
   moveForm();
@@ -84,14 +84,14 @@ function prepareJSON(syllableChoice) {
   // Wait for all Promises to resolve and then merge the results into vocabArray
   Promise.all(promises)
     .then(results => {
-      let vocabArray = results.flat(); // Combine all arrays into one
+      vocabArray = results.flat(); // Combine all arrays into one
       console.log("Inside prepareJSON(), vocabArray: ", vocabArray); // Now this should show the full combined array
       fetchOneCategory(vocabArray, kaVocab, ka); // le2
       fetchOneCategory(vocabArray, hiVocab, hi);
       fetchOneCategory(vocabArray, enVocab, en);
 
       // Call newQuestion();  after the data is loaded (sn1.MD)
-      newQuestion(vocabArray); 
+      newQuestion(); 
     })
     .catch(error => console.error('Error loading vocab JSON files:', error));
 }
