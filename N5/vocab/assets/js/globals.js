@@ -23,9 +23,9 @@ let hiVocab = [];
 let enVocab = [];
 
 //let questionObj = {};
-let ansArray = [];
+//let ansArray = [];
 let correctAns;
 
 let rePractice = [];
 
-let qNo = 0;
+//let qNo = 0;

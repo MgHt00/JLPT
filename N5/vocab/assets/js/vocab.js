@@ -7,9 +7,11 @@ function fetchOneCategory(source, target, catName) {
 }
 
 function newQuestion() {
-  newQuestion.counter = 3; // Initialize newQuestion() own property. Check the book p. 202 for more detail
-
   let questionObj = {};
+  let ansArray = [];
+  let qNo = 0;
+
+  newQuestion.counter = 3; // Initialize newQuestion() own property. Check the book p. 202 for more detail
 
   clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
   questionObj = prepareQuestion(vocabArray, randomYesNo);
