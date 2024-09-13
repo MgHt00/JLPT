@@ -91,7 +91,7 @@ function prepareJSON(syllableChoice) {
       fetchOneCategory(vocabArray, enVocab, en);
 
       // Call newQuestion();  after the data is loaded (sn1.MD)
-      newQuestion(); 
+      questionManager().newQuestion(); 
     })
     .catch(error => console.error('Error loading vocab JSON files:', error));
 }
