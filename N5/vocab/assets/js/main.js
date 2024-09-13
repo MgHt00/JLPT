@@ -68,6 +68,7 @@ function buildNode({parent, child, content, childValues = [], className = "", id
       parent.appendChild(newChild);
     }
   }); 
+  console.log("finished loading buildNode()");
 }
 
 function clearNode({ parent, children = [] }) {

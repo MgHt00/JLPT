@@ -12,19 +12,21 @@ function questionManager() {
   let qNo = 0;
 
   function newQuestion() {
-    console.log("Inside newQuestion()");
+    //console.log("Inside newQuestion()");
     //newQuestion.counter = 3; // Initialize newQuestion() own property. Check the book p. 202 for more detail
 
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
-    questionObj = prepareQuestion(vocabArray, randomYesNo);
-    correctAns = questionObj[aChoiceInput]; // store correct answer
+    //questionObj = prepareQuestion(appData.vocabArray, appState.randomYesNo);
+    questionObj = prepareQuestion();
+    correctAns = questionObj[selectors.aChoice.value]; // store correct answer
 
-    //console.log("inside newQuestion(); ramdomYesNo: ", randomYesNo, "| questionObj: ", questionObj, "| correctAns: ", correctAns);
+    //console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| correctAns: ", correctAns);
 
-    buildNode({ parent: sectionQuestion, child: 'div', content: questionObj[qChoiceInput] });
-    AnswerManager().buildAnswers(questionObj);
+    buildNode({ parent: sectionQuestion, child: 'div', content: questionObj[appState.qChoiceInput] });
+    //AnswerManager().buildAnswers(questionObj);
   }
 
+  /*
   function prepareQuestion(arr, random) {
     console.log("Inside prepareQuestion()");
     let i = randomNo(0, (arr.length - 1));
@@ -35,6 +37,21 @@ function questionManager() {
     }
     else {
       selectedQuestionObj = arr[qNo];
+      qNo++;
+    }
+    return selectedQuestionObj;
+  }
+  */
+  function prepareQuestion() {
+    console.log("Inside prepareQuestion()");
+    let i = randomNo(0, (appData.vocabArray.length - 1));
+    let selectedQuestionObj = {}; // to store the question obj temporarily
+
+    if (appState.randomYesNo) {
+      selectedQuestionObj = appData.vocabArray[i];
+    }
+    else {
+      selectedQuestionObj = appData.vocabArray[qNo];
       qNo++;
     }
     return selectedQuestionObj;
