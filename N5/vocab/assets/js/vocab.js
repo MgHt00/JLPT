@@ -138,10 +138,12 @@ function buildAnswers(questionObj) {
       practiceAgain(questionObj);
       newQuestion();
     }
-  }  
-}
-
-function practiceAgain(questionObj) {
-  console.log("Inside showQuestionAgain(); questionObj: ", questionObj);
-  rePractice.push(questionObj);
+  } 
+  
+  let rePractice = [];
+  
+  function practiceAgain(questionObj) {
+    console.log("Inside showQuestionAgain(); questionObj: ", questionObj);
+    rePractice.push(questionObj);
+  }
 }

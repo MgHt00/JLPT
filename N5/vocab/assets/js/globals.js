@@ -26,6 +26,4 @@ let enVocab = [];
 //let ansArray = [];
 let correctAns;
 
-let rePractice = [];
-
 //let qNo = 0;
