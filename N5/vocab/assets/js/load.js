@@ -7,7 +7,7 @@ const fieldsetSyllable = document.querySelector("#fieldset-syllable");
 const aChoiceSelectorAll = document.querySelectorAll("[id^='aChoiceInput']");
 const aChoiceOptionAll = document.querySelector('select[id="aChoiceInput"]').options;
 const aDefaultChoice = document.querySelector('select[name="aChoiceInput"]').options[1];
-const noOfAnsSelector = document.querySelectorAll("[id^='noOfAnswers']");
+const readNoOfAns = document.querySelectorAll("[id^='noOfAnswers']");
 const submitBtn = document.querySelector("#submit-btn");
 const allSettingSelector = document.querySelectorAll("[id|='settings']");
 const bringBackBtn = document.querySelector("#bring-back-btn");
@@ -56,9 +56,9 @@ function loader() {
     moveForm();
   
     // Convert the string values "true"/"false" to boolean values [sn16]
-    appState.randomYesNo = document.querySelector('input[name="randomYesNo"]:checked').value === 'true';
-    appState.flashYesNo = document.querySelector('input[name="flashYesNo"]:checked').value === 'true';
-    appState.noOfAnswers = parseInt(document.querySelector('input[name="noOfAnswers"]:checked').value, 10); // Ensure this is an integer
+    appState.randomYesNo = selectors.readRandomYesNo === 'true';
+    appState.flashYesNo = selectors.readFlashYesNo === 'true';
+    appState.noOfAnswers = parseInt(selectors.readNoOfAns, 10); // [sn18]Ensure this is an integer
   
     appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
   
@@ -87,8 +87,8 @@ function loader() {
     //aChoiceInput === ("hi" || "ka") ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
 
     selectors.aChoice.value === "hi" || selectors.qChoice.value === "ka" 
-    ? assignLanguage(sectionQuestion, jpLang) 
-    : assignLanguage(sectionQuestion, enLang);
+    ? assignLanguage(sectionAnswer, jpLang) 
+    : assignLanguage(sectionAnswer, enLang);
 
     assignLanguage(sectionMessage, enLang);
   
@@ -200,11 +200,11 @@ function dynamicAnswer() {
 
 function flashmodeChanges(e) {
   //console.log(e.target.value);
-  flipNodeState(...selectors.noOfAnsSelector); 
+  flipNodeState(...selectors.noOfAnsAll); 
 }
 
 function defaultState() {
-  flipNodeState(...selectors.noOfAnsSelector); // [sn14]
+  flipNodeState(...selectors.noOfAnsAll); // [sn14]
   toggleClass('hide', selectors.bringBackBtn, sectionQuestion, sectionAnswer);
 }
 

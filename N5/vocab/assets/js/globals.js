@@ -18,7 +18,7 @@ let enVocab = [];
 
 //let questionObj = {};
 //let ansArray = [];
-let correctAns;
+//let correctAns;
 
 const appState = {
   randomYesNo : false,
@@ -27,6 +27,7 @@ const appState = {
   aChoiceInput: "en",
   flashYesNo: true,
   noOfAnswers: 4,
+  correctAns: "",
 };
 
 const appData = {
@@ -43,10 +44,23 @@ const selectors = {
   aChoiceSelectorAll : document.querySelectorAll("[id^='aChoiceInput']"),
   aChoiceOptionAll : document.querySelector('select[id="aChoiceInput"]').options,
   aDefaultChoice : document.querySelector('select[name="aChoiceInput"]').options[1],
-  noOfAnsSelector : document.querySelectorAll("[id^='noOfAnswers']"),
+  noOfAnsAll : document.querySelectorAll("[id^='noOfAnswers']"),
   submitBtn : document.querySelector("#submit-btn"),
   allSetting : document.querySelectorAll("[id|='settings']"),
   bringBackBtn : document.querySelector("#bring-back-btn"),
+
+  //noOfAns: () => document.querySelector("input[name='noOfAnswers']:checked").value,
+  get readNoOfAns() { //[sn19]
+    return document.querySelector("input[name='noOfAnswers']:checked").value;
+  },
+
+  get readRandomYesNo() {
+    return document.querySelector('input[name="randomYesNo"]:checked').value;
+  },
+
+  get readFlashYesNo() {
+    return document.querySelector('input[name="flashYesNo"]:checked').value;
+  },
 };
 
 //let qNo = 0;
