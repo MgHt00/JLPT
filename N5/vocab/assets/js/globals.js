@@ -2,7 +2,6 @@ const body = document.querySelector("#section-body");
 const sectionQuestion = document.querySelector("#section-question");
 const sectionMessage = document.querySelector("#section-message");
 const sectionAnswer = document.querySelector("#section-answer");
-//let vocabArray = [];
 
 let ka = "ka";
 let hi = "hi";
@@ -11,18 +10,13 @@ let en = "en";
 let enLang = "en";
 let jpLang = "jp";
 
-
 let kaVocab = [];
 let hiVocab = [];
 let enVocab = [];
 
-//let questionObj = {};
-//let ansArray = [];
-//let correctAns;
 
 const appState = {
   randomYesNo : false,
-  //syllableChoice,
   qChoiceInput: "hi",
   aChoiceInput: "en",
   flashYesNo: true,
@@ -50,8 +44,9 @@ const selectors = {
   allSetting : document.querySelectorAll("[id|='settings']"),
   bringBackBtn : document.querySelector("#bring-back-btn"),
 
-  //noOfAns: () => document.querySelector("input[name='noOfAnswers']:checked").value,
   get readNoOfAns() { //[sn19]
+    //if it is not a getter, use this; outside of "get"
+    //noOfAns: () => document.querySelector("input[name='noOfAnswers']:checked").value,
     return document.querySelector("input[name='noOfAnswers']:checked").value;
   },
 

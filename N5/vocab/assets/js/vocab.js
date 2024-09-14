@@ -12,13 +12,9 @@ function questionManager() {
   let qNo = 0;
 
   function newQuestion() {
-    //newQuestion.counter = 3; // Initialize newQuestion() own property. Check the book p. 202 for more detail
-
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
-    //questionObj = prepareQuestion(appData.vocabArray, appState.randomYesNo);
     questionObj = prepareQuestion();
     appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
-
     //console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
 
     buildNode({ 
@@ -26,26 +22,9 @@ function questionManager() {
       child: 'div', 
       content: questionObj[appState.qChoiceInput] 
     });
-    //AnswerManager().buildAnswers(questionObj);
     AnswerManager().buildAnswers();
   }
 
-  /*
-  function prepareQuestion(arr, random) {
-    console.log("Inside prepareQuestion()");
-    let i = randomNo(0, (arr.length - 1));
-    let selectedQuestionObj = {}; // to store the question obj temporarily
-
-    if (random) {
-      selectedQuestionObj = arr[i];
-    }
-    else {
-      selectedQuestionObj = arr[qNo];
-      qNo++;
-    }
-    return selectedQuestionObj;
-  }
-  */
   function prepareQuestion() {
     let i = randomNo(0, (appData.vocabArray.length - 1));
     let selectedQuestionObj = {}; // to store the question obj temporarily
@@ -74,28 +53,36 @@ function AnswerManager() {
     en: enVocab
   };
 
-  //function buildAnswers(questionObj) {
   function buildAnswers() {
-    //ansArray = prepareAnswers(questionObj);
     ansArray = prepareAnswers();
     //console.log("Inside buildAnswers(); ansArray: ", ansArray, "Inside buildAnswers(); flashYesNo: ", flashYesNo);
 
     if (appState.flashYesNo) { // if it is a flash card game
-      buildNode({ parent: sectionAnswer, child: 'div', content: 'Show Answer', className: 'answer-btn', idName: 'answer-btn', eventFunction: showAnswer });
+      buildNode({ 
+        parent: sectionAnswer, 
+        child: 'div', 
+        content: 'Show Answer', 
+        className: 'answer-btn', 
+        idName: 'answer-btn', 
+        eventFunction: showAnswer 
+      });
     } else { // if it is a multiple choice game
-      buildNode({ parent: sectionAnswer, child: 'div', content: ansArray, className: 'answer-btn', eventFunction: multipleChoice });
+      buildNode({ 
+        parent: sectionAnswer, 
+        child: 'div', 
+        content: ansArray, 
+        className: 'answer-btn', 
+        eventFunction: multipleChoice 
+      });
     }
   }
 
   function prepareAnswers() {
     //console.log("Inside prepareAnswers(); selectors.aChoice: ", selectors.aChoice, "| noOfChoice: ", noOfChoice, " | appState.correctAns: ", appState.correctAns);
     let selectedArray = vocabMapping[selectors.aChoice.value];
-
     let tempAnsArray = [];
 
-    //tempAnsArray[0] = appState.correctAns[selectors.aChoice.value]; // add correct answer in index. 0
     tempAnsArray[0] = appState.correctAns; // add correct answer in index. 0
-    console.log("tempAnsArray[0]: ",tempAnsArray[0]);
 
     if (!selectedArray) {
       console.error(`No vocab array found for choice: ${selectors.aChoice.value}`);
@@ -107,16 +94,13 @@ function AnswerManager() {
       return;
     }
     let choiceInput = selectors.readNoOfAns;
-    //console.log("choiceInput: ", choiceInput);
-    //noOfChoice = Math.min(selectors.readNoOfAns.value, selectedArray.length);
     noOfChoice = Math.min(choiceInput, selectedArray.length);
 
     for (let i = 1; i < noOfChoice; i++) {
       let randomIndex;
       let randomWord;
 
-      // [le3] Loop to ensure no duplicates are added 
-      do {
+      do { // [le3] Loop to ensure no duplicates are added 
         randomIndex = randomNo(0, selectedArray.length - 1);
         randomWord = selectedArray[randomIndex];
       } while (tempAnsArray.includes(randomWord));
@@ -200,7 +184,12 @@ function AnswerManager() {
 
     } else {
       if (sectionMessage.textContent !== 'Keep Trying') { // if worng message is not shown already.
-        buildNode({ parent: sectionMessage, child: 'div', content: 'Keep Trying', className: 'wrong-answer' });
+        buildNode({ 
+          parent: sectionMessage, 
+          child: 'div', 
+          content: 'Keep Trying', 
+          className: 'wrong-answer' 
+        });
       }
     }
   }
@@ -219,7 +208,7 @@ function AnswerManager() {
     }
   }
 
-  let rePractice = [];
+  //let rePractice = [];
 
   function practiceAgain() {
     const questionInstance = questionManager();

@@ -1,57 +1,34 @@
-/*
-const settingForm = document.querySelector("#settingsForm");
-const settingFlashYesNo = document.querySelector("#settings-flashYesNo");
-const qChoiceSelector = document.querySelector("#qChoiceInput");
-const aChoiceSelector = document.querySelector("#aChoiceInput");
-const fieldsetSyllable = document.querySelector("#fieldset-syllable");
-const aChoiceSelectorAll = document.querySelectorAll("[id^='aChoiceInput']");
-const aChoiceOptionAll = document.querySelector('select[id="aChoiceInput"]').options;
-const aDefaultChoice = document.querySelector('select[name="aChoiceInput"]').options[1];
-const readNoOfAns = document.querySelectorAll("[id^='noOfAnswers']");
-const submitBtn = document.querySelector("#submit-btn");
-const allSettingSelector = document.querySelectorAll("[id|='settings']");
-const bringBackBtn = document.querySelector("#bring-back-btn");
-*/
-
 defaultState();
 
-const loaderInstance = loader();
-
 function listeners() {
+  const loaderInstance = loader();
 
+  function generalListeners() {
+    // Event Listeners
+    selectors.settingForm.addEventListener('submit', loaderInstance.loadData); // [sn17]
+    selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
+    selectors.qChoice.addEventListener('change', dynamicAnswer);
+    selectors.settingFlashYesNo.addEventListener('change', flashmodeChanges);
+  }
+
+  function formAnimationListeners() {
+    // Wrap the moveForm function with debounce
+    const debouncedMoveForm = debounce(moveForm, 300); // 300ms delay
+
+    selectors.bringBackBtn.addEventListener('click', (event) => {
+      event.stopPropagation(); // Prevent event from bubbling up
+      debouncedMoveForm(event); // Pass the event to the debounced function
+    });
+  }
+
+  return {
+    generalListeners,
+    formAnimationListeners,
+  }
 }
 
-
-// Event Listeners
-selectors.settingForm.addEventListener('submit', loaderInstance.loadData); // [sn17]
-selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
-selectors.qChoice.addEventListener('change', dynamicAnswer);
-selectors.settingFlashYesNo.addEventListener('change', flashmodeChanges);
-
-
-
-// Wrap the moveForm function with debounce
-const debouncedMoveForm = debounce(moveForm, 300); // 300ms delay
-
-selectors.bringBackBtn.addEventListener('click', (event) => {
-  event.stopPropagation(); // Prevent event from bubbling up
-  debouncedMoveForm(event); // Pass the event to the debounced function
-});
-
-
 function loader() {
-  /*
-  let randomYesNo;
-  //let syllableChoice = [];
-  let qChoiceInput;
-  let aChoiceInput;
-  let flashYesNo;
-  let noOfAnswers;
-  */
-
-  function loadData(e) {
-    //let syllableChoice = [];
-  
+  function loadData(e) {  
     e.preventDefault(); // Prevent form from submitting the usual way
     moveForm();
   
@@ -72,19 +49,10 @@ function loader() {
       });
       return;
     }
-    
-    //qChoiceInput = document.querySelector('#qChoiceInput').value;
-    //aChoiceInput = document.querySelector('#aChoiceInput').value;
-    //qChoiceInput === ("hi" || "ka") ? assignLanguage(sectionQuestion, jpLang) : assignLanguage(sectionQuestion, enLang);
-    //aChoiceInput === ("hi" || "ka") ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
-  
-    //console.log("randomYesNo: ", randomYesNo, "| flashYesNo: ",flashYesNo, " | noOfAnswers: ",noOfAnswers, " | syllableChoice: ", syllableChoice, " | qChoiceInput: ", qChoiceInput, " | aChoiceInput: ", aChoiceInput);
 
     selectors.qChoice.value === "hi" || selectors.qChoice.value === "ka" 
     ? assignLanguage(sectionQuestion, jpLang) 
     : assignLanguage(sectionQuestion, enLang);
-
-    //aChoiceInput === ("hi" || "ka") ? assignLanguage(sectionAnswer, jpLang) : assignLanguage(sectionAnswer, enLang);
 
     selectors.aChoice.value === "hi" || selectors.qChoice.value === "ka" 
     ? assignLanguage(sectionAnswer, jpLang) 
@@ -129,9 +97,7 @@ function loader() {
         fetchOneCategory(appData.vocabArray, hiVocab, hi);
         fetchOneCategory(appData.vocabArray, enVocab, en);
   
-        // Call newQuestion();  after the data is loaded (sn1.MD)
-
-        questionManager().newQuestion(); 
+        questionManager().newQuestion(); // Call newQuestion();  after the data is loaded (sn1.MD)
       })
       .catch(error => console.error('Error loading vocab JSON files:', error));
   }
@@ -177,17 +143,14 @@ function syllableChanges(event) { // [le4]
 }
 
 function dynamicAnswer() {
-  // Get the user's question choice
-  //const qChoice = document.querySelector('#qChoiceInput').value;
-  console.log(qChoice);
-
   const ansMapping = { // [sn11]
     ka: { parent: aChoiceSelector, child: 'option', content: 'Kanji', childValues: 'ka', idName: 'a-ka'},
     hi: { parent: aChoiceSelector, child: 'option', content: 'Hiragana', childValues: 'hi', idName: 'a-hi'},
     en: { parent: aChoiceSelector, child: 'option', content: 'English', childValues:'en', idName: 'a-en'},
   };
 
-  clearNode({ parent: aChoiceSelector, children: Array.from(aChoiceOptionAll) }); // Array.from(aChoiceSelectorAll): Converts the NodeList (which is similar to an array but doesn't have all array methods) into a true array
+  clearNode({ parent: aChoiceSelector, children: Array.from(aChoiceOptionAll) }); 
+  // Array.from(aChoiceSelectorAll): Converts the NodeList (which is similar to an array but doesn't have all array methods) into a true array
 
   // Loop through the ansMapping object and call buildNode
   Object.entries(ansMapping).forEach(([key, params]) => { // [sn13]
@@ -199,13 +162,15 @@ function dynamicAnswer() {
 }
 
 function flashmodeChanges(e) {
-  //console.log(e.target.value);
   flipNodeState(...selectors.noOfAnsAll); 
 }
 
 function defaultState() {
+  const listenerInstance = listeners();
   flipNodeState(...selectors.noOfAnsAll); // [sn14]
   toggleClass('hide', selectors.bringBackBtn, sectionQuestion, sectionAnswer);
+  listenerInstance.generalListeners();
+  listenerInstance.formAnimationListeners();
 }
 
 // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
