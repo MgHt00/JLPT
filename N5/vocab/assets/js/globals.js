@@ -33,6 +33,7 @@ const appState = {
 const appData = {
   syllableChoice: [],
   vocabArray : [],
+  rePractice: [],
 };
 
 const selectors = {

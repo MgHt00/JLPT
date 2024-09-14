@@ -21,7 +21,11 @@ function questionManager() {
 
     //console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
 
-    buildNode({ parent: sectionQuestion, child: 'div', content: questionObj[appState.qChoiceInput] });
+    buildNode({ 
+      parent: sectionQuestion, 
+      child: 'div', 
+      content: questionObj[appState.qChoiceInput] 
+    });
     //AnswerManager().buildAnswers(questionObj);
     AnswerManager().buildAnswers();
   }
@@ -56,12 +60,9 @@ function questionManager() {
     return selectedQuestionObj;
   }
 
-  get readQuestionObj() {
-    return questionObj;
-  }
-
   return {
     newQuestion,
+    get readQuestionObj() {return questionObj;},
   }
 }
 
@@ -142,14 +143,38 @@ function AnswerManager() {
     });
 
     // Show correct answer
-    buildNode({ parent: sectionAnswer, child: 'div', content: appState.correctAns, className: 'answer-message', idName: 'answer-message' });
+    buildNode({ 
+      parent: sectionAnswer, 
+      child: 'div', 
+      content: appState.correctAns, 
+      className: 'answer-message', 
+      idName: 'answer-message' 
+    });
 
     // Show buttons
     if (appState.flashYesNo) { // if it is a flash card game
-      buildNode({ parent: sectionMessage, child: 'div', content: 'Did you get it right?', className: 'answer-message', idName: 'answer-message' });
-      buildNode({ parent: sectionAnswer, child: 'div', content: ['Yes', 'No'], className: 'answer-btn', idName: 'choice-btn', eventFunction: storeOrContinue });
+      buildNode({ 
+        parent: sectionMessage, 
+        child: 'div', 
+        content: 'Did you get it right?', 
+        className: 'answer-message', 
+        idName: 'answer-message' 
+      });
+      buildNode({ 
+        parent: sectionAnswer, 
+        child: 'div', 
+        content: ['Yes', 'No'], 
+        className: 'answer-btn', 
+        idName: 'choice-btn', 
+        eventFunction: storeOrContinue 
+      });
     } else {
-      buildNode({ parent: sectionAnswer, child: 'div', content: 'Next', className: 'answer-message', idName: 'next-btn' });
+      buildNode({ 
+        parent: sectionAnswer, 
+        child: 'div', 
+        content: 'Next', 
+        className: 'answer-message', 
+        idName: 'next-btn' });
     }
   }
 
@@ -158,8 +183,20 @@ function AnswerManager() {
     if (appState.correctAns === btnText) {
       clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
 
-      buildNode({ parent: sectionAnswer, child: 'div', content: 'Correct!', className: 'answer-message', idName: 'answer-message' });
-      buildNode({ parent: sectionAnswer, child: 'div', content: 'Next', className: 'answer-btn', idName: 'choice-btn', eventFunction: questionManager().newQuestion });
+      buildNode({ 
+        parent: sectionAnswer, 
+        child: 'div', 
+        content: 'Correct!', 
+        className: 'answer-message', 
+        idName: 'answer-message' 
+      });
+      buildNode({ parent: sectionAnswer, 
+        child: 'div', 
+        content: 'Next', 
+        className: 'answer-btn', 
+        idName: 'choice-btn', 
+        eventFunction: questionManager().newQuestion 
+      });
 
     } else {
       if (sectionMessage.textContent !== 'Keep Trying') { // if worng message is not shown already.
@@ -170,20 +207,24 @@ function AnswerManager() {
 
   function storeOrContinue(event) { // sn4
     const btnID = event.currentTarget.id;
+    const questionInstance = questionManager();
+
     if (btnID === "choice-btn-0") {
-      newQuestion();
+      questionInstance.newQuestion();
     } else if (btnID === "choice-btn-1") {
-      storeToPractice(questionObj);
-      practiceAgain(questionObj);
-      questionManager().newQuestion();
+      
+      storeToPractice(questionInstance);
+      //practiceAgain(questionInstance);
+      questionInstance.newQuestion();
     }
   }
 
   let rePractice = [];
 
   function practiceAgain() {
-    console.log("Inside showQuestionAgain(); questionObj: ", questionObj);
-    rePractice.push(questionObj);
+    const questionInstance = questionManager();
+    console.log("Inside showQuestionAgain(); questionObj: ", questionInstance.readQuestionObj);
+    rePractice.push(questionInstance.readQuestionObj);
   }
 
   return {
