@@ -13,7 +13,7 @@ function questionManager() {
   function newQuestion() {
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
 
-    if (appData.vocabArray.length >= 1) {
+    if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
       questionObj = prepareQuestion();
       appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
       //console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
@@ -30,6 +30,15 @@ function questionManager() {
         child: 'div', 
         content: 'You have completed all the vocabs.  Well done!', 
         className: 'vocabs-complete', 
+      });
+
+      buildNode({ 
+        parent: sectionAnswer, 
+        child: 'div', 
+        content: 'Lets Restart!', 
+        className: 'answer-btn', 
+        idName: 'answer-btn', 
+        eventFunction: listeners().debouncedMoveForm,
       });
     }
   }

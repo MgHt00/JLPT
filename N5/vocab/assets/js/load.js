@@ -2,6 +2,8 @@ defaultState();
 
 function listeners() {
   const loaderInstance = loader();
+  // Wrap the moveForm function with debounce
+  const debouncedMoveForm = debounce(moveForm, 300); // 300ms delay
 
   function generalListeners() {
     // Event Listeners
@@ -12,9 +14,6 @@ function listeners() {
   }
 
   function formAnimationListeners() {
-    // Wrap the moveForm function with debounce
-    const debouncedMoveForm = debounce(moveForm, 300); // 300ms delay
-
     selectors.bringBackBtn.addEventListener('click', (event) => {
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
@@ -24,6 +23,7 @@ function listeners() {
   return {
     generalListeners,
     formAnimationListeners,
+    debouncedMoveForm,
   }
 }
 
@@ -179,31 +179,31 @@ function defaultState() {
   listenerInstance.formAnimationListeners();
 }
 
-// The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
-function debounce(func, delay) {
-  let timeoutId;
-  return function(event, ...args) {
-    clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-      func.apply(this, [event, ...args]);
-    }, delay);
-  };
-}
+  // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
+  function debounce(func, delay) {
+    let timeoutId;
+    return function (event, ...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, [event, ...args]);
+      }, delay);
+    };
+  }
 
-let isMoving = false; // Flag to prevent multiple movements
+  let isMoving = false; // Flag to prevent multiple movements
 
-function moveForm() {
-  if (isMoving) return; // If the form is already moving, exit the function
+  function moveForm() {
+    if (isMoving) return; // If the form is already moving, exit the function
 
-  // Set the flag to prevent further calls
-  isMoving = true;
+    // Set the flag to prevent further calls
+    isMoving = true;
 
-  toggleClass('moved', selectors.settingForm);
-  toggleClass('dim', ...selectors.allSetting);
-  toggleClass('hide', sectionQuestion, sectionAnswer, selectors.submitBtn, selectors.bringBackBtn);
+    toggleClass('moved', selectors.settingForm);
+    toggleClass('dim', ...selectors.allSetting);
+    toggleClass('hide', sectionQuestion, sectionAnswer, selectors.submitBtn, selectors.bringBackBtn);
 
-  // Add an event listener for the transition end to reset the flag
-  selectors.settingForm.addEventListener('transitionend', () => {
-    isMoving = false; // Allow future movement after the transition completes
-  }, { once: true }); // Ensure the event listener is called only once per transition
-}
+    // Add an event listener for the transition end to reset the flag
+    selectors.settingForm.addEventListener('transitionend', () => {
+      isMoving = false; // Allow future movement after the transition completes
+    }, { once: true }); // Ensure the event listener is called only once per transition
+  }
