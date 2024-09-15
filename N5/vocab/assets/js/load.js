@@ -30,7 +30,7 @@ function listeners() {
 function loader() {
   function loadData(e) {  
     e.preventDefault(); // Prevent form from submitting the usual way
-    moveForm();
+    
   
     // Convert the string values "true"/"false" to boolean values [sn16]
     appState.randomYesNo = selectors.readRandomYesNo === 'true';
@@ -40,15 +40,20 @@ function loader() {
     appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
   
     if (appData.syllableChoice.length === 0) {
-      buildNode({
-        parent: fieldsetSyllable, 
-        child: 'div', 
-        content: 'Select at least one syllables', 
-        className: 'setting-error', 
-        idName: 'syllable-error',
-      });
+      // whether error msg is already been displayed.
+      if (!(document.querySelector("[id|='syllable-error']"))) {
+        buildNode({
+          parent: selectors.fieldsetSyllable, 
+          child: 'div', 
+          content: 'Select at least one syllables', 
+          className: 'setting-error', 
+          idName: 'syllable-error',
+        });
+      }
       return;
     }
+
+    moveForm();
 
     selectors.qChoice.value === "hi" || selectors.qChoice.value === "ka" 
     ? assignLanguage(sectionQuestion, jpLang) 
