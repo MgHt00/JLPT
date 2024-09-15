@@ -1,3 +1,4 @@
+/*
 function storeToPractice(objToStore) { // [sn5]
   let incorrectAnswers = JSON.parse(localStorage.getItem("toPractice")) || [];
 
@@ -11,6 +12,25 @@ function storeToPractice(objToStore) { // [sn5]
   // If it doesn't exist, add it to the array
   if (!exists) {
     incorrectAnswers.push(objToStore);
+    localStorage.setItem("toPractice", JSON.stringify(incorrectAnswers));
+    //temp
+    loadIncorrectAnswers();
+  }
+}
+*/
+function storeToPractice(questionInstance) { // [sn5]
+  let incorrectAnswers = JSON.parse(localStorage.getItem("toPractice")) || [];
+
+  // [sn6] Check if the object already exists in the array
+  let exists = incorrectAnswers.some(answer =>
+    answer.ka === questionInstance.readQuestionObj.ka &&
+    answer.hi === questionInstance.readQuestionObj.hi &&
+    answer.en === questionInstance.readQuestionObj.en
+  );
+
+  // If it doesn't exist, add it to the array
+  if (!exists) {
+    incorrectAnswers.push(questionInstance.readQuestionObj);
     localStorage.setItem("toPractice", JSON.stringify(incorrectAnswers));
     //temp
     loadIncorrectAnswers();
