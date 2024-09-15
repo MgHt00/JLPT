@@ -13,6 +13,65 @@ function listeners() {
     selectors.settingFlashYesNo.addEventListener('change', flashmodeChanges);
   }
 
+  function syllableChanges(event) { // [le4]
+    const allCheckbox = document.getElementById('syllableAll');
+    const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
+      .filter(checkbox => checkbox !== allCheckbox);
+
+    if (checkNode({ idName: 'syllable-error' })) {
+      clearNode({
+        parent: selectors.fieldsetSyllable,
+        children: Array.from(document.querySelectorAll('div[id^="syllable-error"]'))
+      });
+    }
+
+    if (event.target === allCheckbox) {
+      if (allCheckbox.checked) {
+        otherCheckboxes.forEach(checkbox => {
+          checkbox.disabled = true;
+          checkbox.checked = false; // Uncheck the others if "All" is checked
+        });
+      } else {
+        otherCheckboxes.forEach(checkbox => checkbox.disabled = false);
+      }
+    } else {
+      if (event.target.checked) { //[sn8]
+        allCheckbox.disabled = true;
+        allCheckbox.checked = false; // Uncheck "All" if any other is checked
+      } else {
+        const anyChecked = otherCheckboxes.some(checkbox => checkbox.checked);
+        if (!anyChecked) {
+          allCheckbox.disabled = false;
+          allCheckbox.checked = true; // check "All" if nothing is checked
+        }
+      }
+    }
+  }
+
+  function flashmodeChanges(e) {
+    flipNodeState(...selectors.noOfAnsAll); 
+  }
+    
+  function dynamicAnswer() {
+    const ansMapping = { // [sn11]
+      ka: { parent: selectors.aChoice, child: 'option', content: 'Kanji', childValues: 'ka', idName: 'a-ka'},
+      hi: { parent: selectors.aChoice, child: 'option', content: 'Hiragana', childValues: 'hi', idName: 'a-hi'},
+      en: { parent: selectors.aChoice, child: 'option', content: 'English', childValues:'en', idName: 'a-en'},
+    };
+  
+    clearNode({ parent: selectors.aChoice, children: Array.from(selectors.aChoiceOptionAll) }); 
+    // Array.from(aChoiceSelectorAll): Converts the NodeList (which is similar to an array but doesn't have all array methods) into a true array
+  
+    // Loop through the ansMapping object and call buildNode
+    Object.entries(ansMapping).forEach(([key, params]) => { // [sn13]
+      // Exclude the option if it matches the user's question choice
+      if (key !== selectors.qChoice.value) {
+        buildNode(params);
+      }
+    });
+  }
+  
+
   function formAnimationListeners() {
     selectors.bringBackBtn.addEventListener('click', (event) => {
       event.stopPropagation(); // Prevent event from bubbling up
@@ -20,8 +79,39 @@ function listeners() {
     });
   }
 
+  // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
+  function debounce(func, delay) {
+    let timeoutId;
+    return function (event, ...args) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, [event, ...args]);
+      }, delay);
+    };
+  }
+
+  let isMoving = false; // Flag to prevent multiple movements
+
+  function moveForm() {
+    if (isMoving) return; // If the form is already moving, exit the function
+
+    // Set the flag to prevent further calls
+    isMoving = true;
+
+    clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
+    toggleClass('moved', selectors.settingForm);
+    toggleClass('dim', ...selectors.allSetting);
+    toggleClass('hide', sectionQuestion, sectionAnswer, selectors.submitBtn, selectors.bringBackBtn);
+
+    // Add an event listener for the transition end to reset the flag
+    selectors.settingForm.addEventListener('transitionend', () => {
+      isMoving = false; // Allow future movement after the transition completes
+    }, { once: true }); // Ensure the event listener is called only once per transition
+  }
+
   return {
     generalListeners,
+    moveForm,
     formAnimationListeners,
     debouncedMoveForm,
   }
@@ -53,7 +143,7 @@ function loader() {
       return;
     }
 
-    moveForm();
+    listeners().moveForm();
 
     selectors.qChoice.value === "hi" || selectors.qChoice.value === "ka" 
     ? assignLanguage(sectionQuestion, jpLang) 
@@ -113,64 +203,6 @@ function loader() {
   }
 }
 
-function syllableChanges(event) { // [le4]
-  const allCheckbox = document.getElementById('syllableAll');
-  const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
-                               .filter(checkbox => checkbox !== allCheckbox);
-
-    if (checkNode({ idName: 'syllable-error' })) {
-      clearNode({
-        parent: fieldsetSyllable, 
-        children: Array.from(document.querySelectorAll('div[id^="syllable-error"]'))
-      });
-    }
-
-  if (event.target === allCheckbox) {
-    if (allCheckbox.checked) {
-        otherCheckboxes.forEach(checkbox => {
-            checkbox.disabled = true;
-            checkbox.checked = false; // Uncheck the others if "All" is checked
-        });
-    } else {
-        otherCheckboxes.forEach(checkbox => checkbox.disabled = false);
-    }
-} else {
-    if (event.target.checked) { //[sn8]
-        allCheckbox.disabled = true;
-        allCheckbox.checked = false; // Uncheck "All" if any other is checked
-    } else {
-        const anyChecked = otherCheckboxes.some(checkbox => checkbox.checked);
-        if (!anyChecked) {
-            allCheckbox.disabled = false;
-            allCheckbox.checked = true; // check "All" if nothing is checked
-        }
-    }
-}
-}
-
-function dynamicAnswer() {
-  const ansMapping = { // [sn11]
-    ka: { parent: aChoiceSelector, child: 'option', content: 'Kanji', childValues: 'ka', idName: 'a-ka'},
-    hi: { parent: aChoiceSelector, child: 'option', content: 'Hiragana', childValues: 'hi', idName: 'a-hi'},
-    en: { parent: aChoiceSelector, child: 'option', content: 'English', childValues:'en', idName: 'a-en'},
-  };
-
-  clearNode({ parent: aChoiceSelector, children: Array.from(aChoiceOptionAll) }); 
-  // Array.from(aChoiceSelectorAll): Converts the NodeList (which is similar to an array but doesn't have all array methods) into a true array
-
-  // Loop through the ansMapping object and call buildNode
-  Object.entries(ansMapping).forEach(([key, params]) => { // [sn13]
-    // Exclude the option if it matches the user's question choice
-    if (key !== selectors.qChoice.value) {
-      buildNode(params);
-    }
-  });
-}
-
-function flashmodeChanges(e) {
-  flipNodeState(...selectors.noOfAnsAll); 
-}
-
 function defaultState() {
   const listenerInstance = listeners();
   flipNodeState(...selectors.noOfAnsAll); // [sn14]
@@ -178,32 +210,3 @@ function defaultState() {
   listenerInstance.generalListeners();
   listenerInstance.formAnimationListeners();
 }
-
-  // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
-  function debounce(func, delay) {
-    let timeoutId;
-    return function (event, ...args) {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func.apply(this, [event, ...args]);
-      }, delay);
-    };
-  }
-
-  let isMoving = false; // Flag to prevent multiple movements
-
-  function moveForm() {
-    if (isMoving) return; // If the form is already moving, exit the function
-
-    // Set the flag to prevent further calls
-    isMoving = true;
-
-    toggleClass('moved', selectors.settingForm);
-    toggleClass('dim', ...selectors.allSetting);
-    toggleClass('hide', sectionQuestion, sectionAnswer, selectors.submitBtn, selectors.bringBackBtn);
-
-    // Add an event listener for the transition end to reset the flag
-    selectors.settingForm.addEventListener('transitionend', () => {
-      isMoving = false; // Allow future movement after the transition completes
-    }, { once: true }); // Ensure the event listener is called only once per transition
-  }

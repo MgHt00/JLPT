@@ -3,14 +3,6 @@ function assignLanguage(sectionBlock, lang) {
   sectionBlock.classList.add(lang);
 }
 
-/*
-function displayContent(sectionBlock, content) {
-  let divBlock = document.createElement("div");
-  divBlock.textContent = content;
-  sectionBlock.appendChild(divBlock);
-}
-*/
-
 function randomNo(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -86,35 +78,6 @@ function checkNode({idName}) {
   return document.querySelectorAll(`[id^=${idName}]`).length > 0;
 }
 
-/*
-function buildNode(parent, child, content, className, idName, eventFunction) { // [sn2]
-  // Ensure className is always treated as an array
-  className = Array.isArray(className) ? className : className.split(' ');
-
-  // Ensure content is always treated as an array
-  content = Array.isArray(content) ? content : [content];
-
-  content.forEach((contentItem, contentIndex) => {
-    let newChild = document.createElement(child);
-    newChild.textContent = contentItem;
-
-    // Add all classes from className array
-    className.forEach(classItem => {
-      newChild.classList.add(classItem);
-    });
-
-    // Add an ID by combining `idName` and content's index
-    newChild.id = `${idName}-${contentIndex}`;
-
-    // And an event listern (if any)
-    if (eventFunction){
-      newChild.addEventListener("click", eventFunction);
-    }
-    parent.appendChild(newChild);
-  });
-}
-*/
-
 function flipNodeState(...nodes) { //[sn10]
   // Iterate over the nodes and toggle the disabled state
   nodes.forEach(node => {
@@ -124,7 +87,6 @@ function flipNodeState(...nodes) { //[sn10]
     }
   });
 }
-
 
 function toggleClass(className = "", ...nodes) { // [sn15]
   if(!className.trim()) return; // Prevent adding an empty or whitespace-only class
