@@ -8,21 +8,30 @@ function fetchOneCategory(source, target, catName) {
 
 function questionManager() {
   let questionObj = {};
-  let ansArray = [];
   let qNo = 0;
 
   function newQuestion() {
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
-    questionObj = prepareQuestion();
-    appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
-    //console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
 
-    buildNode({ 
-      parent: sectionQuestion, 
-      child: 'div', 
-      content: questionObj[appState.qChoiceInput] 
-    });
-    AnswerManager().buildAnswers();
+    if (appData.vocabArray.length >= 1) {
+      questionObj = prepareQuestion();
+      appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
+      //console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
+  
+      buildNode({ 
+        parent: sectionQuestion, 
+        child: 'div', 
+        content: questionObj[appState.qChoiceInput] 
+      });
+      AnswerManager().buildAnswers();  
+    } else {
+      buildNode({ 
+        parent: sectionMessage, 
+        child: 'div', 
+        content: 'You have completed all the vocabs.  Well done!', 
+        className: 'vocabs-complete', 
+      });
+    }
   }
 
   function prepareQuestion() {
@@ -31,6 +40,7 @@ function questionManager() {
 
     if (appState.randomYesNo) {
       selectedQuestionObj = appData.vocabArray[i];
+      vocabManager().removeQuestion(i); // remove shown quesion from vocabArray
     }
     else {
       selectedQuestionObj = appData.vocabArray[qNo];
@@ -38,6 +48,7 @@ function questionManager() {
     }
     return selectedQuestionObj;
   }
+
 
   return {
     newQuestion,
@@ -218,8 +229,22 @@ function AnswerManager() {
 
   return {
     buildAnswers,
-    showAnswer,
-    multipleChoice,
-    storeOrContinue,
+  }
+}
+
+function vocabManager() {
+
+  function removeQuestion(i) {
+  if(appData.vocabArray.length >= 1) {
+    appData.vocabArray.splice(i,1);
+    console.log(`currentQIndex ${i} is removed. vocabArray.length: ${appData.vocabArray.length}`);  
+  } else {
+    console.log(`vocabArray.length: ${appData.vocabArray.length}; reach the end.`);  
+  }
+}
+
+  return {
+    removeQuestion,
+    get readQuestionIndex() {return currentQIndex;},
   }
 }

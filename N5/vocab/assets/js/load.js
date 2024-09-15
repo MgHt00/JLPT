@@ -97,7 +97,8 @@ function loader() {
     Promise.all(promises)
       .then(results => {
         appData.vocabArray = results.flat(); // Combine all arrays into one
-        console.log("Inside prepareJSON(), vocabArray: ", appData.vocabArray); // Now this should show the full combined array
+        //console.log("Inside prepareJSON(), vocabArray: ", appData.vocabArray); // this should show the full combined array
+        console.log("Inside prepareJSON(), vocabArray.length: ", appData.vocabArray.length); // Now this should show the full combined array
         fetchOneCategory(appData.vocabArray, kaVocab, ka); // le2
         fetchOneCategory(appData.vocabArray, hiVocab, hi);
         fetchOneCategory(appData.vocabArray, enVocab, en);
