@@ -21,18 +21,18 @@
 
     <!-- Flash Card Yes/No -->
     <div id="settings-flashYesNo">
-      <label for="flashYesNo">Flashcard Mode:</label><br>
+      <label for="flashYesNo">Mode:</label><br>
 
       <input type="radio" id="flashYes" name="flashYesNo" value="true" checked>
-      <label for="flashYes">Yes</label>
+      <label for="flashYes">Flashcard</label>
 
       <input type="radio" id="flashNo" name="flashYesNo" value="false">
-      <label for="flashNo">No</label><br>
+      <label for="flashNo">Multiple Choice</label><br>
     </div>
 
     <!-- Number of Answers -->
     <div id="settings-noOfAnswers">
-      <label for="noOfAnswers" id="noOfAnswers-label">Number of Answers:</label>
+      <label for="noOfAnswers" id="noOfAnswers-label">Number of Answers:</label><br>
 
       <input type="radio" id="noOfAnswers-2" value="2" name="noOfAnswers">
       <label for="noOfAnswers-2" id="noOfAnswers-label-2">2</label>
@@ -44,11 +44,22 @@
       <label for="noOfAnswers-2" id="noOfAnswers-label-4">4</label>
     </div>
 
+    <!-- Practice Source -->
+    <div id="settings-source">
+      <label for="source" id="source-label">Practice from:</label><br>
+
+      <input type="radio" id="source-fresh" value="fresh" name="source">
+      <label for="source-fresh" id="source-label-fresh">Fresh Start</label>
+
+      <input type="radio" id="source-storage" value="storage" name="source">
+      <label for="source-storage" id="source-label-storage">Stored Memory</label>
+    </div>
+
     <!-- Syllable Choice Checkboxes -->
     <div id="settings-syllableChoice">
     <fieldset id="fieldset-syllable">
-      <legend>Choose Syllables:</legend>
-      <input type="checkbox" id="syllableAll" name="syllableChoice" value="all" checked class="dummy-1 dummy-2">
+      <legend>Practice Syllables:</legend>
+      <input type="checkbox" id="syllableAll" name="syllableChoice" value="all">
       <label for="syllableA">All</label><br>
       <input type="checkbox" id="syllableA" name="syllableChoice" value="a">
       <label for="syllableA">A</label><br>
@@ -57,6 +68,17 @@
       <!-- Add more syllables as needed -->
     </fieldset>
     </div>
+
+    <!-- Repractice Checkboxes -->
+    <div id="settings-repractice">
+      <fieldset id="fieldset-repractice">
+        <legend>Memory Status:</legend>
+        You have
+        <input type="checkbox" id="repracticeAll" name="repracticeAll" value="all">
+        <label for="repracticeAll">All</label><br>
+        <!-- Add more syllables as needed -->
+      </fieldset>
+      </div>
   
     <!-- Question Choice Input -->
     <div id="settings-qChoiceInput">
