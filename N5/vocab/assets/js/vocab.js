@@ -222,7 +222,7 @@ function AnswerManager() {
       questionInstance.newQuestion();
     } else if (btnID === "choice-btn-1") {
       
-      storeToPractice(questionInstance);
+      vocabManager().storeToPractice(questionInstance);
       //practiceAgain(questionInstance);
       questionInstance.newQuestion();
     }
@@ -242,18 +242,63 @@ function AnswerManager() {
 }
 
 function vocabManager() {
-
+  
   function removeQuestion(i) {
-  if(appData.vocabArray.length >= 1) {
-    appData.vocabArray.splice(i,1);
-    console.log(`currentQIndex ${i} is removed. vocabArray.length: ${appData.vocabArray.length}`);  
-  } else {
-    console.log(`vocabArray.length: ${appData.vocabArray.length}; reach the end.`);  
+    if (appData.vocabArray.length >= 1) {
+      appData.vocabArray.splice(i, 1);
+      console.log(`currentQIndex ${i} is removed. vocabArray.length: ${appData.vocabArray.length}`);
+    } else {
+      console.log(`vocabArray.length: ${appData.vocabArray.length}; reach the end.`);
+    }
   }
-}
+
+  function storeToPractice(questionInstance) { // [sn5]
+    let incorrectSets = loadLocalStorage();
+  
+    // [sn6] Check if the object already exists in the array
+    let exists = incorrectSets.some(answer =>
+      answer.ka === questionInstance.readQuestionObj.ka &&
+      answer.hi === questionInstance.readQuestionObj.hi &&
+      answer.en === questionInstance.readQuestionObj.en
+    );
+  
+    // If it doesn't exist, add it to the array
+    if (!exists) {
+      incorrectSets.push(questionInstance.readQuestionObj);
+      localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
+      //temp
+      //loadIncorrectAnswers();
+    }
+  }
+  
+  function loadLocalStorage() {
+    let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
+    storedLength = storedObjects.length;
+    return storedObjects;
+  }
+  
+  function clearIncorrectAnswers() {
+    //localStorage.removeItem("toPractice");
+    console.log("Yes, we are in.");
+    clearNode({
+      parent: selectors.memoryInfo,
+      children: selectors.readMemoryInfoDOMs,
+    });
+    console.log("ready to restructure");
+    loader().loadMemoryData();
+    console.log("resturcture finished");
+  }
 
   return {
     removeQuestion,
-    get readQuestionIndex() {return currentQIndex;},
+    storeToPractice,
+    clearIncorrectAnswers,
+    loadLocalStorage,
+    get readStoredLength() { 
+      let storedLength = loadLocalStorage();
+      return storedLength.length;
+    },
+    //clearIncorrectAnswers,
+    //get readQuestionIndex() { return currentQIndex; },
   }
 }

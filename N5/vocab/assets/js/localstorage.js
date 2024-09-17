@@ -24,5 +24,6 @@ function loadIncorrectAnswers() {
 }
 
 function clearIncorrectAnswers() {
-  localStorage.removeItem("toPractice");
+  //localStorage.removeItem("toPractice");
+  console.log("Yes, we are in.");
 }

@@ -36,6 +36,7 @@ const selectors = {
   qChoice : document.querySelector("#qChoiceInput"),
   aChoice : document.querySelector("#aChoiceInput"),
   fieldsetSyllable : document.querySelector("#fieldset-syllable"),
+  memoryInfo : document.querySelector("#memory-info"),
   aChoiceSelectorAll : document.querySelectorAll("[id^='aChoiceInput']"),
   aChoiceOptionAll : document.querySelector('select[id="aChoiceInput"]').options,
   aDefaultChoice : document.querySelector('select[name="aChoiceInput"]').options[1],
@@ -57,6 +58,10 @@ const selectors = {
   get readFlashYesNo() {
     return document.querySelector('input[name="flashYesNo"]:checked').value;
   },
+
+  get readMemoryInfoDOMs() {
+    return [document.querySelector("#memory-info-0"), document.querySelector("#flush-memory-btn-0")];
+  }
 };
 
 //let qNo = 0;

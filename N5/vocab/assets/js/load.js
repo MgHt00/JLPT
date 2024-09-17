@@ -211,8 +211,50 @@ function loader() {
 
   function loadMemoryData () {
     let storedLength = vocabManager().readStoredLength;
-    console.log(`Enters loadMemoryData: ${storedLength}`);
-    selectors.memoryInfo.textContent = `${storedLength} word(s) in memory.`
+    if (storedLength === 0) {
+      buildNode({
+        parent: selectors.memoryInfo,
+        child: 'div',
+        content: 'Memory is empty, wrongly chosen vocabs will be in the memory for later use.',
+        className: 'memory-info',
+        idName
+      });
+    } else if (storedLength === 1) {
+      buildNode({
+        parent: selectors.memoryInfo,
+        child: 'div',
+        content: `There is ${storedLength} word to repractice.`,
+        className: 'memory-info',
+        idName: 'memory-info',
+      });
+
+      buildNode({
+        parent: selectors.memoryInfo,
+        child: 'div',
+        content: `Flush Memory`,
+        className: 'flush-memory-btn',
+        idName: 'flush-memory-btn',
+        eventFunction: vocabManager().clearIncorrectAnswers,
+      });
+    } else {
+      buildNode({
+        parent: selectors.memoryInfo,
+        child: 'div',
+        content: `There are ${storedLength} words to repractice.`,
+        className: 'memory-info',
+        idName: 'memory-info',
+      });
+
+      buildNode({
+        parent: selectors.memoryInfo,
+        child: 'div',
+        content: `Flush Memory`,
+        className: 'flush-memory-btn',
+        idName: 'flush-memory-btn',
+        eventFunction: vocabManager().clearIncorrectAnswers,
+      });
+    }
+    
   }
 
   return {

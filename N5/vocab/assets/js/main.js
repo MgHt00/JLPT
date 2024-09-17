@@ -11,17 +11,6 @@ function log(variable, label) {
   label ? console.log(`${label}: ${variable}`) : console.log(`${variable}`);
 }
 
-function clearScreen(elements) {
-  // Ensure `elements` is treated as an array
-  elements = Array.isArray(elements) ? elements : [elements];
-
-  elements.forEach(element => {
-    if (element) {
-      element.innerHTML = ""; // Clear the content of the element
-    }
-  });
-}
-
 function buildNode({parent, child, content, childValues = [], className = "", idName = "", eventFunction = "" }) {
   // Ensure className is always treated as an array
   className = Array.isArray(className) ? className : className.split(' ').filter(c => c.trim() !== ''); // 1) split with ' '; 2) remove excess spaces; 3) store if only it is not empty.
@@ -62,7 +51,18 @@ function buildNode({parent, child, content, childValues = [], className = "", id
   }); 
 }
 
-function clearNode({ parent, children = [] }) {
+function clearScreen(elements) { // to remove the content of a node
+  // Ensure `elements` is treated as an array
+  elements = Array.isArray(elements) ? elements : [elements];
+
+  elements.forEach(element => {
+    if (element) {
+      element.innerHTML = ""; // Clear the content of the element
+    }
+  });
+}
+
+function clearNode({ parent, children = [] }) { // to move the entire node
   if (children.length > 0) {
     children.forEach(child => {
       if (parent.contains(child)) { // Ensure the child exists within the parent before removing
