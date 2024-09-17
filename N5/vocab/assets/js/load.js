@@ -1,4 +1,15 @@
-defaultState();
+//defaultState();
+(function defaultState() {
+  const loaderInstance = loader();
+  const listenerInstance = listeners();
+
+  loaderInstance.loadMemoryData();
+  
+  flipNodeState(...selectors.noOfAnsAll); // [sn14]
+  toggleClass('hide', selectors.bringBackBtn, sectionQuestion, sectionAnswer);
+  listenerInstance.generalListeners();
+  listenerInstance.formAnimationListeners();
+})();
 
 function listeners() {
   const loaderInstance = loader();
@@ -198,15 +209,14 @@ function loader() {
       .catch(error => console.error('Error loading vocab JSON files:', error));
   }
 
+  function loadMemoryData () {
+    let storedLength = vocabManager().readStoredLength;
+    console.log(`Enters loadMemoryData: ${storedLength}`);
+    selectors.memoryInfo.textContent = `${storedLength} word(s) in memory.`
+  }
+
   return {
     loadData,
+    loadMemoryData,
   }
-}
-
-function defaultState() {
-  const listenerInstance = listeners();
-  flipNodeState(...selectors.noOfAnsAll); // [sn14]
-  toggleClass('hide', selectors.bringBackBtn, sectionQuestion, sectionAnswer);
-  listenerInstance.generalListeners();
-  listenerInstance.formAnimationListeners();
 }
