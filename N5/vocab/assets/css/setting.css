@@ -4,6 +4,7 @@
 
 .disabled {
   opacity: 0.3;
+  pointer-events: none;
 }
 
 .setting-error {
@@ -20,9 +21,9 @@
   transition: transform 0.5s ease; /* Add transition duration */
 }
 
-.hide {
+/*.hide {
   display: none;
-}
+}*/
 
 .dim {
   opacity: 0.3;

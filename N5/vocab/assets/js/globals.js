@@ -2,6 +2,7 @@ const body = document.querySelector("#section-body");
 const sectionQuestion = document.querySelector("#section-question");
 const sectionMessage = document.querySelector("#section-message");
 const sectionAnswer = document.querySelector("#section-answer");
+const sectionTest = document.querySelector("#test-section");
 
 let ka = "ka";
 let hi = "hi";
@@ -20,6 +21,7 @@ const appState = {
   qChoiceInput: "hi",
   aChoiceInput: "en",
   flashYesNo: true,
+  qMode: "fresh",
   noOfAnswers: 4,
   correctAns: "",
 };
@@ -33,9 +35,12 @@ const appData = {
 const selectors = {
   settingForm : document.querySelector("#settingsForm"),
   settingFlashYesNo : document.querySelector("#settings-flashYesNo"),
+  settingSource: document.querySelector("#settings-source"),
   qChoice : document.querySelector("#qChoiceInput"),
   aChoice : document.querySelector("#aChoiceInput"),
   fieldsetSyllable : document.querySelector("#fieldset-syllable"),
+  settingSyllable : document.querySelector("#settings-syllableChoice"),
+  settingRepractice: document.querySelector("#settings-repractice"),
   memoryInfo : document.querySelector("#memory-info"),
   aChoiceSelectorAll : document.querySelectorAll("[id^='aChoiceInput']"),
   aChoiceOptionAll : document.querySelector('select[id="aChoiceInput"]').options,
@@ -59,9 +64,13 @@ const selectors = {
     return document.querySelector('input[name="flashYesNo"]:checked').value;
   },
 
+  get readQuestionMode() {
+    return document.querySelector('input[name="source"]:checked').value;
+  },
+
   get readMemoryInfoDOMs() {
     return [document.querySelector("#memory-info-0"), document.querySelector("#flush-memory-btn-0")];
-  }
+  },
 };
 
 //let qNo = 0;

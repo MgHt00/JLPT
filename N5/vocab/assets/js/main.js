@@ -12,6 +12,7 @@ function log(variable, label) {
 }
 
 function buildNode({parent, child, content, childValues = [], className = "", idName = "", eventFunction = "" }) {
+  //console.log("Entering buildNode()");
   // Ensure className is always treated as an array
   className = Array.isArray(className) ? className : className.split(' ').filter(c => c.trim() !== ''); // 1) split with ' '; 2) remove excess spaces; 3) store if only it is not empty.
 
@@ -48,7 +49,11 @@ function buildNode({parent, child, content, childValues = [], className = "", id
     if (parent instanceof HTMLElement) {
       parent.appendChild(newChild);
     }
+
+    //console.log("Appending to parent:", parent);
+    //console.log("New child created:", newChild);
   }); 
+  //console.log("Exiting buildNode()");
 }
 
 function clearScreen(elements) { // to remove the content of a node
@@ -94,6 +99,16 @@ function toggleClass(className = "", ...nodes) { // [sn15]
   nodes.forEach(node => {
     if (node instanceof HTMLElement) {
       node.classList.toggle(className); // Toggle the class
+    }
+  });
+}
+
+function removeClass(className = "", ...nodes) {
+  if(!className.trim()) return; // Prevent adding an empty or whitespace-only class
+
+  nodes.forEach(node => {
+    if (node instanceof HTMLElement) {
+      node.classList.remove(className); // remove the class
     }
   });
 }

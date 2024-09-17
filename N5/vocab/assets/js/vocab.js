@@ -16,13 +16,27 @@ function questionManager() {
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
       questionObj = prepareQuestion();
       appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
-      //console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
-  
+      console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
+      /*
       buildNode({ 
         parent: sectionQuestion, 
         child: 'div', 
-        content: questionObj[appState.qChoiceInput] 
+        content: questionObj[appState.qChoiceInput],
       });
+      */
+      console.log(sectionQuestion);
+      console.log(window.getComputedStyle(sectionQuestion).display);
+      console.log(window.getComputedStyle(sectionQuestion).visibility);
+      console.log(window.getComputedStyle(sectionQuestion).height);
+      console.log(window.getComputedStyle(sectionQuestion).width);
+      sectionQuestion.style.display = 'block';
+      sectionQuestion.style.visibility = 'visible';
+
+      sectionQuestion.textContent = "Test Content"; // simple test
+
+
+      console.log("questionObj[appState.qChoiceInput]: ", questionObj[appState.qChoiceInput]);
+      //sectionQuestion.textContent = questionObj[appState.qChoiceInput];
       AnswerManager().buildAnswers();  
     } else {
       buildNode({ 
@@ -53,7 +67,7 @@ function questionManager() {
     }
     else {
       selectedQuestionObj = appData.vocabArray[qNo];
-      qNo++;
+      qNo++; // need to fix this.
     }
     return selectedQuestionObj;
   }
@@ -274,11 +288,12 @@ function vocabManager() {
   function loadLocalStorage() {
     let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
     storedLength = storedObjects.length;
+    //console.log(storedObjects);
     return storedObjects;
   }
   
   function clearIncorrectAnswers() {
-    //localStorage.removeItem("toPractice");
+    localStorage.removeItem("toPractice");
     console.log("Yes, we are in.");
     clearNode({
       parent: selectors.memoryInfo,
