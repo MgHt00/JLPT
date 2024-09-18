@@ -181,7 +181,8 @@ function loader() {
         return;
       }
       listeners().moveForm();
-      loadJSONFunc();
+      //loadJSONFunc();
+      loadFreshJSON();
     } else {
       listeners().moveForm();
       loadStoredJSON();
@@ -194,7 +195,7 @@ function loader() {
                           .map(eachCheckBox => eachCheckBox.value); // [sn7]
     return convertedArray;
   }  
-  /*
+  
   function loadFreshJSON() {
     const syllableMapping = {
       a: "assets/data/n5-vocab-a.json",
@@ -217,8 +218,8 @@ function loader() {
     Promise.all(promises)
       .then(results => {
         appData.vocabArray = results.flat(); // Combine all arrays into one
-        console.log("Inside loadFreshJSON(), vocabArray: ", appData.vocabArray); // this should show the full combined array
-        console.log("Inside loadFreshJSON(), vocabArray.length: ", appData.vocabArray.length); // Now this should show the full combined array
+        //console.log("Inside loadFreshJSON(), vocabArray: ", appData.vocabArray); // this should show the full combined array
+        //console.log("Inside loadFreshJSON(), vocabArray.length: ", appData.vocabArray.length); // Now this should show the full combined array
         
         fetchOneCategory(appData.vocabArray, kaVocab, ka); // le2
         fetchOneCategory(appData.vocabArray, hiVocab, hi);
@@ -228,7 +229,7 @@ function loader() {
       })
       .catch(error => console.error('Error loading vocab JSON files:', error));
   }
-  */
+
 
   function loadJSONFunc() {
     const syllableMapping = {
