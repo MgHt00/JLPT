@@ -285,14 +285,12 @@ function vocabManager() {
   
   function clearIncorrectAnswers() {
     localStorage.removeItem("toPractice");
-    console.log("Yes, we are in.");
+    console.log("localstorage flushed.");
     clearNode({
       parent: selectors.memoryInfo,
       children: selectors.readMemoryInfoDOMs,
     });
-    console.log("ready to restructure");
     loader().loadMemoryData();
-    console.log("resturcture finished");
   }
 
   return {

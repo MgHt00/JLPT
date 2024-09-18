@@ -1,4 +1,3 @@
-//defaultState();
 (function defaultState() {
   const loaderInstance = loader();
   const listenerInstance = listeners();
@@ -11,7 +10,6 @@
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
   listenerInstance.formAnimationListeners();
-  sectionQuestion.textContent = "Dummy JS";
 })();
 
 function listeners() {
@@ -165,7 +163,6 @@ function loader() {
     assignLanguage(sectionMessage, enLang);
 
     appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
-    console.log("appState.qMode: ", appState.qMode);
 
     if (appState.qMode === "fresh") {
       if(appData.syllableChoice.length === 0) {
@@ -265,24 +262,7 @@ function loader() {
     console.log("Inside loadFreshJSON(), vocabArray.length: ", appData.vocabArray.length);
 
     questionMgr.newQuestion();
-  }
-
-  function dummyText() {
-    console.log("Entering dummyText()");
-    console.log(sectionQuestion);
-    console.log(window.getComputedStyle(sectionQuestion).display);
-    console.log(window.getComputedStyle(sectionQuestion).visibility);
-    console.log(window.getComputedStyle(sectionQuestion).height);
-    console.log(window.getComputedStyle(sectionQuestion).width);
-    sectionQuestion.textContent = "Test Content";
-    /*console.log(sectionTest);
-    console.log(window.getComputedStyle(sectionTest).display);
-    console.log(window.getComputedStyle(sectionTest).visibility);
-    console.log(window.getComputedStyle(sectionTest).height);
-    console.log(window.getComputedStyle(sectionTest).width);
-    sectionTest.textContent = "Test Content #2";*/
-  }
-  
+  }  
   
   function loadStoredJSON() {
     console.log("Here comes the sun!");
