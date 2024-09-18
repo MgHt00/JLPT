@@ -1,3 +1,6 @@
+const questionMgr = questionManager();
+const vocabMgr =  vocabManager();
+
 function fetchOneCategory(source, target, catName) {
   let i = 0;
   source.forEach(element => {
@@ -16,27 +19,13 @@ function questionManager() {
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
       questionObj = prepareQuestion();
       appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
-      console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
-      /*
+      //console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
+      
       buildNode({ 
         parent: sectionQuestion, 
         child: 'div', 
         content: questionObj[appState.qChoiceInput],
       });
-      */
-      console.log(sectionQuestion);
-      console.log(window.getComputedStyle(sectionQuestion).display);
-      console.log(window.getComputedStyle(sectionQuestion).visibility);
-      console.log(window.getComputedStyle(sectionQuestion).height);
-      console.log(window.getComputedStyle(sectionQuestion).width);
-      sectionQuestion.style.display = 'block';
-      sectionQuestion.style.visibility = 'visible';
-
-      sectionQuestion.textContent = "Test Content"; // simple test
-
-
-      console.log("questionObj[appState.qChoiceInput]: ", questionObj[appState.qChoiceInput]);
-      //sectionQuestion.textContent = questionObj[appState.qChoiceInput];
       AnswerManager().buildAnswers();  
     } else {
       buildNode({ 
@@ -63,7 +52,7 @@ function questionManager() {
 
     if (appState.randomYesNo) {
       selectedQuestionObj = appData.vocabArray[i];
-      vocabManager().removeQuestion(i); // remove shown quesion from vocabArray
+      vocabMgr.removeQuestion(i); // remove shown quesion from vocabArray
     }
     else {
       selectedQuestionObj = appData.vocabArray[qNo];
@@ -213,7 +202,7 @@ function AnswerManager() {
         content: 'Next', 
         className: 'answer-btn', 
         idName: 'choice-btn', 
-        eventFunction: questionManager().newQuestion 
+        eventFunction: questionMgr.newQuestion 
       });
 
     } else {
@@ -230,24 +219,24 @@ function AnswerManager() {
 
   function storeOrContinue(event) { // sn4
     const btnID = event.currentTarget.id;
-    const questionInstance = questionManager();
+    //const questionInstance = questionManager();
 
     if (btnID === "choice-btn-0") {
-      questionInstance.newQuestion();
+      questionMgr.newQuestion();
     } else if (btnID === "choice-btn-1") {
       
-      vocabManager().storeToPractice(questionInstance);
+      vocabMgr.storeToPractice(questionMgr);
       //practiceAgain(questionInstance);
-      questionInstance.newQuestion();
+      questionMgr.newQuestion();
     }
   }
 
   //let rePractice = [];
 
   function practiceAgain() {
-    const questionInstance = questionManager();
-    console.log("Inside showQuestionAgain(); questionObj: ", questionInstance.readQuestionObj);
-    rePractice.push(questionInstance.readQuestionObj);
+    //const questionInstance = questionMgr;
+    console.log("Inside showQuestionAgain(); questionObj: ", questionMgr.readQuestionObj);
+    rePractice.push(questionMgr.readQuestionObj);
   }
 
   return {
@@ -267,8 +256,10 @@ function vocabManager() {
   }
 
   function storeToPractice(questionInstance) { // [sn5]
+    console.log("Entering storeToPractice()");
     let incorrectSets = loadLocalStorage();
-  
+    
+    console.log(questionInstance.readQuestionObj);
     // [sn6] Check if the object already exists in the array
     let exists = incorrectSets.some(answer =>
       answer.ka === questionInstance.readQuestionObj.ka &&
@@ -281,14 +272,14 @@ function vocabManager() {
       incorrectSets.push(questionInstance.readQuestionObj);
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
       //temp
-      //loadIncorrectAnswers();
+      //loadLocalStorage();
     }
   }
   
   function loadLocalStorage() {
     let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
     storedLength = storedObjects.length;
-    //console.log(storedObjects);
+    console.log(storedObjects);
     return storedObjects;
   }
   

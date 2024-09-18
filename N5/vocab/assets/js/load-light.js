@@ -3,11 +3,11 @@
   const loaderInstance = loader();
   const listenerInstance = listeners();
 
-  //loaderInstance.loadMemoryData();
+  loaderInstance.loadMemoryData();
   
   flipNodeState(...selectors.noOfAnsAll); // [sn14]
   //toggleClass('hide', selectors.bringBackBtn, sectionQuestion, sectionAnswer);
-  //toggleClass('hide', selectors.bringBackBtn);
+  toggleClass('hide', selectors.bringBackBtn);
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
   listenerInstance.formAnimationListeners();
@@ -27,7 +27,7 @@ function listeners() {
     selectors.settingFlashYesNo.addEventListener('change', flashModeChanges);
     selectors.settingSource.addEventListener('change', questionModeChanges);
   }
-
+  
   function syllableChanges(event) { // [le4]
     const allCheckbox = document.getElementById('syllableAll');
     const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
@@ -62,11 +62,11 @@ function listeners() {
       }
     }
   }
-
+   
   function flashModeChanges(e) {
     flipNodeState(...selectors.noOfAnsAll); 
   }
-
+  
   function questionModeChanges(e) {
     let selectedMode = selectors.readQuestionMode;
     if (selectedMode === "fresh") {
@@ -77,7 +77,7 @@ function listeners() {
       toggleClass('disabled', selectors.settingSyllable);
     }
   }
-    
+   
   function dynamicAnswer() {
     const ansMapping = { // [sn11]
       ka: { parent: selectors.aChoice, child: 'option', content: 'Kanji', childValues: 'ka', idName: 'a-ka'},
@@ -97,14 +97,14 @@ function listeners() {
     });
   }
   
-
+ 
   function formAnimationListeners() {
     selectors.bringBackBtn.addEventListener('click', (event) => {
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
     });
   }
-
+  
   // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
   function debounce(func, delay) {
     let timeoutId;
@@ -127,6 +127,7 @@ function listeners() {
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
     toggleClass('moved', selectors.settingForm);
     toggleClass('dim', ...selectors.allSetting);
+    toggleClass('hide', selectors.bringBackBtn);
     //toggleClass('hide', sectionQuestion, sectionAnswer, selectors.submitBtn, selectors.bringBackBtn);
 
     // Add an event listener for the transition end to reset the flag
@@ -134,7 +135,7 @@ function listeners() {
       isMoving = false; // Allow future movement after the transition completes
     }, { once: true }); // Ensure the event listener is called only once per transition
   }
-
+  
   return {
     generalListeners,
     moveForm,
@@ -152,7 +153,7 @@ function loader() {
     appState.flashYesNo = selectors.readFlashYesNo === 'true';
     appState.noOfAnswers = parseInt(selectors.readNoOfAns, 10); // [sn18]Ensure this is an integer
     appState.qMode = selectors.readQuestionMode;
-
+    
     selectors.qChoice.value === "hi" || selectors.qChoice.value === "ka" 
     ? assignLanguage(sectionQuestion, jpLang) 
     : assignLanguage(sectionQuestion, enLang);
@@ -163,12 +164,11 @@ function loader() {
 
     assignLanguage(sectionMessage, enLang);
 
+    appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
+    console.log("appState.qMode: ", appState.qMode);
+
     if (appState.qMode === "fresh") {
-      
-      appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
-      /*
-      if (appData.syllableChoice.length === 0) {
-        // whether error msg is already been displayed.
+      if(appData.syllableChoice.length === 0) {
         if (!(document.querySelector("[id|='syllable-error']"))) {
           buildNode({
             parent: selectors.fieldsetSyllable, 
@@ -180,16 +180,12 @@ function loader() {
         }
         return;
       }
-      
-      loadFreshJSON();
-      */
-      dummyText();
-    } else if (appState.qMode === "storage") {
+      listeners().moveForm();
+      loadJSONFunc();
+    } else {
+      listeners().moveForm();
       loadStoredJSON();
     }
-
-    listeners().moveForm();
-    
   }
 
   function checkBoxToArray(nodeList) {
@@ -228,13 +224,13 @@ function loader() {
         fetchOneCategory(appData.vocabArray, hiVocab, hi);
         fetchOneCategory(appData.vocabArray, enVocab, en);
         
-        questionManager().newQuestion(); // Call newQuestion();  after the data is loaded (sn1.MD)
+        questionMgr.newQuestion(); // Call newQuestion();  after the data is loaded (sn1.MD)
       })
       .catch(error => console.error('Error loading vocab JSON files:', error));
   }
   */
 
-  function loadDataFunc() {
+  function loadJSONFunc() {
     const syllableMapping = {
       a: "assets/data/n5-vocab-a.json",
       i: "assets/data/n5-vocab-i.json",
@@ -266,8 +262,8 @@ function loader() {
     fetchOneCategory(appData.vocabArray, enVocab, en);
     console.log("Inside loadFreshJSON(), vocabArray: ", appData.vocabArray);
     console.log("Inside loadFreshJSON(), vocabArray.length: ", appData.vocabArray.length);
-  
-    //questionManager().newQuestion();
+
+    questionMgr.newQuestion();
   }
 
   function dummyText() {
@@ -288,6 +284,8 @@ function loader() {
   
   
   function loadStoredJSON() {
+    console.log("Here comes the sun!");
+    
     appData.vocabArray = vocabManager().loadLocalStorage();
     
     console.log("Inside loadStoredJSON(), appData.vocabArray: ", appData.vocabArray);
@@ -303,7 +301,8 @@ function loader() {
     fetchOneCategory(appData.vocabArray, hiVocab, hi);
     fetchOneCategory(appData.vocabArray, enVocab, en);
 
-    questionManager().newQuestion(); // Make sure this is called only if data is valid
+    questionMgr.newQuestion(); // Make sure this is called only if data is valid
+    
 }
 
 
