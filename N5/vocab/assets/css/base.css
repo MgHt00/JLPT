@@ -20,7 +20,7 @@ body {
 
 section {
   font-size: 30px;
-  margin-bottom: 2em;
+  margin-bottom: 1em;
   text-align: center;
 }
 
@@ -52,11 +52,12 @@ section.jp {
 }
 
 .answer-btn {
-  padding: 20px;
-  margin: 10px;
-  text-align: center;
-  border: 1px solid #a3a3a3;
+  padding: 10px 40px;
+  margin: 15px;
+  border: 1px solid white;
   border-radius: 20px;
+  text-align: center;
+  background-color: rgba(249, 249, 249, 0.2);
 }
 
 .dummy-class-1 {

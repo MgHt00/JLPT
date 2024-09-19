@@ -128,6 +128,7 @@ function listeners() {
     toggleClass('dim', ...selectors.allSetting);
     toggleClass('hide', selectors.bringBackBtn);
     //toggleClass('hide', sectionQuestion, sectionAnswer, selectors.submitBtn, selectors.bringBackBtn);
+    //toggleClass('section-move', sectionQuestion, sectionMessage, sectionAnswer);
 
     // Add an event listener for the transition end to reset the flag
     selectors.settingForm.addEventListener('transitionend', () => {
@@ -156,6 +157,8 @@ function loader() {
     appState.randomYesNo = selectors.readRandomYesNo === 'true';
     appState.flashYesNo = selectors.readFlashYesNo === 'true';
     appState.noOfAnswers = parseInt(selectors.readNoOfAns, 10); // [sn18]Ensure this is an integer
+    //appState.noOfAnswers = 4; // [sn18]Ensure this is an integer
+    console.log(appState.noOfAnswers);
     appState.qMode = selectors.readQuestionMode;
     
     selectors.qChoice.value === "hi" || selectors.qChoice.value === "ka" 
@@ -316,7 +319,7 @@ function loader() {
         parent: selectors.memoryInfo,
         child: 'div',
         content: `Flush Memory`,
-        className: 'flush-memory-btn',
+        className: 'flush-memory-setting-btn',
         idName: 'flush-memory-btn',
         eventFunction: vocabInstance.clearIncorrectAnswers,
       });
@@ -333,7 +336,7 @@ function loader() {
         parent: selectors.memoryInfo,
         child: 'div',
         content: `Flush Memory`,
-        className: 'flush-memory-btn',
+        className: 'flush-memory-setting-btn',
         idName: 'flush-memory-btn',
         eventFunction: vocabInstance.clearIncorrectAnswers,
       });
