@@ -10,7 +10,6 @@ const vocabInstance = vocabManager();
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
   listenerInstance.formAnimationListeners();
-  console.log("Exits defaultState()");
 })();
 
 
