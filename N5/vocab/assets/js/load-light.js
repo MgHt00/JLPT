@@ -1,16 +1,18 @@
-(function defaultState() {
-  const loaderInstance = loader();
-  const listenerInstance = listeners();
+const loaderInstance = loader();
+const listenerInstance = listeners();
+const vocabInstance = vocabManager();
 
+(function defaultState() {
   loaderInstance.loadMemoryData();
-  
   flipNodeState(...selectors.noOfAnsAll); // [sn14]
   //toggleClass('hide', selectors.bringBackBtn, sectionQuestion, sectionAnswer);
   toggleClass('hide', selectors.bringBackBtn);
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
   listenerInstance.formAnimationListeners();
+  console.log("Exits defaultState()");
 })();
+
 
 function listeners() {
   const loaderInstance = loader();
@@ -95,11 +97,11 @@ function listeners() {
     });
   }
   
- 
   function formAnimationListeners() {
     selectors.bringBackBtn.addEventListener('click', (event) => {
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
+      rePrintMemory();
     });
   }
   
@@ -132,6 +134,11 @@ function listeners() {
     selectors.settingForm.addEventListener('transitionend', () => {
       isMoving = false; // Allow future movement after the transition completes
     }, { once: true }); // Ensure the event listener is called only once per transition
+  }
+
+  function rePrintMemory() {
+    clearNode({parent: selectors.memoryInfo});
+    loaderInstance.loadMemoryData()
   }
   
   return {
@@ -267,7 +274,7 @@ function loader() {
   function loadStoredJSON() {
     console.log("Here comes the sun!");
     
-    appData.vocabArray = vocabManager().loadLocalStorage();
+    appData.vocabArray = vocabInstance.loadLocalStorage();
     
     console.log("Inside loadStoredJSON(), appData.vocabArray: ", appData.vocabArray);
     console.log("Inside loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length); // Should show the length of the array
@@ -288,7 +295,7 @@ function loader() {
 
 
   function loadMemoryData () {
-    let storedLength = vocabManager().readStoredLength;
+    let storedLength = vocabInstance.readStoredLength;
     if (storedLength === 0) {
       buildNode({
         parent: selectors.memoryInfo,
@@ -312,7 +319,7 @@ function loader() {
         content: `Flush Memory`,
         className: 'flush-memory-btn',
         idName: 'flush-memory-btn',
-        eventFunction: vocabManager().clearIncorrectAnswers,
+        eventFunction: vocabInstance.clearIncorrectAnswers,
       });
     } else {
       buildNode({
@@ -329,10 +336,9 @@ function loader() {
         content: `Flush Memory`,
         className: 'flush-memory-btn',
         idName: 'flush-memory-btn',
-        eventFunction: vocabManager().clearIncorrectAnswers,
+        eventFunction: vocabInstance.clearIncorrectAnswers,
       });
     }
-    
   }
 
   return {
