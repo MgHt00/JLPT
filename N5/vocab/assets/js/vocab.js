@@ -56,7 +56,7 @@ function questionManager() {
     }
     else {
       selectedQuestionObj = appData.vocabArray[qNo];
-      qNo++; // need to fix this.
+      qNo++;
     }
     return selectedQuestionObj;
   }

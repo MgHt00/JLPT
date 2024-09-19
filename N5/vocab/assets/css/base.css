@@ -71,3 +71,7 @@ section.jp {
 .wrong-answer {
   color: red;
 }
+
+.dynamic-DOM {
+  margin-top: -500px;
+}
