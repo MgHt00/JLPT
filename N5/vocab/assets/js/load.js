@@ -236,7 +236,7 @@ function loader() {
       .catch(error => console.error('Error loading vocab JSON files:', error));
   }
 
-
+  /*
   function loadJSONFunc() {
     const syllableMapping = {
       a: "assets/data/n5-vocab-a.json",
@@ -272,7 +272,8 @@ function loader() {
 
     questionMgr.newQuestion();
   }  
-  
+  */
+
   function loadStoredJSON() {
     console.log("Here comes the sun!");
     
@@ -346,5 +347,6 @@ function loader() {
   return {
     loadData,
     loadMemoryData,
+    loadStoredJSON,
   }
 }

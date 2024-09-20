@@ -1,5 +1,6 @@
 const questionMgr = questionManager();
 const vocabMgr =  vocabManager();
+const answerMgr = AnswerManager();
 
 function fetchOneCategory(source, target, catName) {
   let i = 0;
@@ -12,6 +13,7 @@ function fetchOneCategory(source, target, catName) {
 function questionManager() {
   let questionObj = {};
   let qNo = 0;
+  let questionRound = "fresh";
 
   function newQuestion() {
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
@@ -26,23 +28,52 @@ function questionManager() {
         child: 'div', 
         content: questionObj[appState.qChoiceInput],
       });
-      AnswerManager().buildAnswers();  
+      answerMgr.buildAnswers();  
     } else {
-      buildNode({ 
-        parent: sectionMessage, 
-        child: 'div', 
-        content: 'You have completed all the vocabs.  Well done!', 
-        className: 'vocabs-complete', 
-      });
+      if (questionRound === "fresh") { // if currently showing data from JSON
+        questionRound = "localstorage";
 
-      buildNode({ 
-        parent: sectionAnswer, 
-        child: 'div', 
-        content: 'Lets Restart!', 
-        className: 'answer-btn', 
-        idName: 'answer-btn', 
-        eventFunction: listeners().debouncedMoveForm,
-      });
+        buildNode({ 
+          parent: sectionMessage, 
+          child: 'div', 
+          content: `There are ${vocabMgr.readStoredLength} words in mistake bank.  Would you like to practice those?`, 
+          className: 'vocabs-complete', 
+        });
+  
+        buildNode({ 
+          parent: sectionAnswer, 
+          child: 'div', 
+          content: 'Yes', 
+          className: 'answer-btn', 
+          idName: 'continue-yes', 
+          eventFunction: answerMgr.ContinueYesNo,
+        });
+  
+        buildNode({ 
+          parent: sectionAnswer, 
+          child: 'div', 
+          content: 'No', 
+          className: 'answer-btn', 
+          idName: 'continue-no', 
+          eventFunction: answerMgr.ContinueYesNo,
+        });
+      } else if (questionRound === "localstorage") { // if currently showing data from localstorage
+        buildNode({ 
+          parent: sectionMessage, 
+          child: 'div', 
+          content: 'You have completed all the vocabs.  Well done!', 
+          className: 'vocabs-complete', 
+        });
+  
+        buildNode({ 
+          parent: sectionAnswer, 
+          child: 'div', 
+          content: 'Lets Restart!', 
+          className: 'answer-btn', 
+          idName: 'answer-btn', 
+          eventFunction: listeners().debouncedMoveForm,
+        });
+      }
     }
   }
 
@@ -207,6 +238,7 @@ function AnswerManager() {
 
     } else {
       if (sectionMessage.textContent !== 'Keep Trying') { // if worng message is not shown already.
+        // add wrongly selected word to localstorage
         buildNode({ 
           parent: sectionMessage, 
           child: 'div', 
@@ -231,6 +263,16 @@ function AnswerManager() {
     }
   }
 
+  function ContinueYesNo(event) {
+    const btnID = event.currentTarget.id;
+
+    if (btnID === "continue-yes-0") {
+      loaderInstance.loadStoredJSON(); 
+    } else if (btnID === "continue-no-0") {
+      listeners().debouncedMoveForm();
+    }
+  }
+
   //let rePractice = [];
 
   function practiceAgain() {
@@ -241,6 +283,7 @@ function AnswerManager() {
 
   return {
     buildAnswers,
+    ContinueYesNo,
   }
 }
 
