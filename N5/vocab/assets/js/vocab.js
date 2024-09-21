@@ -17,11 +17,11 @@ function questionManager() {
 
   function newQuestion() {
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
-
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
+      console.log("Inside newQuestion: vocabArray ", appData.vocabArray);
       questionObj = prepareQuestion();
       appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
-      console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
+      //console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
       
       buildNode({ 
         parent: sectionQuestion, 
@@ -105,9 +105,17 @@ function questionManager() {
   function prepareQuestion() {
     let selectedQuestionObj = {}; // to store the question obj temporarily
     if (typeof prepareQuestion.index === 'undefined') {
-      prepareQuestion.index = -1; // Start from -1, increment before use
+      //prepareQuestion.index = -1; // Start from -1, increment before use
+      prepareQuestion.index = 0;
     }
 
+    /*
+    logic က ဒီမှာ မှားနေတယ်။  မေးပြီးသား question ကို ဖျက်ဖျက်လိုက်တဲ့ အတွက် ၊ random ကို no 
+    လုပ်ထားရင် prepareQuestion.index က အမြဲ 0 ကို ပြနေမှ အစဥ်လိုက်ဖြစ်နေမယ်။  
+    */ 
+
+    /*
+    console.log("prepareQuestion.index:(before increment) ", prepareQuestion.index);
     if (appState.randomYesNo) {
       prepareQuestion.index = randomNo(0, (appData.vocabArray.length - 1));
     } else {
@@ -115,15 +123,31 @@ function questionManager() {
           prepareQuestion.index++;
         }
     }
-    
+    console.log("prepareQuestion.index:(after increment) ", prepareQuestion.index);
     selectedQuestionObj = appData.vocabArray[prepareQuestion.index];
-    vocabMgr.removeQuestion(prepareQuestion.index); // remove shown quesion from vocabArray
+    //vocabMgr.removeQuestion(prepareQuestion.index); // remove shown quesion from vocabArray
+    */
 
+    if (appState.randomYesNo) {
+      prepareQuestion.index = randomNo(0, (appData.vocabArray.length - 1));
+    } else {
+      prepareQuestion.index = 0;
+    }
+    selectedQuestionObj = appData.vocabArray[prepareQuestion.index];
     return selectedQuestionObj;
+  }
+
+  function correctAndContinue () {
+    console.log("Entering correctAndContinue(); prepareQuestion.index to remove: ", prepareQuestion.index);
+    vocabMgr.removeQuestion(prepareQuestion.index);
+    console.log("newQuestion is called.");
+    console.log("_________________");
+    newQuestion();
   }
 
   return {
     newQuestion,
+    correctAndContinue,
     get readQuestionObj() {return questionObj;},
   }
 }
@@ -262,7 +286,7 @@ function AnswerManager() {
         content: 'Next', 
         className: 'answer-btn', 
         idName: 'choice-btn', 
-        eventFunction: questionMgr.newQuestion 
+        eventFunction: questionMgr.correctAndContinue 
       });
 
     } else {
@@ -288,7 +312,7 @@ function AnswerManager() {
       
       vocabMgr.storeToPractice(questionMgr); // // add wrongly selected word to localstorage
       //practiceAgain(questionInstance);
-      questionMgr.newQuestion();
+      questionMgr.newQuestion(); // NEED TO CHECK THIS
     }
   }
 
@@ -324,6 +348,7 @@ function vocabManager() {
     if (appData.vocabArray.length >= 1) {
       appData.vocabArray.splice(i, 1);
       console.log(`currentQIndex ${i} is removed. vocabArray.length: ${appData.vocabArray.length}`);
+      console.log("Inside removeQuestion(): After deletion; ", appData.vocabArray);
     } else {
       console.log(`vocabArray.length: ${appData.vocabArray.length}; reach the end.`);
     }

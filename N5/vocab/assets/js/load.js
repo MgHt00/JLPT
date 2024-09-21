@@ -235,7 +235,7 @@ function loader() {
         fetchOneCategory(appData.vocabArray, kaVocab, ka); // le2
         fetchOneCategory(appData.vocabArray, hiVocab, hi);
         fetchOneCategory(appData.vocabArray, enVocab, en);
-        
+        console.log("Inside loadFreshJSON(), vocabArray: ", appData.vocabArray);
         questionMgr.newQuestion(); // Call newQuestion();  after the data is loaded (sn1.MD)
       })
       .catch(error => console.error('Error loading vocab JSON files:', error));
