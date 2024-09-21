@@ -12,7 +12,7 @@ function fetchOneCategory(source, target, catName) {
 
 function questionManager() {
   let questionObj = {};
-  let qNo = 0;
+  //let qNo = 0;
   let questionRound = "fresh";
 
   function newQuestion() {
@@ -100,14 +100,20 @@ function questionManager() {
     return selectedQuestionObj;
   }
   */
+  
+
   function prepareQuestion() {
-    prepareQuestion.index = 0; 
     let selectedQuestionObj = {}; // to store the question obj temporarily
+    if (typeof prepareQuestion.index === 'undefined') {
+      prepareQuestion.index = -1; // Start from -1, increment before use
+    }
 
     if (appState.randomYesNo) {
       prepareQuestion.index = randomNo(0, (appData.vocabArray.length - 1));
-    } else if(!appState.randomYesNo && qNo < appData.vocabArray.length - 1) {
-        prepareQuestion.index++;
+    } else {
+        if(prepareQuestion.index < appData.vocabArray.length - 1) {
+          prepareQuestion.index++;
+        }
     }
     
     selectedQuestionObj = appData.vocabArray[prepareQuestion.index];
