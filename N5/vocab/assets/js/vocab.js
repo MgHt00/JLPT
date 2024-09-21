@@ -21,7 +21,7 @@ function questionManager() {
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
       questionObj = prepareQuestion();
       appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
-      //console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
+      console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
       
       buildNode({ 
         parent: sectionQuestion, 
@@ -78,6 +78,7 @@ function questionManager() {
     }
   }
 
+  /*
   function prepareQuestion() {
     let i = randomNo(0, (appData.vocabArray.length - 1));
     let selectedQuestionObj = {}; // to store the question obj temporarily
@@ -87,12 +88,33 @@ function questionManager() {
       vocabMgr.removeQuestion(i); // remove shown quesion from vocabArray
     }
     else {
-      selectedQuestionObj = appData.vocabArray[qNo];
-      qNo++;
+      if (qNo < appData.vocabArray.length - 1) {
+        selectedQuestionObj = appData.vocabArray[qNo];
+        vocabMgr.removeQuestion(i); // remove shown quesion from vocabArray
+        console.log("appData.vocabArray.length: ", appData.vocabArray.length, "| qNo : ", qNo);
+        qNo++;
+      } else {
+        // မေးခွန်းကုန်သွားရင်
+      }
     }
     return selectedQuestionObj;
   }
+  */
+  function prepareQuestion() {
+    prepareQuestion.index = 0; 
+    let selectedQuestionObj = {}; // to store the question obj temporarily
 
+    if (appState.randomYesNo) {
+      prepareQuestion.index = randomNo(0, (appData.vocabArray.length - 1));
+    } else if(!appState.randomYesNo && qNo < appData.vocabArray.length - 1) {
+        prepareQuestion.index++;
+    }
+    
+    selectedQuestionObj = appData.vocabArray[prepareQuestion.index];
+    vocabMgr.removeQuestion(prepareQuestion.index); // remove shown quesion from vocabArray
+
+    return selectedQuestionObj;
+  }
 
   return {
     newQuestion,
