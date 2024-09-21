@@ -103,6 +103,11 @@ function listeners() {
       rePrintMemory();
     });
   }
+
+  function restart() {
+    debouncedMoveForm();
+    rePrintMemory();
+  }
   
   // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
   function debounce(func, delay) {
@@ -146,6 +151,7 @@ function listeners() {
     moveForm,
     formAnimationListeners,
     debouncedMoveForm,
+    restart,
   }
 }
 
@@ -158,7 +164,6 @@ function loader() {
     appState.flashYesNo = selectors.readFlashYesNo === 'true';
     appState.noOfAnswers = parseInt(selectors.readNoOfAns, 10); // [sn18]Ensure this is an integer
     //appState.noOfAnswers = 4; // [sn18]Ensure this is an integer
-    console.log(appState.noOfAnswers);
     appState.qMode = selectors.readQuestionMode;
     
     selectors.qChoice.value === "hi" || selectors.qChoice.value === "ka" 

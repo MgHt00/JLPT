@@ -71,7 +71,8 @@ function questionManager() {
           content: 'Lets Restart!', 
           className: 'answer-btn', 
           idName: 'answer-btn', 
-          eventFunction: listeners().debouncedMoveForm,
+          //eventFunction: listeners().debouncedMoveForm,
+          eventFunction: listeners().restart,
         });
       }
     }
@@ -238,7 +239,7 @@ function AnswerManager() {
 
     } else {
       if (sectionMessage.textContent !== 'Keep Trying') { // if worng message is not shown already.
-        // add wrongly selected word to localstorage
+        vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
         buildNode({ 
           parent: sectionMessage, 
           child: 'div', 
@@ -257,7 +258,7 @@ function AnswerManager() {
       questionMgr.newQuestion();
     } else if (btnID === "choice-btn-1") {
       
-      vocabMgr.storeToPractice(questionMgr);
+      vocabMgr.storeToPractice(questionMgr); // // add wrongly selected word to localstorage
       //practiceAgain(questionInstance);
       questionMgr.newQuestion();
     }
@@ -269,7 +270,9 @@ function AnswerManager() {
     if (btnID === "continue-yes-0") {
       loaderInstance.loadStoredJSON(); 
     } else if (btnID === "continue-no-0") {
-      listeners().debouncedMoveForm();
+
+      //listeners().debouncedMoveForm();
+      listenerInstance.restart();
     }
   }
 
@@ -301,8 +304,13 @@ function vocabManager() {
   function storeToPractice(questionInstance) { // [sn5]
     console.log("Entering storeToPractice()");
     let incorrectSets = loadLocalStorage();
+
+    // QuestionManager ရဲ့ questionRound ကို အပြင်ထုတ်ပြီး အခု function ထဲမှာ ပြင်ဖို့လိုတယ် ထင်တယ်
+    // စမ်းဖို့က memory ကို flush လုပ် , round အသစ် နဲ့ စပြီး answer အမှားကို ရွေး ။ သဘောက လမ်းမှာ localstorage ထဲ
+    // အသစ်ထည့်တယ်ပေ့ါ။  vocab ကုန်သွားတဲ့အခါ localstorage ရှိနေသော်လည်း questionmanager က memory zero ထင်ပြီး
+    // let's restart ပြနေတယ်။  
     
-    console.log(questionInstance.readQuestionObj);
+    //console.log(questionInstance.readQuestionObj);
     // [sn6] Check if the object already exists in the array
     let exists = incorrectSets.some(answer =>
       answer.ka === questionInstance.readQuestionObj.ka &&
@@ -313,16 +321,16 @@ function vocabManager() {
     // If it doesn't exist, add it to the array
     if (!exists) {
       incorrectSets.push(questionInstance.readQuestionObj);
+      console.log("New word pushed to localstorage.");
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
-      //temp
-      //loadLocalStorage();
+      loadLocalStorage();
     }
   }
   
   function loadLocalStorage() {
     let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
     storedLength = storedObjects.length;
-    console.log(storedObjects);
+    console.log("storedObjects ", storedObjects);
     return storedObjects;
   }
   
