@@ -3,6 +3,7 @@ const listenerInstance = listeners();
 const vocabInstance = vocabManager();
 
 (function defaultState() {
+  console.groupCollapsed("defaultState()");
   loaderInstance.loadMemoryData();
   flipNodeState(...selectors.noOfAnsAll); // [sn14]
   //toggleClass('hide', selectors.bringBackBtn, sectionQuestion, sectionAnswer);
@@ -10,6 +11,7 @@ const vocabInstance = vocabManager();
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
   listenerInstance.formAnimationListeners();
+  console.groupEnd();
 })();
 
 
@@ -142,8 +144,12 @@ function listeners() {
   }
 
   function rePrintMemory() {
+    console.groupCollapsed("rePrintMemory()");
+
     clearNode({parent: selectors.memoryInfo});
     loaderInstance.loadMemoryData()
+    
+    console.groupEnd();
   }
   
   return {
@@ -158,7 +164,6 @@ function listeners() {
 function loader() {
 
   async function start(e) {  // Mark start() as async
-    console.log("Entering start()");
     e.preventDefault(); // Prevent form from submitting the usual way
        
     if (!inputData(e)) { // If inputData fails, stop execution
@@ -175,7 +180,7 @@ function loader() {
 
     questionMgr.newQuestion(); // Call after data is loaded
   }
-
+  /*
   function loadData(e) {  
     //e.preventDefault(); // Prevent form from submitting the usual way
     
@@ -213,9 +218,10 @@ function loader() {
       } 
     } 
   }
+  */
 
-  function inputData(e) {  
-    console.info("Entering inputData()");
+  function inputData(e) {
+    console.groupCollapsed("inputData()");
     // Convert the string values "true"/"false" to boolean values [sn16]
     appState.randomYesNo = selectors.readRandomYesNo === 'true';
     console.info("appState.randomYesNo: ",appState.randomYesNo);
@@ -274,9 +280,11 @@ function loader() {
         });
       }
       console.error("No syllables selected.");
+      console.groupEnd();
       return false; // Signal that inputData validation failed
     }
     console.info("appData.syllableChoice: ", appData.syllableChoice);
+    console.groupEnd();
     return true; // Signal that inputData validation passed
   }
 
@@ -288,6 +296,7 @@ function loader() {
   }  
   
   async function loadFreshJSON() {
+    console.groupCollapsed("loadFreshJSON()");
     const syllableMapping = {
       a: "assets/data/n5-vocab-a.json",
       i: "assets/data/n5-vocab-i.json",
@@ -312,67 +321,11 @@ function loader() {
     fetchOneCategory(appData.vocabArray, hiVocab, hi);
     fetchOneCategory(appData.vocabArray, enVocab, en);
     console.log("Inside loadFreshJSON(), vocabArray: ", appData.vocabArray);
+    console.groupEnd();
   }
 
-  /*
-  function loadJSONFunc() {
-    const syllableMapping = {
-      a: "assets/data/n5-vocab-a.json",
-      i: "assets/data/n5-vocab-i.json",
-    };
-  
-    if (appData.syllableChoice.includes("all")) {
-      appData.syllableChoice = Object.keys(syllableMapping);
-    }
-  
-    appData.vocabArray = [];
-  
-    appData.syllableChoice.forEach(element => {
-      let selectedJSON = syllableMapping[element];
-      let xhr = new XMLHttpRequest();
-      
-      xhr.open("GET", selectedJSON, false); // false makes the request synchronous
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          const data = JSON.parse(xhr.responseText);
-          appData.vocabArray.push(...data); // Combine arrays
-        }
-      };
-      xhr.send();
-    });
-  
-    // After synchronous requests, update the DOM  
-    fetchOneCategory(appData.vocabArray, kaVocab, ka);
-    fetchOneCategory(appData.vocabArray, hiVocab, hi);
-    fetchOneCategory(appData.vocabArray, enVocab, en);
-    console.log("Inside loadFreshJSON(), vocabArray: ", appData.vocabArray);
-    console.log("Inside loadFreshJSON(), vocabArray.length: ", appData.vocabArray.length);
-
-    questionMgr.newQuestion();
-  }  
-  */
-  /*
   function loadStoredJSON() {
-    console.log("Here comes the sun!");
-    
-    appData.vocabArray = vocabInstance.loadLocalStorage();
-    
-    console.log("Inside loadStoredJSON(), appData.vocabArray: ", appData.vocabArray);
-    console.log("Inside loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length); // Should show the length of the array
-    
-    // Check if appData.vocabArray is being updated correctly
-    if (appData.vocabArray.length === 0) {
-        console.error("Error: vocabArray is empty after loading stored data!");
-        return;
-    }
-
-    fetchOneCategory(appData.vocabArray, kaVocab, ka); 
-    fetchOneCategory(appData.vocabArray, hiVocab, hi);
-    fetchOneCategory(appData.vocabArray, enVocab, en);
-  }
-  */
-  function loadStoredJSON() {
-    console.log("Here comes the sun!");
+    console.groupCollapsed("loadStoredJSON()");
     
     // Ensure loadLocalStorage returns an array
     const storedData = vocabInstance.loadLocalStorage();
@@ -397,8 +350,9 @@ function loader() {
     fetchOneCategory(appData.vocabArray, kaVocab, ka);
     fetchOneCategory(appData.vocabArray, hiVocab, hi);
     fetchOneCategory(appData.vocabArray, enVocab, en);
-  }
 
+    console.groupEnd();
+  }
 
   function loadMemoryData () {
     let storedLength = vocabInstance.readStoredLength;
@@ -449,7 +403,7 @@ function loader() {
 
   return {
     start,
-    loadData,
+    //loadData,
     loadMemoryData,
     loadStoredJSON,
   }
