@@ -175,7 +175,6 @@ function AnswerManager() {
         eventFunction: showAnswer 
       });
     } else { // if it is a multiple choice game
-      console.info("Inside buildAnswers()>else block: ", ansArray);
       buildNode({ 
         parent: sectionAnswer, 
         child: 'div', 
@@ -187,17 +186,16 @@ function AnswerManager() {
   }
 
   function prepareAnswers() {
-    //console.log("Inside prepareAnswers(); selectors.aChoice: ", selectors.aChoice, "| noOfChoice: ", noOfChoice, " | appState.correctAns: ", appState.correctAns);
     let selectedArray = vocabMapping[selectors.aChoice.value];
     let tempAnsArray = [];
-    console.log("Line no. 193");
+
     tempAnsArray[0] = appState.correctAns; // add correct answer in index. 0
 
     if (!selectedArray) {
       console.error(`No vocab array found for choice: ${selectors.aChoice.value}`);
       return;
     }
-    console.log("Line no. 200");
+
     if (selectedArray.length === 0) {
       console.error(`The vocab array is empty for choice: ${selectors.aChoice.value}`);
       return;
@@ -208,7 +206,7 @@ function AnswerManager() {
     // Infinite Loop Prevention: If selectedArray contains very few elements, 
     // the loop inside do...while could run infinitely because it’s trying to pick a unique answer from a small pool, 
     // but keeps failing due to duplicates. This is less likely, but worth checking.
-    console.log("Line no. 207, selectedArray.length: ", selectedArray.length, " | noOfChoice: ", noOfChoice);
+
     if (selectedArray.length < noOfChoice) {
       console.error("Not enough unique answers to generate.");
       return;
@@ -225,9 +223,8 @@ function AnswerManager() {
 
       tempAnsArray[i] = randomWord;
     }
-    console.log("Line no. 219");
+
     tempAnsArray = shuffleArray(tempAnsArray);
-    console.log("Got tempAnsArray: ", tempAnsArray);
     return tempAnsArray;
   }
 

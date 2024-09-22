@@ -20,7 +20,7 @@ function listeners() {
 
   function generalListeners() {
     // Event Listeners
-    selectors.settingForm.addEventListener('submit', loaderInstance.loadData); // [sn17]
+    selectors.settingForm.addEventListener('submit', loaderInstance.start); // [sn17]
     selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
     selectors.qChoice.addEventListener('change', dynamicAnswer);
     selectors.settingFlashYesNo.addEventListener('change', flashModeChanges);
@@ -156,8 +156,28 @@ function listeners() {
 }
 
 function loader() {
-  function loadData(e) {  
+
+  async function start(e) {  // Mark start() as async
+    console.log("Entering start()");
     e.preventDefault(); // Prevent form from submitting the usual way
+       
+    if (!inputData(e)) { // If inputData fails, stop execution
+      return; // Stop further execution if inputData fails validation
+    }
+
+    listeners().moveForm();
+
+    if (appState.qMode === "fresh") {
+      await loadFreshJSON(); // Wait for loadFreshJSON to complete
+    } else {
+      loadStoredJSON();
+    }
+
+    questionMgr.newQuestion(); // Call after data is loaded
+  }
+
+  function loadData(e) {  
+    //e.preventDefault(); // Prevent form from submitting the usual way
     
     // Convert the string values "true"/"false" to boolean values [sn16]
     appState.randomYesNo = selectors.readRandomYesNo === 'true';
@@ -190,14 +210,74 @@ function loader() {
           });
         }
         return;
-      }
-      listeners().moveForm();
-      //loadJSONFunc();
-      loadFreshJSON();
+      } 
+    } 
+  }
+
+  function inputData(e) {  
+    console.info("Entering inputData()");
+    // Convert the string values "true"/"false" to boolean values [sn16]
+    appState.randomYesNo = selectors.readRandomYesNo === 'true';
+    console.info("appState.randomYesNo: ",appState.randomYesNo);
+
+    appState.flashYesNo = selectors.readFlashYesNo === 'true';
+    console.info("appState.flashYesNo: ", appState.flashYesNo);
+
+    // Validate number of answers and set default if invalid
+    const noOfAnswers = parseInt(selectors.readNoOfAns, 10);
+    if (isNaN(noOfAnswers) || noOfAnswers < 2 || noOfAnswers > 4) {
+      appState.noOfAnswers = 4; // Default to 4 answers
+      console.warn("Invalid number of answers. Setting default to 4.");
     } else {
-      listeners().moveForm();
-      loadStoredJSON();
+      appState.noOfAnswers = noOfAnswers;
     }
+    console.info("appState.noOfAnswers: ", appState.noOfAnswers);
+
+
+    appState.qMode = selectors.readQuestionMode;
+    // Validate question mode and set default
+    const validModes = ["fresh", "stored"];
+    if (!validModes.includes(selectors.readQuestionMode)) {
+      appState.qMode = "fresh"; // Default to 'fresh'
+      console.warn("Invalid question mode. Defaulting to 'fresh'.");
+    } else {
+      appState.qMode = selectors.readQuestionMode;
+    }
+    console.info("appState.qMode: ", appState.qMode);
+
+    // Validate and assign the correct language for the question and answer sections
+    const validLanguages = ["hi", "ka"];
+    if (validLanguages.includes(selectors.qChoice.value)) {
+      assignLanguage(sectionQuestion, jpLang);
+    } else {
+      assignLanguage(sectionQuestion, enLang);
+    }
+
+    if (validLanguages.includes(selectors.aChoice.value)) {
+      assignLanguage(sectionAnswer, jpLang);
+    } else {
+      assignLanguage(sectionAnswer, enLang);
+    }
+
+    assignLanguage(sectionMessage, enLang); // Always set message section to English
+
+    // Validate syllable choices and show an error if none are selected
+    appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
+    if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
+      if (!document.querySelector("[id|='syllable-error']")) {
+        buildNode({
+          parent: selectors.fieldsetSyllable, 
+          child: 'div', 
+          content: 'Select at least one syllable', 
+          className: 'setting-error', 
+          idName: 'syllable-error',
+        });
+      }
+      console.error("No syllables selected.");
+      return false; // Signal that inputData validation failed
+    }
+    console.info("appData.syllableChoice: ", appData.syllableChoice);
+    return true; // Signal that inputData validation passed
   }
 
   function checkBoxToArray(nodeList) {
@@ -207,7 +287,7 @@ function loader() {
     return convertedArray;
   }  
   
-  function loadFreshJSON() {
+  async function loadFreshJSON() {
     const syllableMapping = {
       a: "assets/data/n5-vocab-a.json",
       i: "assets/data/n5-vocab-i.json",
@@ -224,21 +304,14 @@ function loader() {
       let selectedJSON = syllableMapping[element];
       return fetch(selectedJSON).then(response => response.json());
     });
-    
-    // Wait for all Promises to resolve and then merge the results into vocabArray
-    Promise.all(promises)
-      .then(results => {
-        appData.vocabArray = results.flat(); // Combine all arrays into one
-        //console.log("Inside loadFreshJSON(), vocabArray: ", appData.vocabArray); // this should show the full combined array
-        //console.log("Inside loadFreshJSON(), vocabArray.length: ", appData.vocabArray.length); // Now this should show the full combined array
-        
-        fetchOneCategory(appData.vocabArray, kaVocab, ka); // le2
-        fetchOneCategory(appData.vocabArray, hiVocab, hi);
-        fetchOneCategory(appData.vocabArray, enVocab, en);
-        console.log("Inside loadFreshJSON(), vocabArray: ", appData.vocabArray);
-        questionMgr.newQuestion(); // Call newQuestion();  after the data is loaded (sn1.MD)
-      })
-      .catch(error => console.error('Error loading vocab JSON files:', error));
+
+    const results = await Promise.all(promises);
+    appData.vocabArray = results.flat();
+
+    fetchOneCategory(appData.vocabArray, kaVocab, ka);
+    fetchOneCategory(appData.vocabArray, hiVocab, hi);
+    fetchOneCategory(appData.vocabArray, enVocab, en);
+    console.log("Inside loadFreshJSON(), vocabArray: ", appData.vocabArray);
   }
 
   /*
@@ -278,7 +351,7 @@ function loader() {
     questionMgr.newQuestion();
   }  
   */
-
+  /*
   function loadStoredJSON() {
     console.log("Here comes the sun!");
     
@@ -296,9 +369,35 @@ function loader() {
     fetchOneCategory(appData.vocabArray, kaVocab, ka); 
     fetchOneCategory(appData.vocabArray, hiVocab, hi);
     fetchOneCategory(appData.vocabArray, enVocab, en);
+  }
+  */
+  function loadStoredJSON() {
+    console.log("Here comes the sun!");
+    
+    // Ensure loadLocalStorage returns an array
+    const storedData = vocabInstance.loadLocalStorage();
+    if (!Array.isArray(storedData)) {
+        console.error("Error: Stored data is not an array! Check your loadLocalStorage function.");
+        return;
+    }
+    
+    // Assign storedData to appData.vocabArray
+    appData.vocabArray = storedData;
+    
+    console.log("Inside loadStoredJSON(), appData.vocabArray: ", appData.vocabArray);
+    console.log("Inside loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length);
+    
+    // Check if the array is empty
+    if (appData.vocabArray.length === 0) {
+        console.error("Error: vocabArray is empty after loading stored data!");
+        return;
+    }
 
-    questionMgr.newQuestion(); // Make sure this is called only if data is valid    
-}
+    // Fetch the relevant categories
+    fetchOneCategory(appData.vocabArray, kaVocab, ka);
+    fetchOneCategory(appData.vocabArray, hiVocab, hi);
+    fetchOneCategory(appData.vocabArray, enVocab, en);
+  }
 
 
   function loadMemoryData () {
@@ -349,6 +448,7 @@ function loader() {
   }
 
   return {
+    start,
     loadData,
     loadMemoryData,
     loadStoredJSON,

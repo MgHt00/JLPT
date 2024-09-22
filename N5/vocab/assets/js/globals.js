@@ -52,6 +52,7 @@ const selectors = {
   get readNoOfAns() { //[sn19]
     //if it is not a getter, use this; outside of "get"
     //noOfAns: () => document.querySelector("input[name='noOfAnswers']:checked").value,
+    //console.info(document.querySelector("input[name='noOfAnswers']:checked").value);
     return document.querySelector("input[name='noOfAnswers']:checked").value;
   },
 
