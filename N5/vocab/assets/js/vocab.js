@@ -12,13 +12,13 @@ function fetchOneCategory(source, target, catName) {
 
 function questionManager() {
   let questionObj = {};
-  //let qNo = 0;
   let questionRound = "fresh";
+  console.log("Initial questionRound: ", questionRound);
 
   function newQuestion() {
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
-      console.log("Inside newQuestion: vocabArray ", appData.vocabArray);
+      //console.log("Inside newQuestion: vocabArray ", appData.vocabArray);
       questionObj = prepareQuestion();
       appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
       //console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
@@ -32,6 +32,7 @@ function questionManager() {
     } else {
       if (questionRound === "fresh") { // if currently showing data from JSON
         questionRound = "localstorage";
+        console.log("Processed questionRound: ", questionRound);
 
         buildNode({ 
           parent: sectionMessage, 
@@ -137,17 +138,17 @@ function questionManager() {
     return selectedQuestionObj;
   }
 
-  function correctAndContinue () {
-    console.log("Entering correctAndContinue(); prepareQuestion.index to remove: ", prepareQuestion.index);
+  function completeAndContinue() {
+    //console.log("Entering correctAndContinue(); prepareQuestion.index to remove: ", prepareQuestion.index);
     vocabMgr.removeQuestion(prepareQuestion.index);
-    console.log("newQuestion is called.");
-    console.log("_________________");
+    //console.log("newQuestion is called.");
+    //console.log("_________________");
     newQuestion();
   }
 
   return {
     newQuestion,
-    correctAndContinue,
+    completeAndContinue,
     get readQuestionObj() {return questionObj;},
   }
 }
@@ -286,7 +287,7 @@ function AnswerManager() {
         content: 'Next', 
         className: 'answer-btn', 
         idName: 'choice-btn', 
-        eventFunction: questionMgr.correctAndContinue 
+        eventFunction: questionMgr.completeAndContinue 
       });
 
     } else {
@@ -307,12 +308,14 @@ function AnswerManager() {
     //const questionInstance = questionManager();
 
     if (btnID === "choice-btn-0") {
-      questionMgr.newQuestion();
+      //questionMgr.newQuestion();
+      questionMgr.completeAndContinue();
     } else if (btnID === "choice-btn-1") {
       
       vocabMgr.storeToPractice(questionMgr); // // add wrongly selected word to localstorage
       //practiceAgain(questionInstance);
-      questionMgr.newQuestion(); // NEED TO CHECK THIS
+      //questionMgr.newQuestion(); // NEED TO CHECK THIS
+      questionManager.completeAndContinue();
     }
   }
 

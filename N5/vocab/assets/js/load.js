@@ -297,8 +297,7 @@ function loader() {
     fetchOneCategory(appData.vocabArray, hiVocab, hi);
     fetchOneCategory(appData.vocabArray, enVocab, en);
 
-    questionMgr.newQuestion(); // Make sure this is called only if data is valid
-    
+    questionMgr.newQuestion(); // Make sure this is called only if data is valid    
 }
 
 
