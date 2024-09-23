@@ -16,7 +16,9 @@ function questionManager() {
   //console.log("Initial questionRound: ", questionRound);
 
   function newQuestion() {
-    console.groupCollapsed("newQuestion()");
+    console.log("____________");
+    console.groupCollapsed("questionManager() - newQuestion()");
+
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
       console.log("vocabArray ", appData.vocabArray);
@@ -34,7 +36,7 @@ function questionManager() {
       answerMgr.buildAnswers();  
     } else {
       if (newQuestion.mode === "fresh") { // if currently showing data from JSON
-        newQuestion.mode = "localstorage";
+        newQuestion.mode = "stored";
         console.log("Processed newQuestion.mode: ", newQuestion.mode);
 
         buildNode({ 
@@ -61,7 +63,7 @@ function questionManager() {
           idName: 'continue-no', 
           eventFunction: answerMgr.ContinueYesNo,
         });
-      } else if (newQuestion.mode === "localstorage") { // if currently showing data from localstorage
+      } else if (newQuestion.mode === "stored") { // if currently showing data from localstorage
         buildNode({ 
           parent: sectionMessage, 
           child: 'div', 
@@ -84,7 +86,7 @@ function questionManager() {
   }
 
   function setMode(m) {
-    console.groupCollapsed("setMode()");
+    console.groupCollapsed("questionManager() - setMode()");
 
     const validModes = ["fresh", "stored"];
     if(!validModes.includes(m)) {
@@ -123,6 +125,8 @@ function questionManager() {
   
 
   function prepareQuestion() {
+    console.groupCollapsed("questionManager() - prepareQuestion()");
+
     let selectedQuestionObj = {}; // to store the question obj temporarily
     if (typeof prepareQuestion.index === 'undefined') {
       prepareQuestion.index = 0;
@@ -138,7 +142,7 @@ function questionManager() {
   }
 
   function completeAndContinue() {
-    console.groupCollapsed("completeAndContinue()");
+    console.groupCollapsed("questionManager() - completeAndContinue()");
 
     vocabMgr.removeQuestion(prepareQuestion.index);
     newQuestion();
@@ -163,6 +167,8 @@ function AnswerManager() {
   };
 
   function buildAnswers() {
+    console.groupCollapsed("AnswerManager() - buildAnswers()");
+
     ansArray = prepareAnswers();
     //console.log("Inside buildAnswers(); ansArray: ", ansArray, "Inside buildAnswers(); flashYesNo: ", flashYesNo);
 
@@ -184,10 +190,12 @@ function AnswerManager() {
         eventFunction: multipleChoice 
       });
     }
+
+    console.groupEnd();
   }
 
   function prepareAnswers() {
-    console.groupCollapsed("prepareAnswers()");
+    console.groupCollapsed("AnswerManager() - prepareAnswers()");
 
     let selectedArray = vocabMapping[selectors.aChoice.value];
     let tempAnsArray = [];
@@ -241,7 +249,7 @@ function AnswerManager() {
   }
 
   function showAnswer() {
-    console.groupCollapsed("showAnswer()");
+    console.groupCollapsed("AnswerManager() - showAnswer()");
 
     // Remove exiting buttons
     const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
@@ -288,7 +296,7 @@ function AnswerManager() {
   }
 
   function multipleChoice(event) {
-    console.groupCollapsed("multipleChoice()");
+    console.groupCollapsed("AnswerManager() - multipleChoice()");
 
     const btnText = event.currentTarget.textContent;
     if (appState.correctAns === btnText) {
@@ -324,7 +332,7 @@ function AnswerManager() {
   }
 
   function storeOrContinue(event) { // sn4
-    console.groupCollapsed("storeOrContinue()");
+    console.groupCollapsed("AnswerManager() - storeOrContinue()");
 
     const btnID = event.currentTarget.id;
     //const questionInstance = questionManager();
@@ -344,12 +352,12 @@ function AnswerManager() {
   }
 
   function ContinueYesNo(event) {
-    console.groupCollapsed("ContinueYesNo()");
+    console.groupCollapsed("AnswerManager() - ContinueYesNo()");
 
     const btnID = event.currentTarget.id;
 
     if (btnID === "continue-yes-0") {
-      loaderInstance.loadStoredJSON(); 
+      listenerInstance.continuetoStoredData();
     } else if (btnID === "continue-no-0") {
 
       //listeners().debouncedMoveForm();
@@ -376,7 +384,7 @@ function AnswerManager() {
 function vocabManager() {
   
   function removeQuestion(i) {
-    console.groupCollapsed("removeQuestion()");
+    console.groupCollapsed("vocabManager() - removeQuestion()");
 
     if (appData.vocabArray.length >= 1) {
       appData.vocabArray.splice(i, 1);
@@ -390,7 +398,7 @@ function vocabManager() {
   }
 
   function storeToPractice(questionInstance) { // [sn5]
-    console.groupCollapsed("storeToPractice()");
+    console.groupCollapsed("vocabManager() - storeToPractice()");
 
     let incorrectSets = loadLocalStorage();
 
@@ -419,7 +427,7 @@ function vocabManager() {
   }
   
   function loadLocalStorage() {
-    console.groupCollapsed("loadLocalStorage()");
+    console.groupCollapsed("vocabManager() - loadLocalStorage()");
 
     let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
     storedLength = storedObjects.length;
@@ -430,7 +438,7 @@ function vocabManager() {
   }
   
   function clearIncorrectAnswers() {
-    console.groupCollapsed("clearIncorrectAnswers()");
+    console.groupCollapsed("vocabManager() - clearIncorrectAnswers()");
 
     localStorage.removeItem("toPractice");
     console.log("localstorage flushed.");

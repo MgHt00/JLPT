@@ -110,6 +110,11 @@ function listeners() {
     debouncedMoveForm();
     rePrintMemory();
   }
+
+  async function continuetoStoredData() {
+    await loaderInstance.loadStoredJSON();// Wait for loadStoredJSON to complete
+    questionMgr.newQuestion();
+  }
   
   // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
   function debounce(func, delay) {
@@ -158,6 +163,7 @@ function listeners() {
     formAnimationListeners,
     debouncedMoveForm,
     restart,
+    continuetoStoredData,
   }
 }
 
@@ -175,7 +181,7 @@ function loader() {
     if (appState.qMode === "fresh") {
       await loadFreshJSON(); // Wait for loadFreshJSON to complete
     } else {
-      loadStoredJSON();
+      await loadStoredJSON();// Wait for loadStoredJSON to complete
     }
 
     questionMgr.newQuestion(); // Call after data is loaded
@@ -327,7 +333,7 @@ function loader() {
     console.groupEnd();
   }
 
-  function loadStoredJSON() {
+  async function loadStoredJSON() {
     console.groupCollapsed("loadStoredJSON()");
 
     questionMgr.setMode("stored");
