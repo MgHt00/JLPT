@@ -12,7 +12,7 @@ function fetchOneCategory(source, target, catName) {
 
 function questionManager() {
   let questionObj = {};
-  let questionRound = "fresh";
+  //let questionRound = "fresh";
   //console.log("Initial questionRound: ", questionRound);
 
   function newQuestion() {
@@ -33,9 +33,9 @@ function questionManager() {
       });
       answerMgr.buildAnswers();  
     } else {
-      if (questionRound === "fresh") { // if currently showing data from JSON
-        questionRound = "localstorage";
-        console.log("Processed questionRound: ", questionRound);
+      if (newQuestion.mode === "fresh") { // if currently showing data from JSON
+        newQuestion.mode = "localstorage";
+        console.log("Processed newQuestion.mode: ", newQuestion.mode);
 
         buildNode({ 
           parent: sectionMessage, 
@@ -61,7 +61,7 @@ function questionManager() {
           idName: 'continue-no', 
           eventFunction: answerMgr.ContinueYesNo,
         });
-      } else if (questionRound === "localstorage") { // if currently showing data from localstorage
+      } else if (newQuestion.mode === "localstorage") { // if currently showing data from localstorage
         buildNode({ 
           parent: sectionMessage, 
           child: 'div', 
@@ -80,6 +80,21 @@ function questionManager() {
         });
       }
     }
+    console.groupEnd();
+  }
+
+  function setMode(m) {
+    console.groupCollapsed("setMode()");
+
+    const validModes = ["fresh", "stored"];
+    if(!validModes.includes(m)) {
+      newQuestion.mode = "fresh"; // defaul to `fresh`
+      console.warn("Invalid mode is passed. Defaulting to `fresh`.");
+    } else {
+      newQuestion.mode = m;
+      console.info("Question mode: ", newQuestion.mode);
+    }
+
     console.groupEnd();
   }
 
@@ -134,6 +149,7 @@ function questionManager() {
   return {
     newQuestion,
     completeAndContinue,
+    setMode,
     get readQuestionObj() {return questionObj;},
   }
 }
