@@ -186,45 +186,6 @@ function loader() {
 
     questionMgr.newQuestion(); // Call after data is loaded
   }
-  /*
-  function loadData(e) {  
-    //e.preventDefault(); // Prevent form from submitting the usual way
-    
-    // Convert the string values "true"/"false" to boolean values [sn16]
-    appState.randomYesNo = selectors.readRandomYesNo === 'true';
-    appState.flashYesNo = selectors.readFlashYesNo === 'true';
-    appState.noOfAnswers = parseInt(selectors.readNoOfAns, 10); // [sn18]Ensure this is an integer
-    //appState.noOfAnswers = 4; // [sn18]Ensure this is an integer
-    appState.qMode = selectors.readQuestionMode;
-    
-    selectors.qChoice.value === "hi" || selectors.qChoice.value === "ka" 
-    ? assignLanguage(sectionQuestion, jpLang) 
-    : assignLanguage(sectionQuestion, enLang);
-
-    selectors.aChoice.value === "hi" || selectors.qChoice.value === "ka" 
-    ? assignLanguage(sectionAnswer, jpLang) 
-    : assignLanguage(sectionAnswer, enLang);
-
-    assignLanguage(sectionMessage, enLang);
-
-    appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
-
-    if (appState.qMode === "fresh") {
-      if(appData.syllableChoice.length === 0) {
-        if (!(document.querySelector("[id|='syllable-error']"))) {
-          buildNode({
-            parent: selectors.fieldsetSyllable, 
-            child: 'div', 
-            content: 'Select at least one syllables', 
-            className: 'setting-error', 
-            idName: 'syllable-error',
-          });
-        }
-        return;
-      } 
-    } 
-  }
-  */
 
   function inputData(e) {
     console.groupCollapsed("inputData()");
