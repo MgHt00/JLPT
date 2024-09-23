@@ -16,12 +16,15 @@ function questionManager() {
   //console.log("Initial questionRound: ", questionRound);
 
   function newQuestion() {
+    console.groupCollapsed("newQuestion()");
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
-      //console.log("Inside newQuestion: vocabArray ", appData.vocabArray);
+      console.log("vocabArray ", appData.vocabArray);
+      
       questionObj = prepareQuestion();
       appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
-      //console.log("inside newQuestion(); ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
+      
+      console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
       
       buildNode({ 
         parent: sectionQuestion, 
@@ -77,6 +80,7 @@ function questionManager() {
         });
       }
     }
+    console.groupEnd();
   }
 
   /*
@@ -106,28 +110,8 @@ function questionManager() {
   function prepareQuestion() {
     let selectedQuestionObj = {}; // to store the question obj temporarily
     if (typeof prepareQuestion.index === 'undefined') {
-      //prepareQuestion.index = -1; // Start from -1, increment before use
       prepareQuestion.index = 0;
     }
-
-    /*
-    logic က ဒီမှာ မှားနေတယ်။  မေးပြီးသား question ကို ဖျက်ဖျက်လိုက်တဲ့ အတွက် ၊ random ကို no 
-    လုပ်ထားရင် prepareQuestion.index က အမြဲ 0 ကို ပြနေမှ အစဥ်လိုက်ဖြစ်နေမယ်။  
-    */ 
-
-    /*
-    console.log("prepareQuestion.index:(before increment) ", prepareQuestion.index);
-    if (appState.randomYesNo) {
-      prepareQuestion.index = randomNo(0, (appData.vocabArray.length - 1));
-    } else {
-        if(prepareQuestion.index < appData.vocabArray.length - 1) {
-          prepareQuestion.index++;
-        }
-    }
-    console.log("prepareQuestion.index:(after increment) ", prepareQuestion.index);
-    selectedQuestionObj = appData.vocabArray[prepareQuestion.index];
-    //vocabMgr.removeQuestion(prepareQuestion.index); // remove shown quesion from vocabArray
-    */
 
     if (appState.randomYesNo) {
       prepareQuestion.index = randomNo(0, (appData.vocabArray.length - 1));
@@ -139,11 +123,12 @@ function questionManager() {
   }
 
   function completeAndContinue() {
-    //console.log("Entering correctAndContinue(); prepareQuestion.index to remove: ", prepareQuestion.index);
+    console.groupCollapsed("completeAndContinue()");
+
     vocabMgr.removeQuestion(prepareQuestion.index);
-    //console.log("newQuestion is called.");
-    //console.log("_________________");
     newQuestion();
+    
+    console.groupEnd();
   }
 
   return {
@@ -186,6 +171,8 @@ function AnswerManager() {
   }
 
   function prepareAnswers() {
+    console.groupCollapsed("prepareAnswers()");
+
     let selectedArray = vocabMapping[selectors.aChoice.value];
     let tempAnsArray = [];
 
@@ -225,6 +212,7 @@ function AnswerManager() {
     }
 
     tempAnsArray = shuffleArray(tempAnsArray);
+    console.groupEnd();
     return tempAnsArray;
   }
 
@@ -237,6 +225,8 @@ function AnswerManager() {
   }
 
   function showAnswer() {
+    console.groupCollapsed("showAnswer()");
+
     // Remove exiting buttons
     const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
     answerButtons.forEach(button => {
@@ -277,9 +267,13 @@ function AnswerManager() {
         className: 'answer-message', 
         idName: 'next-btn' });
     }
+
+    console.groupEnd();
   }
 
   function multipleChoice(event) {
+    console.groupCollapsed("multipleChoice()");
+
     const btnText = event.currentTarget.textContent;
     if (appState.correctAns === btnText) {
       clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
@@ -310,9 +304,12 @@ function AnswerManager() {
         });
       }
     }
+    console.groupEnd();
   }
 
   function storeOrContinue(event) { // sn4
+    console.groupCollapsed("storeOrContinue()");
+
     const btnID = event.currentTarget.id;
     //const questionInstance = questionManager();
 
@@ -326,9 +323,13 @@ function AnswerManager() {
       //questionMgr.newQuestion(); // NEED TO CHECK THIS
       questionManager.completeAndContinue();
     }
+
+    console.groupEnd();
   }
 
   function ContinueYesNo(event) {
+    console.groupCollapsed("ContinueYesNo()");
+
     const btnID = event.currentTarget.id;
 
     if (btnID === "continue-yes-0") {
@@ -338,6 +339,8 @@ function AnswerManager() {
       //listeners().debouncedMoveForm();
       listenerInstance.restart();
     }
+
+    console.groupEnd();
   }
 
   //let rePractice = [];
@@ -357,6 +360,8 @@ function AnswerManager() {
 function vocabManager() {
   
   function removeQuestion(i) {
+    console.groupCollapsed("removeQuestion()");
+
     if (appData.vocabArray.length >= 1) {
       appData.vocabArray.splice(i, 1);
       console.log(`currentQIndex ${i} is removed. vocabArray.length: ${appData.vocabArray.length}`);
@@ -364,10 +369,13 @@ function vocabManager() {
     } else {
       console.log(`vocabArray.length: ${appData.vocabArray.length}; reach the end.`);
     }
+
+    console.groupEnd();
   }
 
   function storeToPractice(questionInstance) { // [sn5]
-    console.log("Entering storeToPractice()");
+    console.groupCollapsed("storeToPractice()");
+
     let incorrectSets = loadLocalStorage();
 
     // QuestionManager ရဲ့ questionRound ကို အပြင်ထုတ်ပြီး အခု function ထဲမှာ ပြင်ဖို့လိုတယ် ထင်တယ်
@@ -390,16 +398,24 @@ function vocabManager() {
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
       loadLocalStorage();
     }
+
+    console.groupEnd();
   }
   
   function loadLocalStorage() {
+    console.groupCollapsed("loadLocalStorage()");
+
     let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
     storedLength = storedObjects.length;
     console.log("storedObjects ", storedObjects);
+    console.groupEnd();
+
     return storedObjects;
   }
   
   function clearIncorrectAnswers() {
+    console.groupCollapsed("clearIncorrectAnswers()");
+
     localStorage.removeItem("toPractice");
     console.log("localstorage flushed.");
     clearNode({
@@ -407,6 +423,8 @@ function vocabManager() {
       children: selectors.readMemoryInfoDOMs,
     });
     loader().loadMemoryData();
+
+    console.groupEnd();
   }
 
   return {

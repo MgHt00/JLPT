@@ -326,6 +326,10 @@ function loader() {
 
   function loadStoredJSON() {
     console.groupCollapsed("loadStoredJSON()");
+
+    // set questionManager() 
+    // need to write a set function inside questionManager() to set `questionRound`
+    // JOB for Sep 23
     
     // Ensure loadLocalStorage returns an array
     const storedData = vocabInstance.loadLocalStorage();
