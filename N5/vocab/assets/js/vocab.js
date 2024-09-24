@@ -34,55 +34,9 @@ function questionManager() {
       });
       answerMgr.buildAnswers();  
     } else { // if there is no more question left to show
-      // else block ကြီး တစ်ခုလုံးကို function ထပ်ခွဲရင်ကောင်းမလား 
-      if (newQuestion.mode === "fresh") { // if currently showing data from JSON
-        newQuestion.mode = "stored";
-        console.log("Processed newQuestion.mode: ", newQuestion.mode);
-
-        buildNode({ 
-          parent: sectionMessage, 
-          child: 'div', 
-          content: `There are ${vocabMgr.readStoredLength} words in mistake bank.  Would you like to practice those?`, 
-          className: 'vocabs-complete', 
-        });
-  
-        buildNode({ 
-          parent: sectionAnswer, 
-          child: 'div', 
-          content: 'Yes', 
-          className: 'answer-btn', 
-          idName: 'continue-yes', 
-          eventFunction: answerMgr.ContinueYesNo,
-        });
-  
-        buildNode({ 
-          parent: sectionAnswer, 
-          child: 'div', 
-          content: 'No', 
-          className: 'answer-btn', 
-          idName: 'continue-no', 
-          eventFunction: answerMgr.ContinueYesNo,
-        });
-      } else if (newQuestion.mode === "stored") { // if currently showing data from localstorage
-        // ဒီမှာ storedmemory က zero သေချာလားထပ်စစ်ဖို့လိုတယ်။ 
-        buildNode({ 
-          parent: sectionMessage, 
-          child: 'div', 
-          content: 'You have completed all the vocabs.  Well done!', 
-          className: 'vocabs-complete', 
-        });
-  
-        buildNode({ 
-          parent: sectionAnswer, 
-          child: 'div', 
-          content: 'Lets Restart!', 
-          className: 'answer-btn', 
-          idName: 'answer-btn', 
-          //eventFunction: listeners().debouncedMoveForm,
-          eventFunction: listeners().restart,
-        });
-      }
+      answerMgr.noMoreQuestion();
     }
+    
     console.groupEnd();
   }
 
@@ -100,30 +54,6 @@ function questionManager() {
 
     console.groupEnd();
   }
-
-  /*
-  function prepareQuestion() {
-    let i = randomNo(0, (appData.vocabArray.length - 1));
-    let selectedQuestionObj = {}; // to store the question obj temporarily
-
-    if (appState.randomYesNo) {
-      selectedQuestionObj = appData.vocabArray[i];
-      vocabMgr.removeQuestion(i); // remove shown quesion from vocabArray
-    }
-    else {
-      if (qNo < appData.vocabArray.length - 1) {
-        selectedQuestionObj = appData.vocabArray[qNo];
-        vocabMgr.removeQuestion(i); // remove shown quesion from vocabArray
-        console.log("appData.vocabArray.length: ", appData.vocabArray.length, "| qNo : ", qNo);
-        qNo++;
-      } else {
-        // မေးခွန်းကုန်သွားရင်
-      }
-    }
-    return selectedQuestionObj;
-  }
-  */
-  
 
   function prepareQuestion() {
     console.groupCollapsed("questionManager() - prepareQuestion()");
@@ -156,6 +86,7 @@ function questionManager() {
     completeAndContinue,
     setMode,
     get readQuestionObj() {return questionObj;},
+    get readQuestionMode() {return newQuestion.mode},
   }
 }
 
@@ -193,6 +124,61 @@ function AnswerManager() {
     }
 
     console.groupEnd();
+  }
+
+  function noMoreQuestion() {
+    console.groupCollapsed("noMoreQuestion()");
+
+    if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
+      questionMgr.readQuestionMode = "stored";
+      console.log("Processed questionMgr.readQuestionMode: ", questionMgr.readQuestionMode);
+
+      buildNode({ 
+        parent: sectionMessage, 
+        child: 'div', 
+        content: `There are ${vocabMgr.readStoredLength} words in mistake bank.  Would you like to practice those?`, 
+        className: 'vocabs-complete', 
+      });
+
+      buildNode({ 
+        parent: sectionAnswer, 
+        child: 'div', 
+        content: 'Yes', 
+        className: 'answer-btn', 
+        idName: 'continue-yes', 
+        eventFunction: answerMgr.ContinueYesNo,
+      });
+
+      buildNode({ 
+        parent: sectionAnswer, 
+        child: 'div', 
+        content: 'No', 
+        className: 'answer-btn', 
+        idName: 'continue-no', 
+        eventFunction: answerMgr.ContinueYesNo,
+      });
+    } else if (questionMgr.readQuestionMode === "stored") { // if currently showing data from localstorage
+      // ဒီမှာ storedmemory က zero သေချာလားထပ်စစ်ဖို့လိုတယ်။ 
+      buildNode({ 
+        parent: sectionMessage, 
+        child: 'div', 
+        content: 'You have completed all the vocabs.  Well done!', 
+        className: 'vocabs-complete', 
+      });
+
+      buildNode({ 
+        parent: sectionAnswer, 
+        child: 'div', 
+        content: 'Lets Restart!', 
+        className: 'answer-btn', 
+        idName: 'answer-btn', 
+        //eventFunction: listeners().debouncedMoveForm,
+        eventFunction: listeners().restart,
+      });
+    }
+
+    console.groupEnd();
+    return this;
   }
 
   function prepareAnswers() {
@@ -403,6 +389,7 @@ function AnswerManager() {
 
   return {
     buildAnswers,
+    noMoreQuestion,
     ContinueYesNo,
   }
 }
