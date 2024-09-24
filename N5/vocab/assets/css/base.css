@@ -75,3 +75,9 @@ section.jp {
 .dynamic-DOM {
   margin-top: -500px;
 }
+
+.runtime-error {
+  /*
+  styles for runtime error, usually display in section-message
+  */
+}

@@ -16,8 +16,7 @@ function questionManager() {
   //console.log("Initial questionRound: ", questionRound);
 
   function newQuestion() {
-    console.log("____________");
-    console.groupCollapsed("questionManager() - newQuestion()");
+    console.groupCollapsed("---questionManager() - newQuestion()---");
 
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
@@ -34,7 +33,8 @@ function questionManager() {
         content: questionObj[appState.qChoiceInput],
       });
       answerMgr.buildAnswers();  
-    } else {
+    } else { // if there is no more question left to show
+      // else block ကြီး တစ်ခုလုံးကို function ထပ်ခွဲရင်ကောင်းမလား 
       if (newQuestion.mode === "fresh") { // if currently showing data from JSON
         newQuestion.mode = "stored";
         console.log("Processed newQuestion.mode: ", newQuestion.mode);
@@ -64,6 +64,7 @@ function questionManager() {
           eventFunction: answerMgr.ContinueYesNo,
         });
       } else if (newQuestion.mode === "stored") { // if currently showing data from localstorage
+        // ဒီမှာ storedmemory က zero သေချာလားထပ်စစ်ဖို့လိုတယ်။ 
         buildNode({ 
           parent: sectionMessage, 
           child: 'div', 
@@ -90,7 +91,7 @@ function questionManager() {
 
     const validModes = ["fresh", "stored"];
     if(!validModes.includes(m)) {
-      newQuestion.mode = "fresh"; // defaul to `fresh`
+      newQuestion.mode = "fresh"; // default to `fresh`
       console.warn("Invalid mode is passed. Defaulting to `fresh`.");
     } else {
       newQuestion.mode = m;
@@ -198,6 +199,7 @@ function AnswerManager() {
     console.groupCollapsed("AnswerManager() - prepareAnswers()");
 
     let selectedArray = vocabMapping[selectors.aChoice.value];
+    console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
     let tempAnsArray = [];
 
     tempAnsArray[0] = appState.correctAns; // add correct answer in index. 0
@@ -213,14 +215,19 @@ function AnswerManager() {
     }
     let choiceInput = selectors.readNoOfAns;
     noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
+    console.info("noOfChoice: ", noOfChoice);
     
     // Infinite Loop Prevention: If selectedArray contains very few elements, 
     // the loop inside do...while could run infinitely because it’s trying to pick a unique answer from a small pool, 
     // but keeps failing due to duplicates. This is less likely, but worth checking.
 
-    if (selectedArray.length < noOfChoice) {
+    if (selectedArray.length <= noOfChoice) {
       console.error("Not enough unique answers to generate.");
+      runtimeError("infiniteloop");
       return;
+      // JOB - return ပြန်လိုက်ပြီးတဲ့နောက် error ပြရမယ်။  
+      // ဘယ်နေရာမှာ ပြမလဲ စဥ်းစားရမယ်။  အခုက return ထားတော့ အဖြေ မပြပဲ question ချည်းပဲ ပြနေတယ်။ 
+      // newquestion ကို load မလုပ်ခင် အရင် စစ်ရမယ်ထင်တာပဲ။  မီးပြတ်တော့မယ်လေ ၊ ဝါးတီးဆွဲရမယ်။ 
     }
 
     for (let i = 1; i < noOfChoice; i++) {
@@ -365,6 +372,25 @@ function AnswerManager() {
     }
 
     console.groupEnd();
+  }
+
+  function runtimeError(errcode) {
+    const codeMapping = {
+      infiniteloop: 1,
+    }
+    
+    if(codeMapping[errcode] === 1) {
+      console.warn("Runtime error: Not enough unique answers to generate.");
+      //alert("Not enough unique answers available. Please reduce the number of answer choices."); // Notify user
+      // Optionally, return to halt execution or take other actions
+      buildNode({ 
+        parent: selectors.settingNoOfAns, 
+        child: 'div', 
+        content: 'Not enough unique answers available. Please reduce the number of answer choices.', 
+        className: 'runtime-error', 
+      });
+      return;
+    }
   }
 
   //let rePractice = [];

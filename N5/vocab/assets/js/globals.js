@@ -34,6 +34,7 @@ const appData = {
 const selectors = {
   settingForm : document.querySelector("#settingsForm"),
   settingFlashYesNo : document.querySelector("#settings-flashYesNo"),
+  settingNoOfAns : document.querySelector("#settings-noOfAnswers"),
   settingSource: document.querySelector("#settings-source"),
   qChoice : document.querySelector("#qChoiceInput"),
   aChoice : document.querySelector("#aChoiceInput"),

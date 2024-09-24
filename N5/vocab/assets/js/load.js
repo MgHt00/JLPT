@@ -73,7 +73,7 @@ function listeners() {
     if (selectedMode === "fresh") {
       removeClass('disabled', selectors.settingSyllable, selectors.settingRepractice);
       toggleClass('disabled', selectors.settingRepractice);
-    } else if (selectedMode === "storage") {
+    } else if (selectedMode === "stored") {
       removeClass('disabled', selectors.settingSyllable, selectors.settingRepractice);
       toggleClass('disabled', selectors.settingSyllable);
     }
@@ -116,8 +116,8 @@ function listeners() {
     questionMgr.newQuestion();
   }
   
-  // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
   function debounce(func, delay) {
+    // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
     let timeoutId;
     return function (event, ...args) {
       clearTimeout(timeoutId);
@@ -176,6 +176,9 @@ function loader() {
       return; // Stop further execution if inputData fails validation
     }
 
+    // ဒီမှာ moveForm ကို newQuestion မစခင်နေရာရွေ့ ၊ infinite loop ဖြစ်နေလား စစ်ဖို့ 
+    // function တစ်ခု ထည့်ဖို့လိုမယ်။
+    
     listeners().moveForm();
 
     if (appState.qMode === "fresh") {
@@ -188,7 +191,9 @@ function loader() {
   }
 
   function inputData(e) {
+    // input validation and loading function
     console.groupCollapsed("inputData()");
+    
     // Convert the string values "true"/"false" to boolean values [sn16]
     appState.randomYesNo = selectors.readRandomYesNo === 'true';
     console.info("appState.randomYesNo: ",appState.randomYesNo);
@@ -234,21 +239,24 @@ function loader() {
 
     assignLanguage(sectionMessage, enLang); // Always set message section to English
 
-    // Validate syllable choices and show an error if none are selected
-    appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
-    if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
-      if (!document.querySelector("[id|='syllable-error']")) {
-        buildNode({
-          parent: selectors.fieldsetSyllable, 
-          child: 'div', 
-          content: 'Select at least one syllable', 
-          className: 'setting-error', 
-          idName: 'syllable-error',
-        });
+    // Run the following block only if qMode is 'fresh'
+    if (appState.qMode === "fresh") {
+      // Validate syllable choices and show an error if none are selected
+      appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
+      if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
+        if (!document.querySelector("[id|='syllable-error']")) {
+          buildNode({
+            parent: selectors.fieldsetSyllable, 
+            child: 'div', 
+            content: 'Select at least one syllable', 
+            className: 'setting-error', 
+            idName: 'syllable-error',
+          });
+        }
+        console.error("No syllables selected.");
+        console.groupEnd();
+        return false; // Signal that inputData validation failed
       }
-      console.error("No syllables selected.");
-      console.groupEnd();
-      return false; // Signal that inputData validation failed
     }
     console.info("appData.syllableChoice: ", appData.syllableChoice);
     console.groupEnd();
