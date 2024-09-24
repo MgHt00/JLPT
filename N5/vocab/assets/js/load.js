@@ -1,6 +1,7 @@
 const loaderInstance = loader();
 const listenerInstance = listeners();
 const vocabInstance = vocabManager();
+const errorInstance = errorManager();
 
 (function defaultState() {
   console.groupCollapsed("defaultState()");
@@ -11,6 +12,7 @@ const vocabInstance = vocabManager();
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
   listenerInstance.formAnimationListeners();
+  //errorInstance.showError({errcode: "iLoop", parentName: selectors.settingNoOfAns});
   console.groupEnd();
 })();
 
@@ -244,7 +246,13 @@ function loader() {
       // Validate syllable choices and show an error if none are selected
       appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
       if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
-        if (!document.querySelector("[id|='syllable-error']")) {
+        if (!document.querySelector("[id|='syllable-error']")) { // if error is not already shown
+          errorInstance.showError({
+            errcode: "noSL",
+            parentName: selectors.fieldsetSyllable,
+            idName: 'syllable-error',
+          });
+          /*
           buildNode({
             parent: selectors.fieldsetSyllable, 
             child: 'div', 
@@ -252,8 +260,8 @@ function loader() {
             className: 'setting-error', 
             idName: 'syllable-error',
           });
+          */
         }
-        console.error("No syllables selected.");
         console.groupEnd();
         return false; // Signal that inputData validation failed
       }

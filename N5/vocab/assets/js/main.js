@@ -24,7 +24,9 @@ function buildNode({parent, child, content, childValues = [], className = "", id
 
   content.forEach((contentItem, contentIndex) => {
     let newChild = document.createElement(child);
-    newChild.textContent = contentItem;
+    //newChild.textContent = contentItem;
+    // innerHTML instead of textContent to render HTML tags like <br>
+    newChild.innerHTML = contentItem;
 
     // Assign value if childValues is provided and has enough entries
     if (childValues[contentIndex]) {

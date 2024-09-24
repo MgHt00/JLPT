@@ -18,6 +18,10 @@ body {
   width: 100%
 }
 
+form#settingsForm {
+  max-width: 280px;
+}
+
 section {
   font-size: 30px;
   margin-bottom: 1em;
@@ -80,4 +84,6 @@ section.jp {
   /*
   styles for runtime error, usually display in section-message
   */
+  font-size: 12px;
+  color: red;
 }

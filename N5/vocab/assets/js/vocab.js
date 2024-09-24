@@ -36,7 +36,7 @@ function questionManager() {
     } else { // if there is no more question left to show
       answerMgr.noMoreQuestion();
     }
-    
+
     console.groupEnd();
   }
 
@@ -200,7 +200,7 @@ function AnswerManager() {
       return;
     }
     let choiceInput = selectors.readNoOfAns;
-    noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
+    let noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
     console.info("noOfChoice: ", noOfChoice);
     
     // Infinite Loop Prevention: If selectedArray contains very few elements, 
@@ -209,7 +209,7 @@ function AnswerManager() {
 
     if (selectedArray.length <= noOfChoice) {
       console.error("Not enough unique answers to generate.");
-      runtimeError("infiniteloop");
+      errorInstance.showError("infiniteloop");
       return;
       // JOB - return ပြန်လိုက်ပြီးတဲ့နောက် error ပြရမယ်။  
       // ဘယ်နေရာမှာ ပြမလဲ စဥ်းစားရမယ်။  အခုက return ထားတော့ အဖြေ မပြပဲ question ချည်းပဲ ပြနေတယ်။ 
@@ -360,25 +360,6 @@ function AnswerManager() {
     console.groupEnd();
   }
 
-  function runtimeError(errcode) {
-    const codeMapping = {
-      infiniteloop: 1,
-    }
-    
-    if(codeMapping[errcode] === 1) {
-      console.warn("Runtime error: Not enough unique answers to generate.");
-      //alert("Not enough unique answers available. Please reduce the number of answer choices."); // Notify user
-      // Optionally, return to halt execution or take other actions
-      buildNode({ 
-        parent: selectors.settingNoOfAns, 
-        child: 'div', 
-        content: 'Not enough unique answers available. Please reduce the number of answer choices.', 
-        className: 'runtime-error', 
-      });
-      return;
-    }
-  }
-
   //let rePractice = [];
 
   function practiceAgain() {
@@ -388,6 +369,7 @@ function AnswerManager() {
   }
 
   return {
+    vocabMapping,
     buildAnswers,
     noMoreQuestion,
     ContinueYesNo,
@@ -475,5 +457,74 @@ function vocabManager() {
     },
     //clearIncorrectAnswers,
     //get readQuestionIndex() { return currentQIndex; },
+  }
+}
+
+function errorManager() {
+  function runtimeError() {
+    console.groupCollapsed("runtimeError()")
+    let selectedArray = answerMgr.vocabMapping[selectors.aChoice.value];
+    let choiceInput = selectors.readNoOfAns;
+    let noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
+    console.info("noOfChoice: ", noOfChoice);
+    
+    // Infinite Loop Prevention: If selectedArray contains very few elements, 
+    // the loop inside do...while of `prepareAnswers()` could run infinitely because it’s trying to pick a unique answer from a small pool, 
+    // but keeps failing due to duplicates. This is less likely, but worth checking.
+
+    if (selectedArray.length <= noOfChoice) {
+      console.error("Not enough unique answers to generate.");
+      showError({errcode: "iLoop", parentName: selectors.settingNoOfAns, idName: "runtime-error"});
+      console.groupEnd();
+      return false;
+    } else {
+      console.groupEnd();
+      return true;
+    }
+  }
+
+  function showError({ errcode, parentName, idName }) {
+    console.groupCollapsed("showError()");
+    const codeMapping = {
+        iLoop: "infiniteloop",
+        noSL: "syllable-error"
+    };
+
+    const classNameMapping = {
+      iLoop: "setting-error",
+      noSL: "setting-error",
+    };
+
+    let errorMessage = "";
+    
+    if (codeMapping[errcode] === "infiniteloop") {
+        console.warn("Runtime error: Not enough unique answers to generate.");
+        errorMessage = `
+            Not enough unique answers available. 
+            Please reduce the number of answer choices.
+        `;
+    }
+
+    else if (codeMapping[errcode] === "syllable-error") {
+      console.error("No syllables selected.");
+        errorMessage = `
+            Select at least one syllable
+        `;
+    }
+
+    buildNode({ 
+      parent: parentName, 
+      child: 'div', 
+      content: errorMessage, 
+      className: classNameMapping[errcode],
+      idName: idName,
+  });
+  console.groupEnd();
+  return this;
+}
+  
+  return {
+    runtimeError,
+    showError,
   }
 }
