@@ -202,7 +202,10 @@ function AnswerManager() {
     let choiceInput = selectors.readNoOfAns;
     let noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
     console.info("noOfChoice: ", noOfChoice);
-    
+
+    /*
+    Infinite loop check moves inside loader() with errorInstance.showError()
+
     // Infinite Loop Prevention: If selectedArray contains very few elements, 
     // the loop inside do...while could run infinitely because it’s trying to pick a unique answer from a small pool, 
     // but keeps failing due to duplicates. This is less likely, but worth checking.
@@ -215,6 +218,7 @@ function AnswerManager() {
       // ဘယ်နေရာမှာ ပြမလဲ စဥ်းစားရမယ်။  အခုက return ထားတော့ အဖြေ မပြပဲ question ချည်းပဲ ပြနေတယ်။ 
       // newquestion ကို load မလုပ်ခင် အရင် စစ်ရမယ်ထင်တာပဲ။  မီးပြတ်တော့မယ်လေ ၊ ဝါးတီးဆွဲရမယ်။ 
     }
+    */
 
     for (let i = 1; i < noOfChoice; i++) {
       let randomIndex;
@@ -461,10 +465,12 @@ function vocabManager() {
 }
 
 function errorManager() {
+  
   function runtimeError() {
     console.groupCollapsed("runtimeError()")
     let selectedArray = answerMgr.vocabMapping[selectors.aChoice.value];
-    let choiceInput = selectors.readNoOfAns;
+    //let choiceInput = selectors.readNoOfAns;
+    let choiceInput = parseInt(selectors.readNoOfAns, 10); // Ensure it's an integer
     let noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
     console.info("noOfChoice: ", noOfChoice);
     
@@ -478,6 +484,7 @@ function errorManager() {
       console.groupEnd();
       return false;
     } else {
+      console.info("No runtime error: good to go!");
       console.groupEnd();
       return true;
     }

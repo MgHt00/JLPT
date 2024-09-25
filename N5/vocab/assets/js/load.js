@@ -178,17 +178,17 @@ function loader() {
       return; // Stop further execution if inputData fails validation
     }
 
-    // ဒီမှာ moveForm ကို newQuestion မစခင်နေရာရွေ့ ၊ infinite loop ဖြစ်နေလား စစ်ဖို့ 
-    // function တစ်ခု ထည့်ဖို့လိုမယ်။
-    
-    listeners().moveForm();
-
     if (appState.qMode === "fresh") {
       await loadFreshJSON(); // Wait for loadFreshJSON to complete
     } else {
       await loadStoredJSON();// Wait for loadStoredJSON to complete
     }
 
+    if(!errorInstance.runtimeError()) { // If vocab pool is too small that it is causing the infinite loop
+      return;
+    }
+
+    listeners().moveForm();
     questionMgr.newQuestion(); // Call after data is loaded
   }
 
