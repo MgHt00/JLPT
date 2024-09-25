@@ -114,6 +114,8 @@ function listeners() {
   }
 
   async function continuetoStoredData() {
+    // infinite loop စစ်ဖို့ လိုမယ်
+    // ans button ကို ၂ reset လုပ်ဖို့ လိုမယ်​
     await loaderInstance.loadStoredJSON();// Wait for loadStoredJSON to complete
     questionMgr.newQuestion();
   }
@@ -173,21 +175,17 @@ function loader() {
 
   async function start(e) {  // Mark start() as async
     e.preventDefault(); // Prevent form from submitting the usual way
+    
+    if (!inputData(e)) { return; } // Stop further execution if inputData fails validation
        
-    if (!inputData(e)) { // If inputData fails, stop execution
-      return; // Stop further execution if inputData fails validation
-    }
-
     if (appState.qMode === "fresh") {
       await loadFreshJSON(); // Wait for loadFreshJSON to complete
     } else {
       await loadStoredJSON();// Wait for loadStoredJSON to complete
     }
 
-    if(!errorInstance.runtimeError()) { // If vocab pool is too small that it is causing the infinite loop
-      return;
-    }
-
+    if(!errorInstance.runtimeError()) { return; } // If vocab pool is too small that it is causing the infinite loop    
+    
     listeners().moveForm();
     questionMgr.newQuestion(); // Call after data is loaded
   }

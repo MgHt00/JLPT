@@ -32,7 +32,7 @@ function questionManager() {
         child: 'div', 
         content: questionObj[appState.qChoiceInput],
       });
-      answerMgr.buildAnswers();  
+      answerMgr.renderAnswers();  
     } else { // if there is no more question left to show
       answerMgr.noMoreQuestion();
     }
@@ -98,11 +98,11 @@ function AnswerManager() {
     en: enVocab
   };
 
-  function buildAnswers() {
-    console.groupCollapsed("AnswerManager() - buildAnswers()");
+  function renderAnswers() {
+    console.groupCollapsed("AnswerManager() - renderAnswers()");
 
     ansArray = prepareAnswers();
-    //console.log("Inside buildAnswers(); ansArray: ", ansArray, "Inside buildAnswers(); flashYesNo: ", flashYesNo);
+    //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
 
     if (appState.flashYesNo) { // if it is a flash card game
       buildNode({ 
@@ -132,8 +132,23 @@ function AnswerManager() {
     if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
       questionMgr.readQuestionMode = "stored";
       console.log("Processed questionMgr.readQuestionMode: ", questionMgr.readQuestionMode);
+      toLocalStorageYesNo();
 
-      buildNode({ 
+    } else if (questionMgr.readQuestionMode === "stored") { // if currently showing data from localstorage
+        if (vocabManager.readStoredLength === 0) { // program စခဲ့တုန်းက stored memory က zero သော်ငြားလဲ ၊ လမ်းမှာ မှားလို့ stored meomory တိုးလာလား စစ်ရမယ်။
+          completeAndRestart();
+        } else {
+          // mistake bank ထဲမှာ ၁ လုံးပဲ ရှိရင် loop မနိုင် ၊ restart မှဖြစ်မယ်
+          toLocalStorageYesNo();
+        }
+    }
+
+    console.groupEnd();
+    return this;
+  }
+
+  function toLocalStorageYesNo() {
+    buildNode({ 
         parent: sectionMessage, 
         child: 'div', 
         content: `There are ${vocabMgr.readStoredLength} words in mistake bank.  Would you like to practice those?`, 
@@ -157,28 +172,24 @@ function AnswerManager() {
         idName: 'continue-no', 
         eventFunction: answerMgr.ContinueYesNo,
       });
-    } else if (questionMgr.readQuestionMode === "stored") { // if currently showing data from localstorage
-      // ဒီမှာ storedmemory က zero သေချာလားထပ်စစ်ဖို့လိုတယ်။ 
-      buildNode({ 
-        parent: sectionMessage, 
-        child: 'div', 
-        content: 'You have completed all the vocabs.  Well done!', 
-        className: 'vocabs-complete', 
-      });
+  }
 
-      buildNode({ 
-        parent: sectionAnswer, 
-        child: 'div', 
-        content: 'Lets Restart!', 
-        className: 'answer-btn', 
-        idName: 'answer-btn', 
-        //eventFunction: listeners().debouncedMoveForm,
-        eventFunction: listeners().restart,
-      });
-    }
+  function completeAndRestart() {
+    buildNode({ 
+      parent: sectionMessage, 
+      child: 'div', 
+      content: 'You have completed all the vocabs.  Well done!', 
+      className: 'vocabs-complete', 
+    });
 
-    console.groupEnd();
-    return this;
+    buildNode({ 
+      parent: sectionAnswer, 
+      child: 'div', 
+      content: 'Lets Restart!', 
+      className: 'answer-btn', 
+      idName: 'answer-btn', 
+      eventFunction: listeners().restart,
+    });
   }
 
   function prepareAnswers() {
@@ -203,22 +214,7 @@ function AnswerManager() {
     let noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
     console.info("noOfChoice: ", noOfChoice);
 
-    /*
-    Infinite loop check moves inside loader() with errorInstance.showError()
-
-    // Infinite Loop Prevention: If selectedArray contains very few elements, 
-    // the loop inside do...while could run infinitely because it’s trying to pick a unique answer from a small pool, 
-    // but keeps failing due to duplicates. This is less likely, but worth checking.
-
-    if (selectedArray.length <= noOfChoice) {
-      console.error("Not enough unique answers to generate.");
-      errorInstance.showError("infiniteloop");
-      return;
-      // JOB - return ပြန်လိုက်ပြီးတဲ့နောက် error ပြရမယ်။  
-      // ဘယ်နေရာမှာ ပြမလဲ စဥ်းစားရမယ်။  အခုက return ထားတော့ အဖြေ မပြပဲ question ချည်းပဲ ပြနေတယ်။ 
-      // newquestion ကို load မလုပ်ခင် အရင် စစ်ရမယ်ထင်တာပဲ။  မီးပြတ်တော့မယ်လေ ၊ ဝါးတီးဆွဲရမယ်။ 
-    }
-    */
+    /* Infinite loop check is moved inside loader() with errorInstance.showError() */
 
     for (let i = 1; i < noOfChoice; i++) {
       let randomIndex;
@@ -278,7 +274,7 @@ function AnswerManager() {
         content: ['Yes', 'No'], 
         className: 'answer-btn', 
         idName: 'choice-btn', 
-        eventFunction: storeOrContinue 
+        eventFunction: flashcardYesNo 
       });
     } else {
       buildNode({ 
@@ -328,8 +324,8 @@ function AnswerManager() {
     console.groupEnd();
   }
 
-  function storeOrContinue(event) { // sn4
-    console.groupCollapsed("AnswerManager() - storeOrContinue()");
+  function flashcardYesNo(event) { // sn4
+    console.groupCollapsed("AnswerManager() - flashcardYesNo()");
 
     const btnID = event.currentTarget.id;
     //const questionInstance = questionManager();
@@ -374,7 +370,7 @@ function AnswerManager() {
 
   return {
     vocabMapping,
-    buildAnswers,
+    renderAnswers,
     noMoreQuestion,
     ContinueYesNo,
   }
