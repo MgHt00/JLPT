@@ -1,6 +1,6 @@
 const questionMgr = questionManager();
 const vocabMgr =  vocabManager();
-const answerMgr = AnswerManager();
+const answerMgr = answerManager();
 
 function fetchOneCategory(source, target, catName) {
   let i = 0;
@@ -12,20 +12,18 @@ function fetchOneCategory(source, target, catName) {
 
 function questionManager() {
   let questionObj = {};
-  //let questionRound = "fresh";
-  //console.log("Initial questionRound: ", questionRound);
 
   function newQuestion() {
     console.groupCollapsed("---questionManager() - newQuestion()---");
 
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
-      console.log("vocabArray ", appData.vocabArray);
+      //console.log("vocabArray ", appData.vocabArray);
       
       questionObj = prepareQuestion();
       appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
       
-      console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
+      //console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
       
       buildNode({ 
         parent: sectionQuestion, 
@@ -91,7 +89,7 @@ function questionManager() {
 }
 
 
-function AnswerManager() {
+function answerManager() {
   const vocabMapping = {
     ka: kaVocab,
     hi: hiVocab,
@@ -99,7 +97,7 @@ function AnswerManager() {
   };
 
   function renderAnswers() {
-    console.groupCollapsed("AnswerManager() - renderAnswers()");
+    console.groupCollapsed("answerManager() - renderAnswers()");
 
     ansArray = prepareAnswers();
     //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
@@ -128,17 +126,24 @@ function AnswerManager() {
 
   function noMoreQuestion() {
     console.groupCollapsed("noMoreQuestion()");
-
+    
     if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
       questionMgr.readQuestionMode = "stored";
       console.log("Processed questionMgr.readQuestionMode: ", questionMgr.readQuestionMode);
       toLocalStorageYesNo();
 
     } else if (questionMgr.readQuestionMode === "stored") { // if currently showing data from localstorage
-        if (vocabManager.readStoredLength === 0) { // program စခဲ့တုန်းက stored memory က zero သော်ငြားလဲ ၊ လမ်းမှာ မှားလို့ stored meomory တိုးလာလား စစ်ရမယ်။
+        if (noMoreQuestion.ranOnce) { // checked whether localstorage has been ran once.
+          console.info("mistake bank as been ran once. ", noMoreQuestion.ranOnce);
           completeAndRestart();
-        } else {
-          // mistake bank ထဲမှာ ၁ လုံးပဲ ရှိရင် loop မနိုင် ၊ restart မှဖြစ်မယ်
+        }
+        else if (vocabMgr.readStoredLength <= 2) { 
+          // even though local storage is zero when the program starts, check whether new words have been added during the run
+          // less than 2 vocab in local storage will lead to infinite loop; so the if statement is adjusted to <=2
+          completeAndRestart();
+        } 
+        else {
+          noMoreQuestion.ranOnce = true;
           toLocalStorageYesNo();
         }
     }
@@ -193,10 +198,10 @@ function AnswerManager() {
   }
 
   function prepareAnswers() {
-    console.groupCollapsed("AnswerManager() - prepareAnswers()");
+    console.groupCollapsed("answerManager() - prepareAnswers()");
 
     let selectedArray = vocabMapping[selectors.aChoice.value];
-    console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
+    //onsole.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
     let tempAnsArray = [];
 
     tempAnsArray[0] = appState.correctAns; // add correct answer in index. 0
@@ -210,7 +215,9 @@ function AnswerManager() {
       console.error(`The vocab array is empty for choice: ${selectors.aChoice.value}`);
       return;
     }
-    let choiceInput = selectors.readNoOfAns;
+    //let choiceInput = selectors.readNoOfAns;
+    let choiceInput = appState.noOfAnswers;
+    console.info("choiceInput = appState.noOfAnswers: ", choiceInput);
     let noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
     console.info("noOfChoice: ", noOfChoice);
 
@@ -242,7 +249,7 @@ function AnswerManager() {
   }
 
   function showAnswer() {
-    console.groupCollapsed("AnswerManager() - showAnswer()");
+    console.groupCollapsed("answerManager() - showAnswer()");
 
     // Remove exiting buttons
     const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
@@ -289,7 +296,7 @@ function AnswerManager() {
   }
 
   function multipleChoice(event) {
-    console.groupCollapsed("AnswerManager() - multipleChoice()");
+    console.groupCollapsed("answerManager() - multipleChoice()");
 
     const btnText = event.currentTarget.textContent;
     if (appState.correctAns === btnText) {
@@ -325,19 +332,15 @@ function AnswerManager() {
   }
 
   function flashcardYesNo(event) { // sn4
-    console.groupCollapsed("AnswerManager() - flashcardYesNo()");
+    console.groupCollapsed("answerManager() - flashcardYesNo()");
 
     const btnID = event.currentTarget.id;
-    //const questionInstance = questionManager();
 
     if (btnID === "choice-btn-0") {
-      //questionMgr.newQuestion();
       questionMgr.completeAndContinue();
     } else if (btnID === "choice-btn-1") {
       
-      vocabMgr.storeToPractice(questionMgr); // // add wrongly selected word to localstorage
-      //practiceAgain(questionInstance);
-      //questionMgr.newQuestion(); // NEED TO CHECK THIS
+      vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
       questionManager.completeAndContinue();
     }
 
@@ -345,15 +348,15 @@ function AnswerManager() {
   }
 
   function ContinueYesNo(event) {
-    console.groupCollapsed("AnswerManager() - ContinueYesNo()");
+    console.groupCollapsed("answerManager() - ContinueYesNo()");
 
     const btnID = event.currentTarget.id;
 
     if (btnID === "continue-yes-0") {
+      noMoreQuestion.ranOnce = true; // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
+      console.info("noMoreQuestion.ranOnce CHANGED :", noMoreQuestion.ranOnce);
       listenerInstance.continuetoStoredData();
     } else if (btnID === "continue-no-0") {
-
-      //listeners().debouncedMoveForm();
       listenerInstance.restart();
     }
 
@@ -466,7 +469,7 @@ function errorManager() {
     console.groupCollapsed("runtimeError()")
     let selectedArray = answerMgr.vocabMapping[selectors.aChoice.value];
     //let choiceInput = selectors.readNoOfAns;
-    let choiceInput = parseInt(selectors.readNoOfAns, 10); // Ensure it's an integer
+    let choiceInput = parseInt(appState.noOfAnswers, 10); // Ensure it's an integer
     let noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
     console.info("noOfChoice: ", noOfChoice);
     

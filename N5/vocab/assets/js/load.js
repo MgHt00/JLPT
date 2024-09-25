@@ -114,10 +114,16 @@ function listeners() {
   }
 
   async function continuetoStoredData() {
-    // infinite loop စစ်ဖို့ လိုမယ်
-    // ans button ကို ၂ reset လုပ်ဖို့ လိုမယ်​
+    console.groupCollapsed("continuetoStoredData()");
+
+    if (vocabInstance.readStoredLength <= 3) {
+      appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
+      console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
+    }
     await loaderInstance.loadStoredJSON();// Wait for loadStoredJSON to complete
     questionMgr.newQuestion();
+
+    console.groupEnd();
   }
   
   function debounce(func, delay) {
@@ -250,15 +256,6 @@ function loader() {
             parentName: selectors.fieldsetSyllable,
             idName: 'syllable-error',
           });
-          /*
-          buildNode({
-            parent: selectors.fieldsetSyllable, 
-            child: 'div', 
-            content: 'Select at least one syllable', 
-            className: 'setting-error', 
-            idName: 'syllable-error',
-          });
-          */
         }
         console.groupEnd();
         return false; // Signal that inputData validation failed
