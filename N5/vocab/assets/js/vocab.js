@@ -140,6 +140,7 @@ function answerManager() {
         else if (vocabMgr.readStoredLength <= 2) { 
           // even though local storage is zero when the program starts, check whether new words have been added during the run
           // less than 2 vocab in local storage will lead to infinite loop; so the if statement is adjusted to <=2
+          console.info("too few vocabs in local storage");
           completeAndRestart();
         } 
         else {
@@ -201,7 +202,7 @@ function answerManager() {
     console.groupCollapsed("answerManager() - prepareAnswers()");
 
     let selectedArray = vocabMapping[selectors.aChoice.value];
-    //onsole.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
+    //console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
     let tempAnsArray = [];
 
     tempAnsArray[0] = appState.correctAns; // add correct answer in index. 0
@@ -464,38 +465,54 @@ function vocabManager() {
 }
 
 function errorManager() {
+  const codeMapping = {
+    iLoop: "infiniteloop",
+    noSL: "syllable-error"
+  };
   
-  function runtimeError() {
+  function runtimeError(errcode) {
     console.groupCollapsed("runtimeError()")
-    let selectedArray = answerMgr.vocabMapping[selectors.aChoice.value];
-    //let choiceInput = selectors.readNoOfAns;
-    let choiceInput = parseInt(appState.noOfAnswers, 10); // Ensure it's an integer
-    let noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
-    console.info("noOfChoice: ", noOfChoice);
     
-    // Infinite Loop Prevention: If selectedArray contains very few elements, 
-    // the loop inside do...while of `prepareAnswers()` could run infinitely because it’s trying to pick a unique answer from a small pool, 
-    // but keeps failing due to duplicates. This is less likely, but worth checking.
-
-    if (selectedArray.length <= noOfChoice) {
-      console.error("Not enough unique answers to generate.");
-      showError({errcode: "iLoop", parentName: selectors.settingNoOfAns, idName: "runtime-error"});
-      console.groupEnd();
-      return false;
-    } else {
-      console.info("No runtime error: good to go!");
-      console.groupEnd();
-      return true;
+    if (codeMapping[errcode] === "infiniteloop") {
+      let selectedArray = answerMgr.vocabMapping[selectors.aChoice.value];
+      //let choiceInput = selectors.readNoOfAns;
+      let choiceInput = parseInt(appState.noOfAnswers, 10); // Ensure it's an integer
+      let noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
+      console.info("noOfChoice: ", noOfChoice);
+      
+      // Infinite Loop Prevention: If selectedArray contains very few elements, 
+      // the loop inside do...while of `prepareAnswers()` could run infinitely because it’s trying to pick a unique answer from a small pool, 
+      // but keeps failing due to duplicates. This is less likely, but worth checking.
+  
+      if (selectedArray.length <= noOfChoice) {
+        console.error("Not enough unique answers to generate.");
+        if (!document.querySelector("[id|='runtime-error']")) { // if error is not already shown
+          showError({errcode: "iLoop", parentName: selectors.settingNoOfAns, idName: "runtime-error"});
+        }  
+        console.groupEnd();
+        return false;
+      } else {
+        console.info("No runtime error: good to go!");
+        console.groupEnd();
+        return true;
+      }
     }
+    
+    else if(codeMapping[errcode] === "syllable-error") {
+      if (!document.querySelector("[id|='syllable-error']")) { // if error is not already shown
+        errorInstance.showError({
+          errcode: "noSL",
+          parentName: selectors.fieldsetSyllable,
+          idName: 'syllable-error',
+        });
+    }
+    return this;
   }
+}
 
   function showError({ errcode, parentName, idName }) {
     console.groupCollapsed("showError()");
-    const codeMapping = {
-        iLoop: "infiniteloop",
-        noSL: "syllable-error"
-    };
-
+    
     const classNameMapping = {
       iLoop: "setting-error",
       noSL: "setting-error",

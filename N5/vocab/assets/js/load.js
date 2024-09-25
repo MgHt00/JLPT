@@ -12,7 +12,6 @@ const errorInstance = errorManager();
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
   listenerInstance.formAnimationListeners();
-  //errorInstance.showError({errcode: "iLoop", parentName: selectors.settingNoOfAns});
   console.groupEnd();
 })();
 
@@ -190,7 +189,7 @@ function loader() {
       await loadStoredJSON();// Wait for loadStoredJSON to complete
     }
 
-    if(!errorInstance.runtimeError()) { return; } // If vocab pool is too small that it is causing the infinite loop    
+    if(!errorInstance.runtimeError("iLoop")) { return; } // If vocab pool is too small that it is causing the infinite loop    
     
     listeners().moveForm();
     questionMgr.newQuestion(); // Call after data is loaded
@@ -250,13 +249,7 @@ function loader() {
       // Validate syllable choices and show an error if none are selected
       appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
       if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
-        if (!document.querySelector("[id|='syllable-error']")) { // if error is not already shown
-          errorInstance.showError({
-            errcode: "noSL",
-            parentName: selectors.fieldsetSyllable,
-            idName: 'syllable-error',
-          });
-        }
+        errorInstance.runtimeError("noSL");
         console.groupEnd();
         return false; // Signal that inputData validation failed
       }
