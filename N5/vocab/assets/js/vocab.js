@@ -110,6 +110,7 @@ function answerManager() {
     //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
 
     if (appState.flashYesNo) { // if it is a flash card game
+      assignLanguage(sectionAnswer, "en"); // if aChoice was set to Kanji or Hirigana, reset to "en"
       buildNode({ 
         parent: sectionAnswer, 
         child: 'div', 

@@ -1,6 +1,6 @@
 function assignLanguage(sectionBlock, lang) {
   // Remove only existing language-related classes
-  sectionBlock.classList.remove("hi", "en"); // Add other language class names if necessary
+  sectionBlock.classList.remove("jp", "en"); // Add other language class names if necessary
   
   // Remove the existing "lang" attribute if it exists
   if (sectionBlock.hasAttribute("lang")) {
