@@ -106,7 +106,7 @@ function answerManager() {
       buildNode({ 
         parent: sectionAnswer, 
         child: 'div', 
-        content: 'Show Answer', 
+        content: 'Check Answer', 
         className: 'answer-btn', 
         idName: 'answer-btn', 
         eventFunction: showAnswer 
