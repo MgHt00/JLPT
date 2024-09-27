@@ -69,6 +69,14 @@ const selectors = {
     return document.querySelector('input[name="source"]:checked').value;
   },
 
+  get readqChoiceInput() {
+    return this.qChoice.value;
+  },
+
+  get readaChoiceInput() {
+    return this.aChoice.value;
+  },
+
   get readMemoryInfoDOMs() {
     return [document.querySelector("#memory-info-0"), document.querySelector("#flush-memory-btn-0")];
   },

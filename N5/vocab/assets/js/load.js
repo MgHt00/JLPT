@@ -255,6 +255,11 @@ function loader() {
       }
     }
     console.info("appData.syllableChoice: ", appData.syllableChoice);
+    
+    appState.qChoiceInput = selectors.readqChoiceInput ?? "hi";
+    appState.aChoiceInput = selectors.readaChoiceInput ?? "en";
+    console.info("appState.qChoiceInput: ", appState.qChoiceInput, "appState.aChoiceInput: ", appState.aChoiceInput);
+    
     console.groupEnd();
     return true; // Signal that inputData validation passed
   }
