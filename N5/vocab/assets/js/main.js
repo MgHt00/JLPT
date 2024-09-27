@@ -1,7 +1,19 @@
 function assignLanguage(sectionBlock, lang) {
+  // Remove only existing language-related classes
+  sectionBlock.classList.remove("hi", "en"); // Add other language class names if necessary
+  
+  // Remove the existing "lang" attribute if it exists
+  if (sectionBlock.hasAttribute("lang")) {
+    sectionBlock.removeAttribute("lang");
+  }
+
+  // Set the new "lang" attribute
   sectionBlock.setAttribute("lang", lang);
+  
+  // Add the corresponding class for the new language
   sectionBlock.classList.add(lang);
 }
+
 
 function randomNo(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
