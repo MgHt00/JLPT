@@ -295,12 +295,14 @@ function loader() {
 
     const results = await Promise.all(promises);
     appData.vocabArray = results.flat();
+    console.log("vocabArray(before removeBlankQuestion(): ", appData.vocabArray);
+    appData.vocabArray = removeBlankQuestions(appData.vocabArray);
+    console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
 
     fetchOneCategory(appData.vocabArray, kaVocab, ka);
     fetchOneCategory(appData.vocabArray, hiVocab, hi);
     fetchOneCategory(appData.vocabArray, enVocab, en);
 
-    console.log("Inside loadFreshJSON(), vocabArray: ", appData.vocabArray);
     console.groupEnd();
   }
 
@@ -318,6 +320,7 @@ function loader() {
     
     // Assign storedData to appData.vocabArray
     appData.vocabArray = storedData;
+    // JOB need to pass to removeBlankQuestions()
     
     console.log("Inside loadStoredJSON(), appData.vocabArray: ", appData.vocabArray);
     console.log("Inside loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length);
@@ -335,6 +338,21 @@ function loader() {
 
     console.groupEnd();
   }
+
+  function removeBlankQuestions(originalArr) {
+    //console.groupCollapsed("removeBlankQuestions()");
+
+    let updatedArr = [];
+    for (let i of originalArr) {
+      if (appState.qChoiceInput && i[appState.qChoiceInput] !== "") {
+        updatedArr.push(i);
+      }
+    }
+
+    console.groupEnd();
+    return updatedArr; // Return the updated array
+}
+
 
   function loadMemoryData () {
     let storedLength = vocabInstance.readStoredLength;

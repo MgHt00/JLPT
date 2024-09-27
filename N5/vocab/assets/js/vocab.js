@@ -19,14 +19,17 @@ function questionManager() {
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
       console.log("vocabArray ", appData.vocabArray);
+      questionObj = prepareQuestion();
       
       // Ensure prepareQuestion() returns a valid question by using a do...while loop
+      /* already checked with removeBlankQuestions()
       do {
         questionObj = prepareQuestion();
         if (questionObj[appState.qChoiceInput] === "") {
           console.log("Empty question text found. Retrying...");
         }
       } while (questionObj[appState.qChoiceInput] === ""); // Keep running prepareQuestion() until the desired field is not empty
+      */
 
       appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
       
