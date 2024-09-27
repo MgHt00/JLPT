@@ -14,7 +14,7 @@ function questionManager() {
   let questionObj = {};
 
   function newQuestion() {
-    console.groupCollapsed("---questionManager() - newQuestion()---");
+    //console.groupCollapsed("---questionManager() - newQuestion()---");
 
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
@@ -39,7 +39,7 @@ function questionManager() {
   }
 
   function setMode(m) {
-    console.groupCollapsed("questionManager() - setMode()");
+    //console.groupCollapsed("questionManager() - setMode()");
 
     const validModes = ["fresh", "stored"];
     if(!validModes.includes(m)) {
@@ -47,14 +47,14 @@ function questionManager() {
       console.warn("Invalid mode is passed. Defaulting to `fresh`.");
     } else {
       newQuestion.mode = m;
-      console.info("Question mode: ", newQuestion.mode);
+      //console.info("Question mode: ", newQuestion.mode);
     }
 
     console.groupEnd();
   }
 
   function prepareQuestion() {
-    console.groupCollapsed("questionManager() - prepareQuestion()");
+    //console.groupCollapsed("questionManager() - prepareQuestion()");
 
     let selectedQuestionObj = {}; // to store the question obj temporarily
     if (typeof prepareQuestion.index === 'undefined') {
@@ -71,7 +71,7 @@ function questionManager() {
   }
 
   function completeAndContinue() {
-    console.groupCollapsed("questionManager() - completeAndContinue()");
+    //console.groupCollapsed("questionManager() - completeAndContinue()");
 
     vocabMgr.removeQuestion(prepareQuestion.index);
     newQuestion();
@@ -97,7 +97,7 @@ function answerManager() {
   };
 
   function renderAnswers() {
-    console.groupCollapsed("answerManager() - renderAnswers()");
+    //console.groupCollapsed("answerManager() - renderAnswers()");
 
     ansArray = prepareAnswers();
     //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
@@ -125,22 +125,22 @@ function answerManager() {
   }
 
   function noMoreQuestion() {
-    console.groupCollapsed("noMoreQuestion()");
+    //console.groupCollapsed("noMoreQuestion()");
     
     if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
       questionMgr.readQuestionMode = "stored";
-      console.log("Processed questionMgr.readQuestionMode: ", questionMgr.readQuestionMode);
+      //console.log("Processed questionMgr.readQuestionMode: ", questionMgr.readQuestionMode);
       toLocalStorageYesNo();
 
     } else if (questionMgr.readQuestionMode === "stored") { // if currently showing data from localstorage
         if (noMoreQuestion.ranOnce) { // checked whether localstorage has been ran once.
-          console.info("mistake bank as been ran once. ", noMoreQuestion.ranOnce);
+          //console.info("mistake bank as been ran once. ", noMoreQuestion.ranOnce);
           completeAndRestart();
         }
         else if (vocabMgr.readStoredLength <= 2) { 
           // even though local storage is zero when the program starts, check whether new words have been added during the run
           // less than 2 vocab in local storage will lead to infinite loop; so the if statement is adjusted to <=2
-          console.info("too few vocabs in local storage");
+          //console.info("too few vocabs in local storage");
           completeAndRestart();
         } 
         else {
@@ -199,7 +199,7 @@ function answerManager() {
   }
 
   function prepareAnswers() {
-    console.groupCollapsed("answerManager() - prepareAnswers()");
+    //console.groupCollapsed("answerManager() - prepareAnswers()");
 
     let selectedArray = vocabMapping[selectors.aChoice.value];
     //console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
@@ -218,9 +218,9 @@ function answerManager() {
     }
     //let choiceInput = selectors.readNoOfAns;
     let choiceInput = appState.noOfAnswers;
-    console.info("choiceInput = appState.noOfAnswers: ", choiceInput);
+    //console.info("choiceInput = appState.noOfAnswers: ", choiceInput);
     let noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
-    console.info("noOfChoice: ", noOfChoice);
+    //console.info("noOfChoice: ", noOfChoice);
 
     /* Infinite loop check is moved inside loader() with errorInstance.showError() */
 
@@ -250,7 +250,7 @@ function answerManager() {
   }
 
   function showAnswer() {
-    console.groupCollapsed("answerManager() - showAnswer()");
+    //console.groupCollapsed("answerManager() - showAnswer()");
 
     // Remove exiting buttons
     const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
@@ -297,7 +297,7 @@ function answerManager() {
   }
 
   function multipleChoice(event) {
-    console.groupCollapsed("answerManager() - multipleChoice()");
+    //console.groupCollapsed("answerManager() - multipleChoice()");
 
     const btnText = event.currentTarget.textContent;
     if (appState.correctAns === btnText) {
@@ -333,7 +333,7 @@ function answerManager() {
   }
 
   function flashcardYesNo(event) { // sn4
-    console.groupCollapsed("answerManager() - flashcardYesNo()");
+    //console.groupCollapsed("answerManager() - flashcardYesNo()");
 
     const btnID = event.currentTarget.id;
 
@@ -383,14 +383,15 @@ function answerManager() {
 function vocabManager() {
   
   function removeQuestion(i) {
-    console.groupCollapsed("vocabManager() - removeQuestion()");
+    //console.groupCollapsed("vocabManager() - removeQuestion()");
 
     if (appData.vocabArray.length >= 1) {
       appData.vocabArray.splice(i, 1);
-      console.log(`currentQIndex ${i} is removed. vocabArray.length: ${appData.vocabArray.length}`);
-      console.log("Inside removeQuestion(): After deletion; ", appData.vocabArray);
+      //console.log(`currentQIndex ${i} is removed. vocabArray.length: ${appData.vocabArray.length}`);
+      //console.log("Inside removeQuestion(): After deletion; ", appData.vocabArray);
     } else {
-      console.log(`vocabArray.length: ${appData.vocabArray.length}; reach the end.`);
+      //console.log(`vocabArray.length: ${appData.vocabArray.length}; reach the end.`);
+      // !!!​CHECK!!  Is it really ok without anything in this else block?????????
     }
 
     console.groupEnd();
@@ -400,11 +401,6 @@ function vocabManager() {
     console.groupCollapsed("vocabManager() - storeToPractice()");
 
     let incorrectSets = loadLocalStorage();
-
-    // QuestionManager ရဲ့ questionRound ကို အပြင်ထုတ်ပြီး အခု function ထဲမှာ ပြင်ဖို့လိုတယ် ထင်တယ်
-    // စမ်းဖို့က memory ကို flush လုပ် , round အသစ် နဲ့ စပြီး answer အမှားကို ရွေး ။ သဘောက လမ်းမှာ localstorage ထဲ
-    // အသစ်ထည့်တယ်ပေ့ါ။  vocab ကုန်သွားတဲ့အခါ localstorage ရှိနေသော်လည်း questionmanager က memory zero ထင်ပြီး
-    // let's restart ပြနေတယ်။  
     
     //console.log(questionInstance.readQuestionObj);
     // [sn6] Check if the object already exists in the array
@@ -459,8 +455,6 @@ function vocabManager() {
       let storedLength = loadLocalStorage();
       return storedLength.length;
     },
-    //clearIncorrectAnswers,
-    //get readQuestionIndex() { return currentQIndex; },
   }
 }
 
