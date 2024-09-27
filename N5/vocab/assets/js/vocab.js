@@ -422,11 +422,11 @@ function vocabManager() {
   }
   
   function loadLocalStorage() {
-    console.groupCollapsed("vocabManager() - loadLocalStorage()");
+    //console.groupCollapsed("vocabManager() - loadLocalStorage()");
 
     let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
     storedLength = storedObjects.length;
-    console.log("storedObjects ", storedObjects);
+    //console.log("storedObjects ", storedObjects);
     console.groupEnd();
 
     return storedObjects;

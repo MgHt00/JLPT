@@ -4,7 +4,7 @@ const vocabInstance = vocabManager();
 const errorInstance = errorManager();
 
 (function defaultState() {
-  console.groupCollapsed("defaultState()");
+  //console.groupCollapsed("defaultState()");
   loaderInstance.loadMemoryData();
   flipNodeState(...selectors.noOfAnsAll); // [sn14]
   //toggleClass('hide', selectors.bringBackBtn, sectionQuestion, sectionAnswer);
@@ -158,7 +158,7 @@ function listeners() {
   }
 
   function rePrintMemory() {
-    console.groupCollapsed("rePrintMemory()");
+    //console.groupCollapsed("rePrintMemory()");
 
     clearNode({parent: selectors.memoryInfo});
     loaderInstance.loadMemoryData()
@@ -299,6 +299,7 @@ function loader() {
     fetchOneCategory(appData.vocabArray, kaVocab, ka);
     fetchOneCategory(appData.vocabArray, hiVocab, hi);
     fetchOneCategory(appData.vocabArray, enVocab, en);
+
     console.log("Inside loadFreshJSON(), vocabArray: ", appData.vocabArray);
     console.groupEnd();
   }
