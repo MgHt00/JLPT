@@ -320,9 +320,9 @@ function loader() {
     
     // Assign storedData to appData.vocabArray
     appData.vocabArray = storedData;
-    // JOB need to pass to removeBlankQuestions()
-    
-    console.log("Inside loadStoredJSON(), appData.vocabArray: ", appData.vocabArray);
+    console.log("vocabArray(before removeBlankQuestion(): ", appData.vocabArray);
+    appData.vocabArray = removeBlankQuestions(appData.vocabArray);
+    console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
     console.log("Inside loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length);
     
     // Check if the array is empty
