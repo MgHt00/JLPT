@@ -283,7 +283,7 @@ function answerManager() {
         content: ['Yes', 'No'], 
         className: 'answer-btn', 
         idName: 'choice-btn', 
-        eventFunction: flashcardYesNo 
+        eventFunction: handleFlashCardAnswer 
       });
     } else {
       buildNode({ 
@@ -333,8 +333,8 @@ function answerManager() {
     console.groupEnd();
   }
 
-  function flashcardYesNo(event) { // sn4
-    //console.groupCollapsed("answerManager() - flashcardYesNo()");
+  function handleFlashCardAnswer(event) { // sn4
+    //console.groupCollapsed("answerManager() - handleFlashCardAnswer()");
 
     const btnID = event.currentTarget.id;
 
@@ -342,7 +342,7 @@ function answerManager() {
       questionMgr.finalizeQuestionAndProceed();
     } else if (btnID === "choice-btn-1") {
       vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
-      questionManager.finalizeQuestionAndProceed();
+      questionMgr.finalizeQuestionAndProceed();
     }
 
     console.groupEnd();
