@@ -118,7 +118,7 @@ function answerManager() {
         child: 'div', 
         content: ansArray, 
         className: 'answer-btn', 
-        eventFunction: multipleChoice 
+        eventFunction: handleMultipleChoiceAnswer 
       });
     }
 
@@ -297,8 +297,8 @@ function answerManager() {
     console.groupEnd();
   }
 
-  function multipleChoice(event) {
-    //console.groupCollapsed("answerManager() - multipleChoice()");
+  function handleMultipleChoiceAnswer(event) {
+    //console.groupCollapsed("answerManager() - handleMultipleChoiceAnswer()");
 
     const btnText = event.currentTarget.textContent;
     if (appState.correctAns === btnText) {
