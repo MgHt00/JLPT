@@ -2,6 +2,7 @@ const body = document.querySelector("#section-body");
 const sectionQuestion = document.querySelector("#section-question");
 const sectionMessage = document.querySelector("#section-message");
 const sectionAnswer = document.querySelector("#section-answer");
+const sectionStatus = document.querySelector("#section-status");
 
 let ka = "ka";
 let hi = "hi";
@@ -21,7 +22,7 @@ const appState = {
   aChoiceInput: "en",
   flashYesNo: true,
   qMode: "fresh",
-  noOfAnswers: 4,
+  noOfAnswers: 2,
   correctAns: "",
 };
 

@@ -66,8 +66,20 @@ function listeners() {
   }
    
   function flashModeChanges(e) {
-    flipNodeState(...selectors.noOfAnsAll); 
+    console.groupCollapsed("flashModeChanges()");
+    flipNodeState(...selectors.noOfAnsAll);
+    
+    // set noOfAns to 2 to bypass runtime error if flashcard mode is selected
+    if (selectors.readFlashYesNo) {
+      console.info("Flashcard mode is selected.");
+      console.warn("noOfAnswers set to `2` to avoid runtime error");
+      appState.noOfAnswers = 2;
+    } else {
+      // Validate number of answers and set default if invalid
+      validateNoOfAns();
+    }
   }
+
   
   function questionModeChanges(e) {
     let selectedMode = selectors.readQuestionMode;
@@ -181,7 +193,7 @@ function loader() {
   async function start(e) {  // Mark start() as async
     e.preventDefault(); // Prevent form from submitting the usual way
     
-    if (!inputData(e)) { return; } // Stop further execution if inputData fails validation
+    if (!validateInputData(e)) { return; } // Stop further execution if inputData fails validation
        
     if (appState.qMode === "fresh") {
       await loadFreshJSON(); // Wait for loadFreshJSON to complete
@@ -195,9 +207,9 @@ function loader() {
     questionMgr.newQuestion(); // Call after data is loaded
   }
 
-  function inputData(e) {
+  function validateInputData(e) {
     // input validation and loading function
-    console.groupCollapsed("inputData()");
+    console.groupCollapsed("validateInputData()");
     
     // Convert the string values "true"/"false" to boolean values [sn16]
     appState.randomYesNo = selectors.readRandomYesNo === 'true';
@@ -207,15 +219,7 @@ function loader() {
     console.info("appState.flashYesNo: ", appState.flashYesNo);
 
     // Validate number of answers and set default if invalid
-    const noOfAnswers = parseInt(selectors.readNoOfAns, 10);
-    if (isNaN(noOfAnswers) || noOfAnswers < 2 || noOfAnswers > 4) {
-      appState.noOfAnswers = 4; // Default to 4 answers
-      console.warn("Invalid number of answers. Setting default to 4.");
-    } else {
-      appState.noOfAnswers = noOfAnswers;
-    }
-    console.info("appState.noOfAnswers: ", appState.noOfAnswers);
-
+    validateNoOfAns();
 
     appState.qMode = selectors.readQuestionMode;
     // Validate question mode and set default
@@ -295,9 +299,9 @@ function loader() {
 
     const results = await Promise.all(promises);
     appData.vocabArray = results.flat();
-    console.log("vocabArray(before removeBlankQuestion(): ", appData.vocabArray);
+    //console.log("vocabArray(before removeBlankQuestion(): ", appData.vocabArray);
     appData.vocabArray = removeBlankQuestions(appData.vocabArray);
-    console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
+    //console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
 
     fetchOneCategory(appData.vocabArray, kaVocab, ka);
     fetchOneCategory(appData.vocabArray, hiVocab, hi);
@@ -341,7 +345,6 @@ function loader() {
 
   function removeBlankQuestions(originalArr) {
     //console.groupCollapsed("removeBlankQuestions()");
-
     let updatedArr = [];
     for (let i of originalArr) {
       if (appState.qChoiceInput && i[appState.qChoiceInput] !== "") {
@@ -351,8 +354,7 @@ function loader() {
 
     console.groupEnd();
     return updatedArr; // Return the updated array
-}
-
+  }
 
   function loadMemoryData () {
     let storedLength = vocabInstance.readStoredLength;
@@ -401,9 +403,22 @@ function loader() {
     }
   }
 
+  function validateNoOfAns() {
+    console.groupCollapsed("validateNoOfAns()");
+    console.info("validateNoOfAns() is called");
+    // Validate number of answers and set default if invalid
+    const noOfAnswers = parseInt(selectors.readNoOfAns, 10);
+    if (isNaN(noOfAnswers) || noOfAnswers < 2 || noOfAnswers > 4) {
+      appState.noOfAnswers = 2; // Default to 2 answers
+      console.warn("Invalid number of answers. Setting default to 2.");
+    } else {
+      appState.noOfAnswers = noOfAnswers;
+    }
+    console.info("appState.noOfAnswers: ", appState.noOfAnswers);
+  }
+
   return {
     start,
-    //loadData,
     loadMemoryData,
     loadStoredJSON,
   }
