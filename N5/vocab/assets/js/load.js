@@ -76,8 +76,9 @@ function listeners() {
       appState.noOfAnswers = 2;
     } else {
       // Validate number of answers and set default if invalid
-      validateNoOfAns();
+      validateAndSetAnswerCount();
     }
+    console.groupEnd();
   }
 
   
@@ -211,55 +212,20 @@ function loader() {
     // input validation and loading function
     console.groupCollapsed("validateInputData()");
     
-    // Convert the string values "true"/"false" to boolean values [sn16]
-    appState.randomYesNo = selectors.readRandomYesNo === 'true';
-    console.info("appState.randomYesNo: ",appState.randomYesNo);
+    convertToBoolean(['randomYesNo', 'flashYesNo']); // Convert the string values "true"/"false" to boolean values
 
-    appState.flashYesNo = selectors.readFlashYesNo === 'true';
-    console.info("appState.flashYesNo: ", appState.flashYesNo);
+    validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
 
-    // Validate number of answers and set default if invalid
-    validateNoOfAns();
+    validateAndSetQuestionMode(); // Validate question mode and set default
 
-    appState.qMode = selectors.readQuestionMode;
-    // Validate question mode and set default
-    const validModes = ["fresh", "stored"];
-    if (!validModes.includes(selectors.readQuestionMode)) {
-      appState.qMode = "fresh"; // Default to 'fresh'
-      console.warn("Invalid question mode. Defaulting to 'fresh'.");
-    } else {
-      appState.qMode = selectors.readQuestionMode;
-    }
-    console.info("appState.qMode: ", appState.qMode);
-
-    // Validate and assign the correct language for the question and answer sections
-    const validLanguages = ["hi", "ka"];
-    if (validLanguages.includes(selectors.qChoice.value)) {
-      assignLanguage(sectionQuestion, jpLang);
-    } else {
-      assignLanguage(sectionQuestion, enLang);
-    }
-
-    if (validLanguages.includes(selectors.aChoice.value)) {
-      assignLanguage(sectionAnswer, jpLang);
-    } else {
-      assignLanguage(sectionAnswer, enLang);
-    }
+    assignLanguageBySelection(); // Validate and assign the correct language for the question and answer sections
 
     assignLanguage(sectionMessage, enLang); // Always set message section to English
 
-    // Run the following block only if qMode is 'fresh'
-    if (appState.qMode === "fresh") {
-      // Validate syllable choices and show an error if none are selected
-      appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
-      if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
-        errorInstance.runtimeError("noSL");
-        console.groupEnd();
-        return false; // Signal that inputData validation failed
-      }
+    if (appState.qMode === "fresh") { // Run the following block only if qMode is 'fresh'
+      validateSyllable(); // Validate syllable choices and show an error if none are selected
     }
-    console.info("appData.syllableChoice: ", appData.syllableChoice);
-    
+
     appState.qChoiceInput = selectors.readqChoiceInput ?? "hi";
     appState.aChoiceInput = selectors.readaChoiceInput ?? "en";
     console.info("appState.qChoiceInput: ", appState.qChoiceInput, "appState.aChoiceInput: ", appState.aChoiceInput);
@@ -357,6 +323,8 @@ function loader() {
   }
 
   function loadMemoryData () {
+    // to load stored data from local storage and show info at the settings
+
     let storedLength = vocabInstance.readStoredLength;
     if (storedLength === 0) {
       buildNode({
@@ -401,12 +369,15 @@ function loader() {
         eventFunction: vocabInstance.clearIncorrectAnswers,
       });
     }
+    
+    console.groupEnd();
+    return this;
   }
 
-  function validateNoOfAns() {
-    console.groupCollapsed("validateNoOfAns()");
-    console.info("validateNoOfAns() is called");
+  function validateAndSetAnswerCount() {
     // Validate number of answers and set default if invalid
+    console.groupCollapsed("validateAndSetAnswerCount()");
+  
     const noOfAnswers = parseInt(selectors.readNoOfAns, 10);
     if (isNaN(noOfAnswers) || noOfAnswers < 2 || noOfAnswers > 4) {
       appState.noOfAnswers = 2; // Default to 2 answers
@@ -415,6 +386,93 @@ function loader() {
       appState.noOfAnswers = noOfAnswers;
     }
     console.info("appState.noOfAnswers: ", appState.noOfAnswers);
+    console.groupEnd();
+    return this;
+  }
+
+  function validateAndSetQuestionMode() {
+    // Validate question mode and set default
+    console.groupCollapsed("validateAndSetQuestionMode()");
+
+    appState.qMode = selectors.readQuestionMode;
+    const validModes = ["fresh", "stored"];
+    if (!validModes.includes(selectors.readQuestionMode)) {
+      appState.qMode = "fresh"; // Default to 'fresh'
+      console.warn("Invalid question mode. Defaulting to 'fresh'.");
+    } else {
+      appState.qMode = selectors.readQuestionMode;
+    }
+    console.info("appState.qMode: ", appState.qMode);
+    console.groupEnd();
+    return this;
+  }
+
+  function assignLanguageBySelection() {
+    // Validate and assign the correct language for the question and answer sections
+    console.groupCollapsed("assignLanguageBySelection()");
+
+    const validLanguages = ["hi", "ka"];
+    if (validLanguages.includes(selectors.qChoice.value)) {
+      assignLanguage(sectionQuestion, jpLang);
+    } else {
+      assignLanguage(sectionQuestion, enLang);
+    }
+
+    if (validLanguages.includes(selectors.aChoice.value)) {
+      assignLanguage(sectionAnswer, jpLang);
+    } else {
+      assignLanguage(sectionAnswer, enLang);
+    }
+
+    console.groupEnd();
+    return this;
+  }
+
+  function validateSyllable() {
+    console.groupCollapsed("validateSyllable()");
+    // Validate syllable choices and show an error if none are selected
+    appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
+    if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
+      errorInstance.runtimeError("noSL");
+      console.groupEnd();
+      return false; // Signal that inputData validation failed
+    }
+    console.info("appData.syllableChoice: ", appData.syllableChoice);
+    console.groupEnd();
+    return this;
+  }
+
+  function convertToBoolean(selectorNames) {
+    // Convert the string values "true"/"false" to boolean values
+    console.groupCollapsed("convertToBoolean()");
+    
+    if (selectorNames.length === 0) {
+      console.error("No values to convert to boolean");
+      return;
+    }
+  
+    for (let selectorName of selectorNames) {
+      // Convert and assign the boolean value
+      appState[selectorName] = selectors[`read${selectorName}`] === 'true';
+      console.info(`appState.${selectorName}: `, appState[selectorName]);
+
+      /* THE LOGIC BEHIND (Please do not delete)
+      appState.randomYesNo = selectors.readrandomYesNo === 'true';
+      console.info("appState.randomYesNo: ",appState.randomYesNo);
+
+      Convert the string values "true"/"false" to boolean values [sn16]
+
+      appState.flashYesNo = selectors.readflashYesNo === 'true';
+      console.info("appState.flashYesNo: ", appState.flashYesNo);
+      */
+    }
+    
+    console.groupEnd();
+    return this;
+  }
+  
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   return {

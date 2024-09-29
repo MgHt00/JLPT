@@ -58,11 +58,11 @@ const selectors = {
     return document.querySelector("input[name='noOfAnswers']:checked").value;
   },
 
-  get readRandomYesNo() {
+  get readrandomYesNo() {
     return document.querySelector('input[name="randomYesNo"]:checked').value;
   },
 
-  get readFlashYesNo() {
+  get readflashYesNo() {
     return document.querySelector('input[name="flashYesNo"]:checked').value;
   },
 
