@@ -70,8 +70,8 @@ function questionManager() {
     return selectedQuestionObj;
   }
 
-  function completeAndContinue() {
-    //console.groupCollapsed("questionManager() - completeAndContinue()");
+  function finalizeQuestionAndProceed() {
+    //console.groupCollapsed("questionManager() - finalizeQuestionAndProceed()");
 
     vocabMgr.removeQuestion(fetchOneQuestion.index);
     newQuestion();
@@ -81,7 +81,7 @@ function questionManager() {
 
   return {
     newQuestion,
-    completeAndContinue,
+    finalizeQuestionAndProceed,
     setQuestionMode,
     get readQuestionObj() {return questionObj;},
     get readQuestionMode() {return newQuestion.mode},
@@ -316,7 +316,7 @@ function answerManager() {
         content: 'Next', 
         className: 'answer-btn', 
         idName: 'choice-btn', 
-        eventFunction: questionMgr.completeAndContinue 
+        eventFunction: questionMgr.finalizeQuestionAndProceed 
       });
 
     } else {
@@ -339,11 +339,10 @@ function answerManager() {
     const btnID = event.currentTarget.id;
 
     if (btnID === "choice-btn-0") {
-      questionMgr.completeAndContinue();
+      questionMgr.finalizeQuestionAndProceed();
     } else if (btnID === "choice-btn-1") {
-      
       vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
-      questionManager.completeAndContinue();
+      questionManager.finalizeQuestionAndProceed();
     }
 
     console.groupEnd();
