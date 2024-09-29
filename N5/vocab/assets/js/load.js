@@ -250,7 +250,7 @@ function loader() {
   async function loadFreshJSON() {
     console.groupCollapsed("loadFreshJSON()");
 
-    questionMgr.setMode("fresh");
+    questionMgr.setQuestionMode("fresh");
 
     const syllableMapping = {
       a: "assets/data/n5-vocab-a.json",
@@ -285,7 +285,7 @@ function loader() {
   async function loadStoredJSON() {
     console.groupCollapsed("loadStoredJSON()");
 
-    questionMgr.setMode("stored");
+    questionMgr.setQuestionMode("stored");
     
     // Ensure loadLocalStorage returns an array
     const storedData = vocabInstance.loadLocalStorage();

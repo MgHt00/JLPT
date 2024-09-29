@@ -38,8 +38,8 @@ function questionManager() {
     console.groupEnd();
   }
 
-  function setMode(m) {
-    //console.groupCollapsed("questionManager() - setMode()");
+  function setQuestionMode(m) {
+    //console.groupCollapsed("questionManager() - setQuestionMode()");
 
     const validModes = ["fresh", "stored"];
     if(!validModes.includes(m)) {
@@ -82,7 +82,7 @@ function questionManager() {
   return {
     newQuestion,
     completeAndContinue,
-    setMode,
+    setQuestionMode,
     get readQuestionObj() {return questionObj;},
     get readQuestionMode() {return newQuestion.mode},
   }
