@@ -203,7 +203,7 @@ function loader() {
 
     if (validateSyllable()) {
       // Only check the runtime error if validateSyllable() returns true
-      // Otherwise programing is showing infinite loop error without necessary.
+      // Otherwise program shows infinite loop error without necessary.
       const isRuntimeError = errorInstance.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
   
       if (!isRuntimeError) {  // Now checks if there is NOT a runtime error
@@ -220,15 +220,12 @@ function loader() {
   function validateInputData(e) {
     // input validation and loading function
     console.groupCollapsed("validateInputData()");
-    
+
     convertToBoolean(['randomYesNo', 'flashYesNo']); // Convert the string values "true"/"false" to boolean values
-
     validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
-
     validateAndSetQuestionMode(); // Validate question mode and set default
-
     assignLanguageBySelection(); // Validate and assign the correct language for the question and answer sections
-
+    
     assignLanguage(sectionMessage, enLang); // Always set message section to English
 
     if (appState.qMode === "fresh") { // Run the following block only if qMode is 'fresh'

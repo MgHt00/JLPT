@@ -17,22 +17,12 @@ function questionManager() {
     console.groupCollapsed("---questionManager() - newQuestion()---");
 
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
-    if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
-      console.log("vocabArray ", appData.vocabArray);
-      questionObj = prepareQuestion();
-      
-      // Ensure prepareQuestion() returns a valid question by using a do...while loop
-      /* already checked with removeBlankQuestions()
-      do {
-        questionObj = prepareQuestion();
-        if (questionObj[appState.qChoiceInput] === "") {
-          console.log("Empty question text found. Retrying...");
-        }
-      } while (questionObj[appState.qChoiceInput] === ""); // Keep running prepareQuestion() until the desired field is not empty
-      */
 
-      appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
+    if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
+      //console.log("vocabArray ", appData.vocabArray);
+      questionObj = fetchOneQuestion();
       
+      appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
       console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
       
       buildNode({ 
@@ -63,27 +53,27 @@ function questionManager() {
     console.groupEnd();
   }
 
-  function prepareQuestion() {
-    //console.groupCollapsed("questionManager() - prepareQuestion()");
+  function fetchOneQuestion() {
+    //console.groupCollapsed("questionManager() - fetchOneQuestion()");
 
     let selectedQuestionObj = {}; // to store the question obj temporarily
-    if (typeof prepareQuestion.index === 'undefined') {
-      prepareQuestion.index = 0;
+    if (typeof fetchOneQuestion.index === 'undefined') {
+      fetchOneQuestion.index = 0;
     }
 
     if (appState.randomYesNo) {
-      prepareQuestion.index = randomNo(0, (appData.vocabArray.length - 1));
+      fetchOneQuestion.index = randomNo(0, (appData.vocabArray.length - 1));
     } else {
-      prepareQuestion.index = 0;
+      fetchOneQuestion.index = 0;
     }
-    selectedQuestionObj = appData.vocabArray[prepareQuestion.index];
+    selectedQuestionObj = appData.vocabArray[fetchOneQuestion.index];
     return selectedQuestionObj;
   }
 
   function completeAndContinue() {
     //console.groupCollapsed("questionManager() - completeAndContinue()");
 
-    vocabMgr.removeQuestion(prepareQuestion.index);
+    vocabMgr.removeQuestion(fetchOneQuestion.index);
     newQuestion();
     
     console.groupEnd();
