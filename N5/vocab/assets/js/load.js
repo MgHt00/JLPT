@@ -25,7 +25,7 @@ function listeners() {
     // Event Listeners
     selectors.settingForm.addEventListener('submit', loaderInstance.start); // [sn17]
     selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
-    selectors.qChoice.addEventListener('change', dynamicAnswer);
+    selectors.qChoice.addEventListener('change', buildAnswerOptions);
     selectors.settingFlashYesNo.addEventListener('change', flashModeChanges);
     selectors.settingSource.addEventListener('change', questionModeChanges);
   }
@@ -81,7 +81,6 @@ function listeners() {
     console.groupEnd();
   }
 
-  
   function questionModeChanges(e) {
     let selectedMode = selectors.readQuestionMode;
     if (selectedMode === "fresh") {
@@ -93,7 +92,7 @@ function listeners() {
     }
   }
    
-  function dynamicAnswer() {
+  function buildAnswerOptions() {
     const ansMapping = { // [sn11]
       ka: { parent: selectors.aChoice, child: 'option', content: 'Kanji', childValues: 'ka', idName: 'a-ka'},
       hi: { parent: selectors.aChoice, child: 'option', content: 'Hiragana', childValues: 'hi', idName: 'a-hi'},
@@ -202,10 +201,20 @@ function loader() {
       await loadStoredJSON();// Wait for loadStoredJSON to complete
     }
 
-    if(!errorInstance.runtimeError("iLoop")) { return; } // If vocab pool is too small that it is causing the infinite loop    
-    
-    listeners().moveForm();
-    questionMgr.newQuestion(); // Call after data is loaded
+    if (validateSyllable()) {
+      // Only check the runtime error if validateSyllable() returns true
+      // Otherwise programing is showing infinite loop error without necessary.
+      const isRuntimeError = errorInstance.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
+  
+      if (!isRuntimeError) {  // Now checks if there is NOT a runtime error
+          console.error("Program failed at loader()");
+          return; // Exit if there is an infinite loop error
+      }
+  
+      // Continue if there is no runtime error.
+      listeners().moveForm();
+      questionMgr.newQuestion();
+    }
   }
 
   function validateInputData(e) {
@@ -234,7 +243,7 @@ function loader() {
     return true; // Signal that inputData validation passed
   }
 
-  function checkBoxToArray(nodeList) {
+  function convertCheckedValuesToArray(nodeList) {
     let convertedArray;
     convertedArray = Array.from(document.querySelectorAll(nodeList))
                           .map(eachCheckBox => eachCheckBox.value); // [sn7]
@@ -431,7 +440,7 @@ function loader() {
   function validateSyllable() {
     console.groupCollapsed("validateSyllable()");
     // Validate syllable choices and show an error if none are selected
-    appData.syllableChoice = checkBoxToArray('input[name="syllableChoice"]:checked');
+    appData.syllableChoice = convertCheckedValuesToArray('input[name="syllableChoice"]:checked');
     if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
       errorInstance.runtimeError("noSL");
       console.groupEnd();
@@ -439,7 +448,7 @@ function loader() {
     }
     console.info("appData.syllableChoice: ", appData.syllableChoice);
     console.groupEnd();
-    return this;
+    return true;
   }
 
   function convertToBoolean(selectorNames) {
@@ -469,10 +478,6 @@ function loader() {
     
     console.groupEnd();
     return this;
-  }
-  
-  function capitalizeFirstLetter(string) {
-    return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
   return {

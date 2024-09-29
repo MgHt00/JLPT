@@ -477,12 +477,15 @@ function errorManager() {
   
   function runtimeError(errcode) {
     console.groupCollapsed("runtimeError()")
+    console.info("errcode: ", errcode);
     
     if (codeMapping[errcode] === "infiniteloop") {
       let selectedArray = answerMgr.vocabMapping[selectors.aChoice.value];
-      //let choiceInput = selectors.readNoOfAns;
-      let choiceInput = parseInt(appState.noOfAnswers, 10); // Ensure it's an integer
-      let noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
+      let choiceInput = parseInt(appState.noOfAnswers, 10);
+      let noOfChoice = Math.min(choiceInput, selectedArray.length);
+      
+      console.info("selectedArray :", selectedArray);
+      console.info("choiceInput :", choiceInput);
       console.info("noOfChoice: ", noOfChoice);
       
       // Infinite Loop Prevention: If selectedArray contains very few elements, 
@@ -495,11 +498,11 @@ function errorManager() {
           showError({errcode: "iLoop", parentName: selectors.settingNoOfAns, idName: "runtime-error"});
         }  
         console.groupEnd();
-        return false;
+        return false; // Return false when there is an error
       } else {
         console.info("No runtime error: good to go!");
         console.groupEnd();
-        return true;
+        return true; // Return true when there is no error
       }
     }
     
@@ -510,9 +513,9 @@ function errorManager() {
           parentName: selectors.fieldsetSyllable,
           idName: 'syllable-error',
         });
+      }
+      return false; // Return false for syllable error case
     }
-    return this;
-  }
 }
 
   function showError({ errcode, parentName, idName }) {
