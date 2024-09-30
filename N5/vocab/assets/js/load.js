@@ -21,8 +21,8 @@ function listeners() {
   // Wrap the moveForm function with debounce
   const debouncedMoveForm = debounce(moveForm, 300); // 300ms delay
 
+  // All event Listeners
   function generalListeners() {
-    // Event Listeners
     selectors.settingForm.addEventListener('submit', loaderInstance.start); // [sn17]
     selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
     selectors.qChoice.addEventListener('change', buildAnswerOptions);
@@ -30,6 +30,7 @@ function listeners() {
     selectors.settingSource.addEventListener('change', questionModeChanges);
   }
   
+  // to handle when syllable checkboxs are changed
   function syllableChanges(event) { // [le4]
     const allCheckbox = document.getElementById('syllableAll');
     const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
@@ -65,6 +66,7 @@ function listeners() {
     }
   }
    
+  // to handle when flash mode radio buttons are changed
   function flashModeChanges(e) {
     console.groupCollapsed("flashModeChanges()");
     flipNodeState(...selectors.noOfAnsAll);
@@ -81,6 +83,7 @@ function listeners() {
     console.groupEnd();
   }
 
+  // to handle when program question mode (fresh / stored) is changed
   function questionModeChanges(e) {
     let selectedMode = selectors.readQuestionMode;
     if (selectedMode === "fresh") {
@@ -92,6 +95,7 @@ function listeners() {
     }
   }
    
+  // to build options for the setting's answer language
   function buildAnswerOptions() {
     const ansMapping = { // [sn11]
       ka: { parent: selectors.aChoice, child: 'option', content: 'Kanji', childValues: 'ka', idName: 'a-ka'},
@@ -111,6 +115,7 @@ function listeners() {
     });
   }
   
+  // animation concerns to move the setting form upward and reprint stored data info
   function formAnimationListeners() {
     selectors.bringBackBtn.addEventListener('click', (event) => {
       event.stopPropagation(); // Prevent event from bubbling up
@@ -119,11 +124,13 @@ function listeners() {
     });
   }
 
+  // when user want to restart the program
   function restart() {
     debouncedMoveForm();
     rePrintMemory();
   }
 
+  // if user wants to continue to local storage after their initial syllable selections
   async function continuetoStoredData() {
     console.groupCollapsed("continuetoStoredData()");
 
@@ -137,8 +144,8 @@ function listeners() {
     console.groupEnd();
   }
   
+  //// The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
   function debounce(func, delay) {
-    // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
     let timeoutId;
     return function (event, ...args) {
       clearTimeout(timeoutId);
@@ -150,6 +157,7 @@ function listeners() {
 
   let isMoving = false; // Flag to prevent multiple movements
 
+  // to move settings form upward
   function moveForm() {
     if (isMoving) return; // If the form is already moving, exit the function
 
@@ -169,6 +177,7 @@ function listeners() {
     }, { once: true }); // Ensure the event listener is called only once per transition
   }
 
+  // to print local storage data on screen
   function rePrintMemory() {
     //console.groupCollapsed("rePrintMemory()");
 
@@ -190,7 +199,8 @@ function listeners() {
 
 function loader() {
 
-  async function start(e) {  // Mark start() as async
+  // when user click submit(start) button of the setting form
+  async function start(e) {  
     e.preventDefault(); // Prevent form from submitting the usual way
     
     if (!validateInputData(e)) { return; } // Stop further execution if inputData fails validation
@@ -217,8 +227,8 @@ function loader() {
     }
   }
 
+  // input validation and loading function
   function validateInputData(e) {
-    // input validation and loading function
     console.groupCollapsed("validateInputData()");
 
     convertToBoolean(['randomYesNo', 'flashYesNo']); // Convert the string values "true"/"false" to boolean values
@@ -240,6 +250,7 @@ function loader() {
     return true; // Signal that inputData validation passed
   }
 
+  // to convert all checked syllables to an array
   function convertCheckedValuesToArray(nodeList) {
     let convertedArray;
     convertedArray = Array.from(document.querySelectorAll(nodeList))
@@ -247,6 +258,7 @@ function loader() {
     return convertedArray;
   }  
   
+  // to load user selected sylable-json when program mode is "fresh"
   async function loadFreshJSON() {
     console.groupCollapsed("loadFreshJSON()");
 
@@ -282,6 +294,7 @@ function loader() {
     console.groupEnd();
   }
 
+  // to load local storage json when program mode is "stored"
   async function loadStoredJSON() {
     console.groupCollapsed("loadStoredJSON()");
 
@@ -315,6 +328,8 @@ function loader() {
     console.groupEnd();
   }
 
+  // there are some questions without kanji, this function is to remove if user select the
+  // question option to kanji and to prevent showing blank question on screen
   function removeBlankQuestions(originalArr) {
     //console.groupCollapsed("removeBlankQuestions()");
     let updatedArr = [];
@@ -328,9 +343,8 @@ function loader() {
     return updatedArr; // Return the updated array
   }
 
+  // to load stored data from local storage and show info at the settings
   function loadMemoryData () {
-    // to load stored data from local storage and show info at the settings
-
     let storedLength = vocabInstance.readStoredLength;
     if (storedLength === 0) {
       buildNode({
@@ -380,8 +394,8 @@ function loader() {
     return this;
   }
 
+  // Validate (setting's) number of answers and set default if invalid
   function validateAndSetAnswerCount() {
-    // Validate number of answers and set default if invalid
     console.groupCollapsed("validateAndSetAnswerCount()");
   
     const noOfAnswers = parseInt(selectors.readNoOfAns, 10);
@@ -396,8 +410,8 @@ function loader() {
     return this;
   }
 
+  // Validate (setting's) question mode and set default
   function validateAndSetQuestionMode() {
-    // Validate question mode and set default
     console.groupCollapsed("validateAndSetQuestionMode()");
 
     appState.qMode = selectors.readQuestionMode;
@@ -413,8 +427,8 @@ function loader() {
     return this;
   }
 
+  // Validate and assign the correct language for the (HTML's) question and answer sections
   function assignLanguageBySelection() {
-    // Validate and assign the correct language for the question and answer sections
     console.groupCollapsed("assignLanguageBySelection()");
 
     const validLanguages = ["hi", "ka"];
@@ -434,6 +448,7 @@ function loader() {
     return this;
   }
 
+  // validate syllable choices and show error if necessary
   function validateSyllable() {
     console.groupCollapsed("validateSyllable()");
     // Validate syllable choices and show an error if none are selected
@@ -448,8 +463,8 @@ function loader() {
     return true;
   }
 
+  // Convert the string values "true"/"false" to boolean values
   function convertToBoolean(selectorNames) {
-    // Convert the string values "true"/"false" to boolean values
     console.groupCollapsed("convertToBoolean()");
     
     if (selectorNames.length === 0) {

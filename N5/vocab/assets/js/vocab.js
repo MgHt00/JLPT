@@ -5,8 +5,8 @@ const answerMgr = answerManager();
 function questionManager() {
   let questionObj = {};
 
+  // to start a new question
   function newQuestion() {
-    // to start a new question
     console.groupCollapsed("---questionManager() - newQuestion()---");
 
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
@@ -31,8 +31,8 @@ function questionManager() {
     console.groupEnd();
   }
 
+  // to set program's question mode (fresh or stored)
   function setQuestionMode(m) {
-    // to set program's question mode
     //console.groupCollapsed("questionManager() - setQuestionMode()");
 
     const validModes = ["fresh", "stored"];
@@ -47,8 +47,8 @@ function questionManager() {
     console.groupEnd();
   }
 
+  // to fetch one question(obj) from the vocabArray
   function fetchOneQuestion() {
-    // to fetch one question(obj) from the vocabArray
     //console.groupCollapsed("questionManager() - fetchOneQuestion()");
 
     let selectedQuestionObj = {}; // to store the question obj temporarily
@@ -65,8 +65,8 @@ function questionManager() {
     return selectedQuestionObj;
   }
 
+  // to remove shown question and carry on
   function finalizeQuestionAndProceed() {
-    // remove shown question and carry on
     //console.groupCollapsed("questionManager() - finalizeQuestionAndProceed()");
 
     vocabMgr.removeSpecifiedQuestion(fetchOneQuestion.index);
@@ -465,6 +465,7 @@ function errorManager() {
     noSL: "syllable-error"
   };
   
+  // to check various runtime errors and handle if necessary
   function runtimeError(errcode) {
     console.groupCollapsed("runtimeError()")
     console.info("errcode: ", errcode);
@@ -506,8 +507,9 @@ function errorManager() {
       }
       return false; // Return false for syllable error case
     }
-}
+  }
 
+  // to show runtime error messages
   function showError({ errcode, parentName, idName }) {
     console.groupCollapsed("showError()");
     
