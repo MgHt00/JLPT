@@ -1,7 +1,6 @@
 const questionMgr = questionManager();
 const vocabMgr =  vocabManager();
 const answerMgr = answerManager();
-const statusMgr = statusManager();
 
 function questionManager() {
   let questionObj = {};
@@ -16,8 +15,8 @@ function questionManager() {
       //console.log("vocabArray ", appData.vocabArray);
       questionObj = fetchOneQuestion();
 
-      statusMgr.increaseQuestionCount(); // increse question count for status bar
-      statusMgr.printQuestionStatus() // show current status
+      statusInstance.increaseQuestionCount(); // increse question count for status bar
+      statusInstance.printQuestionStatus() // show current status
       
       appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
       console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
@@ -247,7 +246,7 @@ function answerManager() {
     return tempAnsArray;
   }
 
-  // build buttons for the flascard mode
+  // build buttons for the flashcard mode
   function buildFlashcardButtons() {
     //console.groupCollapsed("answerManager() - buildFlashcardButtons()");
 
@@ -301,7 +300,7 @@ function answerManager() {
 
     const btnText = event.currentTarget.textContent;
     if (appState.correctAns === btnText) {
-      clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
+      clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer]);
 
       buildNode({ 
         parent: sectionAnswer, 
@@ -315,7 +314,7 @@ function answerManager() {
         content: 'Next', 
         className: 'answer-btn', 
         idName: 'choice-btn', 
-        eventFunction: questionMgr.finalizeQuestionAndProceed 
+        eventFunction: questionMgr.finalizeQuestionAndProceed
       });
 
     } else {
@@ -558,6 +557,7 @@ function errorManager() {
 
 function statusManager() {
   let questionCount = 0;
+  let totalNoOfQuestions = 0;
 
   function readQuestionCount() {
     return questionCount;
@@ -569,7 +569,8 @@ function statusManager() {
   }
 
   function getTotalNoOfQuestions() {
-    const totalNoOfQuestions = appData.vocabArray.length;
+    totalNoOfQuestions = appData.vocabArray.length;
+    console.info("statusManager() -> totalNoOfQuestions: ", totalNoOfQuestions);
     return totalNoOfQuestions;
   }
 
@@ -578,11 +579,12 @@ function statusManager() {
     buildNode({
       parent: sectionStatus,
       child: "div",
-      content: `${readQuestionCount()} / ${getTotalNoOfQuestions()}`,
+      content: `${readQuestionCount()} / ${totalNoOfQuestions}`,
     });
   }
 
   return {
+    getTotalNoOfQuestions,
     readQuestionCount,
     increaseQuestionCount,
     printQuestionStatus,

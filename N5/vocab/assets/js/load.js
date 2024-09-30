@@ -2,6 +2,7 @@ const loaderInstance = loader();
 const listenerInstance = listeners();
 const vocabInstance = vocabManager();
 const errorInstance = errorManager();
+const statusInstance = statusManager();
 
 (function defaultState() {
   //console.groupCollapsed("defaultState()");
@@ -223,6 +224,7 @@ function loader() {
   
       // Continue if there is no runtime error.
       listeners().moveForm();
+      statusInstance.getTotalNoOfQuestions();
       questionMgr.newQuestion();
     }
   }
