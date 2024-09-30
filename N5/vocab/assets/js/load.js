@@ -78,7 +78,7 @@ function listeners() {
       appState.noOfAnswers = 2;
     } else {
       // Validate number of answers and set default if invalid
-      validateAndSetAnswerCount();
+      loaderInstance.validateAndSetAnswerCount();
     }
     console.groupEnd();
   }
@@ -496,5 +496,6 @@ function loader() {
     start,
     loadMemoryData,
     loadStoredJSON,
+    validateAndSetAnswerCount,
   }
 }
