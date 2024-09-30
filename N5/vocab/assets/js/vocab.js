@@ -110,7 +110,7 @@ function answerManager() {
         content: 'Check Answer', 
         className: 'answer-btn', 
         idName: 'answer-btn', 
-        eventFunction: buildFlashcardButtons 
+        eventFunction: handleFlashcardAnswer 
       });
     } else { // if it is a multiple choice game
       buildNode({ 
@@ -246,9 +246,9 @@ function answerManager() {
     return tempAnsArray;
   }
 
-  // build buttons for the flashcard mode
-  function buildFlashcardButtons() {
-    //console.groupCollapsed("answerManager() - buildFlashcardButtons()");
+  // event handler for flashcard  mode
+  function handleFlashcardAnswer() {
+    //console.groupCollapsed("answerManager() - handleFlashcardAnswer()");
 
     // Remove exiting buttons
     const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
