@@ -23,6 +23,16 @@ function log(variable, label) {
   label ? console.log(`${label}: ${variable}`) : console.log(`${variable}`);
 }
 
+function copyOneProperty(source, target, catName) {
+  // to copy `CatName` property from source array of objects to target array
+  // used to fetch all the answers and mix up with the correct answer
+  let i = 0;
+  source.forEach(element => {
+    target[i] = element[catName];
+    i++;
+  });
+}
+
 function buildNode({parent, child, content, childValues = [], className = "", idName = "", eventFunction = "" }) {
   //console.log("Entering buildNode()");
   // Ensure className is always treated as an array

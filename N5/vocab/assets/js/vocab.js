@@ -2,14 +2,6 @@ const questionMgr = questionManager();
 const vocabMgr =  vocabManager();
 const answerMgr = answerManager();
 
-function fetchOneCategory(source, target, catName) {
-  let i = 0;
-  source.forEach(element => {
-    target[i] = element[catName];
-    i++;
-  });
-}
-
 function questionManager() {
   let questionObj = {};
 

@@ -275,9 +275,9 @@ function loader() {
     appData.vocabArray = removeBlankQuestions(appData.vocabArray);
     //console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
 
-    fetchOneCategory(appData.vocabArray, kaVocab, ka);
-    fetchOneCategory(appData.vocabArray, hiVocab, hi);
-    fetchOneCategory(appData.vocabArray, enVocab, en);
+    copyOneProperty(appData.vocabArray, kaVocab, ka);
+    copyOneProperty(appData.vocabArray, hiVocab, hi);
+    copyOneProperty(appData.vocabArray, enVocab, en);
 
     console.groupEnd();
   }
