@@ -33,6 +33,15 @@ function copyOneProperty(source, target, catName) {
   });
 }
 
+// to shuffle an array
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+  return array;
+}
+
 function buildNode({parent, child, content, childValues = [], className = "", idName = "", eventFunction = "" }) {
   //console.log("Entering buildNode()");
   // Ensure className is always treated as an array

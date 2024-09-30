@@ -92,8 +92,8 @@ function answerManager() {
     en: enVocab
   };
 
+  // to prepare all the answers
   function renderAnswers() {
-    // to prepare all the answers
     //console.groupCollapsed("answerManager() - renderAnswers()");
 
     ansArray = createAnswerArray();
@@ -122,8 +122,8 @@ function answerManager() {
     console.groupEnd();
   }
 
+  // when there is no more question to shown.
   function noMoreQuestion() {
-    // when there is no more question to shown.
     //console.groupCollapsed("noMoreQuestion()");
     
     if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
@@ -152,8 +152,8 @@ function answerManager() {
     return this;
   }
 
+  // to ask user whether they want to practice the vocabs from the local storage
   function toLocalStorageYesNo() {
-    // to ask user whether they want to practice the vocabs from the local storage
     buildNode({ 
         parent: sectionMessage, 
         child: 'div', 
@@ -167,7 +167,7 @@ function answerManager() {
         content: 'Yes', 
         className: 'answer-btn', 
         idName: 'continue-yes', 
-        eventFunction: answerMgr.ContinueYesNo,
+        eventFunction: answerMgr.handleContineToStoredData,
       });
 
       buildNode({ 
@@ -176,12 +176,12 @@ function answerManager() {
         content: 'No', 
         className: 'answer-btn', 
         idName: 'continue-no', 
-        eventFunction: answerMgr.ContinueYesNo,
+        eventFunction: answerMgr.handleContineToStoredData,
       });
   }
 
+  // when all of the user selected vocabs are shown
   function completeAndRestart() {
-    // when all of the user selected vocabs are shown
     buildNode({ 
       parent: sectionMessage, 
       child: 'div', 
@@ -199,8 +199,8 @@ function answerManager() {
     });
   }
 
+  // to create an array filled with answers including the correct one.
   function createAnswerArray() {
-    // to create an array filled with answers including the correct one.
     //console.groupCollapsed("answerManager() - createAnswerArray()");
 
     let selectedArray = vocabMapping[selectors.aChoice.value];
@@ -243,14 +243,7 @@ function answerManager() {
     return tempAnsArray;
   }
 
-  function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]]; // Swap elements
-    }
-    return array;
-  }
-
+  // build buttons for the flascard mode
   function buildFlashcardButtons() {
     //console.groupCollapsed("answerManager() - buildFlashcardButtons()");
 
@@ -298,6 +291,7 @@ function answerManager() {
     console.groupEnd();
   }
 
+  // event handler function for multiple choice mode
   function handleMultipleChoiceAnswer(event) {
     //console.groupCollapsed("answerManager() - handleMultipleChoiceAnswer()");
 
@@ -334,6 +328,7 @@ function answerManager() {
     console.groupEnd();
   }
 
+  // event handler function for flashcard mode
   function handleFlashCardAnswer(event) { // sn4
     //console.groupCollapsed("answerManager() - handleFlashCardAnswer()");
 
@@ -349,8 +344,8 @@ function answerManager() {
     console.groupEnd();
   }
 
-  function ContinueYesNo(event) {
-    console.groupCollapsed("answerManager() - ContinueYesNo()");
+  function handleContineToStoredData(event) {
+    console.groupCollapsed("answerManager() - handleContineToStoredData()");
 
     const btnID = event.currentTarget.id;
 
@@ -377,7 +372,7 @@ function answerManager() {
     vocabMapping,
     renderAnswers,
     noMoreQuestion,
-    ContinueYesNo,
+    ContinueToStoredDataYesNo,
   }
 }
 

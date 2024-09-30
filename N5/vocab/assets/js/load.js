@@ -308,9 +308,9 @@ function loader() {
     }
 
     // Fetch the relevant categories
-    fetchOneCategory(appData.vocabArray, kaVocab, ka);
-    fetchOneCategory(appData.vocabArray, hiVocab, hi);
-    fetchOneCategory(appData.vocabArray, enVocab, en);
+    copyOneProperty(appData.vocabArray, kaVocab, ka);
+    copyOneProperty(appData.vocabArray, hiVocab, hi);
+    copyOneProperty(appData.vocabArray, enVocab, en);
 
     console.groupEnd();
   }
