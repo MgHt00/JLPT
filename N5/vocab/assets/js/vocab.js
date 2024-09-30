@@ -6,6 +6,7 @@ function questionManager() {
   let questionObj = {};
 
   function newQuestion() {
+    // to start a new question
     console.groupCollapsed("---questionManager() - newQuestion()---");
 
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
@@ -31,6 +32,7 @@ function questionManager() {
   }
 
   function setQuestionMode(m) {
+    // to set program's question mode
     //console.groupCollapsed("questionManager() - setQuestionMode()");
 
     const validModes = ["fresh", "stored"];
@@ -46,6 +48,7 @@ function questionManager() {
   }
 
   function fetchOneQuestion() {
+    // to fetch one question(obj) from the vocabArray
     //console.groupCollapsed("questionManager() - fetchOneQuestion()");
 
     let selectedQuestionObj = {}; // to store the question obj temporarily
@@ -63,9 +66,10 @@ function questionManager() {
   }
 
   function finalizeQuestionAndProceed() {
+    // remove shown question and carry on
     //console.groupCollapsed("questionManager() - finalizeQuestionAndProceed()");
 
-    vocabMgr.removeQuestion(fetchOneQuestion.index);
+    vocabMgr.removeSpecifiedQuestion(fetchOneQuestion.index);
     newQuestion();
     
     console.groupEnd();
@@ -374,13 +378,13 @@ function answerManager() {
 
 function vocabManager() {
   
-  function removeQuestion(i) {
-    //console.groupCollapsed("vocabManager() - removeQuestion()");
+  function removeSpecifiedQuestion(i) {
+    //console.groupCollapsed("vocabManager() - removeSpecifiedQuestion()");
 
     if (appData.vocabArray.length >= 1) {
       appData.vocabArray.splice(i, 1);
       //console.log(`currentQIndex ${i} is removed. vocabArray.length: ${appData.vocabArray.length}`);
-      //console.log("Inside removeQuestion(): After deletion; ", appData.vocabArray);
+      //console.log("Inside removeSpecifiedQuestion(): After deletion; ", appData.vocabArray);
     } else {
       //console.log(`vocabArray.length: ${appData.vocabArray.length}; reach the end.`);
       // !!!​CHECK!!  Is it really ok without anything in this else block?????????
@@ -439,7 +443,7 @@ function vocabManager() {
   }
 
   return {
-    removeQuestion,
+    removeSpecifiedQuestion,
     storeToPractice,
     clearIncorrectAnswers,
     loadLocalStorage,
