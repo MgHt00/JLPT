@@ -1,6 +1,7 @@
 const questionMgr = questionManager();
 const vocabMgr =  vocabManager();
 const answerMgr = answerManager();
+const statusMgr = statusManager();
 
 function questionManager() {
   let questionObj = {};
@@ -14,6 +15,9 @@ function questionManager() {
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
       //console.log("vocabArray ", appData.vocabArray);
       questionObj = fetchOneQuestion();
+
+      statusMgr.increaseQuestionCount(); // increse question count for status bar
+      statusMgr.printQuestionStatus() // show current status
       
       appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
       console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
@@ -549,5 +553,38 @@ function errorManager() {
   return {
     runtimeError,
     showError,
+  }
+}
+
+function statusManager() {
+  let questionCount = 0;
+
+  function readQuestionCount() {
+    return questionCount;
+  }
+
+  function increaseQuestionCount() {
+    questionCount++;
+    console.info("statusManager() -> questionCount: ", questionCount);
+  }
+
+  function getTotalNoOfQuestions() {
+    const totalNoOfQuestions = appData.vocabArray.length;
+    return totalNoOfQuestions;
+  }
+
+  function printQuestionStatus() {
+    clearScreen(sectionStatus);
+    buildNode({
+      parent: sectionStatus,
+      child: "div",
+      content: `${readQuestionCount()} / ${getTotalNoOfQuestions()}`,
+    });
+  }
+
+  return {
+    readQuestionCount,
+    increaseQuestionCount,
+    printQuestionStatus,
   }
 }
