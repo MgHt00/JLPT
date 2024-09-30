@@ -107,7 +107,7 @@ function answerManager() {
         content: 'Check Answer', 
         className: 'answer-btn', 
         idName: 'answer-btn', 
-        eventFunction: buildMultipleChoiceButtons 
+        eventFunction: buildFlashcardButtons 
       });
     } else { // if it is a multiple choice game
       buildNode({ 
@@ -251,8 +251,8 @@ function answerManager() {
     return array;
   }
 
-  function buildMultipleChoiceButtons() {
-    //console.groupCollapsed("answerManager() - buildMultipleChoiceButtons()");
+  function buildFlashcardButtons() {
+    //console.groupCollapsed("answerManager() - buildFlashcardButtons()");
 
     // Remove exiting buttons
     const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
