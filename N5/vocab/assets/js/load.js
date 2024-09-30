@@ -355,7 +355,7 @@ function loader() {
         content: `Flush Memory`,
         className: 'flush-memory-setting-btn',
         idName: 'flush-memory-btn',
-        eventFunction: vocabInstance.clearIncorrectAnswers,
+        eventFunction: vocabInstance.flushLocalStorage,
       });
     } else {
       buildNode({
@@ -372,7 +372,7 @@ function loader() {
         content: `Flush Memory`,
         className: 'flush-memory-setting-btn',
         idName: 'flush-memory-btn',
-        eventFunction: vocabInstance.clearIncorrectAnswers,
+        eventFunction: vocabInstance.flushLocalStorage,
       });
     }
     

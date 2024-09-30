@@ -291,7 +291,7 @@ function answerManager() {
     console.groupEnd();
   }
 
-  // event handler function for multiple choice mode
+  // event handler for multiple choice mode
   function handleMultipleChoiceAnswer(event) {
     //console.groupCollapsed("answerManager() - handleMultipleChoiceAnswer()");
 
@@ -328,7 +328,7 @@ function answerManager() {
     console.groupEnd();
   }
 
-  // event handler function for flashcard mode
+  // event handler for flashcard mode
   function handleFlashCardAnswer(event) { // sn4
     //console.groupCollapsed("answerManager() - handleFlashCardAnswer()");
 
@@ -344,6 +344,7 @@ function answerManager() {
     console.groupEnd();
   }
 
+  // event handler at the end of 1st round of question, asking user whether they want to continue to storeddata
   function handleContineToStoredData(event) {
     console.groupCollapsed("answerManager() - handleContineToStoredData()");
 
@@ -372,12 +373,13 @@ function answerManager() {
     vocabMapping,
     renderAnswers,
     noMoreQuestion,
-    ContinueToStoredDataYesNo,
+    handleContineToStoredData,
   }
 }
 
 function vocabManager() {
   
+  // to remove passed question number from the array
   function removeSpecifiedQuestion(i) {
     //console.groupCollapsed("vocabManager() - removeSpecifiedQuestion()");
 
@@ -393,6 +395,7 @@ function vocabManager() {
     console.groupEnd();
   }
 
+  // store passed obj to local storage
   function storeToPractice(questionInstance) { // [sn5]
     console.groupCollapsed("vocabManager() - storeToPractice()");
 
@@ -417,6 +420,7 @@ function vocabManager() {
     console.groupEnd();
   }
   
+  // to load data from local storage
   function loadLocalStorage() {
     //console.groupCollapsed("vocabManager() - loadLocalStorage()");
 
@@ -428,8 +432,9 @@ function vocabManager() {
     return storedObjects;
   }
   
-  function clearIncorrectAnswers() {
-    console.groupCollapsed("vocabManager() - clearIncorrectAnswers()");
+  // to flush local storage
+  function flushLocalStorage() {
+    console.groupCollapsed("vocabManager() - flushLocalStorage()");
 
     localStorage.removeItem("toPractice");
     console.log("localstorage flushed.");
@@ -445,7 +450,7 @@ function vocabManager() {
   return {
     removeSpecifiedQuestion,
     storeToPractice,
-    clearIncorrectAnswers,
+    flushLocalStorage,
     loadLocalStorage,
     get readStoredLength() { 
       let storedLength = loadLocalStorage();
