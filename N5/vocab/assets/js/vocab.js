@@ -96,7 +96,7 @@ function answerManager() {
     // to prepare all the answers
     //console.groupCollapsed("answerManager() - renderAnswers()");
 
-    ansArray = createAnswerChoices();
+    ansArray = createAnswerArray();
     //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
 
     if (appState.flashYesNo) { // if it is a flash card game
@@ -199,9 +199,9 @@ function answerManager() {
     });
   }
 
-  function createAnswerChoices() {
+  function createAnswerArray() {
     // to create an array filled with answers including the correct one.
-    //console.groupCollapsed("answerManager() - createAnswerChoices()");
+    //console.groupCollapsed("answerManager() - createAnswerArray()");
 
     let selectedArray = vocabMapping[selectors.aChoice.value];
     //console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
@@ -479,7 +479,7 @@ function errorManager() {
       console.info("noOfChoice: ", noOfChoice);
       
       // Infinite Loop Prevention: If selectedArray contains very few elements, 
-      // the loop inside do...while of `createAnswerChoices()` could run infinitely because it’s trying to pick a unique answer from a small pool, 
+      // the loop inside do...while of `createAnswerArray()` could run infinitely because it’s trying to pick a unique answer from a small pool, 
       // but keeps failing due to duplicates. This is less likely, but worth checking.
   
       if (selectedArray.length <= noOfChoice) {
