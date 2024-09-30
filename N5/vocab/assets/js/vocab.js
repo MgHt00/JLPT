@@ -93,9 +93,10 @@ function answerManager() {
   };
 
   function renderAnswers() {
+    // to prepare all the answers
     //console.groupCollapsed("answerManager() - renderAnswers()");
 
-    ansArray = prepareAnswerChoices();
+    ansArray = createAnswerChoices();
     //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
 
     if (appState.flashYesNo) { // if it is a flash card game
@@ -122,6 +123,7 @@ function answerManager() {
   }
 
   function noMoreQuestion() {
+    // when there is no more question to shown.
     //console.groupCollapsed("noMoreQuestion()");
     
     if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
@@ -151,6 +153,7 @@ function answerManager() {
   }
 
   function toLocalStorageYesNo() {
+    // to ask user whether they want to practice the vocabs from the local storage
     buildNode({ 
         parent: sectionMessage, 
         child: 'div', 
@@ -178,6 +181,7 @@ function answerManager() {
   }
 
   function completeAndRestart() {
+    // when all of the user selected vocabs are shown
     buildNode({ 
       parent: sectionMessage, 
       child: 'div', 
@@ -195,8 +199,9 @@ function answerManager() {
     });
   }
 
-  function prepareAnswerChoices() {
-    //console.groupCollapsed("answerManager() - prepareAnswerChoices()");
+  function createAnswerChoices() {
+    // to create an array filled with answers including the correct one.
+    //console.groupCollapsed("answerManager() - createAnswerChoices()");
 
     let selectedArray = vocabMapping[selectors.aChoice.value];
     //console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
@@ -474,7 +479,7 @@ function errorManager() {
       console.info("noOfChoice: ", noOfChoice);
       
       // Infinite Loop Prevention: If selectedArray contains very few elements, 
-      // the loop inside do...while of `prepareAnswerChoices()` could run infinitely because it’s trying to pick a unique answer from a small pool, 
+      // the loop inside do...while of `createAnswerChoices()` could run infinitely because it’s trying to pick a unique answer from a small pool, 
       // but keeps failing due to duplicates. This is less likely, but worth checking.
   
       if (selectedArray.length <= noOfChoice) {
