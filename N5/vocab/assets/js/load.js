@@ -12,7 +12,7 @@ const statusInstance = statusManager();
   toggleClass('hide', selectors.bringBackBtn);
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
-  listenerInstance.formAnimationListeners();
+  listenerInstance.handlebringBackBtn();
   console.groupEnd();
 })();
 
@@ -116,7 +116,7 @@ function listenerManager() {
   }
   
   // animation concerns to move the setting form upward and reprint stored data info
-  function formAnimationListeners() {
+  function handlebringBackBtn() {
     selectors.bringBackBtn.addEventListener('click', (event) => {
       clearScreen(sectionStatus);
       event.stopPropagation(); // Prevent event from bubbling up
@@ -147,7 +147,7 @@ function listenerManager() {
     console.groupEnd();
   }
   
-  //// The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
+  // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
   function debounce(func, delay) {
     let timeoutId;
     return function (event, ...args) {
@@ -193,7 +193,7 @@ function listenerManager() {
   return {
     generalListeners,
     moveForm,
-    formAnimationListeners,
+    handlebringBackBtn,
     debouncedMoveForm,
     restart,
     continuetoStoredData,
