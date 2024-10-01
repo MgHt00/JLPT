@@ -1,5 +1,5 @@
-const loaderInstance = loader();
-const listenerInstance = listeners();
+const loaderInstance = loaderManager();
+const listenerInstance = listenerManager();
 const vocabInstance = vocabManager();
 const errorInstance = errorManager();
 const statusInstance = statusManager();
@@ -17,8 +17,8 @@ const statusInstance = statusManager();
 })();
 
 
-function listeners() {
-  const loaderInstance = loader();
+function listenerManager() {
+  //const loaderInstance = loaderManager();
   // Wrap the moveForm function with debounce
   const debouncedMoveForm = debounce(moveForm, 300); // 300ms delay
 
@@ -200,7 +200,7 @@ function listeners() {
   }
 }
 
-function loader() {
+function loaderManager() {
 
   // when user click submit(start) button of the setting form
   async function start(e) {  
@@ -220,12 +220,12 @@ function loader() {
       const isRuntimeError = errorInstance.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
   
       if (!isRuntimeError) {  // Now checks if there is NOT a runtime error
-          console.error("Program failed at loader()");
+          console.error("Program failed at loaderManager()");
           return; // Exit if there is an infinite loop error
       }
   
       // Continue if there is no runtime error.
-      listeners().moveForm();
+      listenerInstance.moveForm();
       statusInstance.resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
       questionMgr.newQuestion();
     }
