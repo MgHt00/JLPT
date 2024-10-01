@@ -568,6 +568,11 @@ function statusManager() {
     console.info("statusManager() -> questionCount: ", questionCount);
   }
 
+  function resetTotalNoOfQuestion() {
+    totalNoOfQuestions = 0;
+    return this;
+  }
+
   function getTotalNoOfQuestions() {
     totalNoOfQuestions = appData.vocabArray.length;
     console.info("statusManager() -> totalNoOfQuestions: ", totalNoOfQuestions);
@@ -584,6 +589,7 @@ function statusManager() {
   }
 
   return {
+    resetTotalNoOfQuestion,
     getTotalNoOfQuestions,
     readQuestionCount,
     increaseQuestionCount,

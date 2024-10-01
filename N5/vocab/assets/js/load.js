@@ -140,6 +140,8 @@ function listeners() {
       console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
     }
     await loaderInstance.loadStoredJSON();// Wait for loadStoredJSON to complete
+
+    statusInstance.resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
     questionMgr.newQuestion();
 
     console.groupEnd();
@@ -224,7 +226,7 @@ function loader() {
   
       // Continue if there is no runtime error.
       listeners().moveForm();
-      statusInstance.getTotalNoOfQuestions();
+      statusInstance.resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
       questionMgr.newQuestion();
     }
   }
