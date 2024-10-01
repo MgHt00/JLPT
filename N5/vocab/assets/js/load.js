@@ -18,7 +18,6 @@ const statusInstance = statusManager();
 
 
 function listenerManager() {
-  //const loaderInstance = loaderManager();
   // Wrap the moveForm function with debounce
   const debouncedMoveForm = debounce(moveForm, 300); // 300ms delay
 
@@ -119,6 +118,7 @@ function listenerManager() {
   // animation concerns to move the setting form upward and reprint stored data info
   function formAnimationListeners() {
     selectors.bringBackBtn.addEventListener('click', (event) => {
+      clearScreen(sectionStatus);
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
       rePrintMemory();
