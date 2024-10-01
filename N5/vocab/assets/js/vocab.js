@@ -559,26 +559,31 @@ function statusManager() {
   let questionCount = 0;
   let totalNoOfQuestions = 0;
 
+  // return `questionCount`
   function readQuestionCount() {
     return questionCount;
   }
 
+  // increase `questionCount`
   function increaseQuestionCount() {
     questionCount++;
-    console.info("statusManager() -> questionCount: ", questionCount);
+    //console.info("statusManager() -> questionCount: ", questionCount);
   }
 
+  // reset `totalNoOfQuestion` to zero
   function resetTotalNoOfQuestion() {
     totalNoOfQuestions = 0;
     return this;
   }
 
+  // assign `vocabArrary` length to `totalNoOfQuestions`
   function getTotalNoOfQuestions() {
     totalNoOfQuestions = appData.vocabArray.length;
     console.info("statusManager() -> totalNoOfQuestions: ", totalNoOfQuestions);
     return totalNoOfQuestions;
   }
 
+  // to print `#/#` on screen
   function printQuestionStatus() {
     clearScreen(sectionStatus);
     buildNode({
