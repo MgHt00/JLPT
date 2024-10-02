@@ -1,6 +1,8 @@
+/*
 #settingsForm > div[id^="settings"] {
   margin-bottom: 5px;
 }
+*/
 
 .disabled {
   opacity: 0.3;
@@ -38,27 +40,6 @@
   background-color: rgba(249, 249, 249, 0.2);
 }
 */
-
-[class$="setting-btn"] {
-  border: 1px solid white;
-  border-radius: 10px;
-  padding: 5px;
-  margin: 10px;
-  text-align: center;
-  background-color: rgba(249, 249, 249, 0.2);
-}
-
-.submit-setting-btn {
-  width: 90%;
-  color: whitesmoke;
-  font-family: "Poppins", sans-serif;
-  font-size: 16px;
-}
-
-.bring-back-setting-btn {
-  display:inline-block;
-  transform: rotate(90deg);
-}
 
 .hide {
   display: none;
