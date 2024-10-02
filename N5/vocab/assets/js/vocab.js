@@ -504,7 +504,7 @@ function errorManager() {
       if (!document.querySelector("[id|='syllable-error']")) { // if error is not already shown
         errorInstance.showError({
           errcode: "noSL",
-          parentName: selectors.fieldsetSyllable,
+          parentName: selectors.settingSyllable,
           idName: 'syllable-error',
         });
       }
