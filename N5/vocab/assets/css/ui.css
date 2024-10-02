@@ -18,38 +18,11 @@
   border-radius: 20px;
 }
 
-/* Random Yes/No: */
-#settings-randomInput {
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: flex-start;
-padding: 0px;
-gap: 2px;
-
-width: 210px;
-height: 53px;
-
-flex: none;
-flex-grow: 0;
-}
-
-#settings-randomInput .random-Yes-No-div{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0px;
-  gap: 15px;
-
-  width: 116px;
-  height: 24px;
-
-  flex: none;
-  flex-grow: 0;
-}
-
-/* Flashcard Yes/No */
-#settingsForm #settings-flashYesNo {
+#settingsForm #settings-randomInput,
+#settingsForm #settings-flashYesNo,
+#settingsForm #settings-noOfAnswers,
+#settingsForm #settings-source,
+#settingsForm #settings-syllableChoice {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -57,24 +30,30 @@ flex-grow: 0;
   padding: 0px;
   gap: 2px;
 
-  width: 210px;
-  height: 53px;
+  /*width: 210px;
+  height: 53px;*/
 
   flex: none;
   flex-grow: 0;
 }
 
-#settings-flashYesNo .flash-Yes-No-div {
-  /* Auto layout */
+#settings-randomInput .random-Yes-No-div,
+#settings-flashYesNo .flash-Yes-No-div, 
+#settings-noOfAnswers .no-of-answers-div,
+#settings-source .source-fresh-stored-div {
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 0px;
   gap: 15px;
 
-  width: 276px;
-  height: 24px;
+  /*height: 24px;*/
 
   flex: none;
   flex-grow: 0;
+}
+
+#settings-syllableChoice #fieldset-syllable {
+  width: 100%;
+  border: none;
 }

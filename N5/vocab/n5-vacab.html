@@ -12,7 +12,7 @@
   <form id="settingsForm" class="en-regular">
     <!-- Random Yes/No -->
     <div id="settings-randomInput">
-      <label class="random-label">Random Yes/No:</label>
+      <label class="random-label">Practice in Random Order:</label>
       <div class="random-Yes-No-div">
         <div class="random-Yes-div">
           <input type="radio" id="randomYes" class="random-Yes-radio" name="randomYesNo" value="true" checked>
@@ -42,35 +42,52 @@
 
     <!-- Number of Answers -->
     <div id="settings-noOfAnswers">
-      <label for="noOfAnswers" id="noOfAnswers-label">Number of Answers:</label><br>
+      <label for="noOfAnswers" id="noOfAnswers-label">Number of Answers:</label>
 
-      <input type="radio" id="noOfAnswers-2" value="2" name="noOfAnswers" checked>
-      <label for="noOfAnswers-2" id="noOfAnswers-label-2">2</label>
+      <div class="no-of-answers-div">
+        <div class="no-of-answer-2-div">
+          <input type="radio" id="noOfAnswers-2" value="2" name="noOfAnswers" checked>
+          <label for="noOfAnswers-2" id="noOfAnswers-label-2">2</label>
+        </div>
+        
+        <div class="no-of-answer-3-div">
+          <input type="radio" id="noOfAnswers-3" value="3" name="noOfAnswers">
+          <label for="noOfAnswers-3" id="noOfAnswers-label-3">3</label>
+        </div>
 
-      <input type="radio" id="noOfAnswers-3" value="3" name="noOfAnswers">
-      <label for="noOfAnswers-2" id="noOfAnswers-label-3">3</label>
-
-      <input type="radio" id="noOfAnswers-4" value="4" name="noOfAnswers">
-      <label for="noOfAnswers-2" id="noOfAnswers-label-4">4</label>
+        <div class="no-of-answer-4-div">
+          <input type="radio" id="noOfAnswers-4" value="4" name="noOfAnswers">
+          <label for="noOfAnswers-4" id="noOfAnswers-label-4">4</label>
+        </div>
+      </div>
     </div>
 
     <!-- Practice Source -->
     <div id="settings-source">
-      <label for="source" id="source-label">Practice from:</label><br>
+      <label for="source" id="source-label">Practice from:</label>
 
-      <input type="radio" id="source-fresh" name="source" value="fresh" checked>
-      <label for="source-fresh" id="source-label-fresh">Fresh Start</label>
+      <div class="source-fresh-stored-div">
+        <div class="source-fresh-div">
+          <input type="radio" id="source-fresh" name="source" value="fresh" checked>
+          <label for="source-fresh" id="source-label-fresh">Fresh Start</label>
+        </div>
 
-      <input type="radio" id="source-storage" name="source" value="stored">
-      <label for="source-storage" id="source-label-storage">Stored Memory</label>
+        <div class="source-stored-div">
+          <input type="radio" id="source-storage" name="source" value="stored">
+          <label for="source-storage" id="source-label-storage">Stored Memory</label>  
+        </div>
+      </div>
     </div>
 
     <!-- Syllable Choice Checkboxes -->
     <div id="settings-syllableChoice">
     <fieldset id="fieldset-syllable">
       <legend>Practice Syllables:</legend>
-      <input type="checkbox" id="syllableAll" name="syllableChoice" value="all">
-      <label for="syllableA">All</label><br>
+      <div class="each-syllable-div">
+        <input type="checkbox" id="syllableAll" name="syllableChoice" value="all">
+        <label for="syllableA">All</label>
+      </div>
+      
       <input type="checkbox" id="syllableA" name="syllableChoice" value="a">
       <label for="syllableA">A</label><br>
       <input type="checkbox" id="syllableI" name="syllableChoice" value="i">
