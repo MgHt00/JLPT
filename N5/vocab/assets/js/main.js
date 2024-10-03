@@ -101,6 +101,7 @@ function clearScreen(elements) { // to remove the content of a node
 }
 
 function clearNode({ parent, children = [] }) { // to move the entire node
+  // when passing child/children to this function, wrap it with [] !IMPORTANT
   if (children.length > 0) {
     children.forEach(child => {
       if (parent.contains(child)) { // Ensure the child exists within the parent before removing

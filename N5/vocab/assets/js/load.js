@@ -89,9 +89,29 @@ function listenerManager() {
     if (selectedMode === "fresh") {
       removeClass('disabled', selectors.settingSyllable, selectors.settingRepractice);
       toggleClass('disabled', selectors.settingRepractice);
-    } else if (selectedMode === "stored") {
+
+      if (document.querySelector("[id|='memory-empty-error']")) {
+        // if there is an error under Memory Status Fieldset -> clean it
+        const child = document.querySelector("[id|='memory-empty-error']");
+        clearNode({
+          parent: selectors.settingRepractice,
+          children: [child],
+        });
+      }
+    } 
+    
+    else if (selectedMode === "stored") {
       removeClass('disabled', selectors.settingSyllable, selectors.settingRepractice);
       toggleClass('disabled', selectors.settingSyllable);
+      
+      if (document.querySelector("[id|='syllable-error']")) {
+        // if there is an error under Syllable Fieldset -> clean it
+        const child = document.querySelector("[id|='syllable-error']");
+        clearNode({
+          parent: selectors.settingSyllable,
+          children: [child],
+        });
+      }
     }
   }
    

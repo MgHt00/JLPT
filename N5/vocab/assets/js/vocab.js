@@ -501,7 +501,7 @@ function errorManager() {
             showError({
               errcode: "iLoopS", 
               parentName: selectors.settingRepractice, 
-              idName: "runtime-error"
+              idName: "memory-empty-error"
             });
           }
           
