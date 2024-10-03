@@ -101,17 +101,23 @@ function clearScreen(elements) { // to remove the content of a node
 }
 
 function clearNode({ parent, children = [] }) { // to move the entire node
-  // when passing child/children to this function, wrap it with [] !IMPORTANT
+  // !IMPORTANT: when passing child/children to this function, wrap it with [] 
   if (children.length > 0) {
     children.forEach(child => {
-      if (parent.contains(child)) { // Ensure the child exists within the parent before removing
-        parent.removeChild(child);
+      if (parent.contains(child)) {
+        child.classList.add('fade-out');
+
+        // Wait for the transition before removing the child
+        setTimeout(() => {
+          parent.removeChild(child);
+        }, 500); // Matches the transition duration
       }
     });
   } else {
     parent.innerHTML = ''; // Clears all children of the parent
   }
 }
+
 
 function checkNode({idName}) {
   return document.querySelectorAll(`[id^=${idName}]`).length > 0;
