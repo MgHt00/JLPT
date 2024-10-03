@@ -490,6 +490,7 @@ function errorManager() {
   
       if (selectedArray.length <= noOfChoice) {
         console.error("Not enough unique answers to generate.");
+
         if (!document.querySelector("[id|='runtime-error']")) { // if error is not already shown
           if (appState.qMode === "fresh") {
             showError({
@@ -497,13 +498,17 @@ function errorManager() {
               parentName: selectors.settingNoOfAns, 
               idName: "runtime-error"
             });
-          } else if (appState.qMode === "stored") {
+          } 
+          }
+        
+        if (!document.querySelector("[id|='memory-empty-error']")) { // if error is not already shown
+          if (appState.qMode === "stored") {
             showError({
               errcode: "iLoopS", 
               parentName: selectors.settingRepractice, 
               idName: "memory-empty-error"
             });
-          }
+        }
           
         }  
         console.groupEnd();
