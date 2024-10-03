@@ -198,7 +198,7 @@ function answerManager() {
       content: 'Lets Restart!', 
       className: 'answer-btn', 
       idName: 'answer-btn', 
-      eventFunction: listeners().restart,
+      eventFunction: listenerInstance.restart,
     });
   }
 
@@ -445,7 +445,7 @@ function vocabManager() {
       parent: selectors.memoryInfo,
       children: selectors.readMemoryInfoDOMs,
     });
-    loader().loadMemoryData();
+    loaderInstance.loadMemoryData();
 
     console.groupEnd();
   }
@@ -465,6 +465,8 @@ function vocabManager() {
 function errorManager() {
   const codeMapping = {
     iLoop: "infiniteloop",
+    iLoopF: "infiniteloop-fresh-mode",
+    iLoopS: "infiniteloop-stored-mode",
     noSL: "syllable-error"
   };
   
@@ -489,7 +491,20 @@ function errorManager() {
       if (selectedArray.length <= noOfChoice) {
         console.error("Not enough unique answers to generate.");
         if (!document.querySelector("[id|='runtime-error']")) { // if error is not already shown
-          showError({errcode: "iLoop", parentName: selectors.settingNoOfAns, idName: "runtime-error"});
+          if (appState.qMode === "fresh") {
+            showError({
+              errcode: "iLoopF", 
+              parentName: selectors.settingNoOfAns, 
+              idName: "runtime-error"
+            });
+          } else if (appState.qMode === "stored") {
+            showError({
+              errcode: "iLoopS", 
+              parentName: selectors.settingRepractice, 
+              idName: "runtime-error"
+            });
+          }
+          
         }  
         console.groupEnd();
         return false; // Return false when there is an error
@@ -518,18 +533,27 @@ function errorManager() {
     
     const classNameMapping = {
       iLoop: "setting-error",
+      iLoopF: "setting-error",
+      iLoopS: "setting-error",
       noSL: "setting-error",
     };
 
     let errorMessage = "";
     
-    if (codeMapping[errcode] === "infiniteloop") {
+    if (codeMapping[errcode] === "infiniteloop-fresh-mode") {
         console.warn("Runtime error: Not enough unique answers to generate.");
         errorMessage = `
             Not enough unique answers available. 
             Please reduce the number of answer choices.
         `;
     }
+
+    else if (codeMapping[errcode] === "infiniteloop-stored-mode") {
+      console.warn("Runtime error: No vocab in stored memory");
+      errorMessage = `
+          Memory is empty for the moment, try practicing from the fresh start first.
+      `;
+  }
 
     else if (codeMapping[errcode] === "syllable-error") {
       console.error("No syllables selected.");
