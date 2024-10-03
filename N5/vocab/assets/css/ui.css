@@ -91,7 +91,7 @@
   width: 100%;
 }
 
-[class$="setting-btn"] {
+[class*="setting-btn"] {
   border: 1px solid white;
   border-radius: 10px;
   padding: 5px;
@@ -102,13 +102,16 @@
   transition: all 0.5s ease;
 }
 
-[class$="setting-btn"]:hover {
+[class*="setting-btn"]:hover {
   /*box-shadow: none;*/
   /*box-shadow: inset 0px 4px 0px rgba(0, 0, 0, 0.41);*/
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.41);
   transition: all 0.5s ease;
 }
 
+[class*="setting-btn"]:active {
+  box-shadow: inset 0px 4px 0px rgba(0, 0, 0, 0.41);
+}
 
 .submit-setting-btn {
   width: 90%;
@@ -118,6 +121,11 @@
 }
 
 .bring-back-setting-btn {
-  display:inline-block;
-  transform: rotate(90deg);
+  display: inline-block;
+  transform: rotate(90deg) translateX(-50%);
+  box-shadow: 4px 0px 0px rgba(255, 255, 255, 0.39);
+  position: absolute;
+  top: 2%; /* Position at the top */
+  left: 43%; /* Center horizontally */
+  transform-origin: center; /* Keep the rotation centered */
 }
