@@ -121,11 +121,25 @@
 }
 
 .bring-back-setting-btn {
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: bold;
+  color: #1F1D2B;
   display: inline-block;
   transform: rotate(90deg) translateX(-50%);
+  background-color: rgba(249, 249, 249, 0.9);
   box-shadow: 4px 0px 0px rgba(255, 255, 255, 0.39);
   position: absolute;
   top: 2%; /* Position at the top */
   left: 43%; /* Center horizontally */
   transform-origin: center; /* Keep the rotation centered */
+}
+
+.bring-back-setting-btn:hover {
+  box-shadow: 4px 0px 10px rgba(0, 0, 0, 0.41);
+  transition: all 0.5s ease;
+}
+
+.bring-back-setting-btn:active {
+  box-shadow: inset 2px 0px 0px rgba(0, 0, 0, 0.91);
 }
