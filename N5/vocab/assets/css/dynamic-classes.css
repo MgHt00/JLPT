@@ -36,3 +36,12 @@
   overflow: hidden; /* Prevents content from overflowing during collapse */
   transition: opacity 0.5s ease, max-height 0.5s ease, margin 0.5s ease, padding 0.5s ease; /* Smooth transition */
 }
+
+.shift-sections-to-center {
+  position: absolute;
+  width: 317px; 
+  top: 50%; /* Position at the top */
+  left: 50%; /* Center horizontally */
+  transform: translate(-50%);
+  transition: all 0.5s ease;
+}

@@ -3,6 +3,7 @@ const sectionQuestion = document.querySelector("#section-question");
 const sectionMessage = document.querySelector("#section-message");
 const sectionAnswer = document.querySelector("#section-answer");
 const sectionStatus = document.querySelector("#section-status");
+const dynamicDOM = document.querySelector("#dynamic-DOM");
 
 let ka = "ka";
 let hi = "hi";

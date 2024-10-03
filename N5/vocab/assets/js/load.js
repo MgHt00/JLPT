@@ -138,6 +138,7 @@ function listenerManager() {
   // animation concerns to move the setting form upward and reprint stored data info
   function handlebringBackBtn() {
     selectors.bringBackBtn.addEventListener('click', (event) => {
+      toggleClass('shift-sections-to-center', dynamicDOM);
       clearScreen(sectionStatus);
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
@@ -246,6 +247,7 @@ function loaderManager() {
   
       // Continue if there is no runtime error.
       listenerInstance.moveForm();
+      toggleClass('shift-sections-to-center', dynamicDOM);
       statusInstance.resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
       questionMgr.newQuestion();
     }
