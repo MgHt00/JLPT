@@ -31,6 +31,16 @@ section {
   text-align: center;
 }
 
+#section-status {
+  margin-bottom: 0px;
+  display: flex;
+  justify-content: end;
+  font-family: "Poppins", sans-serif;
+  font-weight: 200;
+  font-style: normal;
+  font-size: 13px;
+}
+
 #section-question {
   font-size: 40px;
 }
