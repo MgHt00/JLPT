@@ -465,9 +465,8 @@ function vocabManager() {
 function errorManager() {
   const codeMapping = {
     iLoop: "infiniteloop",
-    iLoopF: "infiniteloop-fresh-mode",
-    iLoopS: "infiniteloop-stored-mode",
-    noSL: "syllable-error"
+    noSL: "syllable-error",
+    mem0: "no-stored-data",
   };
   
   // to check various runtime errors and handle if necessary
@@ -492,25 +491,12 @@ function errorManager() {
         console.error("Not enough unique answers to generate.");
 
         if (!document.querySelector("[id|='runtime-error']")) { // if error is not already shown
-          if (appState.qMode === "fresh") {
             showError({
-              errcode: "iLoopF", 
+              errcode: "iLoop", 
               parentName: selectors.settingNoOfAns, 
               idName: "runtime-error"
             });
-          } 
           }
-        
-        if (!document.querySelector("[id|='memory-empty-error']")) { // if error is not already shown
-          if (appState.qMode === "stored") {
-            showError({
-              errcode: "iLoopS", 
-              parentName: selectors.settingRepractice, 
-              idName: "memory-empty-error"
-            });
-        }
-          
-        }  
         console.groupEnd();
         return false; // Return false when there is an error
       } else {
@@ -530,6 +516,17 @@ function errorManager() {
       }
       return false; // Return false for syllable error case
     }
+
+    else if (codeMapping[errcode] === "no-stored-data") {
+      console.info("We are in error Manager");
+      if (!document.querySelector("[id|='memory-empty-error']")) { // if error is not already shown
+        showError({
+          errcode: "mem0",
+          parentName: selectors.settingRepractice,
+          idName: "memory-empty-error"
+        });
+      }
+    }
   }
 
   // to show runtime error messages
@@ -538,14 +535,13 @@ function errorManager() {
     
     const classNameMapping = {
       iLoop: "setting-error",
-      iLoopF: "setting-error",
-      iLoopS: "setting-error",
       noSL: "setting-error",
+      mem0: "setting-error",
     };
 
     let errorMessage = "";
     
-    if (codeMapping[errcode] === "infiniteloop-fresh-mode") {
+    if (codeMapping[errcode] === "infiniteloop") {
         console.warn("Runtime error: Not enough unique answers to generate.");
         errorMessage = `
             Not enough unique answers available. 
@@ -553,18 +549,18 @@ function errorManager() {
         `;
     }
 
-    else if (codeMapping[errcode] === "infiniteloop-stored-mode") {
-      console.warn("Runtime error: No vocab in stored memory");
-      errorMessage = `
-          Memory is empty for the moment, try practicing from the fresh start first.
-      `;
-  }
-
     else if (codeMapping[errcode] === "syllable-error") {
       console.error("No syllables selected.");
         errorMessage = `
             Select at least one syllable
         `;
+    }
+
+    else if (codeMapping[errcode] === "no-stored-data") {
+      console.warn("Runtime error: Stored memory is empty.");
+      errorMessage = `
+          Memory is empty for the moment, try practicing from the fresh start first.
+      `;
     }
 
     buildNode({ 
@@ -578,7 +574,7 @@ function errorManager() {
   return this;
 }
   
-  return {
+  return {  
     runtimeError,
     showError,
   }
