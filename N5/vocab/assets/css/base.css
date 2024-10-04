@@ -27,7 +27,6 @@ form #settingsForm {
 
 section {
   font-size: 30px;
-  margin-bottom: 1em;
   text-align: center;
 }
 
@@ -43,11 +42,12 @@ section {
 
 #section-question {
   font-size: 40px;
+  margin-bottom: 15px;
 }
 
 #section-message {
   font-size: 20px;
-  margin: 15px;
+  margin: 0px;
 }
 
 section.en {
@@ -61,20 +61,6 @@ section.jp {
   font-optical-sizing: auto;
   font-weight: 500;
   font-style: normal;
-}
-
-.answer-message {
-  text-align: center;
-  padding: 20px;
-}
-
-.answer-btn {
-  padding: 10px 40px;
-  margin: 15px;
-  border: 1px solid white;
-  border-radius: 20px;
-  text-align: center;
-  background-color: rgba(249, 249, 249, 0.2);
 }
 
 .dummy-class-1 {

@@ -95,7 +95,8 @@
   width: 100%;
 }
 
-[class*="setting-btn"] {
+[class*="setting-btn"],
+.answer-btn {
   border: 1px solid white;
   border-radius: 10px;
   padding: 5px;
@@ -106,14 +107,16 @@
   transition: all 0.5s ease;
 }
 
-[class*="setting-btn"]:hover {
+[class*="setting-btn"]:hover,
+.answer-btn:hover {
   /*box-shadow: none;*/
   /*box-shadow: inset 0px 4px 0px rgba(0, 0, 0, 0.41);*/
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.41);
   transition: all 0.5s ease;
 }
 
-[class*="setting-btn"]:active {
+[class*="setting-btn"]:active,
+.answer-btn:active {
   box-shadow: inset 0px 4px 0px rgba(0, 0, 0, 0.41);
 }
 
@@ -146,4 +149,9 @@
 
 .bring-back-setting-btn:active {
   box-shadow: inset 2px 0px 0px rgba(0, 0, 0, 0.91);
+}
+
+.answer-btn {
+font-size: 22px;
+margin-bottom: 15px;
 }

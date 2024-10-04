@@ -14,7 +14,7 @@
 }
 
 .moved {
-  transform: translateY(-80%);
+  transform: translateY(-90%);
   transition: transform 0.5s ease; /* Add transition duration */
 }
 
@@ -53,4 +53,17 @@
   left: 50%; /* Center horizontally */
   transform: translate(-50%);
   transition: all 0.5s ease;
+}
+
+.correct-answer {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.5);
+}
+
+.answer-message {
+  margin: 0px;
+  padding: 15px;
+  font-size: 20px;
+  font-weight: 200;
 }

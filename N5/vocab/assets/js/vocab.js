@@ -261,14 +261,14 @@ function answerManager() {
       parent: sectionAnswer, 
       child: 'div', 
       content: appState.correctAns, 
-      className: 'answer-message', 
-      idName: 'answer-message' 
+      className: 'correct-answer', 
+      idName: 'correct-answer' 
     });
 
     // Show buttons
     if (appState.flashYesNo) { // if it is a flash card game
       buildNode({ 
-        parent: sectionMessage, 
+        parent: sectionAnswer, 
         child: 'div', 
         content: 'Did you get it right?', 
         className: 'answer-message', 
