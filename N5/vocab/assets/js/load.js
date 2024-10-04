@@ -188,6 +188,7 @@ function listenerManager() {
 
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
     toggleClass('moved', selectors.settingForm);
+    toggleClass('disabled', selectors.settingForm);
     toggleClass('dim', ...selectors.allSetting);
     toggleClass('hide', selectors.bringBackBtn);
     //toggleClass('hide', sectionQuestion, sectionAnswer, selectors.submitBtn, selectors.bringBackBtn);

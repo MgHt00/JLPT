@@ -1,5 +1,5 @@
 .disabled {
-  opacity: 0.3;
+  /*opacity: 0.3;*/
   pointer-events: none;
 }
 
@@ -19,7 +19,7 @@
 }
 
 .dim {
-  opacity: 0.3;
+  opacity: 0.1;
   transition: opacity 0.5s ease; /* Add transition duration */
 }
 
