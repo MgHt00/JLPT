@@ -5,10 +5,8 @@ const errorInstance = errorManager();
 const statusInstance = statusManager();
 
 (function defaultState() {
-  //console.groupCollapsed("defaultState()");
   loaderInstance.loadMemoryData();
   flipNodeState(...selectors.noOfAnsAll); // [sn14]
-  //toggleClass('hide', selectors.bringBackBtn, sectionQuestion, sectionAnswer);
   toggleClass('hide', selectors.bringBackBtn);
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
@@ -228,6 +226,13 @@ function loaderManager() {
     e.preventDefault(); // Prevent form from submitting the usual way
     
     if (!validateInputData(e)) { return; } // Stop further execution if inputData fails validation
+
+    if (appState.qMode === "stored") {
+      if(!validateStoredMemory()) {
+        errorInstance.runtimeError("mem0");
+        return;
+      }
+    }
        
     if (appState.qMode === "fresh") {
       await loadFreshJSON(); // Wait for loadFreshJSON to complete
@@ -516,6 +521,16 @@ function loaderManager() {
     
     console.groupEnd();
     return this;
+  }
+
+  // to validate whether is memory is empty or not
+  function validateStoredMemory() {
+    let storedLength = vocabInstance.readStoredLength;
+    if (storedLength === 0) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   return {
