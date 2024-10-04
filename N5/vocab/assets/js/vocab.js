@@ -518,7 +518,6 @@ function errorManager() {
     }
 
     else if (codeMapping[errcode] === "no-stored-data") {
-      console.info("We are in error Manager");
       if (!document.querySelector("[id|='memory-empty-error']")) { // if error is not already shown
         showError({
           errcode: "mem0",
