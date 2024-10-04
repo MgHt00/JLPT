@@ -594,6 +594,12 @@ function statusManager() {
     //console.info("statusManager() -> questionCount: ", questionCount);
   }
 
+  // reset `questionCount`
+  function resetQuestionCount () {
+    questionCount = 0;
+    return this;
+  }
+
   // reset `totalNoOfQuestion` to zero
   function resetTotalNoOfQuestion() {
     totalNoOfQuestions = 0;
@@ -618,6 +624,7 @@ function statusManager() {
   }
 
   return {
+    resetQuestionCount,
     resetTotalNoOfQuestion,
     getTotalNoOfQuestions,
     readQuestionCount,

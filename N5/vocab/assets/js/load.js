@@ -253,7 +253,7 @@ function loaderManager() {
       // Continue if there is no runtime error.
       listenerInstance.moveForm();
       toggleClass('shift-sections-to-center', dynamicDOM);
-      statusInstance.resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
+      statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
       questionMgr.newQuestion();
     }
   }
