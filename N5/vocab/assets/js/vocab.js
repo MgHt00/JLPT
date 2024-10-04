@@ -306,7 +306,7 @@ function answerManager() {
         parent: sectionAnswer, 
         child: 'div', 
         content: 'Correct!', 
-        className: 'answer-message', 
+        className: 'correct-answer-message', 
         idName: 'answer-message' 
       });
       buildNode({ parent: sectionAnswer, 

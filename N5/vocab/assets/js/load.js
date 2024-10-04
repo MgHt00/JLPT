@@ -160,7 +160,7 @@ function listenerManager() {
     }
     await loaderInstance.loadStoredJSON();// Wait for loadStoredJSON to complete
 
-    statusInstance.resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
+    statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
     questionMgr.newQuestion();
 
     console.groupEnd();

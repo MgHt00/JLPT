@@ -1,5 +1,5 @@
 .disabled {
-  /*opacity: 0.3;*/
+  opacity: 0.3;
   pointer-events: none;
 }
 
@@ -19,7 +19,7 @@
 }
 
 .dim {
-  opacity: 0.1;
+  opacity: 0.5;
   transition: opacity 0.5s ease; /* Add transition duration */
 }
 
@@ -59,6 +59,11 @@
   margin-bottom: 10px;
   padding: 10px;
   border: 1px dashed rgba(255, 255, 255, 0.5);
+}
+
+.correct-answer-message{
+  margin-bottom: 10px;
+  padding: 10px;
 }
 
 .answer-message {
