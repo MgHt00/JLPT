@@ -13,12 +13,18 @@ function questionManager() {
 
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
       //console.log("vocabArray ", appData.vocabArray);
-      questionObj = fetchOneQuestion();
 
+      do {
+        questionObj = fetchOneQuestion(); // Fetch a new question
+      } while (!isThereAnAnswer(questionObj)); // Keep fetching until a valid answer is found
+                                               // (need to check for the situation where answer choice is Kanji and it is empty.)
+
+      // Once a valid question is found, store the correct answer
+      appState.correctAns = questionObj[selectors.aChoice.value]; // Store correct answer
+      
       statusInstance.increaseQuestionCount(); // increse question count for status bar
       statusInstance.printQuestionStatus() // show current status
-      
-      appState.correctAns = questionObj[selectors.aChoice.value]; // store correct answer
+
       console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
       
       buildNode({ 
@@ -76,6 +82,15 @@ function questionManager() {
     newQuestion();
     
     console.groupEnd();
+  }
+
+  // to check whether the correct answer is empty;
+  // necessary for the situation when the user's answer choice is Kanji and there is not Kanji equalivant answer
+  function isThereAnAnswer(questionObj) {
+    let correctAnswer = questionObj[selectors.aChoice.value];
+    if(correctAnswer === "") {
+      return false;
+    } else return true;
   }
 
   return {
@@ -231,14 +246,14 @@ function answerManager() {
 
     for (let i = 1; i < noOfChoice; i++) {
       let randomIndex;
-      let randomWord;
+      let randomAnswer;
 
       do { // [le3] Loop to ensure no duplicates are added 
         randomIndex = randomNo(0, selectedArray.length - 1);
-        randomWord = selectedArray[randomIndex];
-      } while (tempAnsArray.includes(randomWord));
+        randomAnswer = selectedArray[randomIndex];
+      } while (tempAnsArray.includes(randomAnswer) || randomAnswer === ""); // Check for duplicates and empty
 
-      tempAnsArray[i] = randomWord;
+      tempAnsArray[i] = randomAnswer;
     }
 
     tempAnsArray = shuffleArray(tempAnsArray);
