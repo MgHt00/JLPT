@@ -390,7 +390,8 @@ function loaderManager() {
       buildNode({
         parent: selectors.memoryInfo,
         child: 'div',
-        content: `There is ${storedLength} word to repractice.`,
+        //content: `There is ${storedLength} word to repractice.`,
+        content: `${storedLength} word to repractice.`,
         className: 'memory-info',
         idName: 'memory-info',
       });
@@ -407,7 +408,8 @@ function loaderManager() {
       buildNode({
         parent: selectors.memoryInfo,
         child: 'div',
-        content: `There are ${storedLength} words to repractice.`,
+        //content: `There are ${storedLength} words to repractice.`,
+        content: `${storedLength} words to repractice.`,
         className: 'memory-info',
         idName: 'memory-info',
       });
