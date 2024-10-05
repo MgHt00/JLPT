@@ -299,6 +299,7 @@ function loaderManager() {
     const syllableMapping = {
       a: "assets/data/n5-vocab-a.json",
       i: "assets/data/n5-vocab-i.json",
+      db: "assets/data/n5-vocab-debug.json",
     };
   
     // if user selects "all", load all property names from `syllableMapping`
