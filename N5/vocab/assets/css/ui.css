@@ -72,7 +72,8 @@
   flex-grow: 0;
 }
 
-#settings-randomInput .random-Yes-No-div {
+#settings-randomInput .random-Yes-No-div,
+#settings-flashYesNo .flash-Yes-No-div {
   gap: 10px;
 }
 
