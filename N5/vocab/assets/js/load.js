@@ -32,12 +32,15 @@ function listenerManager() {
   // to handle random toggle switch
   function randomToggleChanges(e) {
     console.groupCollapsed("randomToggleChanges");
+    const randomLabel = document.querySelector("#random-label");
+    const sequentialLabel = document.querySelector("#sequential-label");
 
     if (selectors.randomYesNo.checked) {
-      appState.randomYesNo = false;
-    } else {
       appState.randomYesNo = true;
+    } else {
+      appState.randomYesNo = false;
     }
+    toggleClass("dim", randomLabel, sequentialLabel);
     console.info("appState.randomYesNo: ", appState.randomYesNo);
     console.groupEnd();
   }
