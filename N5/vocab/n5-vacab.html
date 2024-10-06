@@ -11,7 +11,7 @@
 <body>  
   <form id="settingsForm" class="en-regular">
     <!-- Random Yes/No -->
-    <div id="settings-randomInput">
+    <!--div id="settings-randomInput">
       <label class="random-label">Practice in Random Order:</label>
       <div class="random-Yes-No-div">
         <div class="random-Yes-div">
@@ -23,8 +23,25 @@
           <label for="randomNo" class="random-No-label">No</label>  
         </div>
       </div>
-    </div>
+    </div-->
 
+    <div id="settings-randomInput">
+      <!--label class="random-label" for="randomYesNo">Random Order: </label-->
+
+      <div class="random-Yes-No-div">
+        <label id="random-label" class="dim">
+          Sequential
+        </label>
+        <label class="switch">
+          <input type="checkbox" name="randomYesNo" id="randomYesNo" checked>
+          <span class="slider"></span>
+        </label>
+        <label id="sequential-label">
+          Random
+        </label>
+      </div>
+    </div>
+      
     <!-- Flashcard Yes/No -->
     <div id="settings-flashYesNo">
       <label for="flashYesNo" class="flashYesNo-label">Mode:</label>
@@ -96,6 +113,11 @@
       <div class="single-syllable-div">
         <input type="checkbox" id="syllableI" name="syllableChoice" value="i">
         <label for="syllableI">I</label>
+      </div>
+
+      <div class="single-syllable-div">
+        <input type="checkbox" id="syllableI" name="syllableChoice" value="db">
+        <label for="syllableI">DB</label>
       </div>
       
       <!-- Add more syllables as needed -->

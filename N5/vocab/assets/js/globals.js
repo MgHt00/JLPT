@@ -18,7 +18,7 @@ let enVocab = [];
 
 
 const appState = {
-  randomYesNo : false,
+  randomYesNo : true,
   qChoiceInput: "hi",
   aChoiceInput: "en",
   flashYesNo: true,
@@ -35,6 +35,7 @@ const appData = {
 
 const selectors = {
   settingForm : document.querySelector("#settingsForm"),
+  randomYesNo : document.querySelector("#randomYesNo"),
   settingFlashYesNo : document.querySelector("#settings-flashYesNo"),
   settingNoOfAns : document.querySelector("#settings-noOfAnswers"),
   settingSource: document.querySelector("#settings-source"),
