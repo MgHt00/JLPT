@@ -22,10 +22,24 @@ function listenerManager() {
   // All event Listeners
   function generalListeners() {
     selectors.settingForm.addEventListener('submit', loaderInstance.start); // [sn17]
+    selectors.randomYesNo.addEventListener('change', randomToggleChanges);
     selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
     selectors.qChoice.addEventListener('change', buildAnswerOptions);
     selectors.settingFlashYesNo.addEventListener('change', flashModeChanges);
     selectors.settingSource.addEventListener('change', questionModeChanges);
+  }
+
+  // to handle random toggle switch
+  function randomToggleChanges(e) {
+    console.groupCollapsed("randomToggleChanges");
+
+    if (selectors.randomYesNo.checked) {
+      appState.randomYesNo = false;
+    } else {
+      appState.randomYesNo = true;
+    }
+    console.info("appState.randomYesNo: ", appState.randomYesNo);
+    console.groupEnd();
   }
   
   // to handle when syllable checkboxs are changed
@@ -263,7 +277,9 @@ function loaderManager() {
   function validateInputData(e) {
     console.groupCollapsed("validateInputData()");
 
-    convertToBoolean(['randomYesNo', 'flashYesNo']); // Convert the string values "true"/"false" to boolean values
+    //convertToBoolean(['randomYesNo', 'flashYesNo']); // Convert the string values "true"/"false" to boolean values
+    validateToggleSwitch(['randomYesNo']);
+    convertToBoolean(['flashYesNo']); // Convert the string values "true"/"false" to boolean values
     validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
     validateAndSetQuestionMode(); // Validate question mode and set default
     assignLanguageBySelection(); // Validate and assign the correct language for the question and answer sections
@@ -526,6 +542,31 @@ function loaderManager() {
     console.groupEnd();
     return this;
   }
+
+    // to validate toggle switch data
+    function validateToggleSwitch(selectorNames) {
+      console.groupCollapsed("validateToggleSwitch()");
+
+      if (selectorNames.length === 0) {
+        console.error("No values to convert to boolean");
+        return;
+      }
+
+      for (let selectorName of selectorNames) {
+        if (appState[selectorName] === null) {
+          appState[selectorName] = false;
+          console.warn(`${appState[selectorName]} is null. Resetting to false.`);
+        }
+        else if (appState[selectorName] !== true && appState[selectorName] !== false) {
+          appState[selectorName] = false;
+          console.warn(`${appState[selectorName]} is neither true nor false. Resetting to false.`);
+        }
+        else {
+          console.info(`${selectorName} is good to go: ${appState[selectorName]}`);
+        }
+      }
+    }
+  
 
   // to validate whether is memory is empty or not
   function validateStoredMemory() {

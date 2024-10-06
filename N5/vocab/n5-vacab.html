@@ -11,7 +11,7 @@
 <body>  
   <form id="settingsForm" class="en-regular">
     <!-- Random Yes/No -->
-    <div id="settings-randomInput">
+    <!--div id="settings-randomInput">
       <label class="random-label">Practice in Random Order:</label>
       <div class="random-Yes-No-div">
         <div class="random-Yes-div">
@@ -23,8 +23,25 @@
           <label for="randomNo" class="random-No-label">No</label>  
         </div>
       </div>
-    </div>
+    </div-->
 
+    <div id="settings-randomInput">
+      <!--label class="random-label" for="randomYesNo">Random Order: </label-->
+
+      <div class="random-Yes-No-div">
+        <label id="random-label">
+          Random
+        </label>
+        <label class="switch">
+          <input type="checkbox" name="randomYesNo" id="randomYesNo">
+          <span class="slider"></span>
+        </label>
+        <label id="sequential-label">
+          Sequential
+        </label>
+      </div>
+    </div>
+      
     <!-- Flashcard Yes/No -->
     <div id="settings-flashYesNo">
       <label for="flashYesNo" class="flashYesNo-label">Mode:</label>
