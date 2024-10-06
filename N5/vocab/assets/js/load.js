@@ -22,7 +22,7 @@ function listenerManager() {
   // All event Listeners
   function generalListeners() {
     selectors.settingForm.addEventListener('submit', loaderInstance.start); // [sn17]
-    selectors.randomYesNo.addEventListener('change', randomToggleChanges);
+    selectors.settingRandomYesNo.addEventListener('change', randomToggleChanges);
     selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
     selectors.qChoice.addEventListener('change', buildAnswerOptions);
     selectors.settingFlashYesNo.addEventListener('change', flashModeChanges);
@@ -35,7 +35,7 @@ function listenerManager() {
     const randomLabel = document.querySelector("#random-label");
     const sequentialLabel = document.querySelector("#sequential-label");
 
-    if (selectors.randomYesNo.checked) {
+    if (selectors.settingRandomYesNo.checked) {
       appState.randomYesNo = true;
     } else {
       appState.randomYesNo = false;
