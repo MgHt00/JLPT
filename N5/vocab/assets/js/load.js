@@ -6,7 +6,8 @@ const statusInstance = statusManager();
 
 (function defaultState() {
   loaderInstance.loadMemoryData();
-  flipNodeState(...selectors.noOfAnsAll); // [sn14]
+  //flipNodeState(...selectors.noOfAnsAll); // [sn14]
+  toggleClass('disabled', ...selectors.noOfAnsAll);
   toggleClass('hide', selectors.bringBackBtn);
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
@@ -22,26 +23,60 @@ function listenerManager() {
   // All event Listeners
   function generalListeners() {
     selectors.settingForm.addEventListener('submit', loaderInstance.start); // [sn17]
-    selectors.randomYesNo.addEventListener('change', randomToggleChanges);
+    selectors.switchRandomYesNo.addEventListener('change', randomToggleChanges);
+    selectors.switchFlashYesNo.addEventListener('change', flashModeToggleChanges); // to handle toggle switch
+    selectors.settingFlashYesNo.addEventListener('change', flashModeChanges); // to show answer options and check runtime error 
     selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
     selectors.qChoice.addEventListener('change', buildAnswerOptions);
-    selectors.settingFlashYesNo.addEventListener('change', flashModeChanges);
     selectors.settingSource.addEventListener('change', questionModeChanges);
   }
 
-  // to handle random toggle switch
+  // to handle settingRandomYesNo toggle switch
   function randomToggleChanges(e) {
-    console.groupCollapsed("randomToggleChanges");
+    console.groupCollapsed("randomToggleChanges()");
     const randomLabel = document.querySelector("#random-label");
     const sequentialLabel = document.querySelector("#sequential-label");
 
-    if (selectors.randomYesNo.checked) {
+    if (selectors.switchRandomYesNo.checked) { // random is selected on the front end
       appState.randomYesNo = true;
     } else {
       appState.randomYesNo = false;
     }
     toggleClass("dim", randomLabel, sequentialLabel);
     console.info("appState.randomYesNo: ", appState.randomYesNo);
+    console.groupEnd();
+  }
+
+  // to handle settingFlashYesNo toggle switch
+  function flashModeToggleChanges(e) {
+    console.groupCollapsed("flashModeToggleChanges()");
+    const flashLabel = document.querySelector("#flashcard-label");
+    const multiLabel = document.querySelector("#multiple-choice-label");
+
+    if (selectors.switchFlashYesNo.checked) { // multi-choice is selected on the front end
+      appState.flashYesNo = false; 
+    } else {
+      appState.flashYesNo = true;
+    }
+    toggleClass("dim", flashLabel, multiLabel);
+    console.info("appState.flashYesNo: ", appState.flashYesNo);
+    console.groupEnd();
+  }
+
+  // to handle when flash mode toogle (previously radio buttons are) is changed
+  function flashModeChanges(e) {
+    console.groupCollapsed("flashModeChanges()");
+    toggleClass('disabled', ...selectors.noOfAnsAll);
+    
+    // set noOfAns to 2 to bypass runtime error if flashcard mode is selected
+    if (selectors.readFlashYesNo) {
+      console.info("Flashcard mode is selected.");
+      console.warn("noOfAnswers set to `2` to avoid runtime error");
+      appState.noOfAnswers = 2;
+    } else {
+      // Validate number of answers and set default if invalid
+      loaderInstance.validateAndSetAnswerCount();
+    }
     console.groupEnd();
   }
   
@@ -80,30 +115,12 @@ function listenerManager() {
       }
     }
   }
-   
-  // to handle when flash mode radio buttons are changed
-  function flashModeChanges(e) {
-    console.groupCollapsed("flashModeChanges()");
-    flipNodeState(...selectors.noOfAnsAll);
-    
-    // set noOfAns to 2 to bypass runtime error if flashcard mode is selected
-    if (selectors.readFlashYesNo) {
-      console.info("Flashcard mode is selected.");
-      console.warn("noOfAnswers set to `2` to avoid runtime error");
-      appState.noOfAnswers = 2;
-    } else {
-      // Validate number of answers and set default if invalid
-      loaderInstance.validateAndSetAnswerCount();
-    }
-    console.groupEnd();
-  }
 
   // to handle when program question mode (fresh / stored) is changed
   function questionModeChanges(e) {
     let selectedMode = selectors.readQuestionMode;
     if (selectedMode === "fresh") {
-      removeClass('disabled', selectors.settingSyllable, selectors.settingRepractice);
-      toggleClass('disabled', selectors.settingRepractice);
+      toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
 
       if (document.querySelector("[id|='memory-empty-error']")) {
         // if there is an error under Memory Status Fieldset -> clean it
@@ -116,8 +133,7 @@ function listenerManager() {
     } 
     
     else if (selectedMode === "stored") {
-      removeClass('disabled', selectors.settingSyllable, selectors.settingRepractice);
-      toggleClass('disabled', selectors.settingSyllable);
+      toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
       
       if (document.querySelector("[id|='syllable-error']")) {
         // if there is an error under Syllable Fieldset -> clean it
@@ -280,9 +296,9 @@ function loaderManager() {
   function validateInputData(e) {
     console.groupCollapsed("validateInputData()");
 
-    //convertToBoolean(['randomYesNo', 'flashYesNo']); // Convert the string values "true"/"false" to boolean values
-    validateToggleSwitch(['randomYesNo']);
-    convertToBoolean(['flashYesNo']); // Convert the string values "true"/"false" to boolean values
+    //convertToBoolean(['randomYesNo', 'flashYesNo']); // (Formly randonYesNo and flashYesNo were radio, so that need to used this.) Convert the string values "true"/"false" to boolean values
+
+    validateToggleSwitch(['randomYesNo', 'flashYesNo']);
     validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
     validateAndSetQuestionMode(); // Validate question mode and set default
     assignLanguageBySelection(); // Validate and assign the correct language for the question and answer sections

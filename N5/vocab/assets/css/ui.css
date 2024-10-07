@@ -18,11 +18,6 @@
   border-radius: 20px;
 }
 
-#settingsForm > * {
-  transition: margin 0.5s ease, padding 0.5s ease; /* Add transition for child elements */
-}
-
-
 #settingsForm #settings-randomInput,
 #settingsForm #settings-flashYesNo,
 #settingsForm #settings-noOfAnswers,
@@ -72,7 +67,8 @@
   flex-grow: 0;
 }
 
-#settings-randomInput .random-Yes-No-div {
+#settings-randomInput .random-Yes-No-div,
+#settings-flashYesNo .flash-Yes-No-div {
   gap: 10px;
 }
 

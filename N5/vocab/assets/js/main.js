@@ -1,5 +1,5 @@
+// Remove only existing language-related classes
 function assignLanguage(sectionBlock, lang) {
-  // Remove only existing language-related classes
   sectionBlock.classList.remove("jp", "en"); // Add other language class names if necessary
   
   // Remove the existing "lang" attribute if it exists
@@ -14,18 +14,20 @@ function assignLanguage(sectionBlock, lang) {
   sectionBlock.classList.add(lang);
 }
 
-
+// to generate a random number
 function randomNo(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// own version of console.log (not much useful)
 function log(variable, label) {
   label ? console.log(`${label}: ${variable}`) : console.log(`${variable}`);
 }
 
+// to copy `CatName` property from source array of objects to target array
+// used to fetch all the answers and mix up with the correct answer
 function copyOneProperty(source, target, catName) {
-  // to copy `CatName` property from source array of objects to target array
-  // used to fetch all the answers and mix up with the correct answer
+  
   let i = 0;
   source.forEach(element => {
     target[i] = element[catName];
@@ -42,6 +44,7 @@ function shuffleArray(array) {
   return array;
 }
 
+// to create node at the front end
 function buildNode({parent, child, content, childValues = [], className = "", idName = "", eventFunction = "" }) {
   //console.log("Entering buildNode()");
   // Ensure className is always treated as an array
@@ -89,7 +92,8 @@ function buildNode({parent, child, content, childValues = [], className = "", id
   //console.log("Exiting buildNode()");
 }
 
-function clearScreen(elements) { // to remove the content of a node
+// to remove the content of a node
+function clearScreen(elements) { 
   // Ensure `elements` is treated as an array
   elements = Array.isArray(elements) ? elements : [elements];
 
@@ -100,7 +104,8 @@ function clearScreen(elements) { // to remove the content of a node
   });
 }
 
-function clearNode({ parent, children = [] }) { // to move the entire node
+// to move the entire node
+function clearNode({ parent, children = [] }) { 
   // !IMPORTANT: when passing child/children to this function, wrap it with [] 
   if (children.length > 0) {
     children.forEach(child => {
@@ -118,21 +123,22 @@ function clearNode({ parent, children = [] }) { // to move the entire node
   }
 }
 
-
 function checkNode({idName}) {
   return document.querySelectorAll(`[id^=${idName}]`).length > 0;
 }
 
+// (replaced using with `toggleClass`) Iterate over the nodes and toggle the disabled state
 function flipNodeState(...nodes) { //[sn10]
-  // Iterate over the nodes and toggle the disabled state
   nodes.forEach(node => {
     if (node instanceof HTMLElement) {
+      //console.info("flipNodeState, node: ", node);
       node.disabled = !node.disabled;
       toggleClass("disabled", node);
     }
   });
 }
 
+// to toggle class name
 function toggleClass(className = "", ...nodes) { // [sn15]
   if(!className.trim()) return; // Prevent adding an empty or whitespace-only class
 
@@ -143,6 +149,7 @@ function toggleClass(className = "", ...nodes) { // [sn15]
   });
 }
 
+// to remove class name
 function removeClass(className = "", ...nodes) {
   if(!className.trim()) return; // Prevent adding an empty or whitespace-only class
 

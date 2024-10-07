@@ -1,6 +1,13 @@
+/* Define transition on the element itself */
+.element {
+  transition: opacity 0.5s ease, pointer-events 0.5s ease;
+}
+
+/* Define disabled state */
 .disabled {
   opacity: 0.3;
   pointer-events: none;
+  transition: opacity 0.5s ease;
 }
 
 .setting-error {
