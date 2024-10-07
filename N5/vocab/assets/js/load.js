@@ -6,10 +6,10 @@ const statusInstance = statusManager();
 
 (function defaultState() {
   loaderInstance.loadMemoryData();
-  flipNodeState(...selectors.noOfAnsAll); // [sn14]
+  //flipNodeState(...selectors.noOfAnsAll); // [sn14]
+  toggleClass('disabled', ...selectors.noOfAnsAll);
   toggleClass('hide', selectors.bringBackBtn);
-  //toggleClass('disabled', selectors.settingRepractice);
-  flipNodeState(selectors.settingRepractice);
+  toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
   listenerInstance.handlebringBackBtn();
   console.groupEnd();
@@ -66,7 +66,7 @@ function listenerManager() {
   // to handle when flash mode toogle (previously radio buttons are) is changed
   function flashModeChanges(e) {
     console.groupCollapsed("flashModeChanges()");
-    flipNodeState(...selectors.noOfAnsAll);
+    toggleClass('disabled', ...selectors.noOfAnsAll);
     
     // set noOfAns to 2 to bypass runtime error if flashcard mode is selected
     if (selectors.readFlashYesNo) {
@@ -120,7 +120,7 @@ function listenerManager() {
   function questionModeChanges(e) {
     let selectedMode = selectors.readQuestionMode;
     if (selectedMode === "fresh") {
-      flipNodeState(selectors.settingRepractice, selectors.settingSyllable);
+      toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
 
       if (document.querySelector("[id|='memory-empty-error']")) {
         // if there is an error under Memory Status Fieldset -> clean it
@@ -133,7 +133,7 @@ function listenerManager() {
     } 
     
     else if (selectedMode === "stored") {
-      flipNodeState(selectors.settingRepractice, selectors.settingSyllable);
+      toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
       
       if (document.querySelector("[id|='syllable-error']")) {
         // if there is an error under Syllable Fieldset -> clean it
@@ -296,9 +296,9 @@ function loaderManager() {
   function validateInputData(e) {
     console.groupCollapsed("validateInputData()");
 
-    //convertToBoolean(['randomYesNo', 'flashYesNo']); // Convert the string values "true"/"false" to boolean values
+    //convertToBoolean(['randomYesNo', 'flashYesNo']); // (Formly randonYesNo and flashYesNo were radio, so that need to used this.) Convert the string values "true"/"false" to boolean values
+
     validateToggleSwitch(['randomYesNo', 'flashYesNo']);
-    //convertToBoolean(['flashYesNo']); // Convert the string values "true"/"false" to boolean values
     validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
     validateAndSetQuestionMode(); // Validate question mode and set default
     assignLanguageBySelection(); // Validate and assign the correct language for the question and answer sections
