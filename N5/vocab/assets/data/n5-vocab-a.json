@@ -1,5 +1,5 @@
 [
-  { 
+  {
     "ka": "会う",
     "hi": "あう",
     "en": "to meet"
@@ -28,5 +28,185 @@
     "ka": "明い",
     "hi": "あかるい",
     "en": "bright"
+  },
+  {
+    "ka": "秋",
+    "hi": "あき",
+    "en": "autumn"
+  },
+  {
+    "ka": "開く",
+    "hi": "あく",
+    "en": "to open, to become open"
+  },
+  {
+    "ka": "開ける",
+    "hi": "あける",
+    "en": "to open"
+  },
+  {
+    "ka": "上げる",
+    "hi": "あげる",
+    "en": "to give"
+  },
+  {
+    "ka": "朝",
+    "hi": "あさ",
+    "en": "morning"
+  },
+  {
+    "ka": "朝御飯",
+    "hi": "あさごはん",
+    "en": "breakfast"
+  },
+  {
+    "ka": "",
+    "hi": "あさって",
+    "en": "day after tomorrow"
+  },
+  {
+    "ka": "足",
+    "hi": "あし",
+    "en": "foot, leg"
+  },
+  {
+    "ka": "明日",
+    "hi": "あした",
+    "en": "tomorrow"
+  },
+  {
+    "ka": "",
+    "hi": "あそこ",
+    "en": "over there"
+  },
+  {
+    "ka": "遊ぶ",
+    "hi": "あそぶ",
+    "en": "to play, to make a visit"
+  },
+  {
+    "ka": "暖かい",
+    "hi": "あたたかい",
+    "en": "warm"
+  },
+  {
+    "ka": "頭",
+    "hi": "あたま",
+    "en": "head"
+  },
+  {
+    "ka": "新しい",
+    "hi": "あたらしい",
+    "en": "new"
+  },
+  {
+    "ka": "",
+    "hi": "あちら",
+    "en": "there"
+  },
+  {
+    "ka": "暑い",
+    "hi": "あつい",
+    "en": "hot"
+  },
+  {
+    "ka": "熱い",
+    "hi": "あつい",
+    "en": "hot to the touch"
+  },
+  {
+    "ka": "厚い",
+    "hi": "あつい",
+    "en": "kind, deep, thick"
+  },
+  {
+    "ka": "",
+    "hi": "あっち",
+    "en": "over there"
+  },
+  {
+    "ka": "後",
+    "hi": "あと",
+    "en": "afterwards"
+  },
+  {
+    "ka": "",
+    "hi": "あなた",
+    "en": "you"
+  },
+  {
+    "ka": "兄",
+    "hi": "あに",
+    "en": "(humble) older brother"
+  },
+  {
+    "ka": "姉",
+    "hi": "あね",
+    "en": "(humble) older sister"
+  },
+  {
+    "ka": "",
+    "hi": "あの",
+    "en": "that over there"
+  },
+  {
+    "ka": "",
+    "hi": "あの",
+    "en": "um..."
+  },
+  {
+    "ka": "",
+    "hi": "アパート",
+    "en": "apartment"
+  },
+  {
+    "ka": "",
+    "hi": "あびる",
+    "en": "to bathe, to shower"
+  },
+  {
+    "ka": "危ない",
+    "hi": "あぶない",
+    "en": "dangerous"
+  },
+  {
+    "ka": "甘い",
+    "hi": "あまい",
+    "en": "sweet"
+  },
+  {
+    "ka": "",
+    "hi": "あまり",
+    "en": "not very"
+  },
+  {
+    "ka": "雨",
+    "hi": "あめ",
+    "en": "rain"
+  },
+  {
+    "ka": "飴",
+    "hi": "あめ",
+    "en": "candy"
+  },
+  {
+    "ka": "洗う",
+    "hi": "あらう",
+    "en": "to wash"
+  },
+  {
+    "ka": "",
+    "hi": "ある",
+    "en": "to be,to have (used for inanimate objects)"
+  },
+  {
+    "ka": "歩く",
+    "hi": "あるく",
+    "en": "to walk"
+  },
+  {
+    "ka": "",
+    "hi": "あれ",
+    "en": "that"
   }
 ]

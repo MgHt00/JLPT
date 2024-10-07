@@ -334,6 +334,7 @@ function loaderManager() {
     const syllableMapping = {
       a: "assets/data/n5-vocab-a.json",
       i: "assets/data/n5-vocab-i.json",
+      u: "assets/data/n5-vocab-u.json",
       db: "assets/data/n5-vocab-debug.json",
     };
   
