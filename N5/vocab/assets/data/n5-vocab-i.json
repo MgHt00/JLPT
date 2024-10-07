@@ -1,12 +1,7 @@
 [
-  { 
-    "ka": "",
-    "hi": "いい",
-    "en": "good"
-  },
   {
     "ka": "",
-    "hi": "よい",
+    "hi": "いい/よい",
     "en": "good"
   },
   {
@@ -29,7 +24,7 @@
     "hi": "いかが",
     "en": "how"
   },
-  { 
+  {
     "ka": "行く",
     "hi": "いく",
     "en": "to go"
@@ -37,7 +32,7 @@
   {
     "ka": "",
     "hi": "いくつ",
-    "en": "how many? / how old?"
+    "en": "how many?,how old?"
   },
   {
     "ka": "",
@@ -58,5 +53,110 @@
     "ka": "",
     "hi": "いす",
     "en": "chair"
+  },
+  {
+    "ka": "忙しい",
+    "hi": "いそがしい",
+    "en": "busy, irritated"
+  },
+  {
+    "ka": "痛い",
+    "hi": "いたい",
+    "en": "painful"
+  },
+  {
+    "ka": "一",
+    "hi": "いち",
+    "en": "one"
+  },
+  {
+    "ka": "一日",
+    "hi": "いちにち",
+    "en": "first of the month"
+  },
+  {
+    "ka": "",
+    "hi": "いちばん",
+    "en": "best, first"
+  },
+  {
+    "ka": "",
+    "hi": "いつ",
+    "en": "when"
+  },
+  {
+    "ka": "五日",
+    "hi": "いつか",
+    "en": "five days, fifth day"
+  },
+  {
+    "ka": "一緒",
+    "hi": "いっしょ",
+    "en": "together"
+  },
+  {
+    "ka": "五つ",
+    "hi": "いつつ",
+    "en": "five"
+  },
+  {
+    "ka": "",
+    "hi": "いつも",
+    "en": "always"
+  },
+  {
+    "ka": "犬",
+    "hi": "いぬ",
+    "en": "dog"
+  },
+  {
+    "ka": "今",
+    "hi": "いま",
+    "en": "now"
+  },
+  {
+    "ka": "意味",
+    "hi": "いみ",
+    "en": "meaning"
+  },
+  {
+    "ka": "妹",
+    "hi": "いもうと",
+    "en": "(humble) younger sister"
+  },
+  {
+    "ka": "嫌",
+    "hi": "いや",
+    "en": "unpleasant"
+  },
+  {
+    "ka": "入口",
+    "hi": "いりぐち",
+    "en": "entrance"
+  },
+  {
+    "ka": "居る",
+    "hi": "いる",
+    "en": "to be, to have (used for people and animals)"
+  },
+  {
+    "ka": "要る",
+    "hi": "いる",
+    "en": "to need"
+  },
+  {
+    "ka": "入れる",
+    "hi": "いれる",
+    "en": "to put in"
+  },
+  {
+    "ka": "色",
+    "hi": "いろ",
+    "en": "colour"
+  },
+  {
+    "ka": "",
+    "hi": "いろいろ",
+    "en": "various"
   }
 ]
