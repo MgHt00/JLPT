@@ -1,6 +1,7 @@
 .disabled {
   opacity: 0.3;
   pointer-events: none;
+  transition: opacity 0.5s ease; /* Add transition duration */
 }
 
 .setting-error {

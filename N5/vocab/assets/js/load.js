@@ -8,7 +8,8 @@ const statusInstance = statusManager();
   loaderInstance.loadMemoryData();
   flipNodeState(...selectors.noOfAnsAll); // [sn14]
   toggleClass('hide', selectors.bringBackBtn);
-  toggleClass('disabled', selectors.settingRepractice);
+  //toggleClass('disabled', selectors.settingRepractice);
+  flipNodeState(selectors.settingRepractice);
   listenerInstance.generalListeners();
   listenerInstance.handlebringBackBtn();
   console.groupEnd();
@@ -119,8 +120,7 @@ function listenerManager() {
   function questionModeChanges(e) {
     let selectedMode = selectors.readQuestionMode;
     if (selectedMode === "fresh") {
-      removeClass('disabled', selectors.settingSyllable, selectors.settingRepractice);
-      toggleClass('disabled', selectors.settingRepractice);
+      flipNodeState(selectors.settingRepractice, selectors.settingSyllable);
 
       if (document.querySelector("[id|='memory-empty-error']")) {
         // if there is an error under Memory Status Fieldset -> clean it
@@ -133,8 +133,7 @@ function listenerManager() {
     } 
     
     else if (selectedMode === "stored") {
-      removeClass('disabled', selectors.settingSyllable, selectors.settingRepractice);
-      toggleClass('disabled', selectors.settingSyllable);
+      flipNodeState(selectors.settingRepractice, selectors.settingSyllable);
       
       if (document.querySelector("[id|='syllable-error']")) {
         // if there is an error under Syllable Fieldset -> clean it

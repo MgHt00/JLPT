@@ -123,10 +123,11 @@ function checkNode({idName}) {
   return document.querySelectorAll(`[id^=${idName}]`).length > 0;
 }
 
+// Iterate over the nodes and toggle the disabled state
 function flipNodeState(...nodes) { //[sn10]
-  // Iterate over the nodes and toggle the disabled state
   nodes.forEach(node => {
     if (node instanceof HTMLElement) {
+      console.info("flipNodeState, node: ", node);
       node.disabled = !node.disabled;
       toggleClass("disabled", node);
     }
