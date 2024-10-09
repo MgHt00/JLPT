@@ -82,10 +82,18 @@
 
 #settings-syllableChoice #fieldset-syllable {
   flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 #settings-repractice #fieldset-repractice {
   flex-direction: column;
+}
+
+#fieldset-syllable .single-syllable-div {
+  display: flex;
+  flex-direction: row;
+  gap: 2px;
 }
 
 #settings-qChoiceInput select,
