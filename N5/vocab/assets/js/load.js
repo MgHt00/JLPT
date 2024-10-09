@@ -259,7 +259,7 @@ function loaderManager() {
   async function start(e) {  
     e.preventDefault(); // Prevent form from submitting the usual way
     
-    if (!validateInputData(e)) { return; } // Stop further execution if inputData fails validation
+    validateAndSetInputData(e); // validate and set defaults to the input data.
 
     if (appState.qMode === "stored") {
       if(!validateStoredMemory()) {
@@ -292,12 +292,11 @@ function loaderManager() {
     }
   }
 
-  // input validation and loading function
-  function validateInputData(e) {
-    console.groupCollapsed("validateInputData()");
+  // to validate input data and set defaults if necessary
+  function validateAndSetInputData(e) {
+    console.groupCollapsed("validateAndSetInputData()");
 
     //convertToBoolean(['randomYesNo', 'flashYesNo']); // (Formly randonYesNo and flashYesNo were radio, so that need to used this.) Convert the string values "true"/"false" to boolean values
-
     validateToggleSwitch(['randomYesNo', 'flashYesNo']);
     validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
     validateAndSetQuestionMode(); // Validate question mode and set default
@@ -314,7 +313,6 @@ function loaderManager() {
     console.info("appState.qChoiceInput: ", appState.qChoiceInput, "appState.aChoiceInput: ", appState.aChoiceInput);
     
     console.groupEnd();
-    return true; // Signal that inputData validation passed
   }
 
   // to convert all checked syllables to an array
