@@ -11,7 +11,7 @@ const statusInstance = statusManager();
   toggleClass('hide', selectors.bringBackBtn);
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
-  listenerInstance.handlebringBackBtn();
+  //listenerInstance.handlebringBackBtn();
   console.groupEnd();
 })();
 
@@ -29,6 +29,7 @@ function listenerManager() {
     selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
     selectors.qChoice.addEventListener('change', buildAnswerOptions);
     selectors.settingSource.addEventListener('change', questionModeChanges);
+    selectors.bringBackBtn.addEventListener('click', handlebringBackBtn); 
   }
 
   // to handle settingRandomYesNo toggle switch
@@ -167,14 +168,12 @@ function listenerManager() {
   }
   
   // animation concerns to move the setting form upward and reprint stored data info
-  function handlebringBackBtn() {
-    selectors.bringBackBtn.addEventListener('click', (event) => {
+  function handlebringBackBtn(event) {
       toggleClass('shift-sections-to-center', dynamicDOM);
       clearScreen(sectionStatus);
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
       rePrintMemory();
-    });
   }
 
   // when user want to restart the program
