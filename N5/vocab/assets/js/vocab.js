@@ -177,7 +177,6 @@ function answerManager() {
     }
 
     console.groupEnd();
-    return this;
   }
 
   // to ask user whether they want to practice the vocabs from the local storage
