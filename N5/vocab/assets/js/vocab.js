@@ -143,21 +143,31 @@ function answerManager() {
   // when there is no more question to shown.
   function noMoreQuestion() {
     //console.groupCollapsed("noMoreQuestion()");
-    
-    if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
-      questionMgr.readQuestionMode = "stored";
-      //console.log("Processed questionMgr.readQuestionMode: ", questionMgr.readQuestionMode);
-      toLocalStorageYesNo();
 
-    } else if (questionMgr.readQuestionMode === "stored") { // if currently showing data from localstorage
+    if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
+      if (vocabMgr.readStoredLength <= 2) { 
+        // If there is no store vocab in local storage
+        // (less than 2 vocab in local storage will lead to infinite loop; so that it needs to be <=2)
+        questionMgr.readQuestionMode = "stored";
+        completeAndRestart();
+      } 
+      else {
+        questionMgr.readQuestionMode = "stored";
+        toLocalStorageYesNo();
+      }
+    }
+    
+    else if (questionMgr.readQuestionMode === "stored") { // if currently showing data from localstorage
         if (noMoreQuestion.ranOnce) { // checked whether localstorage has been ran once.
           //console.info("mistake bank as been ran once. ", noMoreQuestion.ranOnce);
           completeAndRestart();
         }
         else if (vocabMgr.readStoredLength <= 2) { 
-          // even though local storage is zero when the program starts, check whether new words have been added during the run
-          // less than 2 vocab in local storage will lead to infinite loop; so the if statement is adjusted to <=2
-          //console.info("too few vocabs in local storage");
+          // Even though local storage is zero when the program starts, 
+          // check whether new words have been added during the program runtime.
+          
+          // Less than 2 vocab in local storage will lead to infinite loop; so the if statement is adjusted to <=2
+          // console.info("too few vocabs in local storage");
           completeAndRestart();
         } 
         else {
