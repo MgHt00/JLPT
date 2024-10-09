@@ -179,6 +179,7 @@ function listenerManager() {
 
   // when user want to restart the program
   function restart() {
+    clearScreen(sectionStatus);
     debouncedMoveForm();
     rePrintMemory();
   }

@@ -210,7 +210,7 @@ function answerManager() {
     buildNode({ 
       parent: sectionAnswer, 
       child: 'div', 
-      content: 'Lets Restart!', 
+      content: 'Let\'s Restart!', 
       className: 'answer-btn', 
       idName: 'answer-btn', 
       eventFunction: listenerInstance.restart,
