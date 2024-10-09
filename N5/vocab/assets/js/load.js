@@ -194,6 +194,7 @@ function listenerManager() {
     await loaderInstance.loadStoredJSON();// Wait for loadStoredJSON to complete
 
     statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
+    statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
     questionMgr.newQuestion();
 
     console.groupEnd();
@@ -288,6 +289,7 @@ function loaderManager() {
       listenerInstance.moveForm();
       toggleClass('shift-sections-to-center', dynamicDOM);
       statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
+      statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
       questionMgr.newQuestion();
     }
   }

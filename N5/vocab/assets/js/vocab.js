@@ -362,9 +362,11 @@ function answerManager() {
     const btnID = event.currentTarget.id;
 
     if (btnID === "choice-btn-0") {
+      statusInstance.updateCumulativeAverage(true);
       questionMgr.finalizeQuestionAndProceed();
     } else if (btnID === "choice-btn-1") {
       vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
+      statusInstance.updateCumulativeAverage(false);
       questionMgr.finalizeQuestionAndProceed();
     }
 
@@ -608,7 +610,11 @@ function errorManager() {
 function statusManager() {
   let questionCount = 0;
   let totalNoOfQuestions = 0;
-
+  let cumulativeAverage = 0;
+  let totalCorrectAnswers = 0;
+  let totalQuestionsAnswered = 0; 
+  let averageScore = 0;
+  
   // return `questionCount`
   function readQuestionCount() {
     return questionCount;
@@ -639,15 +645,81 @@ function statusManager() {
     return totalNoOfQuestions;
   }
 
-  // to print `#/#` on screen
+  // to print status `#/#` on screen
   function printQuestionStatus() {
     clearScreen(sectionStatus);
+
+    if (totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
+      buildNode({
+        parent: sectionStatus,
+        child: "div",
+        content: `Average Correct Rate: ${averageScore}%`,
+      });
+    }
+
     buildNode({
       parent: sectionStatus,
       child: "div",
       content: `${readQuestionCount()} / ${totalNoOfQuestions}`,
     });
   }
+
+  // to reset all variables concerning with calculating the cumulative average
+  function resetCumulativeVariables() {
+    cumulativeAverage = 0;
+    totalCorrectAnswers = 0;
+    totalQuestionsAnswered = 0; 
+    return this;
+  }
+
+  // to increase totalCorrectAnswers
+  function increaseTotalCorrectAnswers() {
+    totalCorrectAnswers++;
+    return this;
+  }
+
+  // to increase totalQuestionsAnswered
+  function increaseTotalQuestionsAnswered() {
+    totalQuestionsAnswered++;
+    return this;
+  }
+
+  // to calculate cumulative average
+  /*
+  function calCumulativeAverage() {
+    console.groupCollapsed("calCumulativeAverage()");
+
+    console.info("totalCorrectAnswers :", totalCorrectAnswers, "totalQuestionsAnswered :", totalQuestionsAnswered);
+    cumulativeAverage = totalCorrectAnswers / totalQuestionsAnswered;
+    console.info("cumulativeAverage :", cumulativeAverage);
+    return Math.round(cumulativeAverage); // Rounds to the nearest whole number
+  }
+  */
+
+  function updateCumulativeAverage(isCorrect) {
+    console.groupCollapsed("updateCumulativeAverage()");
+
+    totalQuestionsAnswered++;
+    if (isCorrect) totalCorrectAnswers++;
+    console.info("totalQuestionsAnswered :", totalQuestionsAnswered, "totalCorrectAnswers :", totalCorrectAnswers);
+
+    // Calculate new cumulative average based on the latest answer
+    cumulativeAverage = (cumulativeAverage * (totalQuestionsAnswered - 1) + (isCorrect ? 1 : 0)) / totalQuestionsAnswered;
+    console.info("cumulativeAverage :", cumulativeAverage);
+
+    // Calculate the percentage and round to a whole number
+    averageScore = Math.round(cumulativeAverage * 100); // This will give you a whole number
+    console.info("averageScore :", averageScore);
+
+    return averageScore; // Return the rounded percentage directly
+}
+
+
+  // to read totalCorrectAnswers
+  function readTotalCorrectAnswers() {
+      return totalCorrectAnswers;
+  }
+  
 
   return {
     resetQuestionCount,
@@ -656,5 +728,10 @@ function statusManager() {
     readQuestionCount,
     increaseQuestionCount,
     printQuestionStatus,
+    resetCumulativeVariables,
+    //calCumulativeAverage,
+    //increaseTotalCorrectAnswers,
+    //increaseTotalQuestionsAnswered,
+    updateCumulativeAverage,
   }
 }
