@@ -123,7 +123,7 @@ function answerManager() {
         parent: sectionAnswer, 
         child: 'div', 
         content: 'Check Answer', 
-        className: 'answer-btn', 
+        className: ['answer-btn', 'check-flash-mode-answer'], 
         idName: 'answer-btn', 
         eventFunction: handleFlashcardAnswer 
       });

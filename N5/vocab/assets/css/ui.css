@@ -215,3 +215,7 @@ input:checked + .slider:before {
   font-weight: 300;
   margin-bottom: 15px;
 }
+
+.check-flash-mode-answer {
+  margin-top: 175px;
+}

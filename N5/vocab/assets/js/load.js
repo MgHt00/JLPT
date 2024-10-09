@@ -567,12 +567,7 @@ function loaderManager() {
     // to validate toggle switch data
     function validateToggleSwitch(selectorNames) {
       console.groupCollapsed("validateToggleSwitch()");
-      /*
-      if (selectorNames.length === 0) {
-        console.error("No values to convert to boolean");
-        return;
-      }
-      */
+
       for (let selectorName of selectorNames) {
         if (appState[selectorName] === null) {
           appState[selectorName] = false;
