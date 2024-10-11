@@ -11,7 +11,7 @@ const statusInstance = statusManager();
   toggleClass('hide', selectors.bringBackBtn);
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
-  listenerInstance.handlebringBackBtn();
+  //listenerInstance.handlebringBackBtn();
   console.groupEnd();
 })();
 
@@ -29,6 +29,7 @@ function listenerManager() {
     selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
     selectors.qChoice.addEventListener('change', buildAnswerOptions);
     selectors.settingSource.addEventListener('change', questionModeChanges);
+    selectors.bringBackBtn.addEventListener('click', handlebringBackBtn); 
   }
 
   // to handle settingRandomYesNo toggle switch
@@ -167,18 +168,18 @@ function listenerManager() {
   }
   
   // animation concerns to move the setting form upward and reprint stored data info
-  function handlebringBackBtn() {
-    selectors.bringBackBtn.addEventListener('click', (event) => {
+  function handlebringBackBtn(event) {
       toggleClass('shift-sections-to-center', dynamicDOM);
       clearScreen(sectionStatus);
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
       rePrintMemory();
-    });
   }
 
   // when user want to restart the program
   function restart() {
+    clearScreen(sectionStatus);
+    toggleClass('shift-sections-to-center', dynamicDOM);
     debouncedMoveForm();
     rePrintMemory();
   }
@@ -193,7 +194,9 @@ function listenerManager() {
     }
     await loaderInstance.loadStoredJSON();// Wait for loadStoredJSON to complete
 
-    statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
+    //statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
+    //statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
+    statusInstance.getTotalNoOfQuestions("stored");
     questionMgr.newQuestion();
 
     console.groupEnd();
@@ -259,7 +262,7 @@ function loaderManager() {
   async function start(e) {  
     e.preventDefault(); // Prevent form from submitting the usual way
     
-    if (!validateInputData(e)) { return; } // Stop further execution if inputData fails validation
+    validateAndSetInputData(e); // validate and set defaults to the input data.
 
     if (appState.qMode === "stored") {
       if(!validateStoredMemory()) {
@@ -286,18 +289,18 @@ function loaderManager() {
   
       // Continue if there is no runtime error.
       listenerInstance.moveForm();
+      statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
+      statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
       toggleClass('shift-sections-to-center', dynamicDOM);
-      statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
       questionMgr.newQuestion();
     }
   }
 
-  // input validation and loading function
-  function validateInputData(e) {
-    console.groupCollapsed("validateInputData()");
+  // to validate input data and set defaults if necessary
+  function validateAndSetInputData(e) {
+    console.groupCollapsed("validateAndSetInputData()");
 
     //convertToBoolean(['randomYesNo', 'flashYesNo']); // (Formly randonYesNo and flashYesNo were radio, so that need to used this.) Convert the string values "true"/"false" to boolean values
-
     validateToggleSwitch(['randomYesNo', 'flashYesNo']);
     validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
     validateAndSetQuestionMode(); // Validate question mode and set default
@@ -314,7 +317,6 @@ function loaderManager() {
     console.info("appState.qChoiceInput: ", appState.qChoiceInput, "appState.aChoiceInput: ", appState.aChoiceInput);
     
     console.groupEnd();
-    return true; // Signal that inputData validation passed
   }
 
   // to convert all checked syllables to an array
@@ -570,11 +572,6 @@ function loaderManager() {
     function validateToggleSwitch(selectorNames) {
       console.groupCollapsed("validateToggleSwitch()");
 
-      if (selectorNames.length === 0) {
-        console.error("No values to convert to boolean");
-        return;
-      }
-
       for (let selectorName of selectorNames) {
         if (appState[selectorName] === null) {
           appState[selectorName] = false;
@@ -589,7 +586,6 @@ function loaderManager() {
         }
       }
     }
-  
 
   // to validate whether is memory is empty or not
   function validateStoredMemory() {

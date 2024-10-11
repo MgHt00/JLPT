@@ -75,9 +75,9 @@ function questionManager() {
   }
 
   // to remove shown question and carry on
-  function finalizeQuestionAndProceed() {
+  function finalizeQuestionAndProceed(state) {
     //console.groupCollapsed("questionManager() - finalizeQuestionAndProceed()");
-
+    statusInstance.updateCumulativeAverage(state);
     vocabMgr.removeSpecifiedQuestion(fetchOneQuestion.index);
     newQuestion();
     
@@ -123,7 +123,7 @@ function answerManager() {
         parent: sectionAnswer, 
         child: 'div', 
         content: 'Check Answer', 
-        className: 'answer-btn', 
+        className: ['answer-btn', 'check-flash-mode-answer'], 
         idName: 'answer-btn', 
         eventFunction: handleFlashcardAnswer 
       });
@@ -143,21 +143,31 @@ function answerManager() {
   // when there is no more question to shown.
   function noMoreQuestion() {
     //console.groupCollapsed("noMoreQuestion()");
-    
-    if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
-      questionMgr.readQuestionMode = "stored";
-      //console.log("Processed questionMgr.readQuestionMode: ", questionMgr.readQuestionMode);
-      toLocalStorageYesNo();
 
-    } else if (questionMgr.readQuestionMode === "stored") { // if currently showing data from localstorage
+    if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
+      if (vocabMgr.readStoredLength <= 2) { 
+        // If there is no store vocab in local storage
+        // (less than 2 vocab in local storage will lead to infinite loop; so that it needs to be <=2)
+        questionMgr.readQuestionMode = "stored";
+        completeAndRestart();
+      } 
+      else {
+        questionMgr.readQuestionMode = "stored";
+        toLocalStorageYesNo();
+      }
+    }
+    
+    else if (questionMgr.readQuestionMode === "stored") { // if currently showing data from localstorage
         if (noMoreQuestion.ranOnce) { // checked whether localstorage has been ran once.
           //console.info("mistake bank as been ran once. ", noMoreQuestion.ranOnce);
           completeAndRestart();
         }
         else if (vocabMgr.readStoredLength <= 2) { 
-          // even though local storage is zero when the program starts, check whether new words have been added during the run
-          // less than 2 vocab in local storage will lead to infinite loop; so the if statement is adjusted to <=2
-          //console.info("too few vocabs in local storage");
+          // Even though local storage is zero when the program starts, 
+          // check whether new words have been added during the program runtime.
+          
+          // Less than 2 vocab in local storage will lead to infinite loop; so the if statement is adjusted to <=2
+          // console.info("too few vocabs in local storage");
           completeAndRestart();
         } 
         else {
@@ -167,7 +177,6 @@ function answerManager() {
     }
 
     console.groupEnd();
-    return this;
   }
 
   // to ask user whether they want to practice the vocabs from the local storage
@@ -210,7 +219,7 @@ function answerManager() {
     buildNode({ 
       parent: sectionAnswer, 
       child: 'div', 
-      content: 'Lets Restart!', 
+      content: 'Let\'s Restart!', 
       className: 'answer-btn', 
       idName: 'answer-btn', 
       eventFunction: listenerInstance.restart,
@@ -329,11 +338,13 @@ function answerManager() {
         content: 'Next', 
         className: 'answer-btn', 
         idName: 'choice-btn', 
-        eventFunction: questionMgr.finalizeQuestionAndProceed
+        //eventFunction: questionMgr.finalizeQuestionAndProceed
+        eventFunction: () => questionMgr.finalizeQuestionAndProceed(true) // need to wrap the function in an arrow function (or another function) to control the argument passing.
       });
 
     } else {
       if (sectionMessage.textContent !== 'Keep Trying') { // if worng message is not shown already.
+        questionMgr.finalizeQuestionAndProceed(false);
         vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
         buildNode({ 
           parent: sectionMessage, 
@@ -353,10 +364,10 @@ function answerManager() {
     const btnID = event.currentTarget.id;
 
     if (btnID === "choice-btn-0") {
-      questionMgr.finalizeQuestionAndProceed();
+      questionMgr.finalizeQuestionAndProceed(true);
     } else if (btnID === "choice-btn-1") {
       vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
-      questionMgr.finalizeQuestionAndProceed();
+      questionMgr.finalizeQuestionAndProceed(false);
     }
 
     console.groupEnd();
@@ -599,7 +610,11 @@ function errorManager() {
 function statusManager() {
   let questionCount = 0;
   let totalNoOfQuestions = 0;
-
+  let cumulativeAverage = 0;
+  let totalCorrectAnswers = 0;
+  let totalQuestionsAnswered = 0; 
+  let averageScore = 0;
+  
   // return `questionCount`
   function readQuestionCount() {
     return questionCount;
@@ -624,21 +639,90 @@ function statusManager() {
   }
 
   // assign `vocabArrary` length to `totalNoOfQuestions`
-  function getTotalNoOfQuestions() {
-    totalNoOfQuestions = appData.vocabArray.length;
+  function getTotalNoOfQuestions(state) {
+    console.groupCollapsed("getTotalNoOfQuestions()");
+
+    switch (state) {
+      case "fresh":
+        console.info("state : ", state);
+        totalNoOfQuestions = appData.vocabArray.length;
+        break;
+
+      case "stored":
+        console.info("state : ", state);
+        totalNoOfQuestions += appData.vocabArray.length;
+        break;
+    }
+
+    //totalNoOfQuestions = appData.vocabArray.length;
     console.info("statusManager() -> totalNoOfQuestions: ", totalNoOfQuestions);
+
+    console.groupEnd();
     return totalNoOfQuestions;
   }
 
-  // to print `#/#` on screen
+  // to print score and status(`#/#`) on screen
   function printQuestionStatus() {
     clearScreen(sectionStatus);
+
+    if (totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
+      buildNode({
+        parent: sectionStatus,
+        child: "div",
+        content: `Average Correct Rate: ${averageScore}%`,
+      });
+    }
+
     buildNode({
       parent: sectionStatus,
       child: "div",
       content: `${readQuestionCount()} / ${totalNoOfQuestions}`,
     });
   }
+
+  // to reset all variables concerning with calculating the cumulative average
+  function resetCumulativeVariables() {
+    cumulativeAverage = 0;
+    totalCorrectAnswers = 0;
+    totalQuestionsAnswered = 0; 
+    return this;
+  }
+
+  // to increase totalCorrectAnswers
+  function increaseTotalCorrectAnswers() {
+    totalCorrectAnswers++;
+    return this;
+  }
+
+  // to increase totalQuestionsAnswered
+  function increaseTotalQuestionsAnswered() {
+    totalQuestionsAnswered++;
+    return this;
+  }
+
+  function updateCumulativeAverage(isCorrect) {
+    console.groupCollapsed("updateCumulativeAverage()");
+
+    totalQuestionsAnswered++;
+    if (isCorrect) totalCorrectAnswers++;
+    console.info("totalQuestionsAnswered :", totalQuestionsAnswered, "totalCorrectAnswers :", totalCorrectAnswers);
+
+    // Calculate new cumulative average based on the latest answer
+    cumulativeAverage = (cumulativeAverage * (totalQuestionsAnswered - 1) + (isCorrect ? 1 : 0)) / totalQuestionsAnswered; //le6
+    console.info("cumulativeAverage :", cumulativeAverage);
+
+    // Calculate the percentage and round to a whole number
+    averageScore = Math.round(cumulativeAverage * 100); // This will give you a whole number
+    console.info("averageScore :", averageScore);
+
+    return averageScore; // Return the rounded percentage directly
+}
+
+  // to read totalCorrectAnswers
+  function readTotalCorrectAnswers() {
+      return totalCorrectAnswers;
+  }
+  
 
   return {
     resetQuestionCount,
@@ -647,5 +731,10 @@ function statusManager() {
     readQuestionCount,
     increaseQuestionCount,
     printQuestionStatus,
+    resetCumulativeVariables,
+    //calCumulativeAverage,
+    //increaseTotalCorrectAnswers,
+    //increaseTotalQuestionsAnswered,
+    updateCumulativeAverage,
   }
 }
