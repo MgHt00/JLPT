@@ -75,9 +75,9 @@ function questionManager() {
   }
 
   // to remove shown question and carry on
-  function finalizeQuestionAndProceed() {
+  function finalizeQuestionAndProceed(state) {
     //console.groupCollapsed("questionManager() - finalizeQuestionAndProceed()");
-
+    statusInstance.updateCumulativeAverage(state);
     vocabMgr.removeSpecifiedQuestion(fetchOneQuestion.index);
     newQuestion();
     
@@ -338,11 +338,13 @@ function answerManager() {
         content: 'Next', 
         className: 'answer-btn', 
         idName: 'choice-btn', 
-        eventFunction: questionMgr.finalizeQuestionAndProceed
+        //eventFunction: questionMgr.finalizeQuestionAndProceed
+        eventFunction: () => questionMgr.finalizeQuestionAndProceed(true) // need to wrap the function in an arrow function (or another function) to control the argument passing.
       });
 
     } else {
       if (sectionMessage.textContent !== 'Keep Trying') { // if worng message is not shown already.
+        questionMgr.finalizeQuestionAndProceed(false);
         vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
         buildNode({ 
           parent: sectionMessage, 
@@ -362,12 +364,10 @@ function answerManager() {
     const btnID = event.currentTarget.id;
 
     if (btnID === "choice-btn-0") {
-      statusInstance.updateCumulativeAverage(true);
-      questionMgr.finalizeQuestionAndProceed();
+      questionMgr.finalizeQuestionAndProceed(true);
     } else if (btnID === "choice-btn-1") {
       vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
-      statusInstance.updateCumulativeAverage(false);
-      questionMgr.finalizeQuestionAndProceed();
+      questionMgr.finalizeQuestionAndProceed(false);
     }
 
     console.groupEnd();
@@ -645,7 +645,7 @@ function statusManager() {
     return totalNoOfQuestions;
   }
 
-  // to print status `#/#` on screen
+  // to print score and status(`#/#`) on screen
   function printQuestionStatus() {
     clearScreen(sectionStatus);
 
@@ -684,18 +684,6 @@ function statusManager() {
     return this;
   }
 
-  // to calculate cumulative average
-  /*
-  function calCumulativeAverage() {
-    console.groupCollapsed("calCumulativeAverage()");
-
-    console.info("totalCorrectAnswers :", totalCorrectAnswers, "totalQuestionsAnswered :", totalQuestionsAnswered);
-    cumulativeAverage = totalCorrectAnswers / totalQuestionsAnswered;
-    console.info("cumulativeAverage :", cumulativeAverage);
-    return Math.round(cumulativeAverage); // Rounds to the nearest whole number
-  }
-  */
-
   function updateCumulativeAverage(isCorrect) {
     console.groupCollapsed("updateCumulativeAverage()");
 
@@ -704,7 +692,7 @@ function statusManager() {
     console.info("totalQuestionsAnswered :", totalQuestionsAnswered, "totalCorrectAnswers :", totalCorrectAnswers);
 
     // Calculate new cumulative average based on the latest answer
-    cumulativeAverage = (cumulativeAverage * (totalQuestionsAnswered - 1) + (isCorrect ? 1 : 0)) / totalQuestionsAnswered;
+    cumulativeAverage = (cumulativeAverage * (totalQuestionsAnswered - 1) + (isCorrect ? 1 : 0)) / totalQuestionsAnswered; //le6
     console.info("cumulativeAverage :", cumulativeAverage);
 
     // Calculate the percentage and round to a whole number
