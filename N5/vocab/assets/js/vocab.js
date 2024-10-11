@@ -639,9 +639,25 @@ function statusManager() {
   }
 
   // assign `vocabArrary` length to `totalNoOfQuestions`
-  function getTotalNoOfQuestions() {
-    totalNoOfQuestions = appData.vocabArray.length;
+  function getTotalNoOfQuestions(state) {
+    console.groupCollapsed("getTotalNoOfQuestions()");
+
+    switch (state) {
+      case "fresh":
+        console.info("state : ", state);
+        totalNoOfQuestions = appData.vocabArray.length;
+        break;
+
+      case "stored":
+        console.info("state : ", state);
+        totalNoOfQuestions += appData.vocabArray.length;
+        break;
+    }
+
+    //totalNoOfQuestions = appData.vocabArray.length;
     console.info("statusManager() -> totalNoOfQuestions: ", totalNoOfQuestions);
+
+    console.groupEnd();
     return totalNoOfQuestions;
   }
 

@@ -193,8 +193,9 @@ function listenerManager() {
     }
     await loaderInstance.loadStoredJSON();// Wait for loadStoredJSON to complete
 
-    statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
-    statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
+    //statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
+    //statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
+    statusInstance.getTotalNoOfQuestions("stored");
     questionMgr.newQuestion();
 
     console.groupEnd();
@@ -288,7 +289,7 @@ function loaderManager() {
       // Continue if there is no runtime error.
       listenerInstance.moveForm();
       toggleClass('shift-sections-to-center', dynamicDOM);
-      statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
+      statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
       questionMgr.newQuestion();
     }
@@ -584,7 +585,6 @@ function loaderManager() {
         }
       }
     }
-  
 
   // to validate whether is memory is empty or not
   function validateStoredMemory() {
