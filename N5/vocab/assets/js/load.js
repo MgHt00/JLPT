@@ -334,13 +334,13 @@ function loaderManager() {
     questionMgr.setQuestionMode("fresh");
 
     const syllableMapping = {
-      a: "assets/data/n5-vocab-a.json",
-      i: "assets/data/n5-vocab-i.json",
-      u: "assets/data/n5-vocab-u.json",
-      e: "assets/data/n5-vocab-e.json",
-      o: "assets/data/n5-vocab-o.json",
-      ka: "assets/data/n5-vocab-ka.json",
-      db: "assets/data/n5-vocab-debug.json",
+      a: "N5/vocab/assets/data/n5-vocab-a.json",
+      i: "N5/vocab/assets/data/n5-vocab-i.json",
+      u: "N5/vocab/assets/data/n5-vocab-u.json",
+      e: "N5/vocab/assets/data/n5-vocab-e.json",
+      o: "N5/vocab/assets/data/n5-vocab-o.json",
+      ka: "N5/vocab/assets/data/n5-vocab-ka.json",
+      db: "N5/vocab/assets/data/n5-vocab-debug.json",
     };
   
     // if user selects "all", load all property names from `syllableMapping`
