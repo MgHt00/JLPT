@@ -179,6 +179,7 @@ function listenerManager() {
   // when user want to restart the program
   function restart() {
     clearScreen(sectionStatus);
+    toggleClass('shift-sections-to-center', dynamicDOM);
     debouncedMoveForm();
     rePrintMemory();
   }
@@ -288,9 +289,9 @@ function loaderManager() {
   
       // Continue if there is no runtime error.
       listenerInstance.moveForm();
-      toggleClass('shift-sections-to-center', dynamicDOM);
       statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
+      toggleClass('shift-sections-to-center', dynamicDOM);
       questionMgr.newQuestion();
     }
   }

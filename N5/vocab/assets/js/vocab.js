@@ -718,7 +718,6 @@ function statusManager() {
     return averageScore; // Return the rounded percentage directly
 }
 
-
   // to read totalCorrectAnswers
   function readTotalCorrectAnswers() {
       return totalCorrectAnswers;
