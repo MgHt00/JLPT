@@ -8,7 +8,10 @@ const statusInstance = statusManager();
   loaderInstance.loadMemoryData();
   //flipNodeState(...selectors.noOfAnsAll); // [sn14]
   toggleClass('disabled', ...selectors.noOfAnsAll);
-  toggleClass('hide', selectors.bringBackBtn);
+  toggleClass('hide', 
+    selectors.bringBackBtn, 
+    selectors.resumePracticeBtn,
+  );
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
   //listenerInstance.handlebringBackBtn();
@@ -29,7 +32,8 @@ function listenerManager() {
     selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
     selectors.qChoice.addEventListener('change', buildAnswerOptions);
     selectors.settingSource.addEventListener('change', questionModeChanges);
-    selectors.bringBackBtn.addEventListener('click', handlebringBackBtn); 
+    selectors.bringBackBtn.addEventListener('click', handlebringBackBtn);
+    selectors.resumePracticeBtn.addEventListener('click', handleResumePracticeBtn);
   }
 
   // to handle settingRandomYesNo toggle switch
@@ -167,19 +171,26 @@ function listenerManager() {
     });
   }
   
-  // animation concerns to move the setting form upward and reprint stored data info
+  // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
   function handlebringBackBtn(event) {
-      toggleClass('shift-sections-to-center', dynamicDOM);
-      clearScreen(sectionStatus);
+      //clearScreen(sectionStatus);
+      toggleFormDisplay();
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
       rePrintMemory();
   }
 
+  // When resumePracticeBtn is clicked
+  function handleResumePracticeBtn(event) {
+    toggleFormDisplay();
+    debouncedMoveForm(event);
+  }
+
   // when user want to restart the program
   function restart() {
     clearScreen(sectionStatus);
-    toggleClass('shift-sections-to-center', dynamicDOM);
+    //toggleClass('shift-sections-to-center', dynamicDOM);
+    toggleFormDisplay();
     debouncedMoveForm();
     rePrintMemory();
   }
@@ -215,6 +226,22 @@ function listenerManager() {
 
   let isMoving = false; // Flag to prevent multiple movements
 
+  // To toggle buttons and sections when move / resume btn is clicked
+  function toggleFormDisplay() {
+    toggleClass('shift-sections-to-center', dynamicDOM);
+    toggleClass('hide', 
+      selectors.resumePracticeBtn,
+      sectionStatus,
+    );
+    toggleClass('moved', selectors.settingForm);
+    toggleClass('disabled', selectors.settingForm);
+    toggleClass('dim', ...selectors.allSetting);
+    toggleClass('hide', 
+      selectors.bringBackBtn,
+      selectors.resumePracticeBtn,
+    );
+  }
+
   // to move settings form upward
   function moveForm() {
     if (isMoving) return; // If the form is already moving, exit the function
@@ -222,13 +249,7 @@ function listenerManager() {
     // Set the flag to prevent further calls
     isMoving = true;
 
-    clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
-    toggleClass('moved', selectors.settingForm);
-    toggleClass('disabled', selectors.settingForm);
-    toggleClass('dim', ...selectors.allSetting);
-    toggleClass('hide', selectors.bringBackBtn);
-    //toggleClass('hide', sectionQuestion, sectionAnswer, selectors.submitBtn, selectors.bringBackBtn);
-    //toggleClass('section-move', sectionQuestion, sectionMessage, sectionAnswer);
+    //clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
 
     // Add an event listener for the transition end to reset the flag
     selectors.settingForm.addEventListener('transitionend', () => {
@@ -253,6 +274,7 @@ function listenerManager() {
     debouncedMoveForm,
     restart,
     continuetoStoredData,
+    toggleFormDisplay,
   }
 }
 
@@ -288,10 +310,11 @@ function loaderManager() {
       }
   
       // Continue if there is no runtime error.
+      listenerInstance.toggleFormDisplay();
       listenerInstance.moveForm();
       statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
-      toggleClass('shift-sections-to-center', dynamicDOM);
+      //toggleClass('shift-sections-to-center', dynamicDOM);
       questionMgr.newQuestion();
     }
   }

@@ -77,10 +77,19 @@ function questionManager() {
   // to remove shown question and carry on
   function finalizeQuestionAndProceed(state) {
     //console.groupCollapsed("questionManager() - finalizeQuestionAndProceed()");
-    statusInstance.updateCumulativeAverage(state);
-    vocabMgr.removeSpecifiedQuestion(fetchOneQuestion.index);
-    newQuestion();
     
+    statusInstance.updateCumulativeAverage(state);
+
+    if (appState.flashYesNo) { // flashcard mode
+      vocabMgr.removeSpecifiedQuestion(fetchOneQuestion.index);
+      newQuestion();
+    }
+    else { // multiple-choice mode
+      if (state) { // if correct answer is clicked
+        vocabMgr.removeSpecifiedQuestion(fetchOneQuestion.index);
+        newQuestion();
+      }
+    }
     console.groupEnd();
   }
 
@@ -336,7 +345,7 @@ function answerManager() {
       buildNode({ parent: sectionAnswer, 
         child: 'div', 
         content: 'Next', 
-        className: 'answer-btn', 
+        className: 'mcq-next-q-btn', 
         idName: 'choice-btn', 
         //eventFunction: questionMgr.finalizeQuestionAndProceed
         eventFunction: () => questionMgr.finalizeQuestionAndProceed(true) // need to wrap the function in an arrow function (or another function) to control the argument passing.
@@ -612,7 +621,7 @@ function statusManager() {
   let totalNoOfQuestions = 0;
   let cumulativeAverage = 0;
   let totalCorrectAnswers = 0;
-  let totalQuestionsAnswered = 0; 
+  let totalQuestionsAnswered = 0;
   let averageScore = 0;
   
   // return `questionCount`
