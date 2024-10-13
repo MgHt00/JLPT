@@ -189,7 +189,8 @@ function listenerManager() {
   // when user want to restart the program
   function restart() {
     clearScreen(sectionStatus);
-    toggleClass('shift-sections-to-center', dynamicDOM);
+    //toggleClass('shift-sections-to-center', dynamicDOM);
+    toggleFormDisplay();
     debouncedMoveForm();
     rePrintMemory();
   }

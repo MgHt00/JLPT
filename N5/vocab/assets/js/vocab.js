@@ -78,8 +78,10 @@ function questionManager() {
   function finalizeQuestionAndProceed(state) {
     //console.groupCollapsed("questionManager() - finalizeQuestionAndProceed()");
     statusInstance.updateCumulativeAverage(state);
-    vocabMgr.removeSpecifiedQuestion(fetchOneQuestion.index);
-    newQuestion();
+    if (state) {
+      vocabMgr.removeSpecifiedQuestion(fetchOneQuestion.index);
+      newQuestion();
+    }
     
     console.groupEnd();
   }
