@@ -186,18 +186,29 @@ input:checked + .slider:before {
   font-size: 16px;
 }
 
-.bring-back-setting-btn {
+.bring-back-setting-btn,
+.resume-practice-setting-btn {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-style: bold;
   color: #1F1D2B;
   display: inline-block;
-  transform: rotate(90deg) translateX(-50%);
   background-color: rgba(249, 249, 249, 0.9);
-  box-shadow: 4px 0px 0px rgba(255, 255, 255, 0.39);
   position: absolute;
+}
+
+.bring-back-setting-btn {
+  box-shadow: 4px 0px 0px rgba(255, 255, 255, 0.39);
+  transform: rotate(90deg) translateX(-50%);
   top: 2%; /* Position at the top */
   left: 43%; /* Center horizontally */
+  transform-origin: center; /* Keep the rotation centered */
+}
+
+.resume-practice-setting-btn {
+  box-shadow: 0px 4px 0px rgba(255, 255, 255, 0.39);
+  top: 43%; /* Position at the top */
+  left: 2%; /* Center horizontally */
   transform-origin: center; /* Keep the rotation centered */
 }
 

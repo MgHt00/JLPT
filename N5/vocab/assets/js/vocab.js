@@ -612,7 +612,7 @@ function statusManager() {
   let totalNoOfQuestions = 0;
   let cumulativeAverage = 0;
   let totalCorrectAnswers = 0;
-  let totalQuestionsAnswered = 0; 
+  let totalQuestionsAnswered = 0;
   let averageScore = 0;
   
   // return `questionCount`
