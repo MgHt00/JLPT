@@ -174,7 +174,7 @@ function listenerManager() {
   // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
   function handlebringBackBtn(event) {
       //clearScreen(sectionStatus);
-      toggleFormDisplay("bringBackBtn");
+      toggleFormDisplay();
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
       rePrintMemory();
@@ -182,7 +182,7 @@ function listenerManager() {
 
   // When resumePracticeBtn is clicked
   function handleResumePracticeBtn(event) {
-    toggleFormDisplay("resumePracticeBtn");
+    toggleFormDisplay();
     debouncedMoveForm(event);
   }
 
@@ -244,7 +244,7 @@ function listenerManager() {
         );
         break;
       default:
-        console.info("Switch: resumePracticeBtn");
+        console.info("Switch: default");
         toggleClass('hide',
           sectionStatus,
           selectors.bringBackBtn,
