@@ -174,7 +174,7 @@ function listenerManager() {
   // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
   function handlebringBackBtn(event) {
       //clearScreen(sectionStatus);
-      toggleFormDisplay();
+      toggleFormDisplay("bringBackBtn");
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
       rePrintMemory();
@@ -182,7 +182,7 @@ function listenerManager() {
 
   // When resumePracticeBtn is clicked
   function handleResumePracticeBtn(event) {
-    toggleFormDisplay();
+    toggleFormDisplay("resumePracticeBtn");
     debouncedMoveForm(event);
   }
 
@@ -190,7 +190,7 @@ function listenerManager() {
   function restart() {
     clearScreen(sectionStatus);
     //toggleClass('shift-sections-to-center', dynamicDOM);
-    toggleFormDisplay();
+    toggleFormDisplay("start");
     debouncedMoveForm();
     rePrintMemory();
   }
@@ -227,19 +227,39 @@ function listenerManager() {
   let isMoving = false; // Flag to prevent multiple movements
 
   // To toggle buttons and sections when move / resume btn is clicked
-  function toggleFormDisplay() {
+  function toggleFormDisplay(btnClicked) {
+    console.groupCollapsed("toggleFormDisplay()");
+
     toggleClass('shift-sections-to-center', dynamicDOM);
-    toggleClass('hide', 
-      selectors.resumePracticeBtn,
-      sectionStatus,
-    );
     toggleClass('moved', selectors.settingForm);
     toggleClass('disabled', selectors.settingForm);
     toggleClass('dim', ...selectors.allSetting);
-    toggleClass('hide', 
+
+    switch (btnClicked){
+      case "start":
+        console.info("Switch: start");
+        toggleClass('hide',
+          sectionStatus,
+          selectors.bringBackBtn,
+        );
+        break;
+      default:
+        console.info("Switch: resumePracticeBtn");
+        toggleClass('hide',
+          sectionStatus,
+          selectors.bringBackBtn,
+          selectors.resumePracticeBtn,
+        );
+        break;
+    }
+    /*
+    toggleClass('hide',
+      sectionStatus,
       selectors.bringBackBtn,
       selectors.resumePracticeBtn,
     );
+    */
+   console.groupEnd();
   }
 
   // to move settings form upward
@@ -310,7 +330,7 @@ function loaderManager() {
       }
   
       // Continue if there is no runtime error.
-      listenerInstance.toggleFormDisplay();
+      listenerInstance.toggleFormDisplay("start");
       listenerInstance.moveForm();
       statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
