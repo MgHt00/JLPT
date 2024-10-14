@@ -383,6 +383,10 @@ function loaderManager() {
       e: "N5/vocab/assets/data/n5-vocab-e.json",
       o: "N5/vocab/assets/data/n5-vocab-o.json",
       ka: "N5/vocab/assets/data/n5-vocab-ka.json",
+      ki: "N5/vocab/assets/data/n5-vocab-ki.json",
+      ku: "N5/vocab/assets/data/n5-vocab-ku.json",
+      ke: "N5/vocab/assets/data/n5-vocab-ke.json",
+      ko: "N5/vocab/assets/data/n5-vocab-ko.json",
       db: "N5/vocab/assets/data/n5-vocab-debug.json",
     };
   
