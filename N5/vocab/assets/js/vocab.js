@@ -375,18 +375,19 @@ function answerManager() {
         });
 
         // Show overlay "wrong" message
-        toggleClass('hide', sectionMessage); 
+        toggleClass('fade-hide', sectionMessage); 
+        /*
         sectionMessage.classList.remove('fade-out'); // Ensure fade-out is removed on display
 
         // Hide message after 2 seconds (2000 milliseconds) with fade-out
         setTimeout(() => {
             sectionMessage.classList.add('fade-out'); // Adds smooth fade-out effect
         }, 2000);
-
+        */
         // Fully hide after fade-out completes (0.5s from .fade-out transition)
         setTimeout(() => {
-            toggleClass('hide', sectionMessage); // Hide fully
-            sectionMessage.classList.remove('fade-out'); // Reset for next display
+            toggleClass('fade-hide', sectionMessage); // Hide fully
+            //sectionMessage.classList.remove('fade-out'); // Reset for next display
         }, 2500); // Add delay equal to the fade-out transition duration (0.5s)
     }
     console.groupEnd();
