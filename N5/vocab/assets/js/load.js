@@ -8,6 +8,8 @@ const statusInstance = statusManager();
   loaderInstance.loadMemoryData();
   //flipNodeState(...selectors.noOfAnsAll); // [sn14]
   toggleClass('disabled', ...selectors.noOfAnsAll);
+  toggleClass('hide', sectionStatus);
+  toggleClass('hide', sectionMessage);
   toggleClass('hide', 
     selectors.bringBackBtn, 
     selectors.resumePracticeBtn,
