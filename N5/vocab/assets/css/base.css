@@ -65,11 +65,12 @@ section {
 
 .overlay-message {
   position: absolute;
+  display: flex;
   width: 100%;
   height: 20%;
   top: 10%;
   left: 0;
-  background-color: rgba(255, 124, 124, 0.7);
+  background-color: rgba(255, 124, 124, 0.9);
   color: black;
   z-index: 10;
 }
@@ -96,7 +97,7 @@ section.jp {
 }
 
 .wrong-answer {
-  color: red;
+  color: white;
 }
 
 .runtime-error {
