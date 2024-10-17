@@ -107,6 +107,11 @@ function clearScreen(elements) {
       }, 550); // Matches the transition duration
     }
   });
+  /*
+  format for function calls
+  setTimeout(() => {
+  }, 600);
+  */
 }
 
 /*async function clearScreen(elements) { 

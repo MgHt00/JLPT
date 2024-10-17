@@ -346,33 +346,38 @@ function answerManager() {
     if (appState.correctAns === btnText) {
       clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer]);
 
-      buildNode({ 
-        parent: sectionAnswer, 
-        child: 'div', 
-        content: 'Correct!', 
-        className: 'correct-answer-message', 
-        idName: 'answer-message' 
-      });
-      buildNode({ parent: sectionAnswer, 
-        child: 'div', 
-        content: 'Next', 
-        className: 'mcq-next-q-btn', 
-        idName: 'choice-btn', 
-        //eventFunction: questionMgr.finalizeQuestionAndProceed
-        eventFunction: () => questionMgr.finalizeQuestionAndProceed(true) // need to wrap the function in an arrow function (or another function) to control the argument passing.
-      });
+      setTimeout(() => {
+        buildNode({ 
+          parent: sectionAnswer, 
+          child: 'div', 
+          content: 'Correct!', 
+          className: 'correct-answer-message', 
+          idName: 'answer-message' 
+        });
+        buildNode({ parent: sectionAnswer, 
+          child: 'div', 
+          content: 'Next', 
+          className: 'mcq-next-q-btn', 
+          idName: 'choice-btn', 
+          //eventFunction: questionMgr.finalizeQuestionAndProceed
+          eventFunction: () => questionMgr.finalizeQuestionAndProceed(true) // need to wrap the function in an arrow function (or another function) to control the argument passing.
+        });
+      }, 600);
 
     } else {
         questionMgr.finalizeQuestionAndProceed(false);
         vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
         clearScreen(sectionMessage);
-        buildNode({ 
-          parent: sectionMessage, 
-          child: 'div', 
-          content: 'Keep Trying', 
-          className: 'wrong-answer' 
-        });
 
+        setTimeout(() => {
+          buildNode({ 
+            parent: sectionMessage, 
+            child: 'div', 
+            content: 'Keep Trying', 
+            className: 'wrong-answer' 
+          });
+        }, 600);
+        
         // Show overlay "wrong" message
         toggleClass('fade-hide', sectionMessage); 
 
