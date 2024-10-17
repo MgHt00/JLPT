@@ -196,24 +196,6 @@ function listenerManager() {
     debouncedMoveForm();
     rePrintMemory();
   }
-
-  // if user wants to continue to local storage after their initial syllable selections
-  async function continuetoStoredData() {
-    console.groupCollapsed("continuetoStoredData()");
-
-    if (vocabInstance.readStoredLength <= 3) {
-      appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
-      console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
-    }
-    await loaderInstance.loadStoredJSON();// Wait for loadStoredJSON to complete
-
-    //statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
-    //statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
-    statusInstance.getTotalNoOfQuestions("stored");
-    questionMgr.newQuestion();
-
-    console.groupEnd();
-  }
   
   // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
   function debounce(func, delay) {
@@ -259,7 +241,6 @@ function listenerManager() {
     handlebringBackBtn,
     debouncedMoveForm,
     restart,
-    continuetoStoredData,
   }
 }
 
@@ -580,24 +561,24 @@ function loaderManager() {
     return this;
   }
 
-    // to validate toggle switch data
-    function validateToggleSwitch(selectorNames) {
-      console.groupCollapsed("validateToggleSwitch()");
+  // to validate toggle switch data
+  function validateToggleSwitch(selectorNames) {
+    console.groupCollapsed("validateToggleSwitch()");
 
-      for (let selectorName of selectorNames) {
-        if (appState[selectorName] === null) {
-          appState[selectorName] = false;
-          console.warn(`${appState[selectorName]} is null. Resetting to false.`);
-        }
-        else if (appState[selectorName] !== true && appState[selectorName] !== false) {
-          appState[selectorName] = false;
-          console.warn(`${appState[selectorName]} is neither true nor false. Resetting to false.`);
-        }
-        else {
-          console.info(`${selectorName} is good to go: ${appState[selectorName]}`);
-        }
+    for (let selectorName of selectorNames) {
+      if (appState[selectorName] === null) {
+        appState[selectorName] = false;
+        console.warn(`${appState[selectorName]} is null. Resetting to false.`);
+      }
+      else if (appState[selectorName] !== true && appState[selectorName] !== false) {
+        appState[selectorName] = false;
+        console.warn(`${appState[selectorName]} is neither true nor false. Resetting to false.`);
+      }
+      else {
+        console.info(`${selectorName} is good to go: ${appState[selectorName]}`);
       }
     }
+  }
 
   // to validate whether is memory is empty or not
   function validateStoredMemory() {
@@ -608,6 +589,25 @@ function loaderManager() {
       return true;
     }
   }
+
+  // if user wants to continue to local storage after their initial syllable selections
+  async function continuetoStoredData() {
+    console.groupCollapsed("continuetoStoredData()");
+
+    if (vocabInstance.readStoredLength <= 3) {
+      appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
+      console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
+    }
+    await loaderInstance.loadStoredJSON();// Wait for loadStoredJSON to complete
+
+    //statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
+    //statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
+    statusInstance.getTotalNoOfQuestions("stored");
+    questionMgr.newQuestion();
+
+    console.groupEnd();
+  }
+
 
   // To toggle buttons and sections when move / resume btn is clicked
   function toggleFormDisplay(btnClicked) {
@@ -651,6 +651,7 @@ function loaderManager() {
     loadMemoryData,
     loadStoredJSON,
     validateAndSetAnswerCount,
+    continuetoStoredData,
     toggleFormDisplay,
   }
 }

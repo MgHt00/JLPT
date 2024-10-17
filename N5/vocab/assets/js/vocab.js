@@ -418,7 +418,7 @@ function answerManager() {
     if (btnID === "continue-yes-0") {
       noMoreQuestion.ranOnce = true; // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       console.info("noMoreQuestion.ranOnce CHANGED :", noMoreQuestion.ranOnce);
-      listenerInstance.continuetoStoredData();
+      loaderInstance.continuetoStoredData();
     } else if (btnID === "continue-no-0") {
       listenerInstance.restart();
     }
