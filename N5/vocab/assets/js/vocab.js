@@ -232,7 +232,7 @@ function answerManager() {
       content: 'Let\'s Restart!', 
       className: 'answer-btn', 
       idName: 'answer-btn', 
-      eventFunction: listenerInstance.restart,
+      eventFunction: loaderInstance.restart,
     });
   }
 
@@ -420,7 +420,7 @@ function answerManager() {
       console.info("noMoreQuestion.ranOnce CHANGED :", noMoreQuestion.ranOnce);
       loaderInstance.continuetoStoredData();
     } else if (btnID === "continue-no-0") {
-      listenerInstance.restart();
+      loaderInstance.restart();
     }
 
     console.groupEnd();

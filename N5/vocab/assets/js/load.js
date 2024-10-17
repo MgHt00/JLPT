@@ -180,22 +180,13 @@ function listenerManager() {
       loaderInstance.toggleFormDisplay();
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
-      rePrintMemory();
+      loaderInstance.rePrintMemory();
   }
 
   // When resumePracticeBtn is clicked
   function handleResumePracticeBtn(event) {
     loaderInstance.toggleFormDisplay();
     debouncedMoveForm(event);
-  }
-
-  // when user want to restart the program
-  function restart() {
-    clearScreen(sectionStatus);
-    //toggleClass('shift-sections-to-center', dynamicDOM);
-    loaderInstance.toggleFormDisplay("start");
-    debouncedMoveForm();
-    rePrintMemory();
   }
   
   // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
@@ -225,23 +216,12 @@ function listenerManager() {
       isMoving = false; // Allow future movement after the transition completes
     }, { once: true }); // Ensure the event listener is called only once per transition
   }
-
-  // to print local storage data on screen
-  function rePrintMemory() {
-    //console.groupCollapsed("rePrintMemory()");
-
-    clearNode({parent: selectors.memoryInfo});
-    loaderInstance.loadMemoryData()
-    
-    console.groupEnd();
-  }
   
   return {
     generalListeners,
     moveForm,
     handlebringBackBtn,
     debouncedMoveForm,
-    restart,
   }
 }
 
@@ -519,7 +499,7 @@ function loaderManager() {
     return this;
   }
 
-  // validate syllable choices and show error if necessary
+  // Vvalidate syllable choices and show error if necessary
   function validateSyllable() {
     console.groupCollapsed("validateSyllable()");
     // Validate syllable choices and show an error if none are selected
@@ -563,7 +543,7 @@ function loaderManager() {
     return this;
   }
 
-  // to validate toggle switch data
+  // To validate toggle switch data
   function validateToggleSwitch(selectorNames) {
     console.groupCollapsed("validateToggleSwitch()");
 
@@ -582,7 +562,7 @@ function loaderManager() {
     }
   }
 
-  // to validate whether is memory is empty or not
+  // To validate whether is memory is empty or not
   function validateStoredMemory() {
     let storedLength = vocabInstance.readStoredLength;
     if (storedLength === 0) {
@@ -592,7 +572,18 @@ function loaderManager() {
     }
   }
 
-  // if user wants to continue to local storage after their initial syllable selections
+  // to print local storage data on screen
+  function rePrintMemory() {
+    //console.groupCollapsed("rePrintMemory()");
+
+    clearNode({ parent: selectors.memoryInfo });
+    loaderInstance.loadMemoryData()
+
+    console.groupEnd();
+  }
+  
+
+  // If user wants to continue to local storage after their initial syllable selections
   async function continuetoStoredData() {
     console.groupCollapsed("continuetoStoredData()");
 
@@ -609,6 +600,16 @@ function loaderManager() {
 
     console.groupEnd();
   }
+
+  // When user want to restart the program
+  function restart() {
+    clearScreen(sectionStatus);
+    //toggleClass('shift-sections-to-center', dynamicDOM);
+    toggleFormDisplay("start");
+    listenerInstance.debouncedMoveForm();
+    rePrintMemory();
+  }
+
 
   // To reset default 'hide' state to bringback & resume btns
   function floatingBtnsDefaultState() {
@@ -664,7 +665,9 @@ function loaderManager() {
     loadMemoryData,
     loadStoredJSON,
     validateAndSetAnswerCount,
+    rePrintMemory,
     continuetoStoredData,
+    restart,
     floatingBtnsDefaultState,
     toggleFormDisplay,
   }
