@@ -8,9 +8,15 @@ const statusInstance = statusManager();
   loaderInstance.loadMemoryData();
   //flipNodeState(...selectors.noOfAnsAll); // [sn14]
   toggleClass('disabled', ...selectors.noOfAnsAll);
-  toggleClass('hide', sectionStatus);
+  //toggleClass('hide', sectionStatus);
   toggleClass('overlay-message', sectionMessage);
   toggleClass('fade-hide', sectionMessage);
+  toggleClass('fade-in',
+    sectionStatus,
+    sectionQuestion,
+    sectionMessage,
+    sectionAnswer,
+  );
   loaderInstance.floatingBtnsDefaultState();
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();

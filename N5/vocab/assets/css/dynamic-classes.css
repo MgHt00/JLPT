@@ -38,6 +38,16 @@
   opacity: 0;
 }
 
+.fade-in {
+  opacity: 100;
+}
+
+.fade-out-light {
+  opacity: 0;
+  transition: opacity 0.5s ease; /* or any duration you prefer */
+}
+
+
 /* Fade-out class with opacity, max-height, and margin transitions */
 .fade-out {
   opacity: 0;

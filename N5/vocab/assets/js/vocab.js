@@ -12,31 +12,35 @@ function questionManager() {
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
     //clearScreen([sectionQuestion, sectionAnswer]);
 
-    if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
-      //console.log("vocabArray ", appData.vocabArray);
+    statusInstance.printQuestionStatus() // show current status
 
-      do {
-        questionObj = fetchOneQuestion(); // Fetch a new question
-      } while (!isThereAnAnswer(questionObj)); // Keep fetching until a valid answer is found
-                                               // (need to check for the situation where answer choice is Kanji and it is empty.)
-
-      // Once a valid question is found, store the correct answer
-      appState.correctAns = questionObj[selectors.aChoice.value]; // Store correct answer
-      
-      statusInstance.increaseQuestionCount(); // increse question count for status bar
-      statusInstance.printQuestionStatus() // show current status
-
-      console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
-      
-      buildNode({ 
-        parent: sectionQuestion, 
-        child: 'div', 
-        content: questionObj[appState.qChoiceInput],
-      });
-      answerMgr.renderAnswers();  
-    } else { // if there is no more question left to show
-      answerMgr.noMoreQuestion();
-    }
+    setTimeout(() => {
+      if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
+        //console.log("vocabArray ", appData.vocabArray);
+  
+        do {
+          questionObj = fetchOneQuestion(); // Fetch a new question
+        } while (!isThereAnAnswer(questionObj)); // Keep fetching until a valid answer is found
+                                                 // (need to check for the situation where answer choice is Kanji and it is empty.)
+  
+        // Once a valid question is found, store the correct answer
+        appState.correctAns = questionObj[selectors.aChoice.value]; // Store correct answer
+        
+        statusInstance.increaseQuestionCount(); // increse question count for status bar
+        //statusInstance.printQuestionStatus() // show current status
+  
+        console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
+        
+        buildNode({ 
+          parent: sectionQuestion, 
+          child: 'div', 
+          content: questionObj[appState.qChoiceInput],
+        });
+        answerMgr.renderAnswers();  
+      } else { // if there is no more question left to show
+        answerMgr.noMoreQuestion();
+      }      
+    }, 600); // Matches the transition duration
 
     console.groupEnd();
   }
@@ -690,19 +694,21 @@ function statusManager() {
   function printQuestionStatus() {
     clearScreen(sectionStatus);
 
-    if (totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
+    setTimeout(() => {
+      if (totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
+        buildNode({
+          parent: sectionStatus,
+          child: "div",
+          content: `Average Correct Rate: ${averageScore}%`,
+        });
+      }
+  
       buildNode({
         parent: sectionStatus,
         child: "div",
-        content: `Average Correct Rate: ${averageScore}%`,
+        content: `${readQuestionCount()} / ${totalNoOfQuestions}`,
       });
-    }
-
-    buildNode({
-      parent: sectionStatus,
-      child: "div",
-      content: `${readQuestionCount()} / ${totalNoOfQuestions}`,
-    });
+    }, 600);
   }
 
   // to reset all variables concerning with calculating the cumulative average
