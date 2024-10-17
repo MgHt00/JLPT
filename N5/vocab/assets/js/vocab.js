@@ -191,6 +191,9 @@ function answerManager() {
 
   // to ask user whether they want to practice the vocabs from the local storage
   function toLocalStorageYesNo() {
+    removeClass('fade-hide', sectionMessage);
+    removeClass('overlay-message', sectionMessage);
+
     buildNode({ 
         parent: sectionMessage, 
         child: 'div', 
@@ -219,6 +222,9 @@ function answerManager() {
 
   // when all of the user selected vocabs are shown
   function completeAndRestart() {
+    removeClass('fade-hide', sectionMessage);
+    removeClass('overlay-message', sectionMessage);
+
     buildNode({ 
       parent: sectionMessage, 
       child: 'div', 
@@ -232,7 +238,7 @@ function answerManager() {
       content: 'Let\'s Restart!', 
       className: 'answer-btn', 
       idName: 'answer-btn', 
-      eventFunction: listenerInstance.restart,
+      eventFunction: loaderInstance.restart,
     });
   }
 
@@ -353,17 +359,6 @@ function answerManager() {
       });
 
     } else {
-      /*if (sectionMessage.textContent !== 'Keep Trying') { // if worng message is not shown already.
-        questionMgr.finalizeQuestionAndProceed(false);
-        vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
-        buildNode({ 
-          parent: sectionMessage, 
-          child: 'div', 
-          content: 'Keep Trying', 
-          className: 'wrong-answer' 
-        });
-      }
-      */
         questionMgr.finalizeQuestionAndProceed(false);
         vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
         clearScreen(sectionMessage);
@@ -376,19 +371,11 @@ function answerManager() {
 
         // Show overlay "wrong" message
         toggleClass('fade-hide', sectionMessage); 
-        /*
-        sectionMessage.classList.remove('fade-out'); // Ensure fade-out is removed on display
 
-        // Hide message after 2 seconds (2000 milliseconds) with fade-out
-        setTimeout(() => {
-            sectionMessage.classList.add('fade-out'); // Adds smooth fade-out effect
-        }, 2000);
-        */
         // Fully hide after fade-out completes (0.5s from .fade-out transition)
         setTimeout(() => {
             toggleClass('fade-hide', sectionMessage); // Hide fully
-            //sectionMessage.classList.remove('fade-out'); // Reset for next display
-        }, 2500); // Add delay equal to the fade-out transition duration (0.5s)
+        }, 2000); // Add delay equal to the fade-out transition duration (0.5s)
     }
     console.groupEnd();
   }
@@ -413,16 +400,18 @@ function answerManager() {
   function handleContineToStoredData(event) {
     console.groupCollapsed("answerManager() - handleContineToStoredData()");
 
+    toggleClass('fade-hide', sectionMessage);
+    toggleClass('overlay-message', sectionMessage);
+
     const btnID = event.currentTarget.id;
 
     if (btnID === "continue-yes-0") {
       noMoreQuestion.ranOnce = true; // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       console.info("noMoreQuestion.ranOnce CHANGED :", noMoreQuestion.ranOnce);
-      listenerInstance.continuetoStoredData();
+      loaderInstance.continuetoStoredData();
     } else if (btnID === "continue-no-0") {
-      listenerInstance.restart();
+      loaderInstance.restart();
     }
-
     console.groupEnd();
   }
 
