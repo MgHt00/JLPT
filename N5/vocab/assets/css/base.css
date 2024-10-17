@@ -47,12 +47,14 @@ section {
   gap: 15px;
 }
 
+#section-question-and-message {
+  position: relative;
+}
+
 #section-question {
   font-size: 40px;
   margin-bottom: 15px;
   padding-top: 20px;
-
-  position: relative;
 }
 
 #section-message {
@@ -67,7 +69,7 @@ section {
   position: absolute;
   display: flex;
   width: 100%;
-  height: 20%;
+  height: 100%;
   top: 10%;
   left: 0;
   background-color: rgba(255, 124, 124, 0.9);
@@ -97,7 +99,7 @@ section.jp {
 }
 
 .wrong-answer {
-  color: white;
+  color: black;
 }
 
 .runtime-error {
