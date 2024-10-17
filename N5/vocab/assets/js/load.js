@@ -10,10 +10,11 @@ const statusInstance = statusManager();
   toggleClass('disabled', ...selectors.noOfAnsAll);
   toggleClass('hide', sectionStatus);
   toggleClass('fade-hide', sectionMessage);
-  toggleClass('hide', 
+  /*toggleClass('hide', 
     selectors.bringBackBtn, 
     selectors.resumePracticeBtn,
-  );
+  );*/
+  loaderInstance.floatingBtnsDefaultState();
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
   //listenerInstance.handlebringBackBtn();
@@ -276,6 +277,7 @@ function loaderManager() {
       }
   
       // Continue if there is no runtime error.
+      floatingBtnsDefaultState();
       toggleFormDisplay("start");
       listenerInstance.moveForm();
       statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
@@ -608,6 +610,17 @@ function loaderManager() {
     console.groupEnd();
   }
 
+  // To reset default 'hide' state to bringback & resume btns
+  function floatingBtnsDefaultState() {
+    removeClass('hide', // remove 'hide' class
+      selectors.bringBackBtn,
+      selectors.resumePracticeBtn,
+    );
+    toggleClass('hide', // add 'hide' class as default
+      selectors.bringBackBtn,
+      selectors.resumePracticeBtn,
+    );
+  }
 
   // To toggle buttons and sections when move / resume btn is clicked
   function toggleFormDisplay(btnClicked) {
@@ -652,6 +665,7 @@ function loaderManager() {
     loadStoredJSON,
     validateAndSetAnswerCount,
     continuetoStoredData,
+    floatingBtnsDefaultState,
     toggleFormDisplay,
   }
 }
