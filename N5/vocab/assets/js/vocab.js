@@ -10,6 +10,7 @@ function questionManager() {
     console.groupCollapsed("---questionManager() - newQuestion()---");
 
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
+    //clearScreen([sectionQuestion, sectionAnswer]);
 
     if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
       //console.log("vocabArray ", appData.vocabArray);
@@ -352,7 +353,7 @@ function answerManager() {
       });
 
     } else {
-      if (sectionMessage.textContent !== 'Keep Trying') { // if worng message is not shown already.
+      /*if (sectionMessage.textContent !== 'Keep Trying') { // if worng message is not shown already.
         questionMgr.finalizeQuestionAndProceed(false);
         vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
         buildNode({ 
@@ -362,6 +363,32 @@ function answerManager() {
           className: 'wrong-answer' 
         });
       }
+      */
+        questionMgr.finalizeQuestionAndProceed(false);
+        vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
+        clearScreen(sectionMessage);
+        buildNode({ 
+          parent: sectionMessage, 
+          child: 'div', 
+          content: 'Keep Trying', 
+          className: 'wrong-answer' 
+        });
+
+        // Show overlay "wrong" message
+        toggleClass('fade-hide', sectionMessage); 
+        /*
+        sectionMessage.classList.remove('fade-out'); // Ensure fade-out is removed on display
+
+        // Hide message after 2 seconds (2000 milliseconds) with fade-out
+        setTimeout(() => {
+            sectionMessage.classList.add('fade-out'); // Adds smooth fade-out effect
+        }, 2000);
+        */
+        // Fully hide after fade-out completes (0.5s from .fade-out transition)
+        setTimeout(() => {
+            toggleClass('fade-hide', sectionMessage); // Hide fully
+            //sectionMessage.classList.remove('fade-out'); // Reset for next display
+        }, 2500); // Add delay equal to the fade-out transition duration (0.5s)
     }
     console.groupEnd();
   }
