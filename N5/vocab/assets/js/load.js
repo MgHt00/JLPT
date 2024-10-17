@@ -176,7 +176,7 @@ function listenerManager() {
   // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
   function handlebringBackBtn(event) {
       //clearScreen(sectionStatus);
-      toggleFormDisplay();
+      loaderInstance.toggleFormDisplay();
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
       rePrintMemory();
@@ -184,7 +184,7 @@ function listenerManager() {
 
   // When resumePracticeBtn is clicked
   function handleResumePracticeBtn(event) {
-    toggleFormDisplay();
+    loaderInstance.toggleFormDisplay();
     debouncedMoveForm(event);
   }
 
@@ -192,7 +192,7 @@ function listenerManager() {
   function restart() {
     clearScreen(sectionStatus);
     //toggleClass('shift-sections-to-center', dynamicDOM);
-    toggleFormDisplay("start");
+    loaderInstance.toggleFormDisplay("start");
     debouncedMoveForm();
     rePrintMemory();
   }
@@ -227,43 +227,7 @@ function listenerManager() {
   }
 
   let isMoving = false; // Flag to prevent multiple movements
-
-  // To toggle buttons and sections when move / resume btn is clicked
-  function toggleFormDisplay(btnClicked) {
-    console.groupCollapsed("toggleFormDisplay()");
-
-    toggleClass('shift-sections-to-center', dynamicDOM);
-    toggleClass('moved', selectors.settingForm);
-    toggleClass('disabled', selectors.settingForm);
-    toggleClass('dim', ...selectors.allSetting);
-
-    switch (btnClicked){
-      case "start":
-        console.info("Switch: start");
-        toggleClass('hide',
-          sectionStatus,
-          selectors.bringBackBtn,
-        );
-        break;
-      default:
-        console.info("Switch: default");
-        toggleClass('hide',
-          sectionStatus,
-          selectors.bringBackBtn,
-          selectors.resumePracticeBtn,
-        );
-        break;
-    }
-    /*
-    toggleClass('hide',
-      sectionStatus,
-      selectors.bringBackBtn,
-      selectors.resumePracticeBtn,
-    );
-    */
-   console.groupEnd();
-  }
-
+  
   // to move settings form upward
   function moveForm() {
     if (isMoving) return; // If the form is already moving, exit the function
@@ -296,7 +260,6 @@ function listenerManager() {
     debouncedMoveForm,
     restart,
     continuetoStoredData,
-    toggleFormDisplay,
   }
 }
 
@@ -332,7 +295,7 @@ function loaderManager() {
       }
   
       // Continue if there is no runtime error.
-      listenerInstance.toggleFormDisplay("start");
+      toggleFormDisplay("start");
       listenerInstance.moveForm();
       statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
@@ -646,10 +609,48 @@ function loaderManager() {
     }
   }
 
+  // To toggle buttons and sections when move / resume btn is clicked
+  function toggleFormDisplay(btnClicked) {
+    console.groupCollapsed("toggleFormDisplay()");
+
+    toggleClass('shift-sections-to-center', dynamicDOM);
+    toggleClass('moved', selectors.settingForm);
+    toggleClass('disabled', selectors.settingForm);
+    toggleClass('dim', ...selectors.allSetting);
+
+    switch (btnClicked) {
+      case "start":
+        toggleClass('hide',
+          sectionStatus,
+          selectors.bringBackBtn,
+        );
+        console.info("case: ", btnClicked);
+        break;
+      default:
+        toggleClass('hide',
+          sectionStatus,
+          selectors.bringBackBtn,
+          selectors.resumePracticeBtn,
+        );
+        console.info("case: ", btnClicked);
+        break;
+    }
+    /*
+    toggleClass('hide',
+      sectionStatus,
+      selectors.bringBackBtn,
+      selectors.resumePracticeBtn,
+    );
+    */
+    console.groupEnd();
+  }
+  
+
   return {
     start,
     loadMemoryData,
     loadStoredJSON,
     validateAndSetAnswerCount,
+    toggleFormDisplay,
   }
 }
