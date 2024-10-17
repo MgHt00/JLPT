@@ -191,6 +191,9 @@ function answerManager() {
 
   // to ask user whether they want to practice the vocabs from the local storage
   function toLocalStorageYesNo() {
+    removeClass('fade-hide', sectionMessage);
+    removeClass('overlay-message', sectionMessage);
+
     buildNode({ 
         parent: sectionMessage, 
         child: 'div', 
@@ -219,6 +222,9 @@ function answerManager() {
 
   // when all of the user selected vocabs are shown
   function completeAndRestart() {
+    removeClass('fade-hide', sectionMessage);
+    removeClass('overlay-message', sectionMessage);
+
     buildNode({ 
       parent: sectionMessage, 
       child: 'div', 
@@ -369,7 +375,7 @@ function answerManager() {
         // Fully hide after fade-out completes (0.5s from .fade-out transition)
         setTimeout(() => {
             toggleClass('fade-hide', sectionMessage); // Hide fully
-        }, 2500); // Add delay equal to the fade-out transition duration (0.5s)
+        }, 2000); // Add delay equal to the fade-out transition duration (0.5s)
     }
     console.groupEnd();
   }
@@ -394,6 +400,9 @@ function answerManager() {
   function handleContineToStoredData(event) {
     console.groupCollapsed("answerManager() - handleContineToStoredData()");
 
+    toggleClass('fade-hide', sectionMessage);
+    toggleClass('overlay-message', sectionMessage);
+
     const btnID = event.currentTarget.id;
 
     if (btnID === "continue-yes-0") {
@@ -403,7 +412,6 @@ function answerManager() {
     } else if (btnID === "continue-no-0") {
       loaderInstance.restart();
     }
-
     console.groupEnd();
   }
 

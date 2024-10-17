@@ -9,15 +9,11 @@ const statusInstance = statusManager();
   //flipNodeState(...selectors.noOfAnsAll); // [sn14]
   toggleClass('disabled', ...selectors.noOfAnsAll);
   toggleClass('hide', sectionStatus);
+  toggleClass('overlay-message', sectionMessage);
   toggleClass('fade-hide', sectionMessage);
-  /*toggleClass('hide', 
-    selectors.bringBackBtn, 
-    selectors.resumePracticeBtn,
-  );*/
   loaderInstance.floatingBtnsDefaultState();
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
-  //listenerInstance.handlebringBackBtn();
   console.groupEnd();
 })();
 
@@ -604,6 +600,10 @@ function loaderManager() {
   // When user want to restart the program
   function restart() {
     clearScreen(sectionStatus);
+    toggleClass('overlay-message', sectionMessage);
+    
+    toggleClass('fade-hide', sectionMessage);
+
     //toggleClass('shift-sections-to-center', dynamicDOM);
     toggleFormDisplay("start");
     listenerInstance.debouncedMoveForm();
