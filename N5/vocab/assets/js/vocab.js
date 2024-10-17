@@ -376,15 +376,18 @@ function answerManager() {
             content: 'Keep Trying', 
             className: 'wrong-answer' 
           });
-        }, 600);
-        
-        // Show overlay "wrong" message
-        toggleClass('fade-hide', sectionMessage); 
 
-        // Fully hide after fade-out completes (0.5s from .fade-out transition)
-        setTimeout(() => {
-            toggleClass('fade-hide', sectionMessage); // Hide fully
-        }, 2000); // Add delay equal to the fade-out transition duration (0.5s)
+          // Show overlay "wrong" message
+          toggleClass('fade-hide', sectionMessage); 
+
+          // Fully hide after fade-out completes (0.5s from .fade-out transition)
+          setTimeout(() => {
+              toggleClass('fade-hide', sectionMessage); // Hide fully
+          }, 1500); // Add delay equal to the fade-out transition duration (0.5s)
+
+
+        }, 600);
+           
     }
     console.groupEnd();
   }

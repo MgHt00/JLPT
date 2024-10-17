@@ -14,7 +14,7 @@ const statusInstance = statusManager();
   toggleClass('fade-in',
     sectionStatus,
     sectionQuestion,
-    sectionMessage,
+    //sectionMessage,
     sectionAnswer,
   );
   loaderInstance.floatingBtnsDefaultState();
