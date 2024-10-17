@@ -40,7 +40,7 @@ function questionManager() {
       } else { // if there is no more question left to show
         answerMgr.noMoreQuestion();
       }      
-    }, 600); // Matches the transition duration
+    }, 350); // Matches the transition duration
 
     console.groupEnd();
   }
@@ -362,7 +362,7 @@ function answerManager() {
           //eventFunction: questionMgr.finalizeQuestionAndProceed
           eventFunction: () => questionMgr.finalizeQuestionAndProceed(true) // need to wrap the function in an arrow function (or another function) to control the argument passing.
         });
-      }, 600);
+      }, 350);
 
     } else {
         questionMgr.finalizeQuestionAndProceed(false);
@@ -383,10 +383,8 @@ function answerManager() {
           // Fully hide after fade-out completes (0.5s from .fade-out transition)
           setTimeout(() => {
               toggleClass('fade-hide', sectionMessage); // Hide fully
-          }, 1500); // Add delay equal to the fade-out transition duration (0.5s)
-
-
-        }, 600);
+          }, 1000); // Add delay equal to the fade-out transition duration (0.5s)
+        }, 350);
            
     }
     console.groupEnd();
@@ -716,7 +714,7 @@ function statusManager() {
         child: "div",
         content: `${readQuestionCount()} / ${totalNoOfQuestions}`,
       });
-    }, 600);
+    }, 350);
   }
 
   // to reset all variables concerning with calculating the cumulative average

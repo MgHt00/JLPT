@@ -104,13 +104,13 @@ function clearScreen(elements) {
       setTimeout(() => {
         element.innerHTML = ""; // Clear the content of the element
         element.classList.remove('fade-out-light');
-      }, 550); // Matches the transition duration
+      }, 350); // Matches the transition duration
     }
   });
   /*
   format for function calls
   setTimeout(() => {
-  }, 600);
+  }, 350);
   */
 }
 
