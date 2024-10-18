@@ -11,12 +11,12 @@ const statusInstance = statusManager();
   //toggleClass('hide', sectionStatus);
   toggleClass('overlay-message', sectionMessage);
   toggleClass('fade-hide', sectionMessage);
-  toggleClass('fade-in',
+  /*toggleClass('fade-in',
     sectionStatus,
     sectionQuestion,
     //sectionMessage,
     sectionAnswer,
-  );
+  );*/
   loaderInstance.floatingBtnsDefaultState();
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
