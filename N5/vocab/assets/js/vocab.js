@@ -344,27 +344,28 @@ function answerManager() {
 
     const btnText = event.currentTarget.textContent;
     if (appState.correctAns === btnText) {
-      clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer]);
+      clearScreen(sectionMessage);
 
       setTimeout(() => {
-        buildNode({ 
-          parent: sectionAnswer, 
-          child: 'div', 
-          content: 'Correct!', 
-          className: 'correct-answer-message', 
-          idName: 'answer-message' 
-        });
-        buildNode({ parent: sectionAnswer, 
-          child: 'div', 
-          content: 'Next', 
-          className: 'mcq-next-q-btn', 
-          idName: 'choice-btn', 
-          //eventFunction: questionMgr.finalizeQuestionAndProceed
-          eventFunction: () => questionMgr.finalizeQuestionAndProceed(true) // need to wrap the function in an arrow function (or another function) to control the argument passing.
+        toggleClass('fade-hide', sectionMessage);
+        toggleClass('so-dim', sectionStatus, sectionAnswer);
+        buildNode({
+          parent: sectionMessage,
+          child: 'div',
+          content: 'Correct',
+          className: 'mcq-correct-answer'
         });
       }, 350);
 
-    } else {
+      setTimeout(() => {
+        toggleClass('fade-hide', sectionMessage); // Hide fully
+        toggleClass('so-dim', sectionStatus, sectionAnswer);
+        clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer]);
+        questionMgr.finalizeQuestionAndProceed(true);
+      }, 1200); // Add delay equal to the fade-out transition duration (0.5s)
+    } 
+    
+    else {
         questionMgr.finalizeQuestionAndProceed(false);
         vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
         clearScreen(sectionMessage);

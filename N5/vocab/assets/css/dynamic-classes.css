@@ -30,12 +30,18 @@
   transition: opacity 0.5s ease; /* Add transition duration */
 }
 
+.so-dim {
+  opacity: 0.2;
+  transition: opacity 0.2s ease; /* Add transition duration */
+}
+
 .hide {
   display: none;
 }
 
 .fade-hide {
   opacity: 0;
+  transition: opacity 0.2s ease; /* or any duration you prefer */
 }
 
 .fade-in {
@@ -75,22 +81,4 @@
   left: 50%; /* Center horizontally */
   transform: translate(-50%);
   transition: all 0.5s ease;
-}
-
-.correct-answer {
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px dashed rgba(255, 255, 255, 0.5);
-}
-
-.correct-answer-message{
-  margin-bottom: 10px;
-  padding: 10px;
-}
-
-.answer-message {
-  margin: 0px;
-  padding: 15px;
-  font-size: 20px;
-  font-weight: 200;
 }

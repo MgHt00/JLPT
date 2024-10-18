@@ -89,22 +89,42 @@ section.jp {
   font-style: normal;
 }
 
-.dummy-class-1 {
-  color: inherit;
+.correct-answer {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px dashed rgba(255, 255, 255, 0.5);
 }
 
-.dummy-class-2 {
-  color: inherit;
+.correct-answer-message{
+  margin-bottom: 10px;
+  padding: 10px;
 }
 
-.wrong-answer {
+.answer-message {
+  margin: 0px;
+  padding: 15px;
+  font-size: 20px;
+  font-weight: 200;
+}
+
+.wrong-answer,
+.mcq-correct-answer {
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: rgba(255, 124, 124, 0.9);
-  color: black;
+}
+
+.wrong-answer{
+  /*background-color: rgba(255, 124, 124, 0.9);*/
+  background-color: rgba(245, 67, 67, 0.9);
+  color: white;
+}
+
+.mcq-correct-answer {
+  background-color: rgba(40, 96, 249, 0.95);
+  color: white;
 }
 
 .runtime-error {
