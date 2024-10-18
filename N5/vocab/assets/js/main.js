@@ -99,10 +99,80 @@ function clearScreen(elements) {
 
   elements.forEach(element => {
     if (element) {
-      element.innerHTML = ""; // Clear the content of the element
+      element.classList.add('fade-out-light');
+      //element.innerHTML = ""; // Clear the content of the element
+      setTimeout(() => {
+        element.innerHTML = ""; // Clear the content of the element
+        element.classList.remove('fade-out-light');
+      }, 350); // Matches the transition duration
     }
   });
+  /*
+  format for function calls
+  setTimeout(() => {
+  }, 350);
+  */
 }
+
+/*async function clearScreen(elements) { 
+  // Ensure elements is an array
+  elements = Array.isArray(elements) ? elements : [elements];
+
+  await Promise.all(
+    elements.map(element => 
+      new Promise(resolve => {
+        if (element) {
+          element.style.opacity = "1";  // Reset opacity to fully visible before transition
+          element.classList.add('fade-out-light');
+          
+          // Listen for transition end to clear content and resolve
+          element.addEventListener('transitionend', () => {
+            console.log(`Clearing content for: ${element.id}`);
+            element.innerHTML = ""; // Clear the content of the element
+            element.classList.remove('fade-out-light'); // Reset for next usage
+            resolve();
+          }, { once: true });
+
+          // Fallback in case 'transitionend' does not trigger
+          setTimeout(() => {
+            console.log(`Fallback clear for: ${element.id}`);
+            element.innerHTML = "";
+            element.classList.remove('fade-out-light');
+            resolve();
+          }, 1500); // Match transition duration
+        } else {
+          resolve(); // Immediately resolve if element is falsy
+        }
+      })
+    )
+  );
+
+  console.log("clearScreen completed for all elements");
+}*/
+
+/*async function clearScreen(elements) {
+  elements = Array.isArray(elements) ? elements : [elements];
+  
+  await Promise.all(
+    elements.map(element => new Promise(resolve => {
+      if (element) {
+        console.log(`Adding fade-out to: ${element.id}`);
+        element.classList.add('fade-out-light'); 
+
+        // Wait for the transition to finish
+        element.addEventListener('transitionend', () => {
+          console.log(`Clearing content of: ${element.id}`);
+          element.innerHTML = ""; // Clear content after fade-out completes
+          element.classList.remove('fade-out-light'); // Reset fade-out for reuse
+          resolve();
+        }, { once: true });
+      } else {
+        resolve();
+      }
+    }))
+  );
+  console.log("clearScreen completed for all elements");
+}*/
 
 // to move the entire node
 function clearNode({ parent, children = [] }) { 

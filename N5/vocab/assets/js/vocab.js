@@ -10,32 +10,37 @@ function questionManager() {
     console.groupCollapsed("---questionManager() - newQuestion()---");
 
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
+    //clearScreen([sectionQuestion, sectionAnswer]);
 
-    if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
-      //console.log("vocabArray ", appData.vocabArray);
+    statusInstance.printQuestionStatus() // show current status
 
-      do {
-        questionObj = fetchOneQuestion(); // Fetch a new question
-      } while (!isThereAnAnswer(questionObj)); // Keep fetching until a valid answer is found
-                                               // (need to check for the situation where answer choice is Kanji and it is empty.)
-
-      // Once a valid question is found, store the correct answer
-      appState.correctAns = questionObj[selectors.aChoice.value]; // Store correct answer
-      
-      statusInstance.increaseQuestionCount(); // increse question count for status bar
-      statusInstance.printQuestionStatus() // show current status
-
-      console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
-      
-      buildNode({ 
-        parent: sectionQuestion, 
-        child: 'div', 
-        content: questionObj[appState.qChoiceInput],
-      });
-      answerMgr.renderAnswers();  
-    } else { // if there is no more question left to show
-      answerMgr.noMoreQuestion();
-    }
+    setTimeout(() => {
+      if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
+        //console.log("vocabArray ", appData.vocabArray);
+  
+        do {
+          questionObj = fetchOneQuestion(); // Fetch a new question
+        } while (!isThereAnAnswer(questionObj)); // Keep fetching until a valid answer is found
+                                                 // (need to check for the situation where answer choice is Kanji and it is empty.)
+  
+        // Once a valid question is found, store the correct answer
+        appState.correctAns = questionObj[selectors.aChoice.value]; // Store correct answer
+        
+        statusInstance.increaseQuestionCount(); // increse question count for status bar
+        //statusInstance.printQuestionStatus() // show current status
+  
+        console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
+        
+        buildNode({ 
+          parent: sectionQuestion, 
+          child: 'div', 
+          content: questionObj[appState.qChoiceInput],
+        });
+        answerMgr.renderAnswers();  
+      } else { // if there is no more question left to show
+        answerMgr.noMoreQuestion();
+      }      
+    }, 350); // Matches the transition duration
 
     console.groupEnd();
   }
@@ -190,6 +195,9 @@ function answerManager() {
 
   // to ask user whether they want to practice the vocabs from the local storage
   function toLocalStorageYesNo() {
+    removeClass('fade-hide', sectionMessage);
+    removeClass('overlay-message', sectionMessage);
+
     buildNode({ 
         parent: sectionMessage, 
         child: 'div', 
@@ -218,6 +226,9 @@ function answerManager() {
 
   // when all of the user selected vocabs are shown
   function completeAndRestart() {
+    removeClass('fade-hide', sectionMessage);
+    removeClass('overlay-message', sectionMessage);
+
     buildNode({ 
       parent: sectionMessage, 
       child: 'div', 
@@ -231,7 +242,7 @@ function answerManager() {
       content: 'Let\'s Restart!', 
       className: 'answer-btn', 
       idName: 'answer-btn', 
-      eventFunction: listenerInstance.restart,
+      eventFunction: loaderInstance.restart,
     });
   }
 
@@ -335,33 +346,46 @@ function answerManager() {
     if (appState.correctAns === btnText) {
       clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer]);
 
-      buildNode({ 
-        parent: sectionAnswer, 
-        child: 'div', 
-        content: 'Correct!', 
-        className: 'correct-answer-message', 
-        idName: 'answer-message' 
-      });
-      buildNode({ parent: sectionAnswer, 
-        child: 'div', 
-        content: 'Next', 
-        className: 'mcq-next-q-btn', 
-        idName: 'choice-btn', 
-        //eventFunction: questionMgr.finalizeQuestionAndProceed
-        eventFunction: () => questionMgr.finalizeQuestionAndProceed(true) // need to wrap the function in an arrow function (or another function) to control the argument passing.
-      });
+      setTimeout(() => {
+        buildNode({ 
+          parent: sectionAnswer, 
+          child: 'div', 
+          content: 'Correct!', 
+          className: 'correct-answer-message', 
+          idName: 'answer-message' 
+        });
+        buildNode({ parent: sectionAnswer, 
+          child: 'div', 
+          content: 'Next', 
+          className: 'mcq-next-q-btn', 
+          idName: 'choice-btn', 
+          //eventFunction: questionMgr.finalizeQuestionAndProceed
+          eventFunction: () => questionMgr.finalizeQuestionAndProceed(true) // need to wrap the function in an arrow function (or another function) to control the argument passing.
+        });
+      }, 350);
 
     } else {
-      if (sectionMessage.textContent !== 'Keep Trying') { // if worng message is not shown already.
         questionMgr.finalizeQuestionAndProceed(false);
         vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
-        buildNode({ 
-          parent: sectionMessage, 
-          child: 'div', 
-          content: 'Keep Trying', 
-          className: 'wrong-answer' 
-        });
-      }
+        clearScreen(sectionMessage);
+
+        setTimeout(() => {
+          buildNode({ 
+            parent: sectionMessage, 
+            child: 'div', 
+            content: 'Keep Trying', 
+            className: 'wrong-answer' 
+          });
+
+          // Show overlay "wrong" message
+          toggleClass('fade-hide', sectionMessage); 
+
+          // Fully hide after fade-out completes (0.5s from .fade-out transition)
+          setTimeout(() => {
+              toggleClass('fade-hide', sectionMessage); // Hide fully
+          }, 1000); // Add delay equal to the fade-out transition duration (0.5s)
+        }, 350);
+           
     }
     console.groupEnd();
   }
@@ -386,16 +410,18 @@ function answerManager() {
   function handleContineToStoredData(event) {
     console.groupCollapsed("answerManager() - handleContineToStoredData()");
 
+    toggleClass('fade-hide', sectionMessage);
+    toggleClass('overlay-message', sectionMessage);
+
     const btnID = event.currentTarget.id;
 
     if (btnID === "continue-yes-0") {
       noMoreQuestion.ranOnce = true; // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       console.info("noMoreQuestion.ranOnce CHANGED :", noMoreQuestion.ranOnce);
-      listenerInstance.continuetoStoredData();
+      loaderInstance.continuetoStoredData();
     } else if (btnID === "continue-no-0") {
-      listenerInstance.restart();
+      loaderInstance.restart();
     }
-
     console.groupEnd();
   }
 
@@ -674,19 +700,21 @@ function statusManager() {
   function printQuestionStatus() {
     clearScreen(sectionStatus);
 
-    if (totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
+    setTimeout(() => {
+      if (totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
+        buildNode({
+          parent: sectionStatus,
+          child: "div",
+          content: `Average Correct Rate: ${averageScore}%`,
+        });
+      }
+  
       buildNode({
         parent: sectionStatus,
         child: "div",
-        content: `Average Correct Rate: ${averageScore}%`,
+        content: `${readQuestionCount()} / ${totalNoOfQuestions}`,
       });
-    }
-
-    buildNode({
-      parent: sectionStatus,
-      child: "div",
-      content: `${readQuestionCount()} / ${totalNoOfQuestions}`,
-    });
+    }, 350);
   }
 
   // to reset all variables concerning with calculating the cumulative average

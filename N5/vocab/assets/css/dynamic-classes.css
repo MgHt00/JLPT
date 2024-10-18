@@ -34,6 +34,20 @@
   display: none;
 }
 
+.fade-hide {
+  opacity: 0;
+}
+
+.fade-in {
+  opacity: 100;
+}
+
+.fade-out-light {
+  opacity: 0;
+  transition: opacity 0.3s ease; /* or any duration you prefer */
+}
+
+
 /* Fade-out class with opacity, max-height, and margin transitions */
 .fade-out {
   opacity: 0;
@@ -41,6 +55,7 @@
   margin: 0; /* Smoothly removes the margin */
   padding: 0; /* Smoothly removes the padding */
   overflow: hidden; /* Prevents content from overflowing during collapse */
+  visibility: hidden; /* Hides element from click/touch interactions */
   transition: opacity 0.5s ease, max-height 0.5s ease, margin 0.5s ease, padding 0.5s ease; /* Smooth transition */
 }
 
