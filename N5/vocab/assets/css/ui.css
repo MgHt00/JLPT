@@ -38,7 +38,8 @@
   flex-grow: 0;
 }
 
-#settingsForm #settings-randomInput {
+#settingsForm #settings-randomInput,
+#settingsForm #settings-noOfAnswers {
   flex-direction: row;
   gap: 10px;
 }
@@ -70,6 +71,10 @@
 #settings-randomInput .random-Yes-No-div,
 #settings-flashYesNo .flash-Yes-No-div {
   gap: 10px;
+}
+
+#settings-noOfAnswers .no-of-answers-div {
+  gap: 8px;
 }
 
 #settings-syllableChoice #fieldset-syllable,
