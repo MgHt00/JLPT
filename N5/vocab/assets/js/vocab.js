@@ -133,14 +133,27 @@ function answerManager() {
 
     if (appState.flashYesNo) { // if it is a flash card game
       assignLanguage(sectionAnswer, "en"); // if aChoice was set to Kanji or Hirigana, reset to "en"
-      buildNode({ 
-        parent: sectionAnswer, 
-        child: 'div', 
-        content: 'Check Answer', 
-        className: ['answer-btn', 'check-flash-mode-answer'], 
-        idName: 'answer-btn', 
-        eventFunction: handleFlashcardAnswer 
-      });
+      toggleClass('fade-out-light', sectionAnswer);
+      setTimeout(() => {
+        buildNode({ 
+          parent: sectionAnswer, 
+          child: 'div', 
+          content: '', 
+          className: ['answer-btn', 'check-flash-mode-answer'], 
+          idName: 'answer-btn', 
+          eventFunction: handleFlashcardAnswer 
+        });
+        buildNode({ 
+          parent: document.querySelector("#answer-btn-0"), 
+          child: 'div', 
+          content: 'Flip', 
+          className: '', 
+          idName: 'answer-btn-text', 
+          //eventFunction: handleFlashcardAnswer 
+        });
+        toggleClass('fade-out-light', sectionAnswer);
+      }, 350);
+      
     } else { // if it is a multiple choice game
       buildNode({ 
         parent: sectionAnswer, 
@@ -290,50 +303,56 @@ function answerManager() {
     return tempAnsArray;
   }
 
-  // event handler for flashcard  mode
+  // Event handler for flashcard mode
   function handleFlashcardAnswer() {
     //console.groupCollapsed("answerManager() - handleFlashcardAnswer()");
 
     // Remove exiting buttons
     const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
     answerButtons.forEach(button => {
-      button.remove();
+      toggleClass('fade-out-light', button);
+      setTimeout(() => {
+        button.remove();
+      }, 350);
+      toggleClass('fade-out-light', button);
+      setTimeout(() => {
+        button.remove();
+      }, 350);
     });
+    toggleClass('fade-out-light', sectionMessage, sectionAnswer);
 
-    // Show correct answer
-    buildNode({ 
-      parent: sectionAnswer, 
-      child: 'div', 
-      content: appState.correctAns, 
-      className: 'correct-answer', 
-      idName: 'correct-answer' 
-    });
+    setTimeout(() => {
+      // Show correct answer
+      buildNode({
+        parent: sectionAnswer,
+        child: 'div',
+        content: appState.correctAns,
+        className: 'flash-correct-answer',
+        idName: 'correct-answer'
+      });
 
-    // Show buttons
-    if (appState.flashYesNo) { // if it is a flash card game
-      buildNode({ 
-        parent: sectionAnswer, 
-        child: 'div', 
-        content: 'Did you get it right?', 
-        className: 'answer-message', 
-        idName: 'answer-message' 
+      // Show Message
+      buildNode({
+        parent: sectionAnswer,
+        child: 'div',
+        content: 'Did you get it right?',
+        className: 'answer-message',
+        idName: 'answer-message'
       });
-      buildNode({ 
-        parent: sectionAnswer, 
-        child: 'div', 
-        content: ['Yes', 'No'], 
-        className: 'answer-btn', 
-        idName: 'choice-btn', 
-        eventFunction: handleFlashCardAnswer 
+
+      // Show `Yes` `No` buttons
+      buildNode({
+        parent: sectionAnswer,
+        child: 'div',
+        content: ['Yes', 'No'],
+        className: 'answer-btn',
+        idName: 'choice-btn',
+        eventFunction: handleFlashCardAnswer
       });
-    } else {
-      buildNode({ 
-        parent: sectionAnswer, 
-        child: 'div', 
-        content: 'Next', 
-        className: 'answer-message', 
-        idName: 'next-btn' });
-    }
+
+      toggleClass('fade-out-light', sectionMessage, sectionAnswer);
+
+    }, 350);
 
     console.groupEnd();
   }
@@ -344,27 +363,28 @@ function answerManager() {
 
     const btnText = event.currentTarget.textContent;
     if (appState.correctAns === btnText) {
-      clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer]);
+      clearScreen(sectionMessage);
 
       setTimeout(() => {
-        buildNode({ 
-          parent: sectionAnswer, 
-          child: 'div', 
-          content: 'Correct!', 
-          className: 'correct-answer-message', 
-          idName: 'answer-message' 
-        });
-        buildNode({ parent: sectionAnswer, 
-          child: 'div', 
-          content: 'Next', 
-          className: 'mcq-next-q-btn', 
-          idName: 'choice-btn', 
-          //eventFunction: questionMgr.finalizeQuestionAndProceed
-          eventFunction: () => questionMgr.finalizeQuestionAndProceed(true) // need to wrap the function in an arrow function (or another function) to control the argument passing.
+        toggleClass('fade-hide', sectionMessage);
+        toggleClass('so-dim', sectionStatus, sectionAnswer);
+        buildNode({
+          parent: sectionMessage,
+          child: 'div',
+          content: 'Correct',
+          className: 'mcq-correct-answer'
         });
       }, 350);
 
-    } else {
+      setTimeout(() => {
+        toggleClass('fade-hide', sectionMessage); // Hide fully
+        toggleClass('so-dim', sectionStatus, sectionAnswer);
+        clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer]);
+        questionMgr.finalizeQuestionAndProceed(true);
+      }, 1200); // Add delay equal to the fade-out transition duration (0.5s)
+    } 
+    
+    else {
         questionMgr.finalizeQuestionAndProceed(false);
         vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
         clearScreen(sectionMessage);

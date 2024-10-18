@@ -11,12 +11,12 @@ const statusInstance = statusManager();
   //toggleClass('hide', sectionStatus);
   toggleClass('overlay-message', sectionMessage);
   toggleClass('fade-hide', sectionMessage);
-  toggleClass('fade-in',
+  /*toggleClass('fade-in',
     sectionStatus,
     sectionQuestion,
     //sectionMessage,
     sectionAnswer,
-  );
+  );*/
   loaderInstance.floatingBtnsDefaultState();
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
@@ -633,13 +633,19 @@ function loaderManager() {
   function toggleFormDisplay(btnClicked) {
     console.groupCollapsed("toggleFormDisplay()");
 
-    toggleClass('shift-sections-to-center', dynamicDOM);
+   /* setTimeout(() => {
+      toggleClass('shift-sections-to-center', dynamicDOM);
+    }, 400);*/
     toggleClass('moved', selectors.settingForm);
     toggleClass('disabled', selectors.settingForm);
     toggleClass('dim', ...selectors.allSetting);
 
     switch (btnClicked) {
       case "start":
+        setTimeout(() => {
+          toggleClass('shift-sections-to-center', dynamicDOM);
+        }, 400);
+
         toggleClass('hide',
           sectionStatus,
           selectors.bringBackBtn,
@@ -647,6 +653,7 @@ function loaderManager() {
         console.info("case: ", btnClicked);
         break;
       default:
+        toggleClass('shift-sections-to-center', dynamicDOM);
         toggleClass('hide',
           sectionStatus,
           selectors.bringBackBtn,
@@ -655,13 +662,7 @@ function loaderManager() {
         console.info("case: ", btnClicked);
         break;
     }
-    /*
-    toggleClass('hide',
-      sectionStatus,
-      selectors.bringBackBtn,
-      selectors.resumePracticeBtn,
-    );
-    */
+    
     console.groupEnd();
   }
   
