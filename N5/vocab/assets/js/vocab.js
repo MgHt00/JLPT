@@ -133,14 +133,27 @@ function answerManager() {
 
     if (appState.flashYesNo) { // if it is a flash card game
       assignLanguage(sectionAnswer, "en"); // if aChoice was set to Kanji or Hirigana, reset to "en"
-      buildNode({ 
-        parent: sectionAnswer, 
-        child: 'div', 
-        content: 'Check Answer', 
-        className: ['answer-btn', 'check-flash-mode-answer'], 
-        idName: 'answer-btn', 
-        eventFunction: handleFlashcardAnswer 
-      });
+      toggleClass('fade-out-light', sectionAnswer);
+      setTimeout(() => {
+        buildNode({ 
+          parent: sectionAnswer, 
+          child: 'div', 
+          content: '', 
+          className: ['answer-btn', 'check-flash-mode-answer'], 
+          idName: 'answer-btn', 
+          eventFunction: handleFlashcardAnswer 
+        });
+        buildNode({ 
+          parent: document.querySelector("#answer-btn-0"), 
+          child: 'div', 
+          content: 'Flip', 
+          className: '', 
+          idName: 'answer-btn-text', 
+          //eventFunction: handleFlashcardAnswer 
+        });
+        toggleClass('fade-out-light', sectionAnswer);
+      }, 350);
+      
     } else { // if it is a multiple choice game
       buildNode({ 
         parent: sectionAnswer, 
@@ -297,7 +310,10 @@ function answerManager() {
     // Remove exiting buttons
     const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
     answerButtons.forEach(button => {
-      button.remove();
+      toggleClass('fade-out-light', button);
+      setTimeout(() => {
+        button.remove();
+      }, 350);
     });
     toggleClass('fade-out-light', sectionMessage, sectionAnswer);
 

@@ -237,9 +237,24 @@ input:checked + .slider:before {
   transition: opacity 0.3s ease;
 }
 
-.check-flash-mode-answer{
+/*.check-flash-mode-answer{
   margin-top: 175px;
   padding: 30px 0;
+}*/
+
+.check-flash-mode-answer{
+  cursor: pointer;
+  margin-top: 75px;
+  padding: 0;
+  width: 200px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%; 
+  transform: translate(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 /*.mcq-next-q-btn {
