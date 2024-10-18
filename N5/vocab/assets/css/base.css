@@ -89,10 +89,12 @@ section.jp {
   font-style: normal;
 }
 
-.correct-answer {
+.flash-correct-answer {
   margin-bottom: 10px;
   padding: 10px;
   border: 1px dashed rgba(255, 255, 255, 0.5);
+  opacity: 100;
+  transition: opacity 0.3s ease; /* or any duration you prefer */
 }
 
 .correct-answer-message{
@@ -105,6 +107,8 @@ section.jp {
   padding: 15px;
   font-size: 20px;
   font-weight: 200;
+  opacity: 100;
+  transition: opacity 0.3s ease; 
 }
 
 .wrong-answer,

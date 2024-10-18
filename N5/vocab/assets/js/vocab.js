@@ -290,7 +290,7 @@ function answerManager() {
     return tempAnsArray;
   }
 
-  // event handler for flashcard  mode
+  // Event handler for flashcard mode
   function handleFlashcardAnswer() {
     //console.groupCollapsed("answerManager() - handleFlashcardAnswer()");
 
@@ -299,41 +299,40 @@ function answerManager() {
     answerButtons.forEach(button => {
       button.remove();
     });
+    toggleClass('fade-out-light', sectionMessage, sectionAnswer);
 
-    // Show correct answer
-    buildNode({ 
-      parent: sectionAnswer, 
-      child: 'div', 
-      content: appState.correctAns, 
-      className: 'correct-answer', 
-      idName: 'correct-answer' 
-    });
+    setTimeout(() => {
+      // Show correct answer
+      buildNode({
+        parent: sectionAnswer,
+        child: 'div',
+        content: appState.correctAns,
+        className: 'flash-correct-answer',
+        idName: 'correct-answer'
+      });
 
-    // Show buttons
-    if (appState.flashYesNo) { // if it is a flash card game
-      buildNode({ 
-        parent: sectionAnswer, 
-        child: 'div', 
-        content: 'Did you get it right?', 
-        className: 'answer-message', 
-        idName: 'answer-message' 
+      // Show Message
+      buildNode({
+        parent: sectionAnswer,
+        child: 'div',
+        content: 'Did you get it right?',
+        className: 'answer-message',
+        idName: 'answer-message'
       });
-      buildNode({ 
-        parent: sectionAnswer, 
-        child: 'div', 
-        content: ['Yes', 'No'], 
-        className: 'answer-btn', 
-        idName: 'choice-btn', 
-        eventFunction: handleFlashCardAnswer 
+
+      // Show `Yes` `No` buttons
+      buildNode({
+        parent: sectionAnswer,
+        child: 'div',
+        content: ['Yes', 'No'],
+        className: 'answer-btn',
+        idName: 'choice-btn',
+        eventFunction: handleFlashCardAnswer
       });
-    } else {
-      buildNode({ 
-        parent: sectionAnswer, 
-        child: 'div', 
-        content: 'Next', 
-        className: 'answer-message', 
-        idName: 'next-btn' });
-    }
+
+      toggleClass('fade-out-light', sectionMessage, sectionAnswer);
+
+    }, 350);
 
     console.groupEnd();
   }
