@@ -314,6 +314,10 @@ function answerManager() {
       setTimeout(() => {
         button.remove();
       }, 350);
+      toggleClass('fade-out-light', button);
+      setTimeout(() => {
+        button.remove();
+      }, 350);
     });
     toggleClass('fade-out-light', sectionMessage, sectionAnswer);
 
