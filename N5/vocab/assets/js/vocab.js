@@ -141,7 +141,7 @@ function answerManager() {
           content: '', 
           className: ['answer-btn', 'check-flash-mode-answer'], 
           idName: 'answer-btn', 
-          eventFunction: handleFlashcardAnswer 
+          eventFunction: handleFlashcardFlip
         });
         buildNode({ 
           parent: document.querySelector("#answer-btn-0"), 
@@ -304,8 +304,8 @@ function answerManager() {
   }
 
   // Event handler for flashcard mode
-  function handleFlashcardAnswer() {
-    //console.groupCollapsed("answerManager() - handleFlashcardAnswer()");
+  function handleFlashcardFlip() {
+    //console.groupCollapsed("answerManager() - handleFlashcardFlip()");
 
     // Remove exiting buttons
     const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
@@ -314,11 +314,8 @@ function answerManager() {
       setTimeout(() => {
         button.remove();
       }, 350);
-      toggleClass('fade-out-light', button);
-      setTimeout(() => {
-        button.remove();
-      }, 350);
     });
+    
     toggleClass('fade-out-light', sectionMessage, sectionAnswer);
 
     setTimeout(() => {
@@ -347,7 +344,7 @@ function answerManager() {
         content: ['Yes', 'No'],
         className: 'answer-btn',
         idName: 'choice-btn',
-        eventFunction: handleFlashCardAnswer
+        eventFunction: handleFlashCardYesNoAnswer
       });
 
       toggleClass('fade-out-light', sectionMessage, sectionAnswer);
@@ -411,8 +408,8 @@ function answerManager() {
   }
 
   // event handler for flashcard mode
-  function handleFlashCardAnswer(event) { // sn4
-    //console.groupCollapsed("answerManager() - handleFlashCardAnswer()");
+  function handleFlashCardYesNoAnswer(event) { // sn4
+    //console.groupCollapsed("answerManager() - handleFlashCardYesNoAnswer()");
 
     const btnID = event.currentTarget.id;
 
