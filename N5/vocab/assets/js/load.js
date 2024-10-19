@@ -34,7 +34,8 @@ function listenerManager() {
     selectors.switchRandomYesNo.addEventListener('change', randomToggleChanges);
     selectors.switchFlashYesNo.addEventListener('change', flashModeToggleChanges); // to handle toggle switch
     selectors.settingFlashYesNo.addEventListener('change', flashModeChanges); // to show answer options and check runtime error 
-    selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
+    //selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
+    selectors.fieldsetSyllable.addEventListener('change', syllableChangesImprovedVer);
     selectors.qChoice.addEventListener('change', buildAnswerOptions);
     selectors.settingSource.addEventListener('change', questionModeChanges);
     selectors.bringBackBtn.addEventListener('click', handlebringBackBtn);
@@ -122,6 +123,47 @@ function listenerManager() {
           allCheckbox.disabled = false;
           allCheckbox.checked = true; // check "All" if nothing is checked
         }
+      }
+    }
+  }
+
+  // to handle when syllable checkboxs are changed
+  function syllableChangesImprovedVer(event) { // [le4]
+    const allCheckbox = document.getElementById('syllableAll');
+    const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
+      .filter(checkbox => checkbox !== allCheckbox);
+
+    if (checkNode({ idName: 'syllable-error' })) {
+      clearNode({
+        parent: selectors.fieldsetSyllable,
+        children: Array.from(document.querySelectorAll('div[id^="syllable-error"]'))
+      });
+    }
+
+    if (event.target === allCheckbox) { // Check whether event is `allCheckbox`
+      if (allCheckbox.checked) { // If "all" is checked
+        otherCheckboxes.forEach(checkbox => {
+          checkbox.checked = true; // Make every other checkbox checked.
+        });
+      } else { // If "all" is unchecked
+        otherCheckboxes.forEach(checkbox => {
+          checkbox.checked = false;
+        });
+      }
+    } 
+    
+    else { // If the event is NOT `allCheckbox`
+      if (event.target.checked) { //[sn8] // if individual syllable is checked
+        const allAreChecked = otherCheckboxes.every(checkbox => checkbox.checked); // Check if **all** other checkboxes are checked
+
+        if (allAreChecked) { 
+          allCheckbox.checked = true; // If all individual syllables are checked, check "All"
+        } else {
+          allCheckbox.checked = false; // If not all are checked, uncheck "All"
+        }
+      } 
+      else { // If individual syllable is unchecked
+        allCheckbox.checked = false; 
       }
     }
   }
