@@ -460,7 +460,7 @@ function loaderManager() {
       buildNode({
         parent: selectors.memoryInfo,
         child: 'div',
-        content: `Flush Memory`,
+        content: `<i class="fa-solid fa-trash-can"></i>`,
         className: 'flush-memory-setting-btn',
         idName: 'flush-memory-btn',
         eventFunction: vocabInstance.flushLocalStorage,
@@ -478,7 +478,7 @@ function loaderManager() {
       buildNode({
         parent: selectors.memoryInfo,
         child: 'div',
-        content: `Flush Memory`,
+        content: `<i class="fa-solid fa-trash-can"></i>`,
         className: 'flush-memory-setting-btn',
         idName: 'flush-memory-btn',
         eventFunction: vocabInstance.flushLocalStorage,
