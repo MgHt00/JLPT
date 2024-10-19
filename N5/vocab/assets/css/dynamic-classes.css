@@ -69,7 +69,7 @@
 .dynamic-dom-initial-position {
   position: absolute;
   width: 317px; 
-  top: 40%; /* Position at the top */
+  top: 35%; /* Position at the top */
   left: -50%; /* Center horizontally */
   transform: translate(-50%);
   transition: all 0.5s ease;
@@ -78,7 +78,7 @@
 .shift-sections-to-center {
   position: absolute;
   width: 317px; 
-  top: 40%; /* Position at the top */
+  top: 35%; /* Position at the top */
   left: 50%; /* Center horizontally */
   transform: translate(-50%);
   transition: all 0.5s ease;
