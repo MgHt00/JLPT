@@ -93,6 +93,7 @@
 
 #settings-repractice #fieldset-repractice {
   flex-direction: column;
+  gap: 5px;
 }
 
 #fieldset-syllable .single-syllable-div {
