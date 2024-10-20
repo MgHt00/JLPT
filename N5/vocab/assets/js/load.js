@@ -458,7 +458,7 @@ function loaderManager() {
       });
 
       buildNode({
-        parent: selectors.memoryInfo,
+        parent: selectors.memoryBtns,
         child: 'div',
         content: `<i class="fa-solid fa-trash-can"></i>`,
         className: 'flush-memory-setting-btn',
@@ -476,7 +476,7 @@ function loaderManager() {
       });
 
       buildNode({
-        parent: selectors.memoryInfo,
+        parent: selectors.memoryBtns,
         child: 'div',
         content: `<i class="fa-solid fa-trash-can"></i>`,
         className: 'flush-memory-setting-btn',

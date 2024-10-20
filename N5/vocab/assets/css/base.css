@@ -66,6 +66,12 @@ section {
   align-items: center;
 }
 
+#memory-btns {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
 .overlay-message {
   position: absolute;
   display: flex;

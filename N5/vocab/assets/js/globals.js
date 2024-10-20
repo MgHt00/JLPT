@@ -46,6 +46,7 @@ const selectors = {
   settingSyllable : document.querySelector("#settings-syllableChoice"),
   settingRepractice: document.querySelector("#settings-repractice"),
   memoryInfo : document.querySelector("#memory-info"),
+  memoryBtns : document.querySelector("#memory-btns"),
   aChoiceSelectorAll : document.querySelectorAll("[id^='aChoiceInput']"),
   aChoiceOptionAll : document.querySelector('select[id="aChoiceInput"]').options,
   aDefaultChoice : document.querySelector('select[name="aChoiceInput"]').options[1],
