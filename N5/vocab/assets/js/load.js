@@ -456,15 +456,6 @@ function loaderManager() {
         className: 'memory-info',
         idName: 'memory-info',
       });
-
-      buildNode({
-        parent: selectors.memoryBtns,
-        child: 'div',
-        content: `<i class="fa-solid fa-trash-can"></i>`,
-        className: 'flush-memory-setting-btn',
-        idName: 'flush-memory-btn',
-        eventFunction: vocabInstance.flushLocalStorage,
-      });
     } else {
       buildNode({
         parent: selectors.memoryInfo,
@@ -474,16 +465,25 @@ function loaderManager() {
         className: 'memory-info',
         idName: 'memory-info',
       });
-
-      buildNode({
-        parent: selectors.memoryBtns,
-        child: 'div',
-        content: `<i class="fa-solid fa-trash-can"></i>`,
-        className: 'flush-memory-setting-btn',
-        idName: 'flush-memory-btn',
-        eventFunction: vocabInstance.flushLocalStorage,
-      });
     }
+    // Build `flush` button
+    buildNode({
+      parent: selectors.memoryBtns,
+      child: 'div',
+      content: `<i class="fa-solid fa-trash-can"></i>`,
+      className: 'flush-memory-setting-btn',
+      idName: 'flush-memory-btn',
+      eventFunction: vocabInstance.flushLocalStorage,
+    });
+    // Build `list` button
+    buildNode({
+      parent: selectors.memoryBtns,
+      child: 'div',
+      content: `<i class="fa-solid fa-rectangle-list"></i>`,
+      className: 'list-memory-setting-btn',
+      idName: 'list-memory-btn',
+      //eventFunction: vocabInstance.flushLocalStorage,
+    });
     
     console.groupEnd();
     return this;
@@ -621,6 +621,7 @@ function loaderManager() {
     //console.groupCollapsed("rePrintMemory()");
 
     clearNode({ parent: selectors.memoryInfo });
+    clearNode({ parent: selectors.memoryBtns });
     loaderInstance.loadMemoryData()
 
     console.groupEnd();
