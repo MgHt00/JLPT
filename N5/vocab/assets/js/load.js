@@ -482,7 +482,7 @@ function loaderManager() {
       content: `<i class="fa-solid fa-rectangle-list"></i>`,
       className: 'list-memory-setting-btn',
       idName: 'list-memory-btn',
-      //eventFunction: vocabInstance.flushLocalStorage,
+      eventFunction: listMistakes,
     });
     
     console.groupEnd();
@@ -706,6 +706,64 @@ function loaderManager() {
         break;
     }
     
+    console.groupEnd();
+  }
+
+  // To list mistakes from stored data
+  function listMistakes() {
+    console.groupCollapsed("listMistakes()");
+
+    floatingBtnsDefaultState();
+    toggleFormDisplay("start");
+
+    const mistakeArray = vocabInstance.loadLocalStorage();
+    console.info("mistakeArray: ", mistakeArray);
+
+    buildNode({
+      parent: sectionQuestion,
+      child: 'div',
+      content: '',
+      //className: ['mistakes-heading', 'jp'],
+      className: '',
+      idName: 'mistake-list-div',
+    });
+
+    const mistakeListDIV = document.querySelector("[id^='mistake-list-div']");
+
+    buildNode({
+      parent: mistakeListDIV,
+      child: 'div',
+      content: `Kanji`,
+      //className: ['mistakes-heading', 'jp'],
+      className: ['mistakes-heading', 'en'],
+      idName: 'mistakes-heading',
+    });
+
+    buildNode({
+      parent: mistakeListDIV,
+      child: 'div',
+      content: `Hiragana`,
+      className: ['mistakes-heading', 'en'],
+      idName: 'mistakes-heading',
+    });
+
+    buildNode({
+      parent: mistakeListDIV,
+      child: 'div',
+      content: `English`,
+      className: ['mistakes-heading', 'en'],
+      idName: 'mistakes-heading',
+    });
+
+    /*for (let i = 0; i < mistakeArray.length; i++) {
+      let mistake = mistakeArray[i];
+      console.info(mistake);
+    }*/
+
+    for (let mistake of mistakeArray) {
+
+    }
+
     console.groupEnd();
   }
   

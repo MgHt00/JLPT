@@ -82,13 +82,15 @@ section {
   z-index: 10;
 }
 
-section.en {
+section.en,
+div.en {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-style: normal;
 }
 
-section.jp {
+section.jp,
+div.jp {
   font-family: "Noto Sans JP", sans-serif;
   font-optical-sizing: auto;
   font-weight: 500;
@@ -143,4 +145,15 @@ section.jp {
   */
   font-size: 12px;
   color: red;
+}
+
+[id^="mistake-list-div"] {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.mistakes-heading {
+  font-size: 20px;
 }
