@@ -146,14 +146,62 @@ div.jp {
   font-size: 12px;
   color: red;
 }
-
+/*
 [id^="mistake-list-div"] {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 15px;
+  flex-wrap: wrap;  Allows items to wrap into multiple rows 
+  gap: 0px;
 }
 
-.mistakes-heading {
-  font-size: 20px;
+[id^="mistake-list-div"] > *:nth-child(1) {
+  flex: 0 0 40px;  Fixed width for the first column to fit two digits 
+}
+
+[id^="mistake-list-div"] > *:nth-child(n+2) {
+  flex: 1 1 calc((100% - 40px) / 3);  Adjust remaining columns to take up space evenly 
+  box-sizing: border-box;  Ensure padding and borders don’t affect width 
+}
+
+[id^="mistake-list-div"] > * {
+  max-width: calc((100% - 40px) / 3);  Make sure columns do not exceed 3 in width 
+}
+
+/* Container for the entire mistake list */
+.mistake-list-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Four equal columns */
+  gap: 10px; /* Add space between rows */
+}
+
+/* Row for mistake items */
+.mistakes-row {
+  display: contents; /* Use 'contents' to handle grid layout for rows */
+}
+
+/* Individual columns */
+.mistakes-column {
+  padding: 5px;
+  text-align: center;
+  border-bottom: 1px solid #ccc; /* Optional: for a table-like border */
+}
+
+/* Header row */
+.mistakes-row-header {
+  display: contents; /* Ensures the grid applies to the header as well */
+  font-weight: bold;
+}
+
+/* Header columns */
+.mistakes-column-header {
+  padding: 5px;
+  font-size: 16px;
+  text-align: center;
+  /*background-color: #f4f4f4;  Optional: for table header background */
+  border-bottom: 2px solid #c4c4c4; /* Optional: for a bold header separator */
+}
+
+.mistakes-heading,
+.mistakes-row,
+.mistakes-column {
+  font-size: 16px;
 }

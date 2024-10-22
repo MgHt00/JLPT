@@ -710,15 +710,16 @@ function loaderManager() {
   }
 
   // To list mistakes from stored data
-  function listMistakes() {
+  function listMistakesOLD() {
     console.groupCollapsed("listMistakes()");
 
     floatingBtnsDefaultState();
     toggleFormDisplay("start");
 
-    const mistakeArray = vocabInstance.loadLocalStorage();
-    console.info("mistakeArray: ", mistakeArray);
+    const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
+    //console.info("mistakeArray: ", mistakeArray);
 
+    // Create the container to display the mistakes
     buildNode({
       parent: sectionQuestion,
       child: 'div',
@@ -730,42 +731,188 @@ function loaderManager() {
 
     const mistakeListDIV = document.querySelector("[id^='mistake-list-div']");
 
+    // Header for the mistake list
     buildNode({
       parent: mistakeListDIV,
       child: 'div',
-      content: `Kanji`,
-      //className: ['mistakes-heading', 'jp'],
+      content: ['#', 'Kanji', 'Hiragana', 'English'],
       className: ['mistakes-heading', 'en'],
       idName: 'mistakes-heading',
     });
 
-    buildNode({
-      parent: mistakeListDIV,
-      child: 'div',
-      content: `Hiragana`,
-      className: ['mistakes-heading', 'en'],
-      idName: 'mistakes-heading',
+    // Iterate over the mistakeArray and create rows for each mistake
+    mistakeArray.forEach((mistake, index) => {
+      // Create a row for each mistake with index and properties
+      //const rowContent = `${index + 1} | ${mistake.kanji} | ${mistake.hiragana} | ${mistake.english}`;
+      const rowContent = [index + 1, mistake.ka, mistake.hi, mistake.en];
+
+      rowContent.forEach((content, index) => {
+        buildNode({
+          parent: mistakeListDIV,
+          child: 'div',
+          content: content,
+          className: ['mistakes-row', 'en'], // Optional styling class for rows
+          idName: `mistake-row-${index}`, // Unique ID for each row
+        });
+      });
+
+      /*
+      buildNode({
+        parent: mistakeListDIV,
+        child: 'div',
+        content: rowContent,
+        className: ['mistakes-row', 'en'], // Optional styling class for rows
+        idName: `mistake-row-${index}`, // Unique ID for each row
+      });
+*/
     });
-
-    buildNode({
-      parent: mistakeListDIV,
-      child: 'div',
-      content: `English`,
-      className: ['mistakes-heading', 'en'],
-      idName: 'mistakes-heading',
-    });
-
-    /*for (let i = 0; i < mistakeArray.length; i++) {
-      let mistake = mistakeArray[i];
-      console.info(mistake);
-    }*/
-
-    for (let mistake of mistakeArray) {
-
-    }
 
     console.groupEnd();
   }
+
+  function listMistakes() {
+    console.groupCollapsed("listMistakes()");
+  
+    floatingBtnsDefaultState();
+    toggleFormDisplay("start");
+  
+    const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
+  
+    // Create the container to display the mistakes
+    buildNode({
+      parent: sectionQuestion,
+      child: 'div',
+      content: '',
+      className: 'mistake-list-container', // New class for the container
+      idName: 'mistake-list-div',
+    });
+  
+    // Now that the mistakeListDIV is created, select it
+    const mistakeListDIV = document.querySelector("[id^='mistake-list-div']");
+  
+    // Header for the mistake list (4 columns: #, Kanji, Hiragana, English)
+    const headerContent = ['#', 'Kanji', 'Hiragana', 'English'];
+  
+    // Build the row for headers using buildNode (it won’t return the element)
+    buildNode({
+      parent: mistakeListDIV,
+      child: 'div',
+      content: '', // Empty content, as we'll append children later
+      className: 'mistakes-row-header', // Styling for header row
+      idName: 'mistakes-heading',
+    });
+  
+    // Now, select the newly created header div
+    //const headerDiv = document.querySelector("[id^='mistakes-heading']"); // ID assigned by buildNode will be "mistakes-heading-0"
+    const headerDiv = document.querySelector("#mistakes-heading-0");
+    //const headerDiv = document.querySelector("[id^='mistake-list-div']");
+    
+    // Append header columns inside the header div
+    headerContent.forEach((content) => {
+      buildNode({
+        parent: headerDiv, // Append to the header div
+        child: 'div',
+        content: content, // Assign each header title
+        className: ['mistakes-column-header', 'en'] // Class for header columns
+      });
+    });  
+    // Iterate over the mistakeArray and create rows for each mistake
+    mistakeArray.forEach((mistake, index) => {
+      console.log(index, mistake);
+      // Create a container div for each row
+      const rowDiv = buildNode({
+        parent: mistakeListDIV,
+        child: 'div',
+        content: '',
+        className: 'mistakes-row', // Styling class for row
+        idName: `mistake-row-${index}`, // Unique ID for each row
+        //idName: `mistake-row`, // Unique ID for each row
+      });
+  
+      // Create columns for each mistake
+      const rowContent = [index + 1, mistake.ka, mistake.hi, mistake.en];
+      const mistakeRow = document.querySelector("[id^='mistake-row']");
+      rowContent.forEach((content) => {
+        buildNode({
+          //parent: rowDiv, // Append each column to the row
+          parent: mistakeRow,
+          child: 'div',
+          content: content, // Assign content to each column
+          className: 'mistakes-column', // Class for each column
+        });
+      });
+    });
+ 
+    console.groupEnd();
+  }  
+
+  function listMistakesGPT() {
+    console.groupCollapsed("listMistakes()");
+  
+    floatingBtnsDefaultState();
+    toggleFormDisplay("start");
+  
+    const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
+  
+    // Create the container to display the mistakes
+    buildNode({
+      parent: sectionQuestion,
+      child: 'div',
+      content: '',
+      className: 'mistake-list-container', // New class for the container
+      idName: 'mistake-list-div',
+    });
+  
+    const mistakeListDIV = document.querySelector("#mistake-list-div-0");
+  
+    // Header for the mistake list
+    const headerContent = ['#', 'Kanji', 'Hiragana', 'English'];
+  
+    buildNode({
+      parent: mistakeListDIV,
+      child: 'div',
+      content: '',
+      className: 'mistakes-row-header',
+      idName: 'mistakes-heading', // Specific ID for the header
+    });
+  
+    const headerDiv = document.querySelector("#mistakes-heading-0");
+  
+    headerContent.forEach((content) => {
+      buildNode({
+        parent: headerDiv,
+        child: 'div',
+        content: content,
+        className: ['mistakes-column-header', 'en'],
+      });
+    });
+  
+    // Iterate over the mistakeArray and create rows for each mistake
+    mistakeArray.forEach((mistake, index) => {
+      const rowDiv = buildNode({
+        parent: mistakeListDIV,
+        child: 'div',
+        content: '',
+        className: 'mistakes-row',
+        idName: `mistake-row`, // Unique ID for each row
+      });
+      
+      console.log(rowDiv);
+      const rowContent = [index + 1, mistake.ka, mistake.hi, mistake.en];
+      /*rowContent.forEach((content) => {
+        
+        buildNode({
+          parent: `rowDiv-${index}`, // Append each column to the rowDiv
+          child: 'div',
+          content: content,
+          className: 'mistakes-column',
+        });
+      });*/
+    });
+  
+    console.groupEnd();
+  }
+  
   
 
   return {
