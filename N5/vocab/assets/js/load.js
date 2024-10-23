@@ -743,15 +743,16 @@ function loaderManager() {
     });
   
     // Now, select the newly created header div
-    const headerDiv = document.querySelector("#mistakes-heading-0");
+    const mistakeHeading = document.querySelector("#mistakes-heading-0");
     
     // Append header columns inside the header div
     headerContent.forEach((content) => {
       buildNode({
-        parent: headerDiv, // Append to the header div
+        parent: mistakeHeading, // Append to the header div
         child: 'div',
         content: content, // Assign each header title
-        className: ['mistakes-column-header', 'en'] // Class for header columns
+        className: ['mistakes-column-header', 'en'], // Class for header columns
+        id: 'mistake-column-header',
       });
     });
 
@@ -763,22 +764,34 @@ function loaderManager() {
         child: 'div',
         content: '',
         className: 'mistakes-row', // Styling class for row
-        idName: `mistake-row-${index}`, // Unique ID for each row
+        idName: `mistakeList-row-${index}`, // Unique ID for each row
       });
 
       // Now, select the newly created mistake-row
-      const curentRow = document.querySelector("[id^='mistake-row']");
+      //const mistakeListRow = document.querySelector("[id^='mistakeList-row']");
+      const mistakeListRow = document.querySelector(`#mistakeList-row-${index}-0`);
       
       // Prepare contents for each row
       const rowContent = [index + 1, mistake.ka, mistake.hi, mistake.en];
 
       // Append each column (with content) to the newly created mistake-row
-      rowContent.forEach((content) => {
+      rowContent.forEach((content, index) => {
+        // Set en/jp className depending on the index
+        let classNameByIndex;
+        switch (index) {
+          case 3:
+            classNameByIndex = 'en';
+            break;
+          default:
+            classNameByIndex = 'jp';
+            break;
+        }
+
         buildNode({
-          parent: curentRow,
+          parent: mistakeListRow,
           child: 'div',
           content: content, // Assign content to each column
-          className: 'mistakes-column', // Class for each column
+          className: ['mistakes-column', classNameByIndex], // Class for each column
         });
       });
     });
