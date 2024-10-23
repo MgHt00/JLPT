@@ -170,7 +170,7 @@ div.jp {
 .mistake-list-container {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* Four equal columns */
-  gap: 10px; /* Add space between rows */
+  gap: 8px 0; /* Add space between rows */
 }
 
 /* Row for mistake items */
@@ -180,7 +180,7 @@ div.jp {
 
 /* Individual columns */
 .mistakes-column {
-  padding: 5px;
+  padding: 10px;
   text-align: center;
   border-bottom: 1px solid #ccc; /* Optional: for a table-like border */
 }

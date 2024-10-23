@@ -788,14 +788,15 @@ function loaderManager() {
     });
   
     // Now that the mistakeListDIV is created, select it
-    const mistakeListDIV = document.querySelector("[id^='mistake-list-div']");
+    //const mistakeListDIV = document.querySelector("[id^='mistake-list-div']");
+    const mistakeListContainer = document.querySelector("#mistake-list-div-0");
   
     // Header for the mistake list (4 columns: #, Kanji, Hiragana, English)
     const headerContent = ['#', 'Kanji', 'Hiragana', 'English'];
   
     // Build the row for headers using buildNode (it won’t return the element)
     buildNode({
-      parent: mistakeListDIV,
+      parent: mistakeListContainer,
       child: 'div',
       content: '', // Empty content, as we'll append children later
       className: 'mistakes-row-header', // Styling for header row
@@ -815,27 +816,28 @@ function loaderManager() {
         content: content, // Assign each header title
         className: ['mistakes-column-header', 'en'] // Class for header columns
       });
-    });  
+    });
+
     // Iterate over the mistakeArray and create rows for each mistake
-    mistakeArray.forEach((mistake, index) => {
-      console.log(index, mistake);
+    mistakeArray.forEach((mistake, index) => {  
       // Create a container div for each row
-      const rowDiv = buildNode({
-        parent: mistakeListDIV,
+      buildNode({
+        parent: mistakeListContainer,
         child: 'div',
         content: '',
         className: 'mistakes-row', // Styling class for row
         idName: `mistake-row-${index}`, // Unique ID for each row
         //idName: `mistake-row`, // Unique ID for each row
       });
-  
-      // Create columns for each mistake
+      
       const rowContent = [index + 1, mistake.ka, mistake.hi, mistake.en];
-      const mistakeRow = document.querySelector("[id^='mistake-row']");
+      
+      // Create columns for each mistake in recently created row
+      const curentRow = document.querySelector("[id^='mistake-row']");
       rowContent.forEach((content) => {
         buildNode({
           //parent: rowDiv, // Append each column to the row
-          parent: mistakeRow,
+          parent: curentRow,
           child: 'div',
           content: content, // Assign content to each column
           className: 'mistakes-column', // Class for each column
