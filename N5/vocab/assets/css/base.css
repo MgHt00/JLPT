@@ -146,30 +146,12 @@ div.jp {
   font-size: 12px;
   color: red;
 }
-/*
-[id^="mistake-list-div"] {
-  display: flex;
-  flex-wrap: wrap;  Allows items to wrap into multiple rows 
-  gap: 0px;
-}
-
-[id^="mistake-list-div"] > *:nth-child(1) {
-  flex: 0 0 40px;  Fixed width for the first column to fit two digits 
-}
-
-[id^="mistake-list-div"] > *:nth-child(n+2) {
-  flex: 1 1 calc((100% - 40px) / 3);  Adjust remaining columns to take up space evenly 
-  box-sizing: border-box;  Ensure padding and borders don’t affect width 
-}
-
-[id^="mistake-list-div"] > * {
-  max-width: calc((100% - 40px) / 3);  Make sure columns do not exceed 3 in width 
-}
 
 /* Container for the entire mistake list */
 .mistake-list-container {
   display: grid;
-  grid-template-columns: repeat(4, 1fr); /* Four equal columns */
+  /*grid-template-columns: repeat(4, 1fr);*/ /* Four equal columns */
+  grid-template-columns: 50px 1fr 2fr 2fr; /* First column: 50px; second: flexible for Kanji; third & fourth: equal share of remaining space */
   gap: 8px 0; /* Add space between rows */
 }
 
