@@ -695,8 +695,29 @@ function loaderManager() {
         );
         console.info("case: ", btnClicked);
         break;
+
+        case "mistake-list":
+          setTimeout(() => {
+            toggleClass('shift-sections-to-top-center', dynamicDOM);
+          }, 400);
+  
+          toggleClass('hide',
+            sectionStatus,
+            selectors.bringBackBtn,
+          );
+          console.info("case: ", btnClicked);
+          break;
+
       default:
-        toggleClass('shift-sections-to-center', dynamicDOM);
+        const DOMClassList = dynamicDOM.classList;
+
+        // Check if `shift-sections-to-top-center` class is present, then remove it
+        if (DOMClassList.contains("shift-sections-to-top-center")) {
+          DOMClassList.remove("shift-sections-to-top-center");
+        }
+        else {
+          toggleClass('shift-sections-to-center', dynamicDOM);
+        }
         toggleClass('hide',
           sectionStatus,
           selectors.bringBackBtn,
@@ -714,7 +735,7 @@ function loaderManager() {
     console.groupCollapsed("listMistakes()");
   
     floatingBtnsDefaultState();
-    toggleFormDisplay("start");
+    toggleFormDisplay("mistake-list");
   
     const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
   
