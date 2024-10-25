@@ -458,15 +458,6 @@ function loaderManager() {
         className: 'memory-info',
         idName: 'memory-info',
       });
-
-      buildNode({
-        parent: selectors.memoryBtns,
-        child: 'div',
-        content: `<i class="fa-solid fa-trash-can"></i>`,
-        className: 'flush-memory-setting-btn',
-        idName: 'flush-memory-btn',
-        eventFunction: vocabInstance.flushLocalStorage,
-      });
     } else {
       buildNode({
         parent: selectors.memoryInfo,
@@ -476,16 +467,25 @@ function loaderManager() {
         className: 'memory-info',
         idName: 'memory-info',
       });
-
-      buildNode({
-        parent: selectors.memoryBtns,
-        child: 'div',
-        content: `<i class="fa-solid fa-trash-can"></i>`,
-        className: 'flush-memory-setting-btn',
-        idName: 'flush-memory-btn',
-        eventFunction: vocabInstance.flushLocalStorage,
-      });
     }
+    // Build `flush` button
+    buildNode({
+      parent: selectors.memoryBtns,
+      child: 'div',
+      content: `<i class="fa-solid fa-trash-can"></i>`,
+      className: 'flush-memory-setting-btn',
+      idName: 'flush-memory-btn',
+      eventFunction: vocabInstance.flushLocalStorage,
+    });
+    // Build `list` button
+    buildNode({
+      parent: selectors.memoryBtns,
+      child: 'div',
+      content: `<i class="fa-solid fa-rectangle-list"></i>`,
+      className: 'list-memory-setting-btn',
+      idName: 'list-memory-btn',
+      eventFunction: listMistakes,
+    });
     
     console.groupEnd();
     return this;
@@ -623,6 +623,7 @@ function loaderManager() {
     //console.groupCollapsed("rePrintMemory()");
 
     clearNode({ parent: selectors.memoryInfo });
+    clearNode({ parent: selectors.memoryBtns });
     loaderInstance.loadMemoryData()
 
     console.groupEnd();
@@ -696,8 +697,29 @@ function loaderManager() {
         );
         console.info("case: ", btnClicked);
         break;
+
+        case "mistake-list":
+          setTimeout(() => {
+            toggleClass('shift-sections-to-top-center', dynamicDOM);
+          }, 400);
+  
+          toggleClass('hide',
+            sectionStatus,
+            selectors.bringBackBtn,
+          );
+          console.info("case: ", btnClicked);
+          break;
+
       default:
-        toggleClass('shift-sections-to-center', dynamicDOM);
+        const DOMClassList = dynamicDOM.classList;
+
+        // Check if `shift-sections-to-top-center` class is present, then remove it
+        if (DOMClassList.contains("shift-sections-to-top-center")) {
+          DOMClassList.remove("shift-sections-to-top-center");
+        }
+        else {
+          toggleClass('shift-sections-to-center', dynamicDOM);
+        }
         toggleClass('hide',
           sectionStatus,
           selectors.bringBackBtn,
@@ -709,7 +731,96 @@ function loaderManager() {
     
     console.groupEnd();
   }
+
+  // To list mistakes from stored data
+  function listMistakes() {
+    console.groupCollapsed("listMistakes()");
   
+    floatingBtnsDefaultState();
+    toggleFormDisplay("mistake-list");
+  
+    const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
+  
+    // Create the container to display the mistakes
+    buildNode({
+      parent: sectionQuestion,
+      child: 'div',
+      content: '',
+      className: 'mistake-list-container', // New class for the container
+      idName: 'mistake-list-div',
+    });
+  
+    // Now that the mistake-list-container is created, select it
+    const mistakeListContainer = document.querySelector("#mistake-list-div-0");
+  
+    // Header for the mistake list (4 columns: #, Kanji, Hiragana, English)
+    const headerContent = ['#', 'Kanji', 'Hiragana', 'English'];
+  
+    // Build the row for headers
+    buildNode({
+      parent: mistakeListContainer,
+      child: 'div',
+      content: '', // Empty content, as we'll append children later
+      className: 'mistakes-row-header', 
+      idName: 'mistakes-heading',
+    });
+  
+    // Now, select the newly created header div
+    const mistakeHeading = document.querySelector("#mistakes-heading-0");
+    
+    // Append header columns inside the header div
+    headerContent.forEach((content) => {
+      buildNode({
+        parent: mistakeHeading, // Append to the header div
+        child: 'div',
+        content: content, // Assign each header title
+        className: ['mistakes-column-header', 'en'], // Class for header columns
+        id: 'mistake-column-header',
+      });
+    });
+
+    // Iterate over the mistakeArray and create rows for each mistake
+    mistakeArray.forEach((mistake, index) => {  
+      // Create a container div for each row
+      buildNode({
+        parent: mistakeListContainer,
+        child: 'div',
+        content: '',
+        className: 'mistakes-row', // Styling class for row
+        idName: `mistakeList-row-${index}`, // Unique ID for each row
+      });
+
+      // Now, select the newly created mistake-row
+      //const mistakeListRow = document.querySelector("[id^='mistakeList-row']");
+      const mistakeListRow = document.querySelector(`#mistakeList-row-${index}-0`);
+      
+      // Prepare contents for each row
+      const rowContent = [index + 1, mistake.ka, mistake.hi, mistake.en];
+
+      // Append each column (with content) to the newly created mistake-row
+      rowContent.forEach((content, index) => {
+        // Set en/jp className depending on the index
+        let classNameByIndex;
+        switch (index) {
+          case 3:
+            classNameByIndex = 'en';
+            break;
+          default:
+            classNameByIndex = 'jp';
+            break;
+        }
+
+        buildNode({
+          parent: mistakeListRow,
+          child: 'div',
+          content: content, // Assign content to each column
+          className: ['mistakes-column', classNameByIndex], // Class for each column
+        });
+      });
+    });
+ 
+    console.groupEnd();
+  }
 
   return {
     start,

@@ -82,13 +82,15 @@ section {
   z-index: 10;
 }
 
-section.en {
+section.en,
+div.en {
   font-family: "Poppins", sans-serif;
   font-weight: 700;
   font-style: normal;
 }
 
-section.jp {
+section.jp,
+div.jp {
   font-family: "Noto Sans JP", sans-serif;
   font-optical-sizing: auto;
   font-weight: 500;
@@ -143,4 +145,46 @@ section.jp {
   */
   font-size: 12px;
   color: red;
+}
+
+/* Container for the entire mistake list */
+.mistake-list-container {
+  display: grid;
+  /*grid-template-columns: repeat(4, 1fr);*/ /* Four equal columns */
+  grid-template-columns: 50px 1fr 2fr 2fr; /* First column: 50px; second: flexible for Kanji; third & fourth: equal share of remaining space */
+  gap: 8px 0; /* Add space between rows */
+}
+
+/* Row for mistake items */
+.mistakes-row {
+  display: contents; /* Use 'contents' to handle grid layout for rows */
+}
+
+/* Individual columns */
+.mistakes-column {
+  padding: 10px;
+  text-align: center;
+  border-bottom: 1px solid #ccc; /* Optional: for a table-like border */
+}
+
+/* Header row */
+.mistakes-row-header {
+  display: contents; /* Ensures the grid applies to the header as well */
+  font-weight: bold;
+}
+
+/* Header columns */
+.mistakes-column-header {
+  padding: 5px;
+  font-size: 16px;
+  text-align: center;
+  /*background-color: #f4f4f4;  Optional: for table header background */
+  border-bottom: 2px solid #c4c4c4; /* Optional: for a bold header separator */
+}
+
+.mistakes-heading,
+.mistakes-row,
+.mistakes-column {
+  font-size: 16px;
+  font-weight: 200;
 }

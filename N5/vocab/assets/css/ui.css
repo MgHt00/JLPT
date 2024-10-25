@@ -96,6 +96,19 @@
   gap: 5px;
 }
 
+#settings-repractice #fieldset-repractice #memory-btns {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  justify-content: space-evenly;
+}
+
+#memory-btns > * {
+  /*width: 40px;
+  aspect-ratio: 1;*/
+  width: 50%;
+}
+
 #fieldset-syllable .single-syllable-div {
   display: flex;
   flex-direction: row;
