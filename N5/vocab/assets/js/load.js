@@ -795,7 +795,12 @@ function loaderManager() {
       const mistakeListRow = document.querySelector(`#mistakeList-row-${index}-0`);
       
       // Prepare contents for each row
-      const rowContent = [index + 1, mistake.ka, mistake.hi, mistake.en];
+      const rowContent = [
+        "", // Placeholder for the checkbox
+        mistake.ka,
+        mistake.hi,
+        mistake.en,
+      ];
 
       // Append each column (with content) to the newly created mistake-row
       rowContent.forEach((content, index) => {
@@ -810,12 +815,24 @@ function loaderManager() {
             break;
         }
 
-        buildNode({
-          parent: mistakeListRow,
-          child: 'div',
-          content: content, // Assign content to each column
-          className: ['mistakes-column', classNameByIndex], // Class for each column
-        });
+        // Check if it’s the first column (checkbox column)
+        if (index === 0) {
+          // Build the checkbox
+          buildNode({
+            parent: mistakeListRow,
+            child: 'input',
+            className: ['mistakes-checkbox'],
+            idName: `mistake-checkbox-${index}`,
+            childValues: ['checkbox'],
+          });
+        } else {
+          buildNode({
+            parent: mistakeListRow,
+            child: 'div',
+            content: content, // Assign content to each column
+            className: ['mistakes-column', classNameByIndex], // Class for each column
+          });
+        }  
       });
     });
  
