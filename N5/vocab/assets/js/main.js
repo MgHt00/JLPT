@@ -93,18 +93,28 @@ function buildNode({parent, child, content, childValues = [], className = "", id
 }
 
 // to remove the content of a node
-function clearScreen(elements) { 
+function clearScreen(elements, mode) { 
+  console.log("clearScreen()");
   // Ensure `elements` is treated as an array
   elements = Array.isArray(elements) ? elements : [elements];
 
   elements.forEach(element => {
     if (element) {
-      element.classList.add('fade-out-light');
-      //element.innerHTML = ""; // Clear the content of the element
-      setTimeout(() => {
-        element.innerHTML = ""; // Clear the content of the element
-        element.classList.remove('fade-out-light');
-      }, 350); // Matches the transition duration
+      switch (mode) {
+        case "fast" :
+          console.info("MODE: fast - Clear: ", element);
+          element.innerHTML = "";
+          break;
+
+        default:
+          console.info("MODE: animated - Clear: ", element);
+          element.classList.add('fade-out-light');
+          //element.innerHTML = ""; // Clear the content of the element
+          setTimeout(() => {
+            element.innerHTML = ""; // Clear the content of the element
+            element.classList.remove('fade-out-light');
+          }, 350); // Matches the transition duration
+      }
     }
   });
   /*
@@ -112,6 +122,8 @@ function clearScreen(elements) {
   setTimeout(() => {
   }, 350);
   */
+
+  console.groupEnd();
 }
 
 /*async function clearScreen(elements) { 

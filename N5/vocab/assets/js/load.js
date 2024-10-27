@@ -740,6 +740,8 @@ function loaderManager() {
     toggleFormDisplay("mistake-list");
   
     const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
+
+    clearScreen(sectionQuestion, "fast");
   
     // Create the container to display the mistakes
     buildNode({
