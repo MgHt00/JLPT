@@ -182,6 +182,8 @@ function listenerManager() {
           children: [child],
         });
       }
+      questionMgr.setQuestionMode("fresh");
+      answerMgr.setRanOnce(false);
     } 
     
     else if (selectedMode === "stored") {
@@ -195,6 +197,8 @@ function listenerManager() {
           children: [child],
         });
       }
+      questionMgr.setQuestionMode("stored");
+      answerMgr.setRanOnce(true);
     }
   }
    
@@ -676,7 +680,7 @@ function loaderManager() {
 
   // To toggle buttons and sections when move / resume btn is clicked
   function toggleFormDisplay(btnClicked) {
-    console.groupCollapsed("toggleFormDisplay()");
+    //console.groupCollapsed("toggleFormDisplay()");
 
    /* setTimeout(() => {
       toggleClass('shift-sections-to-center', dynamicDOM);
@@ -695,7 +699,7 @@ function loaderManager() {
           sectionStatus,
           selectors.bringBackBtn,
         );
-        console.info("case: ", btnClicked);
+        //console.info("case: ", btnClicked);
         break;
 
         case "mistake-list":
@@ -707,7 +711,7 @@ function loaderManager() {
             sectionStatus,
             selectors.bringBackBtn,
           );
-          console.info("case: ", btnClicked);
+          //console.info("case: ", btnClicked);
           break;
 
       default:
@@ -725,7 +729,7 @@ function loaderManager() {
           selectors.bringBackBtn,
           selectors.resumePracticeBtn,
         );
-        console.info("case: ", btnClicked);
+        //console.info("case: ", btnClicked);
         break;
     }
     
@@ -740,6 +744,8 @@ function loaderManager() {
     toggleFormDisplay("mistake-list");
   
     const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
+
+    clearScreen(sectionQuestion, "fast");
   
     // Create the container to display the mistakes
     buildNode({
