@@ -29,7 +29,7 @@ function questionManager() {
         statusInstance.increaseQuestionCount(); // increse question count for status bar
         //statusInstance.printQuestionStatus() // show current status
   
-        console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
+        //console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
         
         buildNode({ 
           parent: sectionQuestion, 
@@ -47,7 +47,7 @@ function questionManager() {
 
   // to set program's question mode (fresh or stored)
   function setQuestionMode(m) {
-    //console.groupCollapsed("questionManager() - setQuestionMode()");
+    console.groupCollapsed("questionManager() - setQuestionMode()");
 
     const validModes = ["fresh", "stored"];
     if(!validModes.includes(m)) {
@@ -55,7 +55,7 @@ function questionManager() {
       console.warn("Invalid mode is passed. Defaulting to `fresh`.");
     } else {
       newQuestion.mode = m;
-      //console.info("Question mode: ", newQuestion.mode);
+      console.info("Question mode: ", newQuestion.mode);
     }
 
     console.groupEnd();
@@ -135,6 +135,7 @@ function answerManager() {
       assignLanguage(sectionAnswer, "en"); // if aChoice was set to Kanji or Hirigana, reset to "en"
       toggleClass('fade-out-light', sectionAnswer);
       setTimeout(() => {
+        // Building "Flip" button container
         buildNode({ 
           parent: sectionAnswer, 
           child: 'div', 
@@ -143,6 +144,7 @@ function answerManager() {
           idName: 'answer-btn', 
           eventFunction: handleFlashcardFlip
         });
+        // Building "Flip" text
         buildNode({ 
           parent: document.querySelector("#answer-btn-0"), 
           child: 'div', 
@@ -169,24 +171,25 @@ function answerManager() {
 
   // when there is no more question to shown.
   function noMoreQuestion() {
-    //console.groupCollapsed("noMoreQuestion()");
+    console.groupCollapsed("noMoreQuestion()");
 
     if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
+      questionMgr.setQuestionMode("stored");
       if (vocabMgr.readStoredLength <= 2) { 
         // If there is no store vocab in local storage
         // (less than 2 vocab in local storage will lead to infinite loop; so that it needs to be <=2)
-        questionMgr.readQuestionMode = "stored";
+        //questionMgr.readQuestionMode = "stored";
         completeAndRestart();
       } 
       else {
-        questionMgr.readQuestionMode = "stored";
+        //questionMgr.readQuestionMode = "stored";
         toLocalStorageYesNo();
       }
     }
     
     else if (questionMgr.readQuestionMode === "stored") { // if currently showing data from localstorage
         if (noMoreQuestion.ranOnce) { // checked whether localstorage has been ran once.
-          //console.info("mistake bank as been ran once. ", noMoreQuestion.ranOnce);
+          console.info("mistake bank as been ran once. ", noMoreQuestion.ranOnce);
           completeAndRestart();
         }
         else if (vocabMgr.readStoredLength <= 2) { 
@@ -206,8 +209,23 @@ function answerManager() {
     console.groupEnd();
   }
 
+  // To set the "ranOnce" property
+  function setRanOnce(m) {
+    console.groupCollapsed("setRanOnce()");
+    const validModes = [true, false];
+    if(!validModes.includes(m)) {
+      noMoreQuestion.ranOnce = true; // default to `fresh`
+      console.warn("Invalid mode is passed. Defaulting to `true`.");
+    } else {
+      noMoreQuestion.ranOnce = m;
+      console.info("noMoreQuestion.ranOnce: ", noMoreQuestion.ranOnce);
+    }
+    console.groupEnd();
+  }
+
   // to ask user whether they want to practice the vocabs from the local storage
   function toLocalStorageYesNo() {
+    console.groupCollapsed("toLocalStorageYesNo()");
     removeClass('fade-hide', sectionMessage);
     removeClass('overlay-message', sectionMessage);
 
@@ -235,6 +253,7 @@ function answerManager() {
         idName: 'continue-no', 
         eventFunction: answerMgr.handleContineToStoredData,
       });
+      console.groupEnd();
   }
 
   // when all of the user selected vocabs are shown
@@ -410,13 +429,16 @@ function answerManager() {
   // event handler for flashcard mode
   function handleFlashCardYesNoAnswer(event) { // sn4
     //console.groupCollapsed("answerManager() - handleFlashCardYesNoAnswer()");
+    const currentQuestionMode = questionMgr.readQuestionMode;
 
     const btnID = event.currentTarget.id;
 
     if (btnID === "choice-btn-0") {
       questionMgr.finalizeQuestionAndProceed(true);
     } else if (btnID === "choice-btn-1") {
-      vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
+      if (currentQuestionMode !== "stored") {
+        vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
+      }
       questionMgr.finalizeQuestionAndProceed(false);
     }
 
@@ -433,10 +455,14 @@ function answerManager() {
     const btnID = event.currentTarget.id;
 
     if (btnID === "continue-yes-0") {
-      noMoreQuestion.ranOnce = true; // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
+      console.log("Clicked Yes");
+      //noMoreQuestion.ranOnce = true; // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
+      answerMgr.setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       console.info("noMoreQuestion.ranOnce CHANGED :", noMoreQuestion.ranOnce);
       loaderInstance.continuetoStoredData();
     } else if (btnID === "continue-no-0") {
+      console.log("Clicked No");
+      answerMgr.setRanOnce(false);
       loaderInstance.restart();
     }
     console.groupEnd();
@@ -455,6 +481,7 @@ function answerManager() {
     renderAnswers,
     noMoreQuestion,
     handleContineToStoredData,
+    setRanOnce,
   }
 }
 
@@ -755,19 +782,19 @@ function statusManager() {
   }
 
   function updateCumulativeAverage(isCorrect) {
-    console.groupCollapsed("updateCumulativeAverage()");
+    //console.groupCollapsed("updateCumulativeAverage()");
 
     totalQuestionsAnswered++;
     if (isCorrect) totalCorrectAnswers++;
-    console.info("totalQuestionsAnswered :", totalQuestionsAnswered, "totalCorrectAnswers :", totalCorrectAnswers);
+    //console.info("totalQuestionsAnswered :", totalQuestionsAnswered, "totalCorrectAnswers :", totalCorrectAnswers);
 
     // Calculate new cumulative average based on the latest answer
     cumulativeAverage = (cumulativeAverage * (totalQuestionsAnswered - 1) + (isCorrect ? 1 : 0)) / totalQuestionsAnswered; //le6
-    console.info("cumulativeAverage :", cumulativeAverage);
+    //console.info("cumulativeAverage :", cumulativeAverage);
 
     // Calculate the percentage and round to a whole number
     averageScore = Math.round(cumulativeAverage * 100); // This will give you a whole number
-    console.info("averageScore :", averageScore);
+    //console.info("averageScore :", averageScore);
 
     return averageScore; // Return the rounded percentage directly
 }
