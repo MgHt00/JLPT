@@ -9,6 +9,12 @@ function questionManager() {
   function newQuestion() {
     console.groupCollapsed("---questionManager() - newQuestion()---");
 
+    // Initialize newQuestion.mode if it’s not defined yet
+    if (newQuestion.mode === undefined) {
+      newQuestion.mode = "fresh";
+      console.info("newQuestion.mode initialized.");
+    }
+
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
     //clearScreen([sectionQuestion, sectionAnswer]);
 
@@ -172,6 +178,12 @@ function answerManager() {
   // when there is no more question to shown.
   function noMoreQuestion() {
     console.groupCollapsed("noMoreQuestion()");
+
+    // Initialize ranOnce if it’s not defined yet
+      if (noMoreQuestion.ranOnce === undefined) {
+        noMoreQuestion.ranOnce = true;
+        console.info("noMoreQuestion.ranOnce initialized.");
+    }
 
     if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
       questionMgr.setQuestionMode("stored");
