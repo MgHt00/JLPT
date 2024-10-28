@@ -9,7 +9,8 @@ function questionManager() {
   function newQuestion() {
     console.groupCollapsed("---questionManager() - newQuestion()---");
 
-    // Initialize newQuestion.mode if it’s not defined yet
+    // Initialize newQuestion's property, mode, if it’s not defined yet ...
+    // ... by initializing here, it will be easier to debug
     if (newQuestion.mode === undefined) {
       newQuestion.mode = "fresh";
       console.info("newQuestion.mode initialized.");
@@ -179,7 +180,8 @@ function answerManager() {
   function noMoreQuestion() {
     console.groupCollapsed("noMoreQuestion()");
 
-    // Initialize ranOnce if it’s not defined yet
+    // Initialize noMoreQuestion's property, ranOnce, if it’s not defined yet ...
+    // ... by initializing here, it will be easier to debug
       if (noMoreQuestion.ranOnce === undefined) {
         noMoreQuestion.ranOnce = true;
         console.info("noMoreQuestion.ranOnce initialized.");
@@ -224,6 +226,7 @@ function answerManager() {
   // To set the "ranOnce" property
   function setRanOnce(m) {
     console.groupCollapsed("setRanOnce()");
+    
     const validModes = [true, false];
     if(!validModes.includes(m)) {
       noMoreQuestion.ranOnce = true; // default to `fresh`
@@ -232,6 +235,7 @@ function answerManager() {
       noMoreQuestion.ranOnce = m;
       console.info("noMoreQuestion.ranOnce: ", noMoreQuestion.ranOnce);
     }
+
     console.groupEnd();
   }
 

@@ -274,6 +274,11 @@ function listenerManager() {
 }
 
 function loaderManager() {
+  // Initialize loaderManager's property, lastLocation, if it’s not defined yet ...
+  // ... by initializing here, it will be easier to debug
+  if (loaderManager.lastLocation === undefined) {
+    loaderManager.lastLocation = "initial";
+  }
 
   // when user click submit(start) button of the setting form
   async function start(e) {  
@@ -633,7 +638,6 @@ function loaderManager() {
     console.groupEnd();
   }
   
-
   // If user wants to continue to local storage after their initial syllable selections
   async function continuetoStoredData() {
     console.groupCollapsed("continuetoStoredData()");
@@ -739,7 +743,8 @@ function loaderManager() {
   // To list mistakes from stored data
   function listMistakes() {
     console.groupCollapsed("listMistakes()");
-  
+    
+    loaderInstance.resumeTo = "mistake-list";
     floatingBtnsDefaultState();
     toggleFormDisplay("mistake-list");
   
@@ -838,5 +843,24 @@ function loaderManager() {
     restart,
     floatingBtnsDefaultState,
     toggleFormDisplay,
+    get resumeTo() 
+    {
+      return loaderManager.lastLocation;
+    },
+    
+    set resumeTo(l) 
+    {
+      console.groupCollapsed("resumeTo()");
+
+      const validLocations = ['initial','mistake-list', 'flash', 'mcq'];
+      if (!validLocations.includes(l)) {
+        loaderManager.lastLocation = 'initial';
+        console.warn("Invalid location is passed.  Defaulting to `initial`.");
+      }
+      loaderManager.lastLocation = l;
+      console.info("loaderManager.resumeTo is set to ", loaderManager.lastLocation);
+
+      console.groupEnd();
+    },
   }
 }
