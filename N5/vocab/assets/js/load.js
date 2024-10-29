@@ -225,7 +225,7 @@ function listenerManager() {
   // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
   function handlebringBackBtn(event) {
       //clearScreen(sectionStatus);
-      loaderInstance.toggleFormDisplay();
+      loaderInstance.toggleFormDisplay(loaderInstance.resumeTo);
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
       loaderInstance.rePrintMemory();
@@ -274,10 +274,13 @@ function listenerManager() {
 }
 
 function loaderManager() {
-  // Initialize loaderManager's property, lastLocation, if it’s not defined yet ...
+  // Initialize loaderManager's property, previousLocation, if it’s not defined yet ...
   // ... by initializing here, it will be easier to debug
-  if (loaderManager.lastLocation === undefined) {
-    loaderManager.lastLocation = "initial";
+  if (loaderManager.resumeTo === undefined) {
+    loaderManager.resumeTo = "start";
+  }
+  if (loaderManager.currentLocation === undefined) {
+    loaderManager.currentLocation = "start";
   }
 
   // when user click submit(start) button of the setting form
@@ -311,7 +314,8 @@ function loaderManager() {
   
       // Continue if there is no runtime error.
       floatingBtnsDefaultState();
-      toggleFormDisplay("start");
+      toggleFormDisplay(loaderInstance.resumeTo = "start");
+      //toggleFormDisplay(loaderInstance.resumeTo = appState.qMode);
       listenerInstance.moveForm();
       statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
@@ -664,7 +668,7 @@ function loaderManager() {
     toggleClass('fade-hide', sectionMessage);
 
     //toggleClass('shift-sections-to-center', dynamicDOM);
-    toggleFormDisplay("start");
+    toggleFormDisplay(loaderInstance.resumeTo = "start");
     listenerInstance.debouncedMoveForm();
     rePrintMemory();
   }
@@ -683,7 +687,7 @@ function loaderManager() {
   }
 
   // To toggle buttons and sections when move / resume btn is clicked
-  function toggleFormDisplay(btnClicked) {
+  function toggleFormDisplay(previousLocation) {
     //console.groupCollapsed("toggleFormDisplay()");
 
    /* setTimeout(() => {
@@ -693,7 +697,7 @@ function loaderManager() {
     toggleClass('disabled', selectors.settingForm);
     toggleClass('dim', ...selectors.allSetting);
 
-    switch (btnClicked) {
+    switch (previousLocation) {
       case "start":
         setTimeout(() => {
           toggleClass('shift-sections-to-center', dynamicDOM);
@@ -703,7 +707,7 @@ function loaderManager() {
           sectionStatus,
           selectors.bringBackBtn,
         );
-        //console.info("case: ", btnClicked);
+        //console.info("case: ", previousLocation);
         break;
 
         case "mistake-list":
@@ -715,7 +719,7 @@ function loaderManager() {
             sectionStatus,
             selectors.bringBackBtn,
           );
-          //console.info("case: ", btnClicked);
+          //console.info("case: ", previousLocation);
           break;
 
       default:
@@ -733,7 +737,7 @@ function loaderManager() {
           selectors.bringBackBtn,
           selectors.resumePracticeBtn,
         );
-        //console.info("case: ", btnClicked);
+        //console.info("case: ", previousLocation);
         break;
     }
     
@@ -744,9 +748,9 @@ function loaderManager() {
   function listMistakes() {
     console.groupCollapsed("listMistakes()");
     
-    loaderInstance.resumeTo = "mistake-list";
+    //loaderInstance.resumeTo = "mistake-list";
     floatingBtnsDefaultState();
-    toggleFormDisplay("mistake-list");
+    toggleFormDisplay(loaderInstance.resumeTo = "mistake-list");
   
     const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
 
@@ -843,16 +847,13 @@ function loaderManager() {
     restart,
     floatingBtnsDefaultState,
     toggleFormDisplay,
-    get resumeTo() 
-    {
-      return loaderManager.lastLocation;
-    },
+    get resumeTo() { return loaderManager.lastLocation;},
+    get currentLocation() {},
     
-    set resumeTo(l) 
-    {
+    set resumeTo(l) {
       console.groupCollapsed("resumeTo()");
 
-      const validLocations = ['initial','mistake-list', 'flash', 'mcq'];
+      const validLocations = ['start','mistake-list', 'fresh', 'stored'];
       if (!validLocations.includes(l)) {
         loaderManager.lastLocation = 'initial';
         console.warn("Invalid location is passed.  Defaulting to `initial`.");
