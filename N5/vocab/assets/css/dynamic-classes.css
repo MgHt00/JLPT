@@ -95,3 +95,8 @@
 [id|="mistake-list-div"] {
   background-color: #222222;
 }
+
+.mistakes-column.en,
+.mistakes-column.jp {
+  font-weight: 300;
+}
