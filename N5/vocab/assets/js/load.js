@@ -759,7 +759,7 @@ function loaderManager() {
   
     const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
 
-    clearScreen([sectionQuestion, sectionMessage], "fast");
+    clearScreen([sectionQuestion, sectionMessage, sectionAnswer], "fast");
   
     // Create the container to display the mistakes
     buildNode({
