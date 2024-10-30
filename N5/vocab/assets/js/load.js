@@ -225,7 +225,7 @@ function listenerManager() {
   // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
   function handlebringBackBtn(event) {
       //clearScreen(sectionStatus);
-      loaderInstance.toggleFormDisplay();
+      loaderInstance.toggleFormDisplay(loaderInstance.resumeTo);
       event.stopPropagation(); // Prevent event from bubbling up
       debouncedMoveForm(event); // Pass the event to the debounced function
       loaderInstance.rePrintMemory();
@@ -233,7 +233,7 @@ function listenerManager() {
 
   // When resumePracticeBtn is clicked
   function handleResumePracticeBtn(event) {
-    loaderInstance.toggleFormDisplay();
+    loaderInstance.toggleFormDisplay(loaderInstance.resumeTo);
     debouncedMoveForm(event);
   }
   
@@ -274,6 +274,14 @@ function listenerManager() {
 }
 
 function loaderManager() {
+  // Initialize loaderManager's properties, if it’s not defined yet ...
+  // ... by initializing here, it will be easier to debug
+  if (loaderManager.initializedFrom === undefined) {
+    loaderManager.initializedFrom = "start";
+  }
+  if (loaderManager.resumeTo === undefined) {
+    loaderManager.resumeTo = "start";
+  }
 
   // when user click submit(start) button of the setting form
   async function start(e) {  
@@ -306,7 +314,9 @@ function loaderManager() {
   
       // Continue if there is no runtime error.
       floatingBtnsDefaultState();
-      toggleFormDisplay("start");
+      toggleFormDisplay(loaderInstance.initializedFrom = "start");
+      loaderInstance.resumeTo = "program";
+      //toggleFormDisplay(loaderInstance.initial = appState.qMode);
       listenerInstance.moveForm();
       statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
@@ -633,7 +643,6 @@ function loaderManager() {
     console.groupEnd();
   }
   
-
   // If user wants to continue to local storage after their initial syllable selections
   async function continuetoStoredData() {
     console.groupCollapsed("continuetoStoredData()");
@@ -660,7 +669,7 @@ function loaderManager() {
     toggleClass('fade-hide', sectionMessage);
 
     //toggleClass('shift-sections-to-center', dynamicDOM);
-    toggleFormDisplay("start");
+    toggleFormDisplay(loaderInstance.initial = "start");
     listenerInstance.debouncedMoveForm();
     rePrintMemory();
   }
@@ -679,7 +688,7 @@ function loaderManager() {
   }
 
   // To toggle buttons and sections when move / resume btn is clicked
-  function toggleFormDisplay(btnClicked) {
+  function toggleFormDisplay(previousLocation) {
     //console.groupCollapsed("toggleFormDisplay()");
 
    /* setTimeout(() => {
@@ -689,7 +698,7 @@ function loaderManager() {
     toggleClass('disabled', selectors.settingForm);
     toggleClass('dim', ...selectors.allSetting);
 
-    switch (btnClicked) {
+    switch (previousLocation) {
       case "start":
         setTimeout(() => {
           toggleClass('shift-sections-to-center', dynamicDOM);
@@ -699,22 +708,23 @@ function loaderManager() {
           sectionStatus,
           selectors.bringBackBtn,
         );
-        //console.info("case: ", btnClicked);
+        //console.info("case: ", previousLocation);
         break;
 
         case "mistake-list":
           setTimeout(() => {
             toggleClass('shift-sections-to-top-center', dynamicDOM);
+            //toggleClass('shift-sections-to-center', dynamicDOM);
           }, 400);
   
           toggleClass('hide',
             sectionStatus,
             selectors.bringBackBtn,
           );
-          //console.info("case: ", btnClicked);
+          //console.info("case: ", previousLocation);
           break;
 
-      default:
+      case "program":
         const DOMClassList = dynamicDOM.classList;
 
         // Check if `shift-sections-to-top-center` class is present, then remove it
@@ -729,7 +739,7 @@ function loaderManager() {
           selectors.bringBackBtn,
           selectors.resumePracticeBtn,
         );
-        //console.info("case: ", btnClicked);
+        //console.info("case: ", previousLocation);
         break;
     }
     
@@ -739,13 +749,17 @@ function loaderManager() {
   // To list mistakes from stored data
   function listMistakes() {
     console.groupCollapsed("listMistakes()");
-  
+    
+    //loaderInstance.initial = "mistake-list";
     floatingBtnsDefaultState();
-    toggleFormDisplay("mistake-list");
+    loaderInstance.initializedFrom = "start";
+    loaderInstance.resumeTo = "mistake-list";
+
+    toggleFormDisplay(loaderInstance.resumeTo);
   
     const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
 
-    clearScreen(sectionQuestion, "fast");
+    clearScreen([sectionQuestion, sectionMessage, sectionAnswer], "fast");
   
     // Create the container to display the mistakes
     buildNode({
@@ -828,6 +842,45 @@ function loaderManager() {
     console.groupEnd();
   }
 
+  // values for controlling bringbackbtn
+  const validValues = ['start', 'mistake-list', 'program'];
+
+  // To set loaderManger's property (used inside the setter)
+  function getInitializedFrom() {
+    return loaderManager.initializedFrom;
+  }
+
+  // To set loaderManger's property (used inside the setter)
+  function setInitializedFrom(value) {
+    console.groupCollapsed("initializedFrom()");
+    if (!validValues.includes(value)) {
+      loaderManager.initializedFrom = 'start';
+      console.warn("Invalid value passed. Defaulting to `start`.");
+    } else {
+      loaderManager.initializedFrom = value;
+      console.info("loaderManager.initializedFrom is set to ", loaderManager.initializedFrom);
+    }
+    console.groupEnd();
+  }
+
+  // To read loaderManger's property (used inside the getter)
+  function getResumeTo() {
+    return loaderManager.resumeTo;
+  }
+
+  // To set loaderManger's property (used inside the getter)
+  function setResumeTo(value) {
+    console.groupCollapsed("resumeTo()");
+    if (!validValues.includes(value)) {
+      loaderManager.resumeTo = 'start';
+      console.warn("Invalid value passed. Defaulting to `start`.");
+    } else {
+      loaderManager.resumeTo = value;
+      console.info("loaderManager.resumeTo is set to ", loaderManager.resumeTo);
+    }
+    console.groupEnd();
+  }
+
   return {
     start,
     loadMemoryData,
@@ -838,5 +891,9 @@ function loaderManager() {
     restart,
     floatingBtnsDefaultState,
     toggleFormDisplay,
+    get initializedFrom() { return getInitializedFrom(); },
+    set initializedFrom(value) { setInitializedFrom(value); },
+    get resumeTo() { return getResumeTo(); },
+    set resumeTo(value) { setResumeTo(value); },
   }
 }

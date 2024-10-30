@@ -9,6 +9,13 @@ function questionManager() {
   function newQuestion() {
     console.groupCollapsed("---questionManager() - newQuestion()---");
 
+    // Initialize newQuestion's property, mode, if it’s not defined yet ...
+    // ... by initializing here, it will be easier to debug
+    if (newQuestion.mode === undefined) {
+      newQuestion.mode = "fresh";
+      console.info("newQuestion.mode initialized.");
+    }
+
     clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
     //clearScreen([sectionQuestion, sectionAnswer]);
 
@@ -173,6 +180,13 @@ function answerManager() {
   function noMoreQuestion() {
     console.groupCollapsed("noMoreQuestion()");
 
+    // Initialize noMoreQuestion's property, ranOnce, if it’s not defined yet ...
+    // ... by initializing here, it will be easier to debug
+      if (noMoreQuestion.ranOnce === undefined) {
+        noMoreQuestion.ranOnce = true;
+        console.info("noMoreQuestion.ranOnce initialized.");
+    }
+
     if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
       questionMgr.setQuestionMode("stored");
       if (vocabMgr.readStoredLength <= 2) { 
@@ -212,6 +226,7 @@ function answerManager() {
   // To set the "ranOnce" property
   function setRanOnce(m) {
     console.groupCollapsed("setRanOnce()");
+    
     const validModes = [true, false];
     if(!validModes.includes(m)) {
       noMoreQuestion.ranOnce = true; // default to `fresh`
@@ -220,6 +235,7 @@ function answerManager() {
       noMoreQuestion.ranOnce = m;
       console.info("noMoreQuestion.ranOnce: ", noMoreQuestion.ranOnce);
     }
+
     console.groupEnd();
   }
 
