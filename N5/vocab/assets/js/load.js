@@ -233,7 +233,7 @@ function listenerManager() {
 
   // When resumePracticeBtn is clicked
   function handleResumePracticeBtn(event) {
-    loaderInstance.toggleFormDisplay();
+    loaderInstance.toggleFormDisplay(loaderInstance.resumeTo);
     debouncedMoveForm(event);
   }
   
@@ -274,13 +274,13 @@ function listenerManager() {
 }
 
 function loaderManager() {
-  // Initialize loaderManager's property, previousLocation, if it’s not defined yet ...
+  // Initialize loaderManager's properties, if it’s not defined yet ...
   // ... by initializing here, it will be easier to debug
+  if (loaderManager.initializedFrom === undefined) {
+    loaderManager.initializedFrom = "start";
+  }
   if (loaderManager.resumeTo === undefined) {
     loaderManager.resumeTo = "start";
-  }
-  if (loaderManager.currentLocation === undefined) {
-    loaderManager.currentLocation = "start";
   }
 
   // when user click submit(start) button of the setting form
@@ -314,8 +314,9 @@ function loaderManager() {
   
       // Continue if there is no runtime error.
       floatingBtnsDefaultState();
-      toggleFormDisplay(loaderInstance.resumeTo = "start");
-      //toggleFormDisplay(loaderInstance.resumeTo = appState.qMode);
+      toggleFormDisplay(loaderInstance.initializedFrom = "start");
+      loaderInstance.resumeTo = "program";
+      //toggleFormDisplay(loaderInstance.initial = appState.qMode);
       listenerInstance.moveForm();
       statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
@@ -668,7 +669,7 @@ function loaderManager() {
     toggleClass('fade-hide', sectionMessage);
 
     //toggleClass('shift-sections-to-center', dynamicDOM);
-    toggleFormDisplay(loaderInstance.resumeTo = "start");
+    toggleFormDisplay(loaderInstance.initial = "start");
     listenerInstance.debouncedMoveForm();
     rePrintMemory();
   }
@@ -713,6 +714,7 @@ function loaderManager() {
         case "mistake-list":
           setTimeout(() => {
             toggleClass('shift-sections-to-top-center', dynamicDOM);
+            //toggleClass('shift-sections-to-center', dynamicDOM);
           }, 400);
   
           toggleClass('hide',
@@ -722,7 +724,7 @@ function loaderManager() {
           //console.info("case: ", previousLocation);
           break;
 
-      default:
+      case "program":
         const DOMClassList = dynamicDOM.classList;
 
         // Check if `shift-sections-to-top-center` class is present, then remove it
@@ -748,9 +750,12 @@ function loaderManager() {
   function listMistakes() {
     console.groupCollapsed("listMistakes()");
     
-    //loaderInstance.resumeTo = "mistake-list";
+    //loaderInstance.initial = "mistake-list";
     floatingBtnsDefaultState();
-    toggleFormDisplay(loaderInstance.resumeTo = "mistake-list");
+    loaderInstance.initializedFrom = "start";
+    loaderInstance.resumeTo = "mistake-list";
+
+    toggleFormDisplay(loaderInstance.resumeTo);
   
     const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
 
@@ -837,6 +842,45 @@ function loaderManager() {
     console.groupEnd();
   }
 
+  // values for controlling bringbackbtn
+  const validValues = ['start', 'mistake-list', 'program'];
+
+  // To set loaderManger's property (used inside the setter)
+  function getInitializedFrom() {
+    return loaderManager.initializedFrom;
+  }
+
+  // To set loaderManger's property (used inside the setter)
+  function setInitializedFrom(value) {
+    console.groupCollapsed("initializedFrom()");
+    if (!validValues.includes(value)) {
+      loaderManager.initializedFrom = 'start';
+      console.warn("Invalid value passed. Defaulting to `start`.");
+    } else {
+      loaderManager.initializedFrom = value;
+      console.info("loaderManager.initializedFrom is set to ", loaderManager.initializedFrom);
+    }
+    console.groupEnd();
+  }
+
+  // To read loaderManger's property (used inside the getter)
+  function getResumeTo() {
+    return loaderManager.resumeTo;
+  }
+
+  // To set loaderManger's property (used inside the getter)
+  function setResumeTo(value) {
+    console.groupCollapsed("resumeTo()");
+    if (!validValues.includes(value)) {
+      loaderManager.resumeTo = 'start';
+      console.warn("Invalid value passed. Defaulting to `start`.");
+    } else {
+      loaderManager.resumeTo = value;
+      console.info("loaderManager.resumeTo is set to ", loaderManager.resumeTo);
+    }
+    console.groupEnd();
+  }
+
   return {
     start,
     loadMemoryData,
@@ -847,21 +891,9 @@ function loaderManager() {
     restart,
     floatingBtnsDefaultState,
     toggleFormDisplay,
-    get resumeTo() { return loaderManager.lastLocation;},
-    get currentLocation() {},
-    
-    set resumeTo(l) {
-      console.groupCollapsed("resumeTo()");
-
-      const validLocations = ['start','mistake-list', 'fresh', 'stored'];
-      if (!validLocations.includes(l)) {
-        loaderManager.lastLocation = 'initial';
-        console.warn("Invalid location is passed.  Defaulting to `initial`.");
-      }
-      loaderManager.lastLocation = l;
-      console.info("loaderManager.resumeTo is set to ", loaderManager.lastLocation);
-
-      console.groupEnd();
-    },
+    get initializedFrom() { return getInitializedFrom(); },
+    set initializedFrom(value) { setInitializedFrom(value); },
+    get resumeTo() { return getResumeTo(); },
+    set resumeTo(value) { setResumeTo(value); },
   }
 }
