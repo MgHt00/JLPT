@@ -151,7 +151,7 @@ div.jp {
 .mistake-list-container {
   display: grid;
   /*grid-template-columns: repeat(4, 1fr);*/ /* Four equal columns */
-  grid-template-columns: 50px 1fr 2fr 2fr; /* First column: 50px; second: flexible for Kanji; third & fourth: equal share of remaining space */
+  grid-template-columns: 20px 2fr 2fr 2fr; /* First column: 50px; second: flexible for Kanji; third & fourth: equal share of remaining space */
   gap: 8px 0; /* Add space between rows */
 }
 
@@ -164,7 +164,7 @@ div.jp {
 .mistakes-column {
   padding: 10px;
   text-align: center;
-  border-bottom: 1px solid #ccc; /* Optional: for a table-like border */
+  border-bottom: 1px solid rgba(204, 204, 204, 0.3); /* Optional: for a table-like border */
 }
 
 /* Header row */

@@ -22,17 +22,17 @@
 
 .moved {
   transform: translateY(-90%);
-  transition: transform 0.5s ease; /* Add transition duration */
+  transition: transform 0.5s ease; 
 }
 
 .dim {
   opacity: 0.5;
-  transition: opacity 0.5s ease; /* Add transition duration */
+  transition: opacity 0.5s ease; 
 }
 
 .so-dim {
   opacity: 0.2;
-  transition: opacity 0.2s ease; /* Add transition duration */
+  transition: opacity 0.2s ease; 
 }
 
 .hide {
@@ -41,7 +41,7 @@
 
 .fade-hide {
   opacity: 0;
-  transition: opacity 0.2s ease; /* or any duration you prefer */
+  transition: opacity 0.2s ease; 
 }
 
 .fade-in {
@@ -51,11 +51,9 @@
 
 .fade-out-light {
   opacity: 0;
-  transition: opacity 0.3s ease; /* or any duration you prefer */
+  transition: opacity 0.3s ease; 
 }
 
-
-/* Fade-out class with opacity, max-height, and margin transitions */
 .fade-out {
   opacity: 0;
   max-height: 0; /* Collapses the height */
@@ -91,4 +89,14 @@
   left: 50%; /* Center horizontally */
   transform: translate(-50%);
   transition: all 0.5s ease;
+}
+
+/* To prevent setting form from showing underneath */
+[id|="mistake-list-div"] {
+  background-color: #222222;
+}
+
+.mistakes-column.en,
+.mistakes-column.jp {
+  font-weight: 300;
 }
