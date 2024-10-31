@@ -49,6 +49,7 @@ function questionManager() {
       }      
     }, 350); // Matches the transition duration
 
+    vocabMgr.saveState(); // Save the current state to localStorage
     console.groupEnd();
   }
 
@@ -570,11 +571,59 @@ function vocabManager() {
     console.groupEnd();
   }
 
+  // to save the current state of the program to local storage
+  function saveState() {
+    console.groupCollapsed("saveState()");
+
+    localStorage.setItem("appState", JSON.stringify(appState));
+    localStorage.setItem("appData", JSON.stringify(appData));
+    localStorage.setItem("currentStatus", JSON.stringify(currentStatus));
+    console.info("State saved to localStorage");
+    
+    console.groupEnd();
+  }
+
+  // to load the current state of the program to resume
+  function loadState() {
+    console.groupCollapsed("loadState()");
+
+    const savedAppState = localStorage.getItem("appState");
+    const savedAppData = localStorage.getItem("appData");
+    const savedCurrentStatus = localStorage.getItem("currentStatus");
+  
+    if (savedAppState && savedAppData && savedCurrentStatus) {
+      Object.assign(appState, JSON.parse(savedAppState));
+      Object.assign(appData, JSON.parse(savedAppData));
+      Object.assign(currentStatus, JSON.parse(savedCurrentStatus));
+      console.info("State loaded from localStorage");
+    } else {
+      console.warn("No saved state found in localStorage");
+    }
+
+    console.groupEnd();
+  }
+  
+  // to clear the current state (if necessary)
+  function clearState() {
+    console.groupCollapsed("clearState()");
+
+    localStorage.removeItem("appState");
+    localStorage.removeItem("appData");
+    localStorage.removeItem("currentStatus");
+    console.info("State cleared from localStorage");
+
+    console.groupEnd();
+  }
+  
+
   return {
     removeSpecifiedQuestion,
     storeToPractice,
     flushLocalStorage,
     loadLocalStorage,
+    saveState,
+    loadState,
+    clearState,
     get readStoredLength() { 
       let storedLength = loadLocalStorage();
       return storedLength.length;
@@ -702,7 +751,7 @@ function errorManager() {
 }
 
 function statusManager() {
-  
+
   // return `questionCount`
   function readQuestionCount() {
     return currentStatus.questionCount;

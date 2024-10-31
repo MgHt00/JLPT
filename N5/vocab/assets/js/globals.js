@@ -16,7 +16,6 @@ let kaVocab = [];
 let hiVocab = [];
 let enVocab = [];
 
-
 const appState = {
   randomYesNo : true,
   qChoiceInput: "hi",
