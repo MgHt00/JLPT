@@ -33,6 +33,16 @@ const appData = {
   rePractice: [],
 };
 
+const currentStatus = {
+  stillInProgress : false,
+  questionCount : 0,
+  totalNoOfQuestions : 0,
+  cumulativeAverage : 0,
+  totalCorrectAnswers : 0,
+  totalQuestionsAnswered : 0,
+  averageScore : 0,
+}
+
 const selectors = {
   settingForm : document.querySelector("#settingsForm"),
   switchRandomYesNo : document.querySelector("#randomYesNo"),
