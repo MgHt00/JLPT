@@ -123,7 +123,6 @@ function questionManager() {
   }
 }
 
-
 function answerManager() {
   const vocabMapping = {
     ka: kaVocab,
@@ -703,33 +702,35 @@ function errorManager() {
 }
 
 function statusManager() {
-  let questionCount = 0;
-  let totalNoOfQuestions = 0;
-  let cumulativeAverage = 0;
-  let totalCorrectAnswers = 0;
-  let totalQuestionsAnswered = 0;
-  let averageScore = 0;
+  // Initialize status Data
+  statusManager.stillInProgress = false;
+  statusManager.questionCount = 0;
+  statusManager.totalNoOfQuestions = 0;
+  statusManager.cumulativeAverage = 0;
+  statusManager.totalCorrectAnswers = 0;
+  statusManager.totalQuestionsAnswered = 0;
+  statusManager.averageScore = 0;
   
   // return `questionCount`
   function readQuestionCount() {
-    return questionCount;
+    return statusManager.questionCount;
   }
 
   // increase `questionCount`
   function increaseQuestionCount() {
-    questionCount++;
+    statusManager.questionCount++;
     //console.info("statusManager() -> questionCount: ", questionCount);
   }
 
   // reset `questionCount`
   function resetQuestionCount () {
-    questionCount = 0;
+    statusManager.questionCount = 0;
     return this;
   }
 
   // reset `totalNoOfQuestion` to zero
   function resetTotalNoOfQuestion() {
-    totalNoOfQuestions = 0;
+    statusManager.totalNoOfQuestions = 0;
     return this;
   }
 
@@ -740,20 +741,20 @@ function statusManager() {
     switch (state) {
       case "fresh":
         console.info("state : ", state);
-        totalNoOfQuestions = appData.vocabArray.length;
+        statusManager.totalNoOfQuestions = appData.vocabArray.length;
         break;
 
       case "stored":
         console.info("state : ", state);
-        totalNoOfQuestions += appData.vocabArray.length;
+        statusManager.totalNoOfQuestions += appData.vocabArray.length;
         break;
     }
 
     //totalNoOfQuestions = appData.vocabArray.length;
-    console.info("statusManager() -> totalNoOfQuestions: ", totalNoOfQuestions);
+    console.info("statusManager() -> totalNoOfQuestions: ", statusManager.totalNoOfQuestions);
 
     console.groupEnd();
-    return totalNoOfQuestions;
+    return statusManager.totalNoOfQuestions;
   }
 
   // to print score and status(`#/#`) on screen
@@ -761,63 +762,63 @@ function statusManager() {
     clearScreen(sectionStatus);
 
     setTimeout(() => {
-      if (totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
+      if (statusManager.totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
         buildNode({
           parent: sectionStatus,
           child: "div",
-          content: `Average Correct Rate: ${averageScore}%`,
+          content: `Average Correct Rate: ${statusManager.averageScore}%`,
         });
       }
   
       buildNode({
         parent: sectionStatus,
         child: "div",
-        content: `${readQuestionCount()} / ${totalNoOfQuestions}`,
+        content: `${readQuestionCount()} / ${statusManager.totalNoOfQuestions}`,
       });
     }, 350);
   }
 
   // to reset all variables concerning with calculating the cumulative average
   function resetCumulativeVariables() {
-    cumulativeAverage = 0;
-    totalCorrectAnswers = 0;
-    totalQuestionsAnswered = 0; 
+    statusManager.cumulativeAverage = 0;
+    statusManager.totalCorrectAnswers = 0;
+    statusManager.totalQuestionsAnswered = 0; 
     return this;
   }
 
   // to increase totalCorrectAnswers
   function increaseTotalCorrectAnswers() {
-    totalCorrectAnswers++;
+    statusManager.totalCorrectAnswers++;
     return this;
   }
 
   // to increase totalQuestionsAnswered
   function increaseTotalQuestionsAnswered() {
-    totalQuestionsAnswered++;
+    statusManager.totalQuestionsAnswered++;
     return this;
   }
 
   function updateCumulativeAverage(isCorrect) {
     //console.groupCollapsed("updateCumulativeAverage()");
 
-    totalQuestionsAnswered++;
-    if (isCorrect) totalCorrectAnswers++;
+    statusManager.totalQuestionsAnswered++;
+    if (isCorrect) statusManager.totalCorrectAnswers++;
     //console.info("totalQuestionsAnswered :", totalQuestionsAnswered, "totalCorrectAnswers :", totalCorrectAnswers);
 
     // Calculate new cumulative average based on the latest answer
-    cumulativeAverage = (cumulativeAverage * (totalQuestionsAnswered - 1) + (isCorrect ? 1 : 0)) / totalQuestionsAnswered; //le6
+    statusManager.cumulativeAverage = (statusManager.cumulativeAverage * (statusManager.totalQuestionsAnswered - 1) + (isCorrect ? 1 : 0)) / statusManager.totalQuestionsAnswered; //le6
     //console.info("cumulativeAverage :", cumulativeAverage);
 
     // Calculate the percentage and round to a whole number
-    averageScore = Math.round(cumulativeAverage * 100); // This will give you a whole number
+    statusManager.averageScore = Math.round(statusManager.cumulativeAverage * 100); // This will give you a whole number
     //console.info("averageScore :", averageScore);
 
-    return averageScore; // Return the rounded percentage directly
+    return statusManager.averageScore; // Return the rounded percentage directly
 }
 
   // to read totalCorrectAnswers
   function readTotalCorrectAnswers() {
-      return totalCorrectAnswers;
+      return statusManager.totalCorrectAnswers;
   }
   
 
