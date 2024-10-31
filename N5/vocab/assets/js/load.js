@@ -347,14 +347,6 @@ function loaderManager() {
     
     console.groupEnd();
   }
-
-  // to convert all checked syllables to an array
-  function convertCheckedValuesToArray(nodeList) {
-    let convertedArray;
-    convertedArray = Array.from(document.querySelectorAll(nodeList))
-                          .map(eachCheckBox => eachCheckBox.value); // [sn7]
-    return convertedArray;
-  }  
   
   // to load user selected sylable-json when program mode is "fresh"
   async function loadFreshJSON() {
