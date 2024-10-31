@@ -6,20 +6,19 @@ const statusInstance = statusManager();
 
 (function defaultState() {
   loaderInstance.loadMemoryData();
-  //flipNodeState(...selectors.noOfAnsAll); // [sn14]
-  toggleClass('disabled', ...selectors.noOfAnsAll);
-  //toggleClass('hide', sectionStatus);
+
+  toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]
   toggleClass('overlay-message', sectionMessage);
   toggleClass('fade-hide', sectionMessage);
-  /*toggleClass('fade-in',
-    sectionStatus,
-    sectionQuestion,
-    //sectionMessage,
-    sectionAnswer,
-  );*/
   loaderInstance.floatingBtnsDefaultState();
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
+
+  // if the program is still in progress, load data from local storage to global objects
+  if (vocabInstance.stillInProgress()) {
+    vocabInstance.loadState();
+  }
+
   console.groupEnd();
 })();
 
@@ -401,10 +400,10 @@ function loaderManager() {
 
     questionMgr.setQuestionMode("stored");
     
-    // Ensure loadLocalStorage returns an array
-    const storedData = vocabInstance.loadLocalStorage();
+    // Ensure loadMistakesFromStorage returns an array
+    const storedData = vocabInstance.loadMistakesFromStorage();
     if (!Array.isArray(storedData)) {
-        console.error("Error: Stored data is not an array! Check your loadLocalStorage function.");
+        console.error("Error: Stored data is not an array! Check your loadMistakesFromStorage function.");
         return;
     }
     
@@ -749,7 +748,7 @@ function loaderManager() {
 
     toggleFormDisplay(loaderInstance.resumeTo);
   
-    const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
+    const mistakeArray = vocabInstance.loadMistakesFromStorage(); // Load mistakes from localStorage
 
     clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer], "fast");
   

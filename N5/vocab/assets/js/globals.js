@@ -33,7 +33,7 @@ const appData = {
 };
 
 const currentStatus = {
-  stillInProgress : false,
+  //stillInProgress : false,
   questionCount : 0,
   totalNoOfQuestions : 0,
   cumulativeAverage : 0,

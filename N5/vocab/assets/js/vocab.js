@@ -523,7 +523,7 @@ function vocabManager() {
   function storeToPractice(questionInstance) { // [sn5]
     console.groupCollapsed("vocabManager() - storeToPractice()");
 
-    let incorrectSets = loadLocalStorage();
+    let incorrectSets = loadMistakesFromStorage();
     
     //console.log(questionInstance.readQuestionObj);
     // [sn6] Check if the object already exists in the array
@@ -538,15 +538,15 @@ function vocabManager() {
       incorrectSets.push(questionInstance.readQuestionObj);
       console.log("New word pushed to localstorage.");
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
-      loadLocalStorage();
+      loadMistakesFromStorage();
     }
 
     console.groupEnd();
   }
   
   // to load data from local storage
-  function loadLocalStorage() {
-    //console.groupCollapsed("vocabManager() - loadLocalStorage()");
+  function loadMistakesFromStorage() {
+    //console.groupCollapsed("vocabManager() - loadMistakesFromStorage()");
 
     let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
     storedLength = storedObjects.length;
@@ -579,7 +579,7 @@ function vocabManager() {
     localStorage.setItem("appData", JSON.stringify(appData));
     localStorage.setItem("currentStatus", JSON.stringify(currentStatus));
     console.info("State saved to localStorage");
-    
+
     console.groupEnd();
   }
 
@@ -614,18 +614,34 @@ function vocabManager() {
 
     console.groupEnd();
   }
-  
+
+  function stillInProgress() {
+    console.groupCollapsed("stillInProgress()");
+
+    const savedCurrentStatus = JSON.parse(localStorage.getItem("currentStatus")); // Parse JSON
+
+    if (savedCurrentStatus && savedCurrentStatus.totalNoOfQuestions >= 1) {
+      console.info("TRUE - program still in progress.");
+      console.groupEnd();
+      return true;
+    } else {
+      console.info("FALSE - no questions to resume");
+      console.groupEnd();
+      return false;
+    }
+  }  
 
   return {
     removeSpecifiedQuestion,
     storeToPractice,
     flushLocalStorage,
-    loadLocalStorage,
+    loadMistakesFromStorage,
     saveState,
     loadState,
     clearState,
+    stillInProgress,
     get readStoredLength() { 
-      let storedLength = loadLocalStorage();
+      let storedLength = loadMistakesFromStorage();
       return storedLength.length;
     },
   }
