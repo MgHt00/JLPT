@@ -16,7 +16,8 @@ const statusInstance = statusManager();
 
   // if the program is still in progress, load data from local storage to global objects
   if (vocabInstance.stillInProgress()) {
-    vocabInstance.loadState();
+    statusInstance.programInProgress =  true;
+    toggleClass('hide',selectors.resumePracticeBtn);
   }
 
   console.groupEnd();
@@ -24,6 +25,7 @@ const statusInstance = statusManager();
 
 
 function listenerManager() {
+
   // Wrap the moveForm function with debounce
   const debouncedMoveForm = debounce(moveForm, 300); // 300ms delay
 
@@ -232,8 +234,23 @@ function listenerManager() {
 
   // When resumePracticeBtn is clicked
   function handleResumePracticeBtn(event) {
-    loaderInstance.toggleFormDisplay(loaderInstance.resumeTo);
-    debouncedMoveForm(event);
+    console.groupCollapsed("handleResumePracticeBtn()");
+
+    if (statusInstance.programInProgress) { // if the program is still in progress,
+      console.info("statusInstance.programInProgress: TRUE");
+      loaderInstance.floatingBtnsDefaultState();
+      loaderInstance.toggleFormDisplay(loaderInstance.initializedFrom = "start");
+      loaderInstance.resumeTo = "program";
+      listenerInstance.moveForm();
+      loaderInstance.resumeProgram();
+    }
+    else {
+      console.info("Normal resume procedures.");
+      loaderInstance.toggleFormDisplay(loaderInstance.resumeTo);
+      debouncedMoveForm(event);
+    }
+
+    console.groupEnd();
   }
   
   // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
@@ -315,7 +332,6 @@ function loaderManager() {
       floatingBtnsDefaultState();
       toggleFormDisplay(loaderInstance.initializedFrom = "start");
       loaderInstance.resumeTo = "program";
-      //toggleFormDisplay(loaderInstance.initial = appState.qMode);
       listenerInstance.moveForm();
       statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
@@ -426,6 +442,26 @@ function loaderManager() {
     copyOneProperty(appData.vocabArray, enVocab, en);
 
     console.groupEnd();
+  }
+
+  // to resume the existing program
+  function resumeProgram() {
+    console.groupCollapsed("resumeProgram()");
+
+    vocabInstance.loadState();
+    console.log("loadState: ", appState, appData, currentStatus);
+
+    // Fetch the relevant categories
+    copyOneProperty(appData.vocabArray, kaVocab, ka);
+    copyOneProperty(appData.vocabArray, hiVocab, hi);
+    copyOneProperty(appData.vocabArray, enVocab, en);
+
+    questionMgr.newQuestion();
+
+    statusInstance.programInProgress = false;
+
+    console.groupEnd();
+
   }
 
   // there are some questions without kanji, this function is to remove if user select the
@@ -882,6 +918,7 @@ function loaderManager() {
     restart,
     floatingBtnsDefaultState,
     toggleFormDisplay,
+    resumeProgram,
     get initializedFrom() { return getInitializedFrom(); },
     set initializedFrom(value) { setInitializedFrom(value); },
     get resumeTo() { return getResumeTo(); },

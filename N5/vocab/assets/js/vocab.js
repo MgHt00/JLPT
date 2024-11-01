@@ -767,6 +767,10 @@ function errorManager() {
 }
 
 function statusManager() {
+  // Initialize statusManager's properties, if it’s not defined yet ...
+  if (statusManager.programInProgress === undefined) {
+    statusManager.programInProgress = "false";
+  }
 
   // return `questionCount`
   function readQuestionCount() {
@@ -877,6 +881,25 @@ function statusManager() {
   function readTotalCorrectAnswers() {
       return currentStatus.totalCorrectAnswers;
   }
+
+  function getProgramInProgress() {
+    return statusManager.programInProgress;
+  }
+
+  function setProgramInProgress(value) {
+    console.groupCollapsed("setProgramInProgress()");
+
+    const validValues = [true, false];
+    if(!validValues.includes(value)) {
+      statusManager.programInProgress = false;
+      console.warn("statusManager.programInProgress set to default - FALSE");
+    } else {
+      statusManager.programInProgress = value;
+      console.info("statusManager.programInProgress set to - ", value);
+    }
+
+    console.groupEnd();
+  }
   
 
   return {
@@ -891,5 +914,7 @@ function statusManager() {
     //increaseTotalCorrectAnswers,
     //increaseTotalQuestionsAnswered,
     updateCumulativeAverage,
+    get programInProgress() { return getProgramInProgress(); },
+    set programInProgress(value) { setProgramInProgress(value); },
   }
 }
