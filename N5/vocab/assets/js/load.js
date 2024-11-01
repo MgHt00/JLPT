@@ -15,8 +15,8 @@ const statusInstance = statusManager();
   listenerInstance.generalListeners();
 
   // if the program is still in progress, load data from local storage to global objects
-  if (vocabInstance.stillInProgress()) {
-    statusInstance.programInProgress =  true;
+  if (statusInstance.stillInProgress()) {
+    statusInstance.goodToResume =  true;
     toggleClass('hide',selectors.resumePracticeBtn);
   }
 
@@ -236,12 +236,13 @@ function listenerManager() {
   function handleResumePracticeBtn(event) {
     console.groupCollapsed("handleResumePracticeBtn()");
 
-    if (statusInstance.programInProgress) { // if the program is still in progress,
-      console.info("statusInstance.programInProgress: TRUE");
+    if (statusInstance.goodToResume) { // if the program is still in progress,
+      console.info("statusInstance.goodToResume: FALSE");
       loaderInstance.floatingBtnsDefaultState();
       loaderInstance.toggleFormDisplay(loaderInstance.initializedFrom = "start");
       loaderInstance.resumeTo = "program";
       listenerInstance.moveForm();
+      statusInstance.goodToResume = false;
       loaderInstance.resumeProgram();
     }
     else {
@@ -348,7 +349,6 @@ function loaderManager() {
     validateToggleSwitch(['randomYesNo', 'flashYesNo']);
     validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
     validateAndSetQuestionMode(); // Validate question mode and set default
-    assignLanguageBySelection(); // Validate and assign the correct language for the question and answer sections
     
     assignLanguage(sectionMessage, enLang); // Always set message section to English
 
@@ -358,6 +358,9 @@ function loaderManager() {
 
     appState.qChoiceInput = selectors.readqChoiceInput ?? "hi";
     appState.aChoiceInput = selectors.readaChoiceInput ?? "en";
+
+    assignLanguageBySelection(); // Validate and assign the correct language for the question and answer sections
+
     console.info("appState.qChoiceInput: ", appState.qChoiceInput, "appState.aChoiceInput: ", appState.aChoiceInput);
     
     console.groupEnd();
@@ -456,12 +459,11 @@ function loaderManager() {
     copyOneProperty(appData.vocabArray, hiVocab, hi);
     copyOneProperty(appData.vocabArray, enVocab, en);
 
+    assignLanguageBySelection();
+
     questionMgr.newQuestion();
 
-    statusInstance.programInProgress = false;
-
     console.groupEnd();
-
   }
 
   // there are some questions without kanji, this function is to remove if user select the
@@ -569,6 +571,7 @@ function loaderManager() {
   function assignLanguageBySelection() {
     console.groupCollapsed("assignLanguageBySelection()");
 
+    /*
     const validLanguages = ["hi", "ka"];
     if (validLanguages.includes(selectors.qChoice.value)) {
       assignLanguage(sectionQuestion, jpLang);
@@ -579,6 +582,25 @@ function loaderManager() {
     if (validLanguages.includes(selectors.aChoice.value)) {
       assignLanguage(sectionAnswer, jpLang);
     } else {
+      assignLanguage(sectionAnswer, enLang);
+    }
+    */
+
+    const jpLanguages = ["hi", "ka"];
+
+    console.info("appState.qChoiceInput: ", appState.qChoiceInput);
+    if(jpLanguages.includes(appState.qChoiceInput)) {
+      assignLanguage(sectionQuestion, jpLang);
+    } else {
+      assignLanguage(sectionQuestion, enLang);
+    }
+
+    console.info("appState.aChoiceInput: ", appState.aChoiceInput);
+    if(jpLanguages.includes(appState.aChoiceInput)) {
+      console.info("Assigning sectionAnswer to jpLang");
+      assignLanguage(sectionAnswer, jpLang);
+    } else {
+      console.info("Assigning sectionAnswer to enLang");
       assignLanguage(sectionAnswer, enLang);
     }
 
@@ -647,6 +669,7 @@ function loaderManager() {
         console.info(`${selectorName} is good to go: ${appState[selectorName]}`);
       }
     }
+    console.groupEnd();
   }
 
   // To validate whether is memory is empty or not

@@ -615,22 +615,6 @@ function vocabManager() {
     console.groupEnd();
   }
 
-  function stillInProgress() {
-    console.groupCollapsed("stillInProgress()");
-
-    const savedCurrentStatus = JSON.parse(localStorage.getItem("currentStatus")); // Parse JSON
-
-    if (savedCurrentStatus && savedCurrentStatus.totalNoOfQuestions >= 1) {
-      console.info("TRUE - program still in progress.");
-      console.groupEnd();
-      return true;
-    } else {
-      console.info("FALSE - no questions to resume");
-      console.groupEnd();
-      return false;
-    }
-  }  
-
   return {
     removeSpecifiedQuestion,
     storeToPractice,
@@ -639,7 +623,6 @@ function vocabManager() {
     saveState,
     loadState,
     clearState,
-    stillInProgress,
     get readStoredLength() { 
       let storedLength = loadMistakesFromStorage();
       return storedLength.length;
@@ -768,8 +751,8 @@ function errorManager() {
 
 function statusManager() {
   // Initialize statusManager's properties, if it’s not defined yet ...
-  if (statusManager.programInProgress === undefined) {
-    statusManager.programInProgress = "false";
+  if (statusManager.goodToResume === undefined) {
+    statusManager.goodToResume = "false";
   }
 
   // return `questionCount`
@@ -875,27 +858,46 @@ function statusManager() {
     //console.info("averageScore :", averageScore);
 
     return currentStatus.averageScore; // Return the rounded percentage directly
-}
+  }
 
   // to read totalCorrectAnswers
   function readTotalCorrectAnswers() {
       return currentStatus.totalCorrectAnswers;
   }
 
-  function getProgramInProgress() {
-    return statusManager.programInProgress;
+  function stillInProgress() {
+    console.groupCollapsed("stillInProgress()");
+
+    const savedCurrentStatus = JSON.parse(localStorage.getItem("currentStatus")); // Parse JSON
+    const savedTotalQuestionsAnswered = savedCurrentStatus.totalQuestionsAnswered;
+    const savedTotalNoOfQuestions = savedCurrentStatus.totalNoOfQuestions;
+
+    //if (savedCurrentStatus && (savedCurrentStatus.questionCount >= 1)) {
+    if (savedCurrentStatus && (savedTotalQuestionsAnswered < savedTotalNoOfQuestions)) {
+      console.info("TRUE - program still in progress.  ", savedTotalQuestionsAnswered, "/", savedTotalNoOfQuestions);
+      console.groupEnd();
+      return true;
+    } else {
+      console.info("FALSE - no remaining questions.", savedTotalQuestionsAnswered, "/", savedTotalNoOfQuestions);
+      console.groupEnd();
+      return false;
+    }
+  }  
+
+  function getGoodToResume() {
+    return statusManager.goodToResume;
   }
 
-  function setProgramInProgress(value) {
+  function setGoodToResume(value) {
     console.groupCollapsed("setProgramInProgress()");
 
     const validValues = [true, false];
     if(!validValues.includes(value)) {
-      statusManager.programInProgress = false;
-      console.warn("statusManager.programInProgress set to default - FALSE");
+      statusManager.goodToResume = false;
+      console.warn("statusManager.goodToResume set to default - FALSE");
     } else {
-      statusManager.programInProgress = value;
-      console.info("statusManager.programInProgress set to - ", value);
+      statusManager.goodToResume = value;
+      console.info("statusManager.goodToResume set to - ", value);
     }
 
     console.groupEnd();
@@ -914,7 +916,8 @@ function statusManager() {
     //increaseTotalCorrectAnswers,
     //increaseTotalQuestionsAnswered,
     updateCumulativeAverage,
-    get programInProgress() { return getProgramInProgress(); },
-    set programInProgress(value) { setProgramInProgress(value); },
+    stillInProgress,
+    get goodToResume() { return getGoodToResume(); },
+    set goodToResume(value) { setGoodToResume(value); },
   }
 }

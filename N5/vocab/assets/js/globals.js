@@ -85,10 +85,12 @@ const selectors = {
   },
 
   get readqChoiceInput() {
+    //console.info("qChoice.value: ", this.qChoice.value);
     return this.qChoice.value;
   },
 
   get readaChoiceInput() {
+    //console.info("aChoice.value: ", this.aChoice.value);
     return this.aChoice.value;
   },
 
