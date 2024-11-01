@@ -49,6 +49,7 @@ function questionManager() {
       }      
     }, 350); // Matches the transition duration
 
+    vocabMgr.saveState(); // Save the current state to localStorage
     console.groupEnd();
   }
 
@@ -122,7 +123,6 @@ function questionManager() {
     get readQuestionMode() {return newQuestion.mode},
   }
 }
-
 
 function answerManager() {
   const vocabMapping = {
@@ -523,7 +523,7 @@ function vocabManager() {
   function storeToPractice(questionInstance) { // [sn5]
     console.groupCollapsed("vocabManager() - storeToPractice()");
 
-    let incorrectSets = loadLocalStorage();
+    let incorrectSets = loadMistakesFromStorage();
     
     //console.log(questionInstance.readQuestionObj);
     // [sn6] Check if the object already exists in the array
@@ -538,15 +538,15 @@ function vocabManager() {
       incorrectSets.push(questionInstance.readQuestionObj);
       console.log("New word pushed to localstorage.");
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
-      loadLocalStorage();
+      loadMistakesFromStorage();
     }
 
     console.groupEnd();
   }
   
   // to load data from local storage
-  function loadLocalStorage() {
-    //console.groupCollapsed("vocabManager() - loadLocalStorage()");
+  function loadMistakesFromStorage() {
+    //console.groupCollapsed("vocabManager() - loadMistakesFromStorage()");
 
     let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
     storedLength = storedObjects.length;
@@ -571,13 +571,60 @@ function vocabManager() {
     console.groupEnd();
   }
 
+  // to save the current state of the program to local storage
+  function saveState() {
+    console.groupCollapsed("saveState()");
+
+    localStorage.setItem("appState", JSON.stringify(appState));
+    localStorage.setItem("appData", JSON.stringify(appData));
+    localStorage.setItem("currentStatus", JSON.stringify(currentStatus));
+    console.info("State saved to localStorage");
+
+    console.groupEnd();
+  }
+
+  // to load the current state of the program to resume
+  function loadState() {
+    console.groupCollapsed("loadState()");
+
+    const savedAppState = localStorage.getItem("appState");
+    const savedAppData = localStorage.getItem("appData");
+    const savedCurrentStatus = localStorage.getItem("currentStatus");
+  
+    if (savedAppState && savedAppData && savedCurrentStatus) {
+      Object.assign(appState, JSON.parse(savedAppState));
+      Object.assign(appData, JSON.parse(savedAppData));
+      Object.assign(currentStatus, JSON.parse(savedCurrentStatus));
+      console.info("State loaded from localStorage");
+    } else {
+      console.warn("No saved state found in localStorage");
+    }
+
+    console.groupEnd();
+  }
+  
+  // to clear the current state (if necessary)
+  function clearState() {
+    console.groupCollapsed("clearState()");
+
+    localStorage.removeItem("appState");
+    localStorage.removeItem("appData");
+    localStorage.removeItem("currentStatus");
+    console.info("State cleared from localStorage");
+
+    console.groupEnd();
+  }
+
   return {
     removeSpecifiedQuestion,
     storeToPractice,
     flushLocalStorage,
-    loadLocalStorage,
+    loadMistakesFromStorage,
+    saveState,
+    loadState,
+    clearState,
     get readStoredLength() { 
-      let storedLength = loadLocalStorage();
+      let storedLength = loadMistakesFromStorage();
       return storedLength.length;
     },
   }
@@ -703,33 +750,31 @@ function errorManager() {
 }
 
 function statusManager() {
-  let questionCount = 0;
-  let totalNoOfQuestions = 0;
-  let cumulativeAverage = 0;
-  let totalCorrectAnswers = 0;
-  let totalQuestionsAnswered = 0;
-  let averageScore = 0;
-  
+  // Initialize statusManager's properties, if it’s not defined yet ...
+  if (statusManager.goodToResume === undefined) {
+    statusManager.goodToResume = "false";
+  }
+
   // return `questionCount`
   function readQuestionCount() {
-    return questionCount;
+    return currentStatus.questionCount;
   }
 
   // increase `questionCount`
   function increaseQuestionCount() {
-    questionCount++;
-    //console.info("statusManager() -> questionCount: ", questionCount);
+    currentStatus.questionCount++;
+    //console.info("currentStatus() -> questionCount: ", questionCount);
   }
 
   // reset `questionCount`
   function resetQuestionCount () {
-    questionCount = 0;
+    currentStatus.questionCount = 0;
     return this;
   }
 
   // reset `totalNoOfQuestion` to zero
   function resetTotalNoOfQuestion() {
-    totalNoOfQuestions = 0;
+    currentStatus.totalNoOfQuestions = 0;
     return this;
   }
 
@@ -740,20 +785,20 @@ function statusManager() {
     switch (state) {
       case "fresh":
         console.info("state : ", state);
-        totalNoOfQuestions = appData.vocabArray.length;
+        currentStatus.totalNoOfQuestions = appData.vocabArray.length;
         break;
 
       case "stored":
         console.info("state : ", state);
-        totalNoOfQuestions += appData.vocabArray.length;
+        currentStatus.totalNoOfQuestions += appData.vocabArray.length;
         break;
     }
 
     //totalNoOfQuestions = appData.vocabArray.length;
-    console.info("statusManager() -> totalNoOfQuestions: ", totalNoOfQuestions);
+    console.info("currentStatus() -> totalNoOfQuestions: ", currentStatus.totalNoOfQuestions);
 
     console.groupEnd();
-    return totalNoOfQuestions;
+    return currentStatus.totalNoOfQuestions;
   }
 
   // to print score and status(`#/#`) on screen
@@ -761,63 +806,101 @@ function statusManager() {
     clearScreen(sectionStatus);
 
     setTimeout(() => {
-      if (totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
+      if (currentStatus.totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
         buildNode({
           parent: sectionStatus,
           child: "div",
-          content: `Average Correct Rate: ${averageScore}%`,
+          content: `Average Correct Rate: ${currentStatus.averageScore}%`,
         });
       }
   
       buildNode({
         parent: sectionStatus,
         child: "div",
-        content: `${readQuestionCount()} / ${totalNoOfQuestions}`,
+        content: `${readQuestionCount()} / ${currentStatus.totalNoOfQuestions}`,
       });
     }, 350);
   }
 
   // to reset all variables concerning with calculating the cumulative average
   function resetCumulativeVariables() {
-    cumulativeAverage = 0;
-    totalCorrectAnswers = 0;
-    totalQuestionsAnswered = 0; 
+    currentStatus.cumulativeAverage = 0;
+    currentStatus.totalCorrectAnswers = 0;
+    currentStatus.totalQuestionsAnswered = 0; 
     return this;
   }
 
   // to increase totalCorrectAnswers
   function increaseTotalCorrectAnswers() {
-    totalCorrectAnswers++;
+    currentStatus.totalCorrectAnswers++;
     return this;
   }
 
   // to increase totalQuestionsAnswered
   function increaseTotalQuestionsAnswered() {
-    totalQuestionsAnswered++;
+    currentStatus.totalQuestionsAnswered++;
     return this;
   }
 
   function updateCumulativeAverage(isCorrect) {
     //console.groupCollapsed("updateCumulativeAverage()");
 
-    totalQuestionsAnswered++;
-    if (isCorrect) totalCorrectAnswers++;
+    currentStatus.totalQuestionsAnswered++;
+    if (isCorrect) currentStatus.totalCorrectAnswers++;
     //console.info("totalQuestionsAnswered :", totalQuestionsAnswered, "totalCorrectAnswers :", totalCorrectAnswers);
 
     // Calculate new cumulative average based on the latest answer
-    cumulativeAverage = (cumulativeAverage * (totalQuestionsAnswered - 1) + (isCorrect ? 1 : 0)) / totalQuestionsAnswered; //le6
+    currentStatus.cumulativeAverage = (currentStatus.cumulativeAverage * (currentStatus.totalQuestionsAnswered - 1) + (isCorrect ? 1 : 0)) / currentStatus.totalQuestionsAnswered; //le6
     //console.info("cumulativeAverage :", cumulativeAverage);
 
     // Calculate the percentage and round to a whole number
-    averageScore = Math.round(cumulativeAverage * 100); // This will give you a whole number
+    currentStatus.averageScore = Math.round(currentStatus.cumulativeAverage * 100); // This will give you a whole number
     //console.info("averageScore :", averageScore);
 
-    return averageScore; // Return the rounded percentage directly
-}
+    return currentStatus.averageScore; // Return the rounded percentage directly
+  }
 
   // to read totalCorrectAnswers
   function readTotalCorrectAnswers() {
-      return totalCorrectAnswers;
+      return currentStatus.totalCorrectAnswers;
+  }
+
+  function stillInProgress() {
+    console.groupCollapsed("stillInProgress()");
+
+    const savedCurrentStatus = JSON.parse(localStorage.getItem("currentStatus")); // Parse JSON
+    const savedTotalQuestionsAnswered = savedCurrentStatus.totalQuestionsAnswered;
+    const savedTotalNoOfQuestions = savedCurrentStatus.totalNoOfQuestions;
+
+    //if (savedCurrentStatus && (savedCurrentStatus.questionCount >= 1)) {
+    if (savedCurrentStatus && (savedTotalQuestionsAnswered < savedTotalNoOfQuestions)) {
+      console.info("TRUE - program still in progress.  ", savedTotalQuestionsAnswered, "/", savedTotalNoOfQuestions);
+      console.groupEnd();
+      return true;
+    } else {
+      console.info("FALSE - no remaining questions.", savedTotalQuestionsAnswered, "/", savedTotalNoOfQuestions);
+      console.groupEnd();
+      return false;
+    }
+  }  
+
+  function getGoodToResume() {
+    return statusManager.goodToResume;
+  }
+
+  function setGoodToResume(value) {
+    console.groupCollapsed("setProgramInProgress()");
+
+    const validValues = [true, false];
+    if(!validValues.includes(value)) {
+      statusManager.goodToResume = false;
+      console.warn("statusManager.goodToResume set to default - FALSE");
+    } else {
+      statusManager.goodToResume = value;
+      console.info("statusManager.goodToResume set to - ", value);
+    }
+
+    console.groupEnd();
   }
   
 
@@ -833,5 +916,8 @@ function statusManager() {
     //increaseTotalCorrectAnswers,
     //increaseTotalQuestionsAnswered,
     updateCumulativeAverage,
+    stillInProgress,
+    get goodToResume() { return getGoodToResume(); },
+    set goodToResume(value) { setGoodToResume(value); },
   }
 }

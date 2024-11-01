@@ -16,7 +16,6 @@ let kaVocab = [];
 let hiVocab = [];
 let enVocab = [];
 
-
 const appState = {
   randomYesNo : true,
   qChoiceInput: "hi",
@@ -32,6 +31,16 @@ const appData = {
   vocabArray : [],
   rePractice: [],
 };
+
+const currentStatus = {
+  //stillInProgress : false,
+  questionCount : 0,
+  totalNoOfQuestions : 0,
+  cumulativeAverage : 0,
+  totalCorrectAnswers : 0,
+  totalQuestionsAnswered : 0,
+  averageScore : 0,
+}
 
 const selectors = {
   settingForm : document.querySelector("#settingsForm"),
@@ -76,10 +85,12 @@ const selectors = {
   },
 
   get readqChoiceInput() {
+    //console.info("qChoice.value: ", this.qChoice.value);
     return this.qChoice.value;
   },
 
   get readaChoiceInput() {
+    //console.info("aChoice.value: ", this.aChoice.value);
     return this.aChoice.value;
   },
 

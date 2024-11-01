@@ -24,6 +24,14 @@ function log(variable, label) {
   label ? console.log(`${label}: ${variable}`) : console.log(`${variable}`);
 }
 
+// to convert all checked syllables to an array
+function convertCheckedValuesToArray(nodeList) {
+  let convertedArray;
+  convertedArray = Array.from(document.querySelectorAll(nodeList))
+                        .map(eachCheckBox => eachCheckBox.value); // [sn7]
+  return convertedArray;
+}  
+
 // to copy `CatName` property from source array of objects to target array
 // used to fetch all the answers and mix up with the correct answer
 function copyOneProperty(source, target, catName) {

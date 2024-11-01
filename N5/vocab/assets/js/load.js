@@ -6,25 +6,26 @@ const statusInstance = statusManager();
 
 (function defaultState() {
   loaderInstance.loadMemoryData();
-  //flipNodeState(...selectors.noOfAnsAll); // [sn14]
-  toggleClass('disabled', ...selectors.noOfAnsAll);
-  //toggleClass('hide', sectionStatus);
+
+  toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]
   toggleClass('overlay-message', sectionMessage);
   toggleClass('fade-hide', sectionMessage);
-  /*toggleClass('fade-in',
-    sectionStatus,
-    sectionQuestion,
-    //sectionMessage,
-    sectionAnswer,
-  );*/
   loaderInstance.floatingBtnsDefaultState();
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
+
+  // if the program is still in progress, load data from local storage to global objects
+  if (statusInstance.stillInProgress()) {
+    statusInstance.goodToResume =  true;
+    toggleClass('hide',selectors.resumePracticeBtn);
+  }
+
   console.groupEnd();
 })();
 
 
 function listenerManager() {
+
   // Wrap the moveForm function with debounce
   const debouncedMoveForm = debounce(moveForm, 300); // 300ms delay
 
@@ -233,8 +234,24 @@ function listenerManager() {
 
   // When resumePracticeBtn is clicked
   function handleResumePracticeBtn(event) {
-    loaderInstance.toggleFormDisplay(loaderInstance.resumeTo);
-    debouncedMoveForm(event);
+    console.groupCollapsed("handleResumePracticeBtn()");
+
+    if (statusInstance.goodToResume) { // if the program is still in progress,
+      console.info("statusInstance.goodToResume: FALSE");
+      loaderInstance.floatingBtnsDefaultState();
+      loaderInstance.toggleFormDisplay(loaderInstance.initializedFrom = "start");
+      loaderInstance.resumeTo = "program";
+      listenerInstance.moveForm();
+      statusInstance.goodToResume = false;
+      loaderInstance.resumeProgram();
+    }
+    else {
+      console.info("Normal resume procedures.");
+      loaderInstance.toggleFormDisplay(loaderInstance.resumeTo);
+      debouncedMoveForm(event);
+    }
+
+    console.groupEnd();
   }
   
   // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
@@ -316,7 +333,6 @@ function loaderManager() {
       floatingBtnsDefaultState();
       toggleFormDisplay(loaderInstance.initializedFrom = "start");
       loaderInstance.resumeTo = "program";
-      //toggleFormDisplay(loaderInstance.initial = appState.qMode);
       listenerInstance.moveForm();
       statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
@@ -333,7 +349,6 @@ function loaderManager() {
     validateToggleSwitch(['randomYesNo', 'flashYesNo']);
     validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
     validateAndSetQuestionMode(); // Validate question mode and set default
-    assignLanguageBySelection(); // Validate and assign the correct language for the question and answer sections
     
     assignLanguage(sectionMessage, enLang); // Always set message section to English
 
@@ -343,18 +358,13 @@ function loaderManager() {
 
     appState.qChoiceInput = selectors.readqChoiceInput ?? "hi";
     appState.aChoiceInput = selectors.readaChoiceInput ?? "en";
+
+    assignLanguageBySelection(); // Validate and assign the correct language for the question and answer sections
+
     console.info("appState.qChoiceInput: ", appState.qChoiceInput, "appState.aChoiceInput: ", appState.aChoiceInput);
     
     console.groupEnd();
   }
-
-  // to convert all checked syllables to an array
-  function convertCheckedValuesToArray(nodeList) {
-    let convertedArray;
-    convertedArray = Array.from(document.querySelectorAll(nodeList))
-                          .map(eachCheckBox => eachCheckBox.value); // [sn7]
-    return convertedArray;
-  }  
   
   // to load user selected sylable-json when program mode is "fresh"
   async function loadFreshJSON() {
@@ -409,10 +419,10 @@ function loaderManager() {
 
     questionMgr.setQuestionMode("stored");
     
-    // Ensure loadLocalStorage returns an array
-    const storedData = vocabInstance.loadLocalStorage();
+    // Ensure loadMistakesFromStorage returns an array
+    const storedData = vocabInstance.loadMistakesFromStorage();
     if (!Array.isArray(storedData)) {
-        console.error("Error: Stored data is not an array! Check your loadLocalStorage function.");
+        console.error("Error: Stored data is not an array! Check your loadMistakesFromStorage function.");
         return;
     }
     
@@ -433,6 +443,25 @@ function loaderManager() {
     copyOneProperty(appData.vocabArray, kaVocab, ka);
     copyOneProperty(appData.vocabArray, hiVocab, hi);
     copyOneProperty(appData.vocabArray, enVocab, en);
+
+    console.groupEnd();
+  }
+
+  // to resume the existing program
+  function resumeProgram() {
+    console.groupCollapsed("resumeProgram()");
+
+    vocabInstance.loadState();
+    console.log("loadState: ", appState, appData, currentStatus);
+
+    // Fetch the relevant categories
+    copyOneProperty(appData.vocabArray, kaVocab, ka);
+    copyOneProperty(appData.vocabArray, hiVocab, hi);
+    copyOneProperty(appData.vocabArray, enVocab, en);
+
+    assignLanguageBySelection();
+
+    questionMgr.newQuestion();
 
     console.groupEnd();
   }
@@ -542,6 +571,7 @@ function loaderManager() {
   function assignLanguageBySelection() {
     console.groupCollapsed("assignLanguageBySelection()");
 
+    /*
     const validLanguages = ["hi", "ka"];
     if (validLanguages.includes(selectors.qChoice.value)) {
       assignLanguage(sectionQuestion, jpLang);
@@ -552,6 +582,25 @@ function loaderManager() {
     if (validLanguages.includes(selectors.aChoice.value)) {
       assignLanguage(sectionAnswer, jpLang);
     } else {
+      assignLanguage(sectionAnswer, enLang);
+    }
+    */
+
+    const jpLanguages = ["hi", "ka"];
+
+    console.info("appState.qChoiceInput: ", appState.qChoiceInput);
+    if(jpLanguages.includes(appState.qChoiceInput)) {
+      assignLanguage(sectionQuestion, jpLang);
+    } else {
+      assignLanguage(sectionQuestion, enLang);
+    }
+
+    console.info("appState.aChoiceInput: ", appState.aChoiceInput);
+    if(jpLanguages.includes(appState.aChoiceInput)) {
+      console.info("Assigning sectionAnswer to jpLang");
+      assignLanguage(sectionAnswer, jpLang);
+    } else {
+      console.info("Assigning sectionAnswer to enLang");
       assignLanguage(sectionAnswer, enLang);
     }
 
@@ -620,6 +669,7 @@ function loaderManager() {
         console.info(`${selectorName} is good to go: ${appState[selectorName]}`);
       }
     }
+    console.groupEnd();
   }
 
   // To validate whether is memory is empty or not
@@ -757,9 +807,9 @@ function loaderManager() {
 
     toggleFormDisplay(loaderInstance.resumeTo);
   
-    const mistakeArray = vocabInstance.loadLocalStorage(); // Load mistakes from localStorage
+    const mistakeArray = vocabInstance.loadMistakesFromStorage(); // Load mistakes from localStorage
 
-    clearScreen([sectionQuestion, sectionMessage, sectionAnswer], "fast");
+    clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer], "fast");
   
     // Create the container to display the mistakes
     buildNode({
@@ -891,6 +941,7 @@ function loaderManager() {
     restart,
     floatingBtnsDefaultState,
     toggleFormDisplay,
+    resumeProgram,
     get initializedFrom() { return getInitializedFrom(); },
     set initializedFrom(value) { setInitializedFrom(value); },
     get resumeTo() { return getResumeTo(); },
