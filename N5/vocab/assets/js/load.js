@@ -935,12 +935,8 @@ function loaderManager() {
   }
 
   function resetAfterFlushingMistakes() {
-    toggleClass('disabled', selectors.settingRepractice);
-    let selectedMode = selectors.readQuestionMode;
-    if (selectedMode === "stored") {
-      // Set the 'source-fresh' radio input to checked
-      document.querySelector("#source-fresh").checked = true;
-    }
+    toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
+    document.querySelector("#source-fresh").checked = true; // Set the 'source-fresh' radio input to checked
     return this;
   }
 
