@@ -95,8 +95,12 @@ const selectors = {
   },
 
   get readMemoryInfoDOMs() {
-    return [document.querySelector("#memory-info-0"), document.querySelector("#flush-memory-btn-0")];
+    return [document.querySelector("#memory-info-0")];
   },
+
+  get readMemoryBtns() {
+    return [document.querySelector("#flush-memory-btn-0"), document.querySelector("#list-memory-btn-0")];
+  }
 };
 
 //let qNo = 0;
