@@ -505,8 +505,8 @@ function loaderManager() {
       buildNode({
         parent: selectors.memoryInfo,
         child: 'div',
-        //content: `There are ${storedLength} words to repractice.`,
-        content: `${storedLength} words to repractice.`,
+        content: `There are ${storedLength} words to repractice.`,
+        //content: `${storedLength} words to repractice.`,
         className: 'memory-info',
         idName: 'memory-info',
       });
@@ -516,8 +516,8 @@ function loaderManager() {
     buildNode({
       parent: selectors.memoryBtns,
       child: 'div',
-      //content: '<i class="fa-solid fa-trash-can"></i>',
-      content: 'trash',
+      content: '<i class="fa-solid fa-trash-can"></i>',
+      //content: 'trash',
       className: 'flush-memory-setting-btn',
       idName: 'flush-memory-btn',
       eventFunction: vocabInstance.flushLocalStorage,
