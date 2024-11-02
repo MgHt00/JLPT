@@ -505,17 +505,19 @@ function loaderManager() {
       buildNode({
         parent: selectors.memoryInfo,
         child: 'div',
-        //content: `There are ${storedLength} words to repractice.`,
-        content: `${storedLength} words to repractice.`,
+        content: `There are ${storedLength} words to repractice.`,
+        //content: `${storedLength} words to repractice.`,
         className: 'memory-info',
         idName: 'memory-info',
       });
     }
+
     // Build `flush` button
     buildNode({
       parent: selectors.memoryBtns,
       child: 'div',
-      content: `<i class="fa-solid fa-trash-can"></i>`,
+      content: '<i class="fa-solid fa-trash-can"></i>',
+      //content: 'trash',
       className: 'flush-memory-setting-btn',
       idName: 'flush-memory-btn',
       eventFunction: vocabInstance.flushLocalStorage,
@@ -524,7 +526,8 @@ function loaderManager() {
     buildNode({
       parent: selectors.memoryBtns,
       child: 'div',
-      content: `<i class="fa-solid fa-rectangle-list"></i>`,
+      //content: `<i class="fa-solid fa-rectangle-list"></i>`,
+      content: 'list',
       className: 'list-memory-setting-btn',
       idName: 'list-memory-btn',
       eventFunction: listMistakes,
@@ -931,6 +934,12 @@ function loaderManager() {
     console.groupEnd();
   }
 
+  function resetAfterFlushingMistakes() {
+    toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
+    document.querySelector("#source-fresh").checked = true; // Set the 'source-fresh' radio input to checked
+    return this;
+  }
+
   return {
     start,
     loadMemoryData,
@@ -942,6 +951,7 @@ function loaderManager() {
     floatingBtnsDefaultState,
     toggleFormDisplay,
     resumeProgram,
+    resetAfterFlushingMistakes,
     get initializedFrom() { return getInitializedFrom(); },
     set initializedFrom(value) { setInitializedFrom(value); },
     get resumeTo() { return getResumeTo(); },

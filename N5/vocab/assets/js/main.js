@@ -249,3 +249,8 @@ function removeClass(className = "", ...nodes) {
     }
   });
 }
+
+function checkClass(className = "", node) {
+  if (!className.trim() || !(node instanceof HTMLElement)) return false;
+  return node.classList.contains(className);  
+}

@@ -562,12 +562,23 @@ function vocabManager() {
 
     localStorage.removeItem("toPractice");
     console.log("localstorage flushed.");
+    /*
     clearNode({
       parent: selectors.memoryInfo,
       children: selectors.readMemoryInfoDOMs,
     });
     loaderInstance.loadMemoryData();
+    */
+    clearNode({
+      parent: selectors.memoryInfo,
+      children: selectors.readMemoryInfoDOMs,
+    });
+    clearNode({
+      parent: selectors.memoryBtns,
+      children: selectors.readMemoryBtns,
+    });
 
+    loaderInstance.loadMemoryData().resetAfterFlushingMistakes();
     console.groupEnd();
   }
 
@@ -624,8 +635,8 @@ function vocabManager() {
     loadState,
     clearState,
     get readStoredLength() { 
-      let storedLength = loadMistakesFromStorage();
-      return storedLength.length;
+      let mistakeFromStorage = loadMistakesFromStorage();
+      return mistakeFromStorage.length;
     },
   }
 }
