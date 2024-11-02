@@ -526,8 +526,8 @@ function loaderManager() {
     buildNode({
       parent: selectors.memoryBtns,
       child: 'div',
-      //content: `<i class="fa-solid fa-rectangle-list"></i>`,
-      content: 'list',
+      content: `<i class="fa-solid fa-rectangle-list"></i>`,
+      //content: 'list',
       className: 'list-memory-setting-btn',
       idName: 'list-memory-btn',
       eventFunction: listMistakes,
