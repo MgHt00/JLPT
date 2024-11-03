@@ -572,42 +572,20 @@ function loaderManager() {
 
   // Validate and assign the correct language for the (HTML's) question and answer sections
   function assignLanguageBySelection() {
-    console.groupCollapsed("assignLanguageBySelection()");
-
-    /*
-    const validLanguages = ["hi", "ka"];
-    if (validLanguages.includes(selectors.qChoice.value)) {
-      assignLanguage(sectionQuestion, jpLang);
-    } else {
-      assignLanguage(sectionQuestion, enLang);
-    }
-
-    if (validLanguages.includes(selectors.aChoice.value)) {
-      assignLanguage(sectionAnswer, jpLang);
-    } else {
-      assignLanguage(sectionAnswer, enLang);
-    }
-    */
-
     const jpLanguages = ["hi", "ka"];
 
-    console.info("appState.qChoiceInput: ", appState.qChoiceInput);
     if(jpLanguages.includes(appState.qChoiceInput)) {
       assignLanguage(sectionQuestion, jpLang);
     } else {
       assignLanguage(sectionQuestion, enLang);
     }
 
-    console.info("appState.aChoiceInput: ", appState.aChoiceInput);
     if(jpLanguages.includes(appState.aChoiceInput)) {
-      console.info("Assigning sectionAnswer to jpLang");
       assignLanguage(sectionAnswer, jpLang);
     } else {
-      console.info("Assigning sectionAnswer to enLang");
       assignLanguage(sectionAnswer, enLang);
     }
 
-    console.groupEnd();
     return this;
   }
 
