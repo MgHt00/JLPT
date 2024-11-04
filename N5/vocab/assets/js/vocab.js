@@ -900,7 +900,7 @@ function statusManager() {
   }
 
   function setGoodToResume(value) {
-    console.groupCollapsed("setProgramInProgress()");
+    console.groupCollapsed("setGoodToResume()");
 
     const validValues = [true, false];
     if(!validValues.includes(value)) {

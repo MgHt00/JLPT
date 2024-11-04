@@ -1,23 +1,26 @@
 const loaderInstance = loaderManager();
 const listenerInstance = listenerManager();
+const controlInstance = controlManger();
 const vocabInstance = vocabManager();
 const errorInstance = errorManager();
 const statusInstance = statusManager();
 
 (function defaultState() {
+  console.groupCollapsed("defaultState()");
+
   loaderInstance.loadMemoryData();
 
   toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]
   toggleClass('overlay-message', sectionMessage);
   toggleClass('fade-hide', sectionMessage);
-  loaderInstance.floatingBtnsDefaultState();
+  controlInstance.floatingBtnsHideAll();
   toggleClass('disabled', selectors.settingRepractice);
   listenerInstance.generalListeners();
 
   // if the program is still in progress, load data from local storage to global objects
   if (statusInstance.stillInProgress()) {
     statusInstance.goodToResume =  true;
-    toggleClass('hide',selectors.resumePracticeBtn);
+    controlInstance.hideBackShowResume();
   }
 
   console.groupEnd();
@@ -225,31 +228,46 @@ function listenerManager() {
   
   // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
   function handlebringBackBtn(event) {
-      //clearScreen(sectionStatus);
-      loaderInstance.toggleFormDisplay(loaderInstance.resumeTo);
-      event.stopPropagation(); // Prevent event from bubbling up
-      debouncedMoveForm(event); // Pass the event to the debounced function
-      loaderInstance.rePrintMemory();
+    controlInstance.floatingBtnsHideAll().toggleFormDisplay().hideBackShowResume();
+    event.stopPropagation(); // Prevent event from bubbling up
+    debouncedMoveForm(event); // Pass the event to the debounced function
+    loaderInstance.rePrintMemory();
   }
 
   // When resumePracticeBtn is clicked
   function handleResumePracticeBtn(event) {
     console.groupCollapsed("handleResumePracticeBtn()");
 
+    controlInstance.floatingBtnsHideAll();
+
     if (statusInstance.goodToResume) { // if the program is still in progress,
       console.info("statusInstance.goodToResume: FALSE");
-      loaderInstance.floatingBtnsDefaultState();
-      loaderInstance.toggleFormDisplay(loaderInstance.initializedFrom = "start");
-      loaderInstance.resumeTo = "program";
+      //loaderInstance.floatingBtnsDefaultState();
+      //loaderInstance.toggleFormDisplay(loaderInstance.initializedFrom = "start");
+      //loaderInstance.resumeTo = "program";
+      controlInstance.toggleFormDisplay().hideResumeShowBack();
       listenerInstance.moveForm();
       statusInstance.goodToResume = false;
       loaderInstance.resumeProgram();
     }
     else {
       console.info("Normal resume procedures.");
-      loaderInstance.toggleFormDisplay(loaderInstance.resumeTo);
+      //loaderInstance.toggleFormDisplay(loaderInstance.resumeTo);
+      controlInstance.toggleFormDisplay().hideResumeShowBack();
       debouncedMoveForm(event);
     }
+
+    console.groupEnd();
+  }
+
+  // When list mistake button is clicked
+  function handleListMistakeBtn() {
+    console.groupCollapsed("handleListMistakeBtn()");
+
+    controlInstance.floatingBtnsHideAll().hideResumeShowBack().toggleFormDisplay();
+    const mistakeArray = vocabInstance.loadMistakesFromStorage(); // Load mistakes from localStorage
+    clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer], "fast");
+    loaderInstance.listMistakes();
 
     console.groupEnd();
   }
@@ -285,20 +303,13 @@ function listenerManager() {
   return {
     generalListeners,
     moveForm,
-    handlebringBackBtn,
+    //handlebringBackBtn,
+    handleListMistakeBtn,
     debouncedMoveForm,
   }
 }
 
 function loaderManager() {
-  // Initialize loaderManager's properties, if it’s not defined yet ...
-  // ... by initializing here, it will be easier to debug
-  if (loaderManager.initializedFrom === undefined) {
-    loaderManager.initializedFrom = "start";
-  }
-  if (loaderManager.resumeTo === undefined) {
-    loaderManager.resumeTo = "start";
-  }
 
   // when user click submit(start) button of the setting form
   async function start(e) {  
@@ -330,10 +341,9 @@ function loaderManager() {
       }
   
       // Continue if there is no runtime error.
-      floatingBtnsDefaultState();
-      toggleFormDisplay(loaderInstance.initializedFrom = "start");
-      loaderInstance.resumeTo = "program";
+      //loaderInstance.resumeTo = "program";
       listenerInstance.moveForm();
+      controlInstance.floatingBtnsHideAll().toggleFormDisplay().hideResumeShowBack();
       statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
       //toggleClass('shift-sections-to-center', dynamicDOM);
@@ -530,7 +540,7 @@ function loaderManager() {
       //content: 'list',
       className: 'list-memory-setting-btn',
       idName: 'list-memory-btn',
-      eventFunction: listMistakes,
+      eventFunction: listenerInstance.handleListMistakeBtn,
     });
     
     console.groupEnd();
@@ -705,93 +715,10 @@ function loaderManager() {
     rePrintMemory();
   }
 
-
-  // To reset default 'hide' state to bringback & resume btns
-  function floatingBtnsDefaultState() {
-    removeClass('hide', // remove 'hide' class
-      selectors.bringBackBtn,
-      selectors.resumePracticeBtn,
-    );
-    toggleClass('hide', // add 'hide' class as default
-      selectors.bringBackBtn,
-      selectors.resumePracticeBtn,
-    );
-  }
-
-  // To toggle buttons and sections when move / resume btn is clicked
-  function toggleFormDisplay(previousLocation) {
-    //console.groupCollapsed("toggleFormDisplay()");
-
-   /* setTimeout(() => {
-      toggleClass('shift-sections-to-center', dynamicDOM);
-    }, 400);*/
-    toggleClass('moved', selectors.settingForm);
-    toggleClass('disabled', selectors.settingForm);
-    toggleClass('dim', ...selectors.allSetting);
-
-    switch (previousLocation) {
-      case "start":
-        setTimeout(() => {
-          toggleClass('shift-sections-to-center', dynamicDOM);
-        }, 400);
-
-        toggleClass('hide',
-          sectionStatus,
-          selectors.bringBackBtn,
-        );
-        //console.info("case: ", previousLocation);
-        break;
-
-        case "mistake-list":
-          setTimeout(() => {
-            toggleClass('shift-sections-to-top-center', dynamicDOM);
-            //toggleClass('shift-sections-to-center', dynamicDOM);
-          }, 400);
-  
-          toggleClass('hide',
-            sectionStatus,
-            selectors.bringBackBtn,
-          );
-          //console.info("case: ", previousLocation);
-          break;
-
-      case "program":
-        const DOMClassList = dynamicDOM.classList;
-
-        // Check if `shift-sections-to-top-center` class is present, then remove it
-        if (DOMClassList.contains("shift-sections-to-top-center")) {
-          DOMClassList.remove("shift-sections-to-top-center");
-        }
-        else {
-          toggleClass('shift-sections-to-center', dynamicDOM);
-        }
-        toggleClass('hide',
-          sectionStatus,
-          selectors.bringBackBtn,
-          selectors.resumePracticeBtn,
-        );
-        //console.info("case: ", previousLocation);
-        break;
-    }
-    
-    console.groupEnd();
-  }
-
   // To list mistakes from stored data
   function listMistakes() {
     console.groupCollapsed("listMistakes()");
     
-    //loaderInstance.initial = "mistake-list";
-    floatingBtnsDefaultState();
-    loaderInstance.initializedFrom = "start";
-    loaderInstance.resumeTo = "mistake-list";
-
-    toggleFormDisplay(loaderInstance.resumeTo);
-  
-    const mistakeArray = vocabInstance.loadMistakesFromStorage(); // Load mistakes from localStorage
-
-    clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer], "fast");
-  
     // Create the container to display the mistakes
     buildNode({
       parent: sectionQuestion,
@@ -873,45 +800,6 @@ function loaderManager() {
     console.groupEnd();
   }
 
-  // values for controlling bringbackbtn
-  const validValues = ['start', 'mistake-list', 'program'];
-
-  // To set loaderManger's property (used inside the setter)
-  function getInitializedFrom() {
-    return loaderManager.initializedFrom;
-  }
-
-  // To set loaderManger's property (used inside the setter)
-  function setInitializedFrom(value) {
-    console.groupCollapsed("initializedFrom()");
-    if (!validValues.includes(value)) {
-      loaderManager.initializedFrom = 'start';
-      console.warn("Invalid value passed. Defaulting to `start`.");
-    } else {
-      loaderManager.initializedFrom = value;
-      console.info("loaderManager.initializedFrom is set to ", loaderManager.initializedFrom);
-    }
-    console.groupEnd();
-  }
-
-  // To read loaderManger's property (used inside the getter)
-  function getResumeTo() {
-    return loaderManager.resumeTo;
-  }
-
-  // To set loaderManger's property (used inside the getter)
-  function setResumeTo(value) {
-    console.groupCollapsed("resumeTo()");
-    if (!validValues.includes(value)) {
-      loaderManager.resumeTo = 'start';
-      console.warn("Invalid value passed. Defaulting to `start`.");
-    } else {
-      loaderManager.resumeTo = value;
-      console.info("loaderManager.resumeTo is set to ", loaderManager.resumeTo);
-    }
-    console.groupEnd();
-  }
-
   function resetAfterFlushingMistakes() {
     toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
     document.querySelector("#source-fresh").checked = true; // Set the 'source-fresh' radio input to checked
@@ -926,13 +814,166 @@ function loaderManager() {
     rePrintMemory,
     continuetoStoredData,
     restart,
-    floatingBtnsDefaultState,
-    toggleFormDisplay,
+    listMistakes,
     resumeProgram,
     resetAfterFlushingMistakes,
-    get initializedFrom() { return getInitializedFrom(); },
-    set initializedFrom(value) { setInitializedFrom(value); },
-    get resumeTo() { return getResumeTo(); },
-    set resumeTo(value) { setResumeTo(value); },
+  }
+}
+
+function controlManger() {
+
+  // To hide both bringBack and resumePracticeBtn
+  function floatingBtnsHideAll() {
+    console.groupCollapsed("floatingBtnsHideAll()");
+
+    removeClass('hide', // remove 'hide' class
+      selectors.bringBackBtn,
+      selectors.resumePracticeBtn,
+    );
+    addClass('hide', // add 'hide' class
+      selectors.bringBackBtn,
+      selectors.resumePracticeBtn,
+    );
+    console.groupEnd();
+    return this;
+  }
+
+  // To hide resumePracticeBtn; show bringBackBtn
+  function hideResumeShowBack() {
+    removeClass('hide', // remove 'hide' class
+      selectors.bringBackBtn,
+      selectors.resumePracticeBtn,
+    );
+    addClass('hide', // add 'hide' class
+      selectors.resumePracticeBtn,
+    );
+    return this;
+  }
+
+  // To hide bringBackBtn; show resumePracticeBtn
+  function hideBackShowResume() {
+    removeClass('hide', // remove 'hide' class
+      selectors.bringBackBtn,
+      selectors.resumePracticeBtn,
+    );
+    addClass('hide', // add 'hide' class
+      selectors.bringBackBtn,
+    );
+    return this;
+  }
+
+  // To reset default 'hide' state to bringback & resume btns
+  function floatingBtnsDefaultState() {
+    console.groupCollapsed("floatingBtnsDefaultState()");
+
+    removeClass('hide', // remove 'hide' class
+      selectors.bringBackBtn,
+      selectors.resumePracticeBtn,
+    );
+    addClass('hide', // add 'hide' class as default
+      selectors.bringBackBtn,
+      //selectors.resumePracticeBtn,
+    );
+    console.info("bringBackBtn: ", selectors.bringBackBtn.classList);
+    console.info("resumePracticeBtn", selectors.resumePracticeBtn.classList);
+
+    console.groupEnd();
+    return this;
+  }
+
+  // To toggle buttons and sections when move / resume btn is clicked
+  function toggleFormDisplayComplicated(previousLocation) {
+    //console.groupCollapsed("toggleFormDisplay()");
+
+    /* setTimeout(() => {
+       toggleClass('shift-sections-to-center', dynamicDOM);
+     }, 400);*/
+    toggleClass('moved', selectors.settingForm);
+    toggleClass('disabled', selectors.settingForm);
+    toggleClass('dim', ...selectors.allSetting);
+
+    switch (previousLocation) {
+      case "start":
+        setTimeout(() => {
+          toggleClass('shift-sections-to-center', dynamicDOM);
+        }, 400);
+
+        toggleClass('hide',
+          sectionStatus,
+          selectors.bringBackBtn,
+        );
+        //console.info("case: ", previousLocation);
+        break;
+
+      case "mistake-list":
+        setTimeout(() => {
+          toggleClass('shift-sections-to-top-center', dynamicDOM);
+          //toggleClass('shift-sections-to-center', dynamicDOM);
+        }, 400);
+
+        toggleClass('hide',
+          sectionStatus,
+          selectors.bringBackBtn,
+        );
+        //console.info("case: ", previousLocation);
+        break;
+
+      case "program":
+        const DOMClassList = dynamicDOM.classList;
+
+        // Check if `shift-sections-to-top-center` class is present, then remove it
+        if (DOMClassList.contains("shift-sections-to-top-center")) {
+          DOMClassList.remove("shift-sections-to-top-center");
+        }
+        else {
+          toggleClass('shift-sections-to-center', dynamicDOM);
+        }
+        toggleClass('hide',
+          sectionStatus,
+          selectors.bringBackBtn,
+          selectors.resumePracticeBtn,
+        );
+        //console.info("case: ", previousLocation);
+        break;
+    }
+
+    console.groupEnd();
+  }
+
+  // To toggle buttons and sections when move / resume btn is clicked
+  function toggleFormDisplay() {
+    console.groupCollapsed("toggleFormDisplay()");
+    toggleClass('moved', selectors.settingForm);
+    toggleClass('disabled', selectors.settingForm);
+    toggleClass('dim', ...selectors.allSetting);
+
+    const dynamicDOMClassList = dynamicDOM.classList;
+    let dynamicDOMClassToToggle;
+    if (dynamicDOMClassList.contains('shift-sections-to-top-center')) {
+      dynamicDOMClassToToggle = 'shift-sections-to-top-center';
+    } else {
+      dynamicDOMClassToToggle = 'shift-sections-to-center';
+    }
+
+    setTimeout(() => {
+      toggleClass(dynamicDOMClassToToggle, dynamicDOM);
+    }, 400);
+
+    toggleClass('hide',
+      sectionStatus,
+      //selectors.bringBackBtn,
+      //selectors.resumePracticeBtn,
+    );
+
+    console.groupEnd();
+    return this;
+  }
+
+  return {
+    floatingBtnsHideAll,
+    hideResumeShowBack,
+    hideBackShowResume,
+    floatingBtnsDefaultState,
+    toggleFormDisplay,
   }
 }
