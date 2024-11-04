@@ -250,6 +250,17 @@ function removeClass(className = "", ...nodes) {
   });
 }
 
+// to add class names
+function addClass(className = "", ...nodes){
+  if(!className.trim()) return; // Prevent adding an empty or whitespace-only class
+
+  nodes.forEach(node => {
+    if (node instanceof HTMLElement) {
+      node.classList.add(className); // add the class
+    }
+  });
+}
+
 function checkClass(className = "", node) {
   if (!className.trim() || !(node instanceof HTMLElement)) return false;
   return node.classList.contains(className);  
