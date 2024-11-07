@@ -45,13 +45,20 @@ function copyOneProperty(source, target, propertyName) {
 }
 */
 function copyOneProperty(source, target, propertyName) {
+  console.groupCollapsed("copyOneProperty()");
+  console.info("propertyName: ", propertyName);
+
   source.forEach((element, i) => {
-    if (element[propertyName] === "en") {
+    if (propertyName === en) {
+      console.info("Going through .toLowerCase() & trim()");
       target[i] = element[propertyName].toLowerCase().trim();
     } else {
-      target[i] = element[propertyName];
+      console.info("Skipped toLowerCase, going through trim()")
+      target[i] = element[propertyName].trim();
     }
   });
+  console.info(target);
+  console.groupEnd();
 }
 
 
