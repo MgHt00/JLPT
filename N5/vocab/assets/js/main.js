@@ -34,16 +34,6 @@ function convertCheckedValuesToArray(nodeList) {
 
 // to copy `propertyName` property from source array of objects to target array
 // used to fetch all the answers and mix up with the correct answer
-/*
-function copyOneProperty(source, target, propertyName) {
-  
-  let i = 0;
-  source.forEach(element => {
-    target[i] = element[propertyName];
-    i++;
-  });
-}
-*/
 function copyOneProperty(source, target, propertyName) {
   console.groupCollapsed("copyOneProperty()");
   console.info("propertyName: ", propertyName);
