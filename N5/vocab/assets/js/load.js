@@ -344,6 +344,7 @@ function loaderManager() {
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
       //toggleClass('shift-sections-to-center', dynamicDOM);
       questionMgr.newQuestion();
+      removeErrBlks();
     }
   }
 
@@ -805,6 +806,18 @@ function loaderManager() {
     );
     document.querySelector("#source-fresh").checked = true; // Set the 'source-fresh' radio input to checked
     return this;
+  }
+
+  function removeErrBlks() {
+    console.groupCollapsed("cleanUpErrMsgs()");
+    const errBlocks = [document.querySelector("[id|='syllable-error']")];
+    errBlocks.forEach((blk) => {
+      if (blk){
+        console.info("Error block found");
+        blk.remove();
+      }
+    });
+    console.groupEnd();
   }
 
   return {
