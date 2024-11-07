@@ -81,6 +81,7 @@ function listenerManager() {
   // to handle when flash mode toogle (previously radio buttons are) is changed
   function flashModeChanges(e) {
     console.groupCollapsed("flashModeChanges()");
+    controlInstance.resetQuestionMode();
     toggleClass('disabled', ...selectors.noOfAnsAll);
     
     // set noOfAns to 2 to bypass runtime error if flashcard mode is selected
@@ -343,6 +344,7 @@ function loaderManager() {
       statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
       //toggleClass('shift-sections-to-center', dynamicDOM);
       questionMgr.newQuestion();
+      removeErrBlks();
     }
   }
 
@@ -798,9 +800,24 @@ function loaderManager() {
   }
 
   function resetAfterFlushingMistakes() {
-    toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
+    toggleClass('disabled', 
+      selectors.settingRepractice, 
+      selectors.settingSyllable
+    );
     document.querySelector("#source-fresh").checked = true; // Set the 'source-fresh' radio input to checked
     return this;
+  }
+
+  function removeErrBlks() {
+    console.groupCollapsed("cleanUpErrMsgs()");
+    const errBlocks = [document.querySelector("[id|='syllable-error']")];
+    errBlocks.forEach((blk) => {
+      if (blk){
+        console.info("Error block found");
+        blk.remove();
+      }
+    });
+    console.groupEnd();
   }
 
   return {
@@ -886,10 +903,24 @@ function controlManger() {
     return this;
   }
 
+  // To reset Question mode when something changes on the setting form
+  function resetQuestionMode() {
+    removeClass('disabled',
+      selectors.settingSyllable,
+      selectors.settingRepractice, 
+    );
+    addClass('disabled',
+      selectors.settingRepractice, 
+    );
+
+    document.querySelector("#source-fresh").checked = true; // Set the 'source-fresh' radio input to checked
+  }
+
   return {
     floatingBtnsHideAll,
     hideResumeShowBack,
     hideBackShowResume,
     toggleFormDisplay,
+    resetQuestionMode,
   }
 }

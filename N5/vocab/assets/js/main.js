@@ -32,16 +32,25 @@ function convertCheckedValuesToArray(nodeList) {
   return convertedArray;
 }  
 
-// to copy `CatName` property from source array of objects to target array
+// to copy `propertyName` property from source array of objects to target array
 // used to fetch all the answers and mix up with the correct answer
-function copyOneProperty(source, target, catName) {
-  
-  let i = 0;
-  source.forEach(element => {
-    target[i] = element[catName];
-    i++;
+function copyOneProperty(source, target, propertyName) {
+  console.groupCollapsed("copyOneProperty()");
+  console.info("propertyName: ", propertyName);
+
+  source.forEach((element, i) => {
+    if (propertyName === en) {
+      console.info("Going through .toLowerCase() & trim()");
+      target[i] = element[propertyName].toLowerCase().trim();
+    } else {
+      console.info("Skipped toLowerCase, going through trim()")
+      target[i] = element[propertyName].trim();
+    }
   });
+  console.info(target);
+  console.groupEnd();
 }
+
 
 // to shuffle an array
 function shuffleArray(array) {
