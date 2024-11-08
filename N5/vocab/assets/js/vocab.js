@@ -471,8 +471,11 @@ function answerListnerManager() {
       questionMgr.finalizeQuestionAndProceed(true);
     } else if (btnID === "choice-btn-1") {
       if (currentQuestionMode !== "stored") {
-        vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
+        vocabMgr.storeToPractice(); // add wrongly selected word to localstorage
+      } else {
+
       }
+
       questionMgr.finalizeQuestionAndProceed(false);
     }
 
@@ -528,27 +531,35 @@ function vocabManager() {
     console.groupEnd();
   }
 
-  // store passed obj to local storage
-  function storeToPractice(questionInstance) { // [sn5]
-    console.groupCollapsed("vocabManager() - storeToPractice()");
+  function storeToPractice() { // [sn5]
+    console.groupCollapsed("storeToPractice()");
 
     let incorrectSets = loadMistakesFromStorage();
-    
-    //console.log(questionInstance.readQuestionObj);
+
     // [sn6] Check if the object already exists in the array
     let exists = incorrectSets.some(answer =>
-      answer.ka === questionInstance.readQuestionObj.ka &&
-      answer.hi === questionInstance.readQuestionObj.hi &&
-      answer.en === questionInstance.readQuestionObj.en
+      answer.ka === questionMgr.readQuestionObj.ka &&
+      answer.hi === questionMgr.readQuestionObj.hi &&
+      answer.en === questionMgr.readQuestionObj.en
     );
-  
+
     // If it doesn't exist, add it to the array
     if (!exists) {
-      incorrectSets.push(questionInstance.readQuestionObj);
-      console.log("New word pushed to localstorage.");
+      incorrectSets.push(questionMgr.readQuestionObj);
+      console.info("New word pushed to localstorage.");
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
-      loadMistakesFromStorage();
+      //loadMistakesFromStorage();
+    } else {
+      console.info("Word already exit in localstorage.")
     }
+
+    console.groupEnd();
+  }
+
+  function removeFromMistakeBank(questionInstance) {
+    console.groupCollapsed("removeFromMistakeBank()");
+
+    let incorrectSets = loadMistakesFromStorage();
 
     console.groupEnd();
   }
