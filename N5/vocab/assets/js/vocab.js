@@ -436,7 +436,7 @@ function answerListnerManager() {
     
     else {
         questionMgr.finalizeQuestionAndProceed(false);
-        vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
+        vocabMgr.storeToMistakeBank(questionMgr); // add wrongly selected word to localstorage
         clearScreen(sectionMessage);
 
         setTimeout(() => {
@@ -471,7 +471,7 @@ function answerListnerManager() {
       questionMgr.finalizeQuestionAndProceed(true);
     } else if (btnID === "choice-btn-1") {
       if (currentQuestionMode !== "stored") {
-        vocabMgr.storeToPractice(); // add wrongly selected word to localstorage
+        vocabMgr.storeToMistakeBank(); // add wrongly selected word to localstorage
       } else {
 
       }
@@ -531,8 +531,8 @@ function vocabManager() {
     console.groupEnd();
   }
 
-  function storeToPractice() { // [sn5]
-    console.groupCollapsed("storeToPractice()");
+  function storeToMistakeBank() { // [sn5]
+    console.groupCollapsed("storeToMistakeBank()");
 
     let incorrectSets = loadMistakesFromStorage();
 
@@ -560,6 +560,9 @@ function vocabManager() {
     console.groupCollapsed("removeFromMistakeBank()");
 
     let incorrectSets = loadMistakesFromStorage();
+    incorrectSets.pop(questionMgr.readQuestionObj);
+    console.info("Word pops from local storage");
+    localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
 
     console.groupEnd();
   }
@@ -648,7 +651,7 @@ function vocabManager() {
 
   return {
     removeSpecifiedQuestion,
-    storeToPractice,
+    storeToMistakeBank,
     flushLocalStorage,
     loadMistakesFromStorage,
     saveState,
