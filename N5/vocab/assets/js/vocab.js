@@ -534,7 +534,7 @@ function vocabManager() {
   function storeToMistakeBank() { // [sn5]
     console.groupCollapsed("storeToMistakeBank()");
 
-    let incorrectSets = loadMistakesFromStorage();
+    let incorrectSets = loadMistakesFromMistakeBank();
 
     // [sn6] Check if the object already exists in the array
     let exists = incorrectSets.some(answer =>
@@ -548,7 +548,7 @@ function vocabManager() {
       incorrectSets.push(questionMgr.readQuestionObj);
       console.info("New word pushed to localstorage.");
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
-      //loadMistakesFromStorage();
+      //loadMistakesFromMistakeBank();
     } else {
       console.info("Word already exit in localstorage.")
     }
@@ -559,7 +559,7 @@ function vocabManager() {
   function removeFromMistakeBank() {
     console.groupCollapsed("removeFromMistakeBank()");
 
-    let incorrectSets = loadMistakesFromStorage();
+    let incorrectSets = loadMistakesFromMistakeBank();
     incorrectSets.pop(questionMgr.readQuestionObj);
     console.info("Word pops from local storage");
     localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
@@ -568,8 +568,8 @@ function vocabManager() {
   }
   
   // to load data from local storage
-  function loadMistakesFromStorage() {
-    //console.groupCollapsed("vocabManager() - loadMistakesFromStorage()");
+  function loadMistakesFromMistakeBank() {
+    //console.groupCollapsed("vocabManager() - loadMistakesFromMistakeBank()");
 
     let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
     storedLength = storedObjects.length;
@@ -654,12 +654,12 @@ function vocabManager() {
     storeToMistakeBank,
     removeFromMistakeBank,
     flushMistakeBank,
-    loadMistakesFromStorage,
+    loadMistakesFromMistakeBank,
     saveState,
     loadState,
     clearState,
     get readStoredLength() { 
-      let mistakeFromStorage = loadMistakesFromStorage();
+      let mistakeFromStorage = loadMistakesFromMistakeBank();
       return mistakeFromStorage.length;
     },
   }

@@ -426,10 +426,10 @@ function loaderManager() {
 
     questionMgr.setQuestionMode("stored");
     
-    // Ensure loadMistakesFromStorage returns an array
-    const storedData = vocabInstance.loadMistakesFromStorage();
+    // Ensure loadMistakesFromMistakeBank returns an array
+    const storedData = vocabInstance.loadMistakesFromMistakeBank();
     if (!Array.isArray(storedData)) {
-        console.error("Error: Stored data is not an array! Check your loadMistakesFromStorage function.");
+        console.error("Error: Stored data is not an array! Check your loadMistakesFromMistakeBank function.");
         return;
     }
     
@@ -718,7 +718,7 @@ function loaderManager() {
   function listMistakes() {
     console.groupCollapsed("listMistakes()");
 
-    const mistakeArray = vocabInstance.loadMistakesFromStorage(); // Load mistakes from localStorage
+    const mistakeArray = vocabInstance.loadMistakesFromMistakeBank(); // Load mistakes from localStorage
     
     // Create the container to display the mistakes
     buildNode({
