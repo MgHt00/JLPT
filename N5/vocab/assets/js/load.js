@@ -593,6 +593,8 @@ function loaderManager() {
       assignLanguage(sectionAnswer, enLang);
     }
 
+    assignLanguage(sectionMessage, enLang);
+
     return this;
   }
 
@@ -799,6 +801,7 @@ function loaderManager() {
     console.groupEnd();
   }
 
+  // Reset after flushing mistake bank
   function resetAfterFlushingMistakes() {
     toggleClass('disabled', 
       selectors.settingRepractice, 
@@ -808,6 +811,7 @@ function loaderManager() {
     return this;
   }
 
+  // To remove error messages after "Start New" is clicked
   function removeErrBlks() {
     console.groupCollapsed("cleanUpErrMsgs()");
     const errBlocks = [document.querySelector("[id|='syllable-error']")];
