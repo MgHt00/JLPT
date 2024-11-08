@@ -580,8 +580,8 @@ function vocabManager() {
   }
   
   // to flush local storage
-  function flushLocalStorage() {
-    console.groupCollapsed("vocabManager() - flushLocalStorage()");
+  function flushMistakeBank() {
+    console.groupCollapsed("vocabManager() - flushMistakeBank()");
 
     localStorage.removeItem("toPractice");
     console.log("localstorage flushed.");
@@ -653,7 +653,7 @@ function vocabManager() {
     removeSpecifiedQuestion,
     storeToMistakeBank,
     removeFromMistakeBank,
-    flushLocalStorage,
+    flushMistakeBank,
     loadMistakesFromStorage,
     saveState,
     loadState,

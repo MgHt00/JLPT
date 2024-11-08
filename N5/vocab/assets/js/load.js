@@ -527,7 +527,7 @@ function loaderManager() {
       //content: 'trash',
       className: 'flush-memory-setting-btn',
       idName: 'flush-memory-btn',
-      eventFunction: vocabInstance.flushLocalStorage,
+      eventFunction: vocabInstance.flushMistakeBank,
     });
     // Build `list` button
     buildNode({
