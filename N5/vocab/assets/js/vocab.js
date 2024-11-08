@@ -556,7 +556,7 @@ function vocabManager() {
     console.groupEnd();
   }
 
-  function removeFromMistakeBank(questionInstance) {
+  function removeFromMistakeBank() {
     console.groupCollapsed("removeFromMistakeBank()");
 
     let incorrectSets = loadMistakesFromStorage();
@@ -652,6 +652,7 @@ function vocabManager() {
   return {
     removeSpecifiedQuestion,
     storeToMistakeBank,
+    removeFromMistakeBank,
     flushLocalStorage,
     loadMistakesFromStorage,
     saveState,
