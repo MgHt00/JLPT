@@ -205,9 +205,10 @@ function clearScreen(elements, mode) {
 
 // to move the entire node
 function clearNode({ parent, children = [] }) { 
-  // !IMPORTANT: when passing child/children to this function, wrap it with [] 
-  if (children.length > 0) {
-    children.forEach(child => {
+  const childArray = Array.isArray(children) ? children : [children]; // Ensure children is an array]
+  
+  if (childArray.length > 0) {
+    childArray.forEach(child => {
       if (parent.contains(child)) {
         child.classList.add('fade-out');
 
