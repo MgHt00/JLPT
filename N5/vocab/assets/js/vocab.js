@@ -1,6 +1,7 @@
 const questionMgr = questionManager();
 const vocabMgr =  vocabManager();
 const answerMgr = answerManager();
+const answerListenersMgr = answerListnerManager();
 
 function questionManager() {
   let questionObj = {};
@@ -149,7 +150,7 @@ function answerManager() {
           content: '', 
           className: ['answer-btn', 'check-flash-mode-answer'], 
           idName: 'answer-btn', 
-          eventFunction: handleFlashcardFlip
+          eventFunction: answerListenersMgr.handleFlashcardFlip
         });
         // Building "Flip" text
         buildNode({ 
@@ -169,7 +170,7 @@ function answerManager() {
         child: 'div', 
         content: ansArray, 
         className: 'answer-btn', 
-        eventFunction: handleMultipleChoiceAnswer 
+        eventFunction: answerListenersMgr.handleMultipleChoiceAnswer 
       });
     }
 
@@ -338,6 +339,23 @@ function answerManager() {
     return tempAnsArray;
   }
 
+  //let rePractice = [];
+
+  function practiceAgain() {
+    //const questionInstance = questionMgr;
+    console.log("Inside showQuestionAgain(); questionObj: ", questionMgr.readQuestionObj);
+    rePractice.push(questionMgr.readQuestionObj);
+  }
+
+  return {
+    vocabMapping,
+    renderAnswers,
+    noMoreQuestion,
+    setRanOnce,
+  }
+}
+
+function answerListnerManager() {
   // Event handler for flashcard mode
   function handleFlashcardFlip() {
     //console.groupCollapsed("answerManager() - handleFlashcardFlip()");
@@ -379,7 +397,7 @@ function answerManager() {
         content: ['Yes', 'No'],
         className: 'answer-btn',
         idName: 'choice-btn',
-        eventFunction: handleFlashCardYesNoAnswer
+        eventFunction: answerListenersMgr.handleFlashCardYesNoAnswer
       });
 
       toggleClass('fade-out-light', sectionMessage, sectionAnswer);
@@ -484,20 +502,11 @@ function answerManager() {
     console.groupEnd();
   }
 
-  //let rePractice = [];
-
-  function practiceAgain() {
-    //const questionInstance = questionMgr;
-    console.log("Inside showQuestionAgain(); questionObj: ", questionMgr.readQuestionObj);
-    rePractice.push(questionMgr.readQuestionObj);
-  }
-
   return {
-    vocabMapping,
-    renderAnswers,
-    noMoreQuestion,
+    handleFlashcardFlip,
+    handleMultipleChoiceAnswer,
+    handleFlashCardYesNoAnswer,
     handleContineToStoredData,
-    setRanOnce,
   }
 }
 

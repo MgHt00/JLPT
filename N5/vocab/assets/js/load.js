@@ -489,7 +489,7 @@ function loaderManager() {
   }
 
   // to load stored data from local storage and show info at the settings
-  function loadMemoryData () {
+  function loadMemoryData() {
     let storedLength = vocabInstance.readStoredLength;
     if (storedLength === 0) {
       buildNode({
