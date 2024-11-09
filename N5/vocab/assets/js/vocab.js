@@ -473,7 +473,7 @@ function answerListnerManager() {
       if (currentQuestionMode !== "stored") {
         vocabMgr.storeToMistakeBank(); // add wrongly selected word to localstorage
       } else {
-
+        vocabMgr.removeFromMistakeBank();
       }
 
       questionMgr.finalizeQuestionAndProceed(false);
@@ -560,8 +560,12 @@ function vocabManager() {
     console.groupCollapsed("removeFromMistakeBank()");
 
     let incorrectSets = loadMistakesFromMistakeBank();
+
+    console.info("incorrectSets Before popping: ", incorrectSets);
     incorrectSets.pop(questionMgr.readQuestionObj);
     console.info("Word pops from local storage");
+    console.info("incorrectSets AFTER popping: ", incorrectSets);
+
     localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
 
     console.groupEnd();
@@ -695,9 +699,10 @@ function errorManager() {
           console.error("Not enough unique answers to generate.");
 
           if (!document.querySelector("[id|='runtime-error']")) { // if error is not already shown
+            toggleClass('hide', selectors.settingNoOfAnsERRblk);
             showError({
               errcode: "iLoop",
-              parentName: selectors.settingNoOfAns,
+              parentName: selectors.settingNoOfAnsERRblk,
               idName: "runtime-error"
             });
           }

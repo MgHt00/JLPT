@@ -44,6 +44,11 @@
   gap: 10px;
 }
 
+#settingsForm #settings-noOfAnswers-errBLK {
+  width: 100%;
+  align-items: center;
+}
+
 #settingsForm #settings-qChoiceInput,
 #settingsForm #settings-aChoiceInput{
   width: 100%;
