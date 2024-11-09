@@ -7,7 +7,7 @@
 
   /*width: 375px;
   height: 667px;*/
-  max-width: 317px;
+  max-width: 310px;
   background: #1F1D2B;
 
   /* Prevents sudden shifts */
@@ -20,7 +20,7 @@
 
 #settingsForm #settings-randomInput,
 #settingsForm #settings-flashYesNo,
-#settingsForm #settings-noOfAnswers,
+/*#settingsForm #settings-noOfAnswers,*/
 #settingsForm #settings-source,
 #settingsForm #settings-syllableChoice,
 #settingsForm #settings-repractice {
@@ -38,11 +38,38 @@
   flex-grow: 0;
 }
 
-#settingsForm #settings-randomInput,
-#settingsForm #settings-noOfAnswers {
+#settingsForm #settings-randomInput
+/*#settingsForm #settings-noOfAnswers*/ {
   flex-direction: row;
   gap: 10px;
 }
+
+#settingsForm #settings-noOfAnswers {
+  width: 250px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px;
+}
+
+#settings-noOfAnswers > label {
+  width: 50%;        
+  flex-shrink: 0; 
+}
+
+.no-of-answers-div {
+  width: 43%;
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0; 
+}
+
+.setting-error {
+  flex: 1 1 100%;        /* Error message takes full width below */
+  max-width: 250px;
+  /*color: red;
+  font-size: 0.9em;*/
+}
+
 
 #settingsForm #settings-qChoiceInput,
 #settingsForm #settings-aChoiceInput{

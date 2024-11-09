@@ -15,6 +15,7 @@ const statusInstance = statusManager();
   toggleClass('fade-hide', sectionMessage);
   controlInstance.floatingBtnsHideAll();
   toggleClass('disabled', selectors.settingRepractice);
+  toggleClass('hide', selectors.settingNoOfAnsERRblk);
   listenerInstance.generalListeners();
 
   // if the program is still in progress, load data from local storage to global objects
@@ -326,26 +327,30 @@ function loaderManager() {
       await loadStoredJSON();// Wait for loadStoredJSON to complete
     }
 
+    console.info("appState.flashYesNo: ", appState.flashYesNo);
+    console.info("appState.randomYesNo: ", appState.randomYesNo);
+
     if (validateSyllable()) {
       // Only check the runtime error if validateSyllable() returns true
       // Otherwise program shows infinite loop error without necessary.
       const isRuntimeError = errorInstance.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
-  
+
       if (!isRuntimeError) {  // Now checks if there is NOT a runtime error
-          console.error("Program failed at loaderManager()");
-          return; // Exit if there is an infinite loop error
+        console.error("Program failed at loaderManager()");
+        return; // Exit if there is an infinite loop error
       }
-  
-      // Continue if there is no runtime error.
-      //loaderInstance.resumeTo = "program";
-      listenerInstance.moveForm();
-      controlInstance.floatingBtnsHideAll().toggleFormDisplay().hideResumeShowBack();
-      statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
-      statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
-      //toggleClass('shift-sections-to-center', dynamicDOM);
-      questionMgr.newQuestion();
-      removeErrBlks();
     }
+    
+    // Continue if there is no runtime error.
+    //loaderInstance.resumeTo = "program";
+    listenerInstance.moveForm();
+    controlInstance.floatingBtnsHideAll().toggleFormDisplay().hideResumeShowBack();
+    statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
+    statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
+    //toggleClass('shift-sections-to-center', dynamicDOM);
+    questionMgr.newQuestion();
+    removeErrBlks();
+
   }
 
   // to validate input data and set defaults if necessary
@@ -426,10 +431,10 @@ function loaderManager() {
 
     questionMgr.setQuestionMode("stored");
     
-    // Ensure loadMistakesFromStorage returns an array
-    const storedData = vocabInstance.loadMistakesFromStorage();
+    // Ensure loadMistakesFromMistakeBank returns an array
+    const storedData = vocabInstance.loadMistakesFromMistakeBank();
     if (!Array.isArray(storedData)) {
-        console.error("Error: Stored data is not an array! Check your loadMistakesFromStorage function.");
+        console.error("Error: Stored data is not an array! Check your loadMistakesFromMistakeBank function.");
         return;
     }
     
@@ -489,7 +494,7 @@ function loaderManager() {
   }
 
   // to load stored data from local storage and show info at the settings
-  function loadMemoryData () {
+  function loadMemoryData() {
     let storedLength = vocabInstance.readStoredLength;
     if (storedLength === 0) {
       buildNode({
@@ -527,7 +532,7 @@ function loaderManager() {
       //content: 'trash',
       className: 'flush-memory-setting-btn',
       idName: 'flush-memory-btn',
-      eventFunction: vocabInstance.flushLocalStorage,
+      eventFunction: vocabInstance.flushMistakeBank,
     });
     // Build `list` button
     buildNode({
@@ -593,6 +598,8 @@ function loaderManager() {
       assignLanguage(sectionAnswer, enLang);
     }
 
+    assignLanguage(sectionMessage, enLang);
+
     return this;
   }
 
@@ -644,6 +651,8 @@ function loaderManager() {
   function validateToggleSwitch(selectorNames) {
     console.groupCollapsed("validateToggleSwitch()");
 
+    console.info("Parameters: ", selectorNames);
+
     for (let selectorName of selectorNames) {
       if (appState[selectorName] === null) {
         appState[selectorName] = false;
@@ -654,7 +663,7 @@ function loaderManager() {
         console.warn(`${appState[selectorName]} is neither true nor false. Resetting to false.`);
       }
       else {
-        console.info(`${selectorName} is good to go: ${appState[selectorName]}`);
+        console.info(`${selectorName} is good to go.  Current value: ${appState[selectorName]}`);
       }
     }
     console.groupEnd();
@@ -716,7 +725,7 @@ function loaderManager() {
   function listMistakes() {
     console.groupCollapsed("listMistakes()");
 
-    const mistakeArray = vocabInstance.loadMistakesFromStorage(); // Load mistakes from localStorage
+    const mistakeArray = vocabInstance.loadMistakesFromMistakeBank(); // Load mistakes from localStorage
     
     // Create the container to display the mistakes
     buildNode({
@@ -799,6 +808,7 @@ function loaderManager() {
     console.groupEnd();
   }
 
+  // Reset after flushing mistake bank
   function resetAfterFlushingMistakes() {
     toggleClass('disabled', 
       selectors.settingRepractice, 
@@ -808,9 +818,10 @@ function loaderManager() {
     return this;
   }
 
+  // To remove error messages after "Start New" is clicked
   function removeErrBlks() {
     console.groupCollapsed("cleanUpErrMsgs()");
-    const errBlocks = [document.querySelector("[id|='syllable-error']")];
+    const errBlocks = [document.querySelector("[id|='syllable-error']"), document.querySelector("[id|='runtime-error']")];
     errBlocks.forEach((blk) => {
       if (blk){
         console.info("Error block found");

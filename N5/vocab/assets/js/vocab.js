@@ -1,6 +1,7 @@
 const questionMgr = questionManager();
 const vocabMgr =  vocabManager();
 const answerMgr = answerManager();
+const answerListenersMgr = answerListnerManager();
 
 function questionManager() {
   let questionObj = {};
@@ -149,7 +150,7 @@ function answerManager() {
           content: '', 
           className: ['answer-btn', 'check-flash-mode-answer'], 
           idName: 'answer-btn', 
-          eventFunction: handleFlashcardFlip
+          eventFunction: answerListenersMgr.handleFlashcardFlip
         });
         // Building "Flip" text
         buildNode({ 
@@ -169,7 +170,7 @@ function answerManager() {
         child: 'div', 
         content: ansArray, 
         className: 'answer-btn', 
-        eventFunction: handleMultipleChoiceAnswer 
+        eventFunction: answerListenersMgr.handleMultipleChoiceAnswer 
       });
     }
 
@@ -338,6 +339,23 @@ function answerManager() {
     return tempAnsArray;
   }
 
+  //let rePractice = [];
+
+  function practiceAgain() {
+    //const questionInstance = questionMgr;
+    console.log("Inside showQuestionAgain(); questionObj: ", questionMgr.readQuestionObj);
+    rePractice.push(questionMgr.readQuestionObj);
+  }
+
+  return {
+    vocabMapping,
+    renderAnswers,
+    noMoreQuestion,
+    setRanOnce,
+  }
+}
+
+function answerListnerManager() {
   // Event handler for flashcard mode
   function handleFlashcardFlip() {
     //console.groupCollapsed("answerManager() - handleFlashcardFlip()");
@@ -379,7 +397,7 @@ function answerManager() {
         content: ['Yes', 'No'],
         className: 'answer-btn',
         idName: 'choice-btn',
-        eventFunction: handleFlashCardYesNoAnswer
+        eventFunction: answerListenersMgr.handleFlashCardYesNoAnswer
       });
 
       toggleClass('fade-out-light', sectionMessage, sectionAnswer);
@@ -418,7 +436,7 @@ function answerManager() {
     
     else {
         questionMgr.finalizeQuestionAndProceed(false);
-        vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
+        vocabMgr.storeToMistakeBank(questionMgr); // add wrongly selected word to localstorage
         clearScreen(sectionMessage);
 
         setTimeout(() => {
@@ -453,8 +471,11 @@ function answerManager() {
       questionMgr.finalizeQuestionAndProceed(true);
     } else if (btnID === "choice-btn-1") {
       if (currentQuestionMode !== "stored") {
-        vocabMgr.storeToPractice(questionMgr); // add wrongly selected word to localstorage
+        vocabMgr.storeToMistakeBank(); // add wrongly selected word to localstorage
+      } else {
+        vocabMgr.removeFromMistakeBank();
       }
+
       questionMgr.finalizeQuestionAndProceed(false);
     }
 
@@ -484,20 +505,11 @@ function answerManager() {
     console.groupEnd();
   }
 
-  //let rePractice = [];
-
-  function practiceAgain() {
-    //const questionInstance = questionMgr;
-    console.log("Inside showQuestionAgain(); questionObj: ", questionMgr.readQuestionObj);
-    rePractice.push(questionMgr.readQuestionObj);
-  }
-
   return {
-    vocabMapping,
-    renderAnswers,
-    noMoreQuestion,
+    handleFlashcardFlip,
+    handleMultipleChoiceAnswer,
+    handleFlashCardYesNoAnswer,
     handleContineToStoredData,
-    setRanOnce,
   }
 }
 
@@ -519,34 +531,49 @@ function vocabManager() {
     console.groupEnd();
   }
 
-  // store passed obj to local storage
-  function storeToPractice(questionInstance) { // [sn5]
-    console.groupCollapsed("vocabManager() - storeToPractice()");
+  function storeToMistakeBank() { // [sn5]
+    console.groupCollapsed("storeToMistakeBank()");
 
-    let incorrectSets = loadMistakesFromStorage();
-    
-    //console.log(questionInstance.readQuestionObj);
+    let incorrectSets = loadMistakesFromMistakeBank();
+
     // [sn6] Check if the object already exists in the array
     let exists = incorrectSets.some(answer =>
-      answer.ka === questionInstance.readQuestionObj.ka &&
-      answer.hi === questionInstance.readQuestionObj.hi &&
-      answer.en === questionInstance.readQuestionObj.en
+      answer.ka === questionMgr.readQuestionObj.ka &&
+      answer.hi === questionMgr.readQuestionObj.hi &&
+      answer.en === questionMgr.readQuestionObj.en
     );
-  
+
     // If it doesn't exist, add it to the array
     if (!exists) {
-      incorrectSets.push(questionInstance.readQuestionObj);
-      console.log("New word pushed to localstorage.");
+      incorrectSets.push(questionMgr.readQuestionObj);
+      console.info("New word pushed to localstorage.");
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
-      loadMistakesFromStorage();
+      //loadMistakesFromMistakeBank();
+    } else {
+      console.info("Word already exit in localstorage.")
     }
+
+    console.groupEnd();
+  }
+
+  function removeFromMistakeBank() {
+    console.groupCollapsed("removeFromMistakeBank()");
+
+    let incorrectSets = loadMistakesFromMistakeBank();
+
+    console.info("incorrectSets Before popping: ", incorrectSets);
+    incorrectSets.pop(questionMgr.readQuestionObj);
+    console.info("Word pops from local storage");
+    console.info("incorrectSets AFTER popping: ", incorrectSets);
+
+    localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
 
     console.groupEnd();
   }
   
   // to load data from local storage
-  function loadMistakesFromStorage() {
-    //console.groupCollapsed("vocabManager() - loadMistakesFromStorage()");
+  function loadMistakesFromMistakeBank() {
+    //console.groupCollapsed("vocabManager() - loadMistakesFromMistakeBank()");
 
     let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
     storedLength = storedObjects.length;
@@ -557,8 +584,8 @@ function vocabManager() {
   }
   
   // to flush local storage
-  function flushLocalStorage() {
-    console.groupCollapsed("vocabManager() - flushLocalStorage()");
+  function flushMistakeBank() {
+    console.groupCollapsed("vocabManager() - flushMistakeBank()");
 
     localStorage.removeItem("toPractice");
     console.log("localstorage flushed.");
@@ -628,14 +655,15 @@ function vocabManager() {
 
   return {
     removeSpecifiedQuestion,
-    storeToPractice,
-    flushLocalStorage,
-    loadMistakesFromStorage,
+    storeToMistakeBank,
+    removeFromMistakeBank,
+    flushMistakeBank,
+    loadMistakesFromMistakeBank,
     saveState,
     loadState,
     clearState,
     get readStoredLength() { 
-      let mistakeFromStorage = loadMistakesFromStorage();
+      let mistakeFromStorage = loadMistakesFromMistakeBank();
       return mistakeFromStorage.length;
     },
   }
