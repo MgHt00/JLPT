@@ -699,10 +699,9 @@ function errorManager() {
           console.error("Not enough unique answers to generate.");
 
           if (!document.querySelector("[id|='runtime-error']")) { // if error is not already shown
-            toggleClass('hide', selectors.settingNoOfAnsERRblk);
             showError({
               errcode: "iLoop",
-              parentName: selectors.settingNoOfAnsERRblk,
+              parentName: selectors.settingNoOfAns,
               idName: "runtime-error"
             });
           }

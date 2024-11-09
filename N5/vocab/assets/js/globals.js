@@ -48,7 +48,7 @@ const selectors = {
   settingFlashYesNo : document.querySelector("#settings-flashYesNo"),
   switchFlashYesNo : document.querySelector("#flashYesNo"),
   settingNoOfAns : document.querySelector("#settings-noOfAnswers"),
-  settingNoOfAnsERRblk : document.querySelector("#settings-noOfAnswers-errBLK"),
+  //settingNoOfAnsERRblk : document.querySelector("#settings-noOfAnswers-errBLK"),
   settingSource: document.querySelector("#settings-source"),
   qChoice : document.querySelector("#qChoiceInput"),
   aChoice : document.querySelector("#aChoiceInput"),
