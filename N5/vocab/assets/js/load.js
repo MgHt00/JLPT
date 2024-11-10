@@ -312,7 +312,6 @@ function loaderManager() {
   // when user click submit(start) button of the setting form
   async function start(e) {  
     e.preventDefault(); // Prevent form from submitting the usual way
-    
     validateAndSetInputData(e); // validate and set defaults to the input data.
 
     if (appState.qMode === "stored") {
@@ -320,35 +319,39 @@ function loaderManager() {
         errorInstance.runtimeError("mem0");
         return;
       }
+      // Continue if there is no runtime error.
+      await loadStoredJSON();// Wait for loadStoredJSON to complete
+      initializeQuiz();
     }
        
     if (appState.qMode === "fresh") {
-      await loadFreshJSON(); // Wait for loadFreshJSON to complete
-    } else {
-      await loadStoredJSON();// Wait for loadStoredJSON to complete
-    }
-
-    if (validateSyllable()) {
-      // Only check the runtime error if validateSyllable() returns true
-      // Otherwise program shows infinite loop error without necessary.
-      const hasSufficientAnswers = errorInstance.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
-
-      if (!hasSufficientAnswers) {  // Now checks if there is NOT a runtime error
-        console.error("Program failed at loaderManager()");
-        return; // Exit if there is an infinite loop error
+      if (validateSyllable()) {
+        // Only check the runtime error if validateSyllable() returns true ...
+        // ... Otherwise program shows infinite loop error without necessary.
+        const hasSufficientAnswers = errorInstance.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
+        if (!hasSufficientAnswers) {  // Now checks if there is NOT a runtime error
+          console.error("Program failed at loaderManager()");
+          return; // Exit if there is an infinite loop error
+        }
+        // Continue if there is no runtime error.
+        await loadFreshJSON(); // Wait for loadFreshJSON to complete
+        initializeQuiz();
       }
+    } 
+  }
 
-      // Continue if there is no runtime error.
-      //loaderInstance.resumeTo = "program";
-      listenerInstance.moveForm();
-      controlInstance.floatingBtnsHideAll().toggleFormDisplay().hideResumeShowBack();
-      statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
-      statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
-      //toggleClass('shift-sections-to-center', dynamicDOM);
-      questionMgr.newQuestion();
-      removeErrBlks();
-
-    }
+  // Function to initialize quiz settings and UI setup
+  function initializeQuiz() {
+    listenerInstance.moveForm();
+    controlInstance.floatingBtnsHideAll()
+                   .toggleFormDisplay()
+                   .hideResumeShowBack();
+    statusInstance.resetQuestionCount()
+                  .resetTotalNoOfQuestion()
+                  .getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
+    statusInstance.resetCumulativeVariables(); // reset cumulative variables
+    questionMgr.newQuestion();
+    removeErrBlks();
   }
 
   // to validate input data and set defaults if necessary
