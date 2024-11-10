@@ -32,7 +32,7 @@ function questionManager() {
                                                  // (need to check for the situation where answer choice is Kanji and it is empty.)
   
         // Once a valid question is found, store the correct answer
-        appState.correctAns = questionObj[selectors.aChoice.value]; // Store correct answer
+        appState.correctAns = questionObj[selectors.aChoice.value].toLowerCase().trim(); // Store correct answer
         
         statusInstance.increaseQuestionCount(); // increse question count for status bar
         //statusInstance.printQuestionStatus() // show current status
