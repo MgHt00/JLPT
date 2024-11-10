@@ -716,6 +716,7 @@ function errorManager() {
 
       case "syllable-error":
         if (!document.querySelector("[id|='syllable-error']")) { // if error is not already shown
+          console.info("we are inside syllable-error => if blk");
           errorInstance.showError({
             errcode: "noSL",
             parentName: selectors.settingSyllable,

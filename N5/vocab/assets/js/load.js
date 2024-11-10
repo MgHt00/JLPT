@@ -176,6 +176,7 @@ function listenerManager() {
 
   // to handle when program question mode (fresh / stored) is changed
   function questionModeChanges(e) {
+    loaderInstance.removeErrBlks();
     let selectedMode = selectors.readQuestionMode;
     if (selectedMode === "fresh") {
       toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
@@ -327,30 +328,27 @@ function loaderManager() {
       await loadStoredJSON();// Wait for loadStoredJSON to complete
     }
 
-    console.info("appState.flashYesNo: ", appState.flashYesNo);
-    console.info("appState.randomYesNo: ", appState.randomYesNo);
-
     if (validateSyllable()) {
       // Only check the runtime error if validateSyllable() returns true
       // Otherwise program shows infinite loop error without necessary.
-      const isRuntimeError = errorInstance.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
+      const hasSufficientAnswers = errorInstance.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
 
-      if (!isRuntimeError) {  // Now checks if there is NOT a runtime error
+      if (!hasSufficientAnswers) {  // Now checks if there is NOT a runtime error
         console.error("Program failed at loaderManager()");
         return; // Exit if there is an infinite loop error
       }
-    }
-    
-    // Continue if there is no runtime error.
-    //loaderInstance.resumeTo = "program";
-    listenerInstance.moveForm();
-    controlInstance.floatingBtnsHideAll().toggleFormDisplay().hideResumeShowBack();
-    statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
-    statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
-    //toggleClass('shift-sections-to-center', dynamicDOM);
-    questionMgr.newQuestion();
-    removeErrBlks();
 
+      // Continue if there is no runtime error.
+      //loaderInstance.resumeTo = "program";
+      listenerInstance.moveForm();
+      controlInstance.floatingBtnsHideAll().toggleFormDisplay().hideResumeShowBack();
+      statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
+      statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
+      //toggleClass('shift-sections-to-center', dynamicDOM);
+      questionMgr.newQuestion();
+      removeErrBlks();
+
+    }
   }
 
   // to validate input data and set defaults if necessary
@@ -842,6 +840,7 @@ function loaderManager() {
     listMistakes,
     resumeProgram,
     resetAfterFlushingMistakes,
+    removeErrBlks,
   }
 }
 
