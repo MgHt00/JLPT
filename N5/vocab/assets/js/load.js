@@ -135,6 +135,7 @@ function listenerManager() {
 
   // to handle when syllable checkboxs are changed
   function syllableChangesImprovedVer(event) { // [le4]
+    console.groupCollapsed("syllableChangesImprovedVer()");
     const allCheckbox = document.getElementById('syllableAll');
     const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
       .filter(checkbox => checkbox !== allCheckbox);
@@ -172,6 +173,7 @@ function listenerManager() {
         allCheckbox.checked = false; 
       }
     }
+    console.groupEnd();
   }
 
   // to handle when program question mode (fresh / stored) is changed
@@ -326,6 +328,8 @@ function loaderManager() {
        
     if (appState.qMode === "fresh") {
       if (validateSyllable()) {
+        await loadFreshJSON(); // Wait for loadFreshJSON to complete
+
         // Only check the runtime error if validateSyllable() returns true ...
         // ... Otherwise program shows infinite loop error without necessary.
         const hasSufficientAnswers = errorInstance.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
@@ -333,8 +337,8 @@ function loaderManager() {
           console.error("Program failed at loaderManager()");
           return; // Exit if there is an infinite loop error
         }
+        
         // Continue if there is no runtime error.
-        await loadFreshJSON(); // Wait for loadFreshJSON to complete
         initializeQuiz();
       }
     } 
@@ -365,9 +369,9 @@ function loaderManager() {
     
     assignLanguage(sectionMessage, enLang); // Always set message section to English
 
-    if (appState.qMode === "fresh") { // Run the following block only if qMode is 'fresh'
+    /*if (appState.qMode === "fresh") { // Run the following block only if qMode is 'fresh'
       validateSyllable(); // Validate syllable choices and show an error if none are selected
-    }
+    }*/
 
     appState.qChoiceInput = selectors.readqChoiceInput ?? "hi";
     appState.aChoiceInput = selectors.readaChoiceInput ?? "en";
@@ -417,7 +421,7 @@ function loaderManager() {
     appData.vocabArray = results.flat();
     //console.log("vocabArray(before removeBlankQuestion(): ", appData.vocabArray);
     appData.vocabArray = removeBlankQuestions(appData.vocabArray);
-    //console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
+    console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
 
     copyOneProperty(appData.vocabArray, kaVocab, ka);
     copyOneProperty(appData.vocabArray, hiVocab, hi);
