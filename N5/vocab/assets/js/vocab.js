@@ -582,7 +582,7 @@ function vocabManager() {
     console.info("incorrectSets AFTER popping: ", incorrectSets);
 
     localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
-    console.info("incorrectSets had been successfully pushed to toPractice.");
+    console.info("incorrectSets had been successfully pushed it back to toPractice.");
 
     console.groupEnd();
   }
