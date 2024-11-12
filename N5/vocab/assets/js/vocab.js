@@ -259,7 +259,7 @@ function answerManager() {
         content: 'Yes', 
         className: 'answer-btn', 
         idName: 'continue-yes', 
-        eventFunction: answerListenersMgr.handleContineToStoredData,
+        eventFunction: answerListenersMgr.handleContinueToStoredData,
       });
 
       buildNode({ 
@@ -268,7 +268,7 @@ function answerManager() {
         content: 'No', 
         className: 'answer-btn', 
         idName: 'continue-no', 
-        eventFunction: answerListenersMgr.handleContineToStoredData,
+        eventFunction: answerListenersMgr.handleContinueToStoredData,
       });
       console.groupEnd();
   }
@@ -473,7 +473,7 @@ function answerListnerManager() {
     } 
     
     else if (btnID === "choice-btn-1") {
-      if (currentQuestionMode !== "stored") {
+      if (questionMgr.readQuestionMode !== "stored") {
         vocabMgr.storeToMistakeBank(); // add wrongly selected word to localstorage
       } 
 
@@ -484,8 +484,8 @@ function answerListnerManager() {
   }
 
   // event handler at the end of 1st round of question, asking user whether they want to continue to storeddata
-  function handleContineToStoredData(event) {
-    console.groupCollapsed("answerManager() - handleContineToStoredData()");
+  function handleContinueToStoredData(event) {
+    console.groupCollapsed("answerManager() - handleContinueToStoredData()");
 
     toggleClass('fade-hide', sectionMessage);
     toggleClass('overlay-message', sectionMessage);
@@ -494,9 +494,9 @@ function answerListnerManager() {
 
     if (btnID === "continue-yes-0") {
       console.log("Clicked Yes");
-      //noMoreQuestion.ranOnce = true; // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
+      questionMgr.setQuestionMode("stored");
       answerMgr.setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
-      console.info("noMoreQuestion.ranOnce CHANGED :", answerMgr.noMoreQuestion.ranOnce);
+      //console.info("noMoreQuestion.ranOnce CHANGED :", answerMgr.noMoreQuestion.ranOnce);
       loaderInstance.continuetoStoredData();
     } else if (btnID === "continue-no-0") {
       console.log("Clicked No");
@@ -526,7 +526,7 @@ function answerListnerManager() {
     handleFlashcardFlip,
     handleMultipleChoiceAnswer,
     handleFlashCardYesNoAnswer,
-    handleContineToStoredData,
+    handleContinueToStoredData,
   }
 }
 
@@ -565,7 +565,6 @@ function vocabManager() {
       incorrectSets.push(questionMgr.readQuestionObj);
       console.info("New word pushed to localstorage.");
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
-      //loadMistakesFromMistakeBank();
     } else {
       console.info("Word already exit in localstorage.")
     }
