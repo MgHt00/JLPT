@@ -430,7 +430,7 @@ function answerListnerManager() {
         toggleClass('fade-hide', sectionMessage); // Hide fully
         toggleClass('so-dim', sectionStatus, sectionAnswer);
         clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer]);
-        
+        checkModeAndRemoveVocab();
         questionMgr.finalizeQuestionAndProceed(true);
       }, 1200); // Add delay equal to the fade-out transition duration (0.5s)
     } 
@@ -464,15 +464,11 @@ function answerListnerManager() {
   // event handler for flashcard mode
   function handleFlashCardYesNoAnswer(event) { // sn4
     //console.groupCollapsed("answerManager() - handleFlashCardYesNoAnswer()");
-    const currentQuestionMode = questionMgr.readQuestionMode;
-
+    
     const btnID = event.currentTarget.id;
 
     if (btnID === "choice-btn-0") {
-      if (currentQuestionMode === "stored") { // if current q mode is stored and answer is right
-        console.info("currentQuestionMode: ", currentQuestionMode, "reremoveFromMistakeBank() is called");
-        vocabMgr.removeFromMistakeBank();
-      }
+      checkModeAndRemoveVocab();
       questionMgr.finalizeQuestionAndProceed(true);
     } 
     
@@ -507,6 +503,22 @@ function answerListnerManager() {
       answerMgr.setRanOnce(false);
       loaderInstance.restart();
     }
+    console.groupEnd();
+  }
+
+  // Check q mode and decide whether to proceed to remove from the mistake bank
+  function checkModeAndRemoveVocab() {
+    console.groupCollapsed("checkModeAndRemoveVocab()");
+    
+    const currentQuestionMode = questionMgr.readQuestionMode;
+
+    if (currentQuestionMode === "stored") { // if current q mode is stored and answer is right
+      console.info("currentQuestionMode: ", currentQuestionMode, ".  removeFromMistakeBank() is called.");
+      vocabMgr.removeFromMistakeBank();
+    } else {
+      console.info("currentQuestionMode: ", currentQuestionMode, ".  No need to remove mistakes");
+    }
+
     console.groupEnd();
   }
 
@@ -568,7 +580,6 @@ function vocabManager() {
 
     console.info("incorrectSets Before popping: ", incorrectSets);
     incorrectSets.pop(questionMgr.readQuestionObj);
-    console.info("Word pops from local storage");
     console.info("incorrectSets AFTER popping: ", incorrectSets);
 
     localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
