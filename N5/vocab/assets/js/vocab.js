@@ -259,7 +259,7 @@ function answerManager() {
         content: 'Yes', 
         className: 'answer-btn', 
         idName: 'continue-yes', 
-        eventFunction: answerMgr.handleContineToStoredData,
+        eventFunction: answerListenersMgr.handleContineToStoredData,
       });
 
       buildNode({ 
@@ -268,7 +268,7 @@ function answerManager() {
         content: 'No', 
         className: 'answer-btn', 
         idName: 'continue-no', 
-        eventFunction: answerMgr.handleContineToStoredData,
+        eventFunction: answerListenersMgr.handleContineToStoredData,
       });
       console.groupEnd();
   }
@@ -495,7 +495,7 @@ function answerListnerManager() {
       console.log("Clicked Yes");
       //noMoreQuestion.ranOnce = true; // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       answerMgr.setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
-      console.info("noMoreQuestion.ranOnce CHANGED :", noMoreQuestion.ranOnce);
+      console.info("noMoreQuestion.ranOnce CHANGED :", answerMgr.noMoreQuestion.ranOnce);
       loaderInstance.continuetoStoredData();
     } else if (btnID === "continue-no-0") {
       console.log("Clicked No");
