@@ -430,6 +430,7 @@ function answerListnerManager() {
         toggleClass('fade-hide', sectionMessage); // Hide fully
         toggleClass('so-dim', sectionStatus, sectionAnswer);
         clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer]);
+        
         questionMgr.finalizeQuestionAndProceed(true);
       }, 1200); // Add delay equal to the fade-out transition duration (0.5s)
     } 
@@ -468,13 +469,17 @@ function answerListnerManager() {
     const btnID = event.currentTarget.id;
 
     if (btnID === "choice-btn-0") {
-      questionMgr.finalizeQuestionAndProceed(true);
-    } else if (btnID === "choice-btn-1") {
-      if (currentQuestionMode !== "stored") {
-        vocabMgr.storeToMistakeBank(); // add wrongly selected word to localstorage
-      } else {
+      if (currentQuestionMode === "stored") { // if current q mode is stored and answer is right
+        console.info("currentQuestionMode: ", currentQuestionMode, "reremoveFromMistakeBank() is called");
         vocabMgr.removeFromMistakeBank();
       }
+      questionMgr.finalizeQuestionAndProceed(true);
+    } 
+    
+    else if (btnID === "choice-btn-1") {
+      if (currentQuestionMode !== "stored") {
+        vocabMgr.storeToMistakeBank(); // add wrongly selected word to localstorage
+      } 
 
       questionMgr.finalizeQuestionAndProceed(false);
     }
@@ -567,6 +572,7 @@ function vocabManager() {
     console.info("incorrectSets AFTER popping: ", incorrectSets);
 
     localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
+    console.info("incorrectSets had been successfully pushed to toPractice.");
 
     console.groupEnd();
   }
