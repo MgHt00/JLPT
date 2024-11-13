@@ -265,7 +265,10 @@ function listenerManager() {
   function handleListMistakeBtn() {
     console.groupCollapsed("handleListMistakeBtn()");
 
-    controlInstance.floatingBtnsHideAll().hideResumeShowBack().toggleFormDisplay();
+    controlInstance.floatingBtnsHideAll()
+                   .hideResumeShowBack()
+                   .toggleFormDisplay('shift-sections-to-top-center');
+
     clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer], "fast");
     loaderInstance.listMistakes();
 
@@ -894,7 +897,7 @@ function controlManger() {
   }
 
   // To toggle buttons and sections when move / resume btn is clicked
-  function toggleFormDisplay() {
+  function toggleFormDisplay(specialCSSClass) {
     console.groupCollapsed("toggleFormDisplay()");
     toggleClass('moved', selectors.settingForm);
     toggleClass('disabled', selectors.settingForm);
@@ -902,7 +905,7 @@ function controlManger() {
 
     const dynamicDOMClassList = dynamicDOM.classList;
     let dynamicDOMClassToToggle;
-    if (dynamicDOMClassList.contains('shift-sections-to-top-center')) {
+    if ((specialCSSClass === 'shift-sections-to-top-center') || dynamicDOMClassList.contains('shift-sections-to-top-center')) {
       dynamicDOMClassToToggle = 'shift-sections-to-top-center';
     } else {
       dynamicDOMClassToToggle = 'shift-sections-to-center';
