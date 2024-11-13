@@ -32,7 +32,7 @@ function questionManager() {
                                                  // (need to check for the situation where answer choice is Kanji and it is empty.)
   
         // Once a valid question is found, store the correct answer
-        appState.correctAns = questionObj[selectors.aChoice.value]; // Store correct answer
+        appState.correctAns = questionObj[selectors.aChoice.value].toLowerCase().trim(); // Store correct answer
         
         statusInstance.increaseQuestionCount(); // increse question count for status bar
         //statusInstance.printQuestionStatus() // show current status
@@ -259,7 +259,7 @@ function answerManager() {
         content: 'Yes', 
         className: 'answer-btn', 
         idName: 'continue-yes', 
-        eventFunction: answerMgr.handleContineToStoredData,
+        eventFunction: answerListenersMgr.handleContinueToStoredData,
       });
 
       buildNode({ 
@@ -268,7 +268,7 @@ function answerManager() {
         content: 'No', 
         className: 'answer-btn', 
         idName: 'continue-no', 
-        eventFunction: answerMgr.handleContineToStoredData,
+        eventFunction: answerListenersMgr.handleContinueToStoredData,
       });
       console.groupEnd();
   }
@@ -430,6 +430,7 @@ function answerListnerManager() {
         toggleClass('fade-hide', sectionMessage); // Hide fully
         toggleClass('so-dim', sectionStatus, sectionAnswer);
         clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer]);
+        checkModeAndRemoveVocab();
         questionMgr.finalizeQuestionAndProceed(true);
       }, 1200); // Add delay equal to the fade-out transition duration (0.5s)
     } 
@@ -463,18 +464,18 @@ function answerListnerManager() {
   // event handler for flashcard mode
   function handleFlashCardYesNoAnswer(event) { // sn4
     //console.groupCollapsed("answerManager() - handleFlashCardYesNoAnswer()");
-    const currentQuestionMode = questionMgr.readQuestionMode;
-
+    
     const btnID = event.currentTarget.id;
 
     if (btnID === "choice-btn-0") {
+      checkModeAndRemoveVocab();
       questionMgr.finalizeQuestionAndProceed(true);
-    } else if (btnID === "choice-btn-1") {
-      if (currentQuestionMode !== "stored") {
+    } 
+    
+    else if (btnID === "choice-btn-1") {
+      if (questionMgr.readQuestionMode !== "stored") {
         vocabMgr.storeToMistakeBank(); // add wrongly selected word to localstorage
-      } else {
-        vocabMgr.removeFromMistakeBank();
-      }
+      } 
 
       questionMgr.finalizeQuestionAndProceed(false);
     }
@@ -483,8 +484,8 @@ function answerListnerManager() {
   }
 
   // event handler at the end of 1st round of question, asking user whether they want to continue to storeddata
-  function handleContineToStoredData(event) {
-    console.groupCollapsed("answerManager() - handleContineToStoredData()");
+  function handleContinueToStoredData(event) {
+    console.groupCollapsed("answerManager() - handleContinueToStoredData()");
 
     toggleClass('fade-hide', sectionMessage);
     toggleClass('overlay-message', sectionMessage);
@@ -493,9 +494,9 @@ function answerListnerManager() {
 
     if (btnID === "continue-yes-0") {
       console.log("Clicked Yes");
-      //noMoreQuestion.ranOnce = true; // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
+      questionMgr.setQuestionMode("stored");
       answerMgr.setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
-      console.info("noMoreQuestion.ranOnce CHANGED :", noMoreQuestion.ranOnce);
+      //console.info("noMoreQuestion.ranOnce CHANGED :", answerMgr.noMoreQuestion.ranOnce);
       loaderInstance.continuetoStoredData();
     } else if (btnID === "continue-no-0") {
       console.log("Clicked No");
@@ -505,11 +506,27 @@ function answerListnerManager() {
     console.groupEnd();
   }
 
+  // Check q mode and decide whether to proceed to remove from the mistake bank
+  function checkModeAndRemoveVocab() {
+    console.groupCollapsed("checkModeAndRemoveVocab()");
+    
+    const currentQuestionMode = questionMgr.readQuestionMode;
+
+    if (currentQuestionMode === "stored") { // if current q mode is stored and answer is right
+      console.info("currentQuestionMode: ", currentQuestionMode, ".  removeFromMistakeBank() is called.");
+      vocabMgr.removeFromMistakeBank();
+    } else {
+      console.info("currentQuestionMode: ", currentQuestionMode, ".  No need to remove mistakes");
+    }
+
+    console.groupEnd();
+  }
+
   return {
     handleFlashcardFlip,
     handleMultipleChoiceAnswer,
     handleFlashCardYesNoAnswer,
-    handleContineToStoredData,
+    handleContinueToStoredData,
   }
 }
 
@@ -548,7 +565,6 @@ function vocabManager() {
       incorrectSets.push(questionMgr.readQuestionObj);
       console.info("New word pushed to localstorage.");
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
-      //loadMistakesFromMistakeBank();
     } else {
       console.info("Word already exit in localstorage.")
     }
@@ -563,10 +579,10 @@ function vocabManager() {
 
     console.info("incorrectSets Before popping: ", incorrectSets);
     incorrectSets.pop(questionMgr.readQuestionObj);
-    console.info("Word pops from local storage");
     console.info("incorrectSets AFTER popping: ", incorrectSets);
 
     localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
+    console.info("incorrectSets had been successfully pushed it back to toPractice.");
 
     console.groupEnd();
   }
@@ -716,6 +732,7 @@ function errorManager() {
 
       case "syllable-error":
         if (!document.querySelector("[id|='syllable-error']")) { // if error is not already shown
+          console.info("we are inside syllable-error => if blk");
           errorInstance.showError({
             errcode: "noSL",
             parentName: selectors.settingSyllable,

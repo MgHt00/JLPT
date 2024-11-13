@@ -135,6 +135,7 @@ function listenerManager() {
 
   // to handle when syllable checkboxs are changed
   function syllableChangesImprovedVer(event) { // [le4]
+    console.groupCollapsed("syllableChangesImprovedVer()");
     const allCheckbox = document.getElementById('syllableAll');
     const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
       .filter(checkbox => checkbox !== allCheckbox);
@@ -172,10 +173,12 @@ function listenerManager() {
         allCheckbox.checked = false; 
       }
     }
+    console.groupEnd();
   }
 
   // to handle when program question mode (fresh / stored) is changed
   function questionModeChanges(e) {
+    loaderInstance.removeErrBlks();
     let selectedMode = selectors.readQuestionMode;
     if (selectedMode === "fresh") {
       toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
@@ -262,7 +265,10 @@ function listenerManager() {
   function handleListMistakeBtn() {
     console.groupCollapsed("handleListMistakeBtn()");
 
-    controlInstance.floatingBtnsHideAll().hideResumeShowBack().toggleFormDisplay();
+    controlInstance.floatingBtnsHideAll()
+                   .hideResumeShowBack()
+                   .toggleFormDisplay('shift-sections-to-top-center');
+
     clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer], "fast");
     loaderInstance.listMistakes();
 
@@ -311,7 +317,6 @@ function loaderManager() {
   // when user click submit(start) button of the setting form
   async function start(e) {  
     e.preventDefault(); // Prevent form from submitting the usual way
-    
     validateAndSetInputData(e); // validate and set defaults to the input data.
 
     if (appState.qMode === "stored") {
@@ -319,38 +324,41 @@ function loaderManager() {
         errorInstance.runtimeError("mem0");
         return;
       }
+      // Continue if there is no runtime error.
+      await loadStoredJSON();// Wait for loadStoredJSON to complete
+      initializeQuiz();
     }
        
     if (appState.qMode === "fresh") {
-      await loadFreshJSON(); // Wait for loadFreshJSON to complete
-    } else {
-      await loadStoredJSON();// Wait for loadStoredJSON to complete
-    }
+      if (validateSyllable()) {
+        await loadFreshJSON(); // Wait for loadFreshJSON to complete
 
-    console.info("appState.flashYesNo: ", appState.flashYesNo);
-    console.info("appState.randomYesNo: ", appState.randomYesNo);
-
-    if (validateSyllable()) {
-      // Only check the runtime error if validateSyllable() returns true
-      // Otherwise program shows infinite loop error without necessary.
-      const isRuntimeError = errorInstance.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
-
-      if (!isRuntimeError) {  // Now checks if there is NOT a runtime error
-        console.error("Program failed at loaderManager()");
-        return; // Exit if there is an infinite loop error
+        // Only check the runtime error if validateSyllable() returns true ...
+        // ... Otherwise program shows infinite loop error without necessary.
+        const hasSufficientAnswers = errorInstance.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
+        if (!hasSufficientAnswers) {  // Now checks if there is NOT a runtime error
+          console.error("Program failed at loaderManager()");
+          return; // Exit if there is an infinite loop error
+        }
+        
+        // Continue if there is no runtime error.
+        initializeQuiz();
       }
-    }
-    
-    // Continue if there is no runtime error.
-    //loaderInstance.resumeTo = "program";
+    } 
+  }
+
+  // Function to initialize quiz settings and UI setup
+  function initializeQuiz() {
     listenerInstance.moveForm();
-    controlInstance.floatingBtnsHideAll().toggleFormDisplay().hideResumeShowBack();
-    statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
-    statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
-    //toggleClass('shift-sections-to-center', dynamicDOM);
+    controlInstance.floatingBtnsHideAll()
+                   .toggleFormDisplay()
+                   .hideResumeShowBack();
+    statusInstance.resetQuestionCount()
+                  .resetTotalNoOfQuestion()
+                  .getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
+    statusInstance.resetCumulativeVariables(); // reset cumulative variables
     questionMgr.newQuestion();
     removeErrBlks();
-
   }
 
   // to validate input data and set defaults if necessary
@@ -364,9 +372,9 @@ function loaderManager() {
     
     assignLanguage(sectionMessage, enLang); // Always set message section to English
 
-    if (appState.qMode === "fresh") { // Run the following block only if qMode is 'fresh'
+    /*if (appState.qMode === "fresh") { // Run the following block only if qMode is 'fresh'
       validateSyllable(); // Validate syllable choices and show an error if none are selected
-    }
+    }*/
 
     appState.qChoiceInput = selectors.readqChoiceInput ?? "hi";
     appState.aChoiceInput = selectors.readaChoiceInput ?? "en";
@@ -416,7 +424,7 @@ function loaderManager() {
     appData.vocabArray = results.flat();
     //console.log("vocabArray(before removeBlankQuestion(): ", appData.vocabArray);
     appData.vocabArray = removeBlankQuestions(appData.vocabArray);
-    //console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
+    console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
 
     copyOneProperty(appData.vocabArray, kaVocab, ka);
     copyOneProperty(appData.vocabArray, hiVocab, hi);
@@ -842,6 +850,7 @@ function loaderManager() {
     listMistakes,
     resumeProgram,
     resetAfterFlushingMistakes,
+    removeErrBlks,
   }
 }
 
@@ -888,7 +897,7 @@ function controlManger() {
   }
 
   // To toggle buttons and sections when move / resume btn is clicked
-  function toggleFormDisplay() {
+  function toggleFormDisplay(specialCSSClass) {
     console.groupCollapsed("toggleFormDisplay()");
     toggleClass('moved', selectors.settingForm);
     toggleClass('disabled', selectors.settingForm);
@@ -896,7 +905,7 @@ function controlManger() {
 
     const dynamicDOMClassList = dynamicDOM.classList;
     let dynamicDOMClassToToggle;
-    if (dynamicDOMClassList.contains('shift-sections-to-top-center')) {
+    if ((specialCSSClass === 'shift-sections-to-top-center') || dynamicDOMClassList.contains('shift-sections-to-top-center')) {
       dynamicDOMClassToToggle = 'shift-sections-to-top-center';
     } else {
       dynamicDOMClassToToggle = 'shift-sections-to-center';
