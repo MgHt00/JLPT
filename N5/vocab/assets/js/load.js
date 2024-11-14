@@ -405,6 +405,9 @@ function loaderManager() {
       ko: "N5/vocab/assets/data/n5-vocab-ko.json",
       sa: "N5/vocab/assets/data/n5-vocab-sa.json",
       shi: "N5/vocab/assets/data/n5-vocab-shi.json",
+      su: "N5/vocab/assets/data/n5-vocab-su.json",
+      se: "N5/vocab/assets/data/n5-vocab-se.json",
+      so: "N5/vocab/assets/data/n5-vocab-so.json",
       //db: "N5/vocab/assets/data/n5-vocab-debug.json",
     };
   
