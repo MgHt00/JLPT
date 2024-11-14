@@ -405,7 +405,7 @@ function loaderManager() {
       ko: "N5/vocab/assets/data/n5-vocab-ko.json",
       sa: "N5/vocab/assets/data/n5-vocab-sa.json",
       shi: "N5/vocab/assets/data/n5-vocab-shi.json",
-      db: "N5/vocab/assets/data/n5-vocab-debug.json",
+      //db: "N5/vocab/assets/data/n5-vocab-debug.json",
     };
   
     // if user selects "all", load all property names from `syllableMapping`
