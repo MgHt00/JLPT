@@ -12,7 +12,7 @@ const listenerInstance = listenerManager(null, null, null, null);
 const loaderInstance = loaderManager(listenerInstance, null, null, null, null, null);
 const controlInstance = controlManger();
 
-const questionMgr = questionManager(null);
+const questionMgr = questionManager(null, null, null);
 const answerMgr = answerManager(questionMgr, loaderInstance, null);
 const answerListenersMgr = answerListnerManager(questionMgr, loaderInstance);
 const vocabMgr =  vocabManager(loaderInstance, questionMgr);
@@ -22,7 +22,7 @@ const statusInstance = statusManager();
 
 // resetting the null instaces passed while creating the Managers.
 answerMgr.setInstances(answerListenersMgr);
-questionMgr.setInstances(answerMgr);
+questionMgr.setInstances(answerMgr, statusInstance, vocabMgr);
 
 loaderInstance.setInstances(controlInstance, questionMgr, vocabInstance, errorInstance, statusInstance);
 listenerInstance.setInstances(loaderInstance, controlInstance, questionMgr, answerMgr);

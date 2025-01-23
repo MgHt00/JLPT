@@ -1,8 +1,10 @@
-export function questionManager(answerMgr) {
+export function questionManager(answerMgr, statusInstance, vocabMgr) {
   let questionObj = {};
 
-  function setInstances(answerInstance) {
+  function setInstances(answerInstance, statusMgr, vocabInstance) {
     answerMgr = answerInstance;
+    statusInstance = statusMgr;
+    vocabMgr = vocabInstance;
   }
 
   // to start a new question
