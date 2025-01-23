@@ -393,18 +393,18 @@ function loaderManager() {
     questionMgr.setQuestionMode("fresh");
 
     const syllableMapping = {
-      a: "../../../assets/data/n5/n5-vocab-a.json",
-      i: "../../../assets/data/n5/n5-vocab-i.json",
-      u: "../../../assets/data/n5/n5-vocab-u.json",
-      e: "../../../assets/data/n5/n5-vocab-e.json",
-      o: "../../../assets/data/n5/n5-vocab-o.json",
-      ka: "../../../assets/data/n5/n5-vocab-ka.json",
-      ki: "../../../assets/data/n5/n5-vocab-ki.json",
-      ku: "../../../assets/data/n5/n5-vocab-ku.json",
-      ke: "../../../assets/data/n5/n5-vocab-ke.json",
-      ko: "../../../assets/data/n5/n5-vocab-ko.json",
-      sa: "../../../assets/data/n5/n5-vocab-sa.json",
-      shi: "../../../assets/data/n5/n5-vocab-shi.json",
+      a: "../../../assets/data/n5-vocab-a.json",
+      i: "../../../assets/data/n5-vocab-i.json",
+      u: "../../../assets/data/n5-vocab-u.json",
+      e: "../../../assets/data/n5-vocab-e.json",
+      o: "../../../assets/data/n5-vocab-o.json",
+      ka: "../../../assets/data/n5-vocab-ka.json",
+      ki: "../../../assets/data/n5-vocab-ki.json",
+      ku: "../../../assets/data/n5-vocab-ku.json",
+      ke: "../../../assets/data/n5-vocab-ke.json",
+      ko: "../../../assets/data/n5-vocab-ko.json",
+      sa: "../../../assets/data/n5-vocab-sa.json",
+      shi: "../../../assets/data/n5-vocab-shi.json",
       //db: "N5/vocab/assets/data/n5-vocab-debug.json",
     };
   
