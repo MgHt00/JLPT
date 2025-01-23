@@ -57,13 +57,14 @@ export function vocabManager(loaderInstance, questionMgr) {
   
   // to load data from local storage
   function loadMistakesFromMistakeBank() {
-    //console.groupCollapsed("vocabManager() - loadMistakesFromMistakeBank()");
+    console.groupCollapsed("vocabManager() - loadMistakesFromMistakeBank()");
 
     let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
-    storedLength = storedObjects.length;
-    //console.log("storedObjects ", storedObjects);
+    console.info("storedObjects ", storedObjects);
+    let storedLength = storedObjects.length;
+    console.info("storedLength:", storedLength);
+    
     console.groupEnd();
-
     return storedObjects;
   }
   

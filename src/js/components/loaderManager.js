@@ -195,7 +195,9 @@ export function loaderManager(listenerInstance, controlInstance, questionMgr, vo
 
   // to load stored data from local storage and show info at the settings
   function loadMemoryData() {
+    console.groupCollapsed("loadMemoryData");
     let storedLength = vocabInstance.readStoredLength;
+    console.info("storedLength:", storedLength);
     if (storedLength === 0) {
       buildNode({
         parent: selectors.memoryInfo,
