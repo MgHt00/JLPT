@@ -13,7 +13,7 @@ export function answerManager(questionMgr, loaderInstance, answerListenersMgr) {
   function renderAnswers() {
     //console.groupCollapsed("answerManager() - renderAnswers()");
 
-    ansArray = createAnswerArray();
+    let ansArray = createAnswerArray();
     //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
 
     if (appState.flashYesNo) { // if it is a flash card game
