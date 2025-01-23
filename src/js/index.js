@@ -9,7 +9,7 @@ import { errorManager } from "./components/errorManager.js";
 import { statusManager } from "./components/statusManager.js";
 
 const listenerInstance = listenerManager(null, null, null, null);
-const loaderInstance = loaderManager(listenerInstance, null, null, null);
+const loaderInstance = loaderManager(listenerInstance, null, null, null, null, null);
 const controlInstance = controlManger();
 
 const questionMgr = questionManager(null);
@@ -24,7 +24,7 @@ const statusInstance = statusManager();
 answerMgr.setInstances(answerListenersMgr);
 questionMgr.setInstances(answerMgr);
 
-loaderInstance.setInstances(controlInstance, questionMgr, vocabInstance);
+loaderInstance.setInstances(controlInstance, questionMgr, vocabInstance, errorInstance, statusInstance);
 listenerInstance.setInstances(loaderInstance, controlInstance, questionMgr, answerMgr);
 
 (function defaultState() {

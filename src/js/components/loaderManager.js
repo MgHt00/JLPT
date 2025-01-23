@@ -1,9 +1,11 @@
-export function loaderManager(listenerInstance, controlInstance, questionMgr, vocabInstance) {
+export function loaderManager(listenerInstance, controlInstance, questionMgr, vocabInstance, errorInstance, statusInstance) {
 
-  function setInstances(controlMgr, questionInstance, vocabMgr) {
+  function setInstances(controlMgr, questionInstance, vocabMgr, errMgr, statusMgr) {
     controlInstance = controlMgr;
     questionMgr = questionInstance;
     vocabInstance = vocabMgr;
+    errorInstance = errMgr;
+    statusInstance = statusMgr;
   }
 
   // when user click submit(start) button of the setting form
