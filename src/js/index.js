@@ -39,13 +39,8 @@ listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr);
   console.groupCollapsed("defaultState()");
 
   loaderMgr.loadMemoryData();
-
-  toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]
-  toggleClass('overlay-message', sectionMessage);
-  toggleClass('fade-hide', sectionMessage);
+  defaultStateClassChanges();
   controlMgr.floatingBtnsHideAll();
-  toggleClass('disabled', selectors.settingRepractice);
-  toggleClass('hide', selectors.settingNoOfAnsERRblk);
   listenerMgr.generalListeners();
 
   // if the program is still in progress, load data from local storage to global objects
@@ -55,4 +50,14 @@ listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr);
   }
 
   console.groupEnd();
+
+  // Helper function
+  function defaultStateClassChanges() {
+    toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]
+    toggleClass('overlay-message', sectionMessage);
+    toggleClass('fade-hide', sectionMessage);
+
+    toggleClass('disabled', selectors.settingRepractice);
+    toggleClass('hide', selectors.settingNoOfAnsERRblk);
+  }
 })();
