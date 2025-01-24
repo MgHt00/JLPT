@@ -1,7 +1,7 @@
-export function listenerManager(loaderInstance, controlInstance, questionMgr, answerMgr) {
+export function listenerManager(loaderMgr, controlInstance, questionMgr, answerMgr) {
 
-  function setInstances(loaderMgr, controlMgr, questionInstance, answerInstance){
-    loaderInstance = loaderMgr;
+  function setInstances(loaderInstance, controlMgr, questionInstance, answerInstance){
+    loaderMgr = loaderInstance;
     controlInstance = controlMgr;
     questionMgr = questionInstance;
     answerMgr = answerInstance;
@@ -12,7 +12,7 @@ export function listenerManager(loaderInstance, controlInstance, questionMgr, an
 
   // All event Listeners
   function generalListeners() {
-    selectors.settingForm.addEventListener('submit', loaderInstance.start); // [sn17]
+    selectors.settingForm.addEventListener('submit', loaderMgr.start); // [sn17]
     selectors.switchRandomYesNo.addEventListener('change', randomToggleChanges);
     selectors.switchFlashYesNo.addEventListener('change', flashModeToggleChanges); // to handle toggle switch
     selectors.settingFlashYesNo.addEventListener('change', flashModeChanges); // to show answer options and check runtime error 
@@ -69,7 +69,7 @@ export function listenerManager(loaderInstance, controlInstance, questionMgr, an
       appState.noOfAnswers = 2;
     } else {
       // Validate number of answers and set default if invalid
-      loaderInstance.validateAndSetAnswerCount();
+      loaderMgr.validateAndSetAnswerCount();
     }
     console.groupEnd();
   }
@@ -155,7 +155,7 @@ export function listenerManager(loaderInstance, controlInstance, questionMgr, an
 
   // to handle when program question mode (fresh / stored) is changed
   function questionModeChanges(e) {
-    loaderInstance.removeErrBlks();
+    loaderMgr.removeErrBlks();
     let selectedMode = selectors.readQuestionMode;
     if (selectedMode === "fresh") {
       toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
@@ -213,7 +213,7 @@ export function listenerManager(loaderInstance, controlInstance, questionMgr, an
     controlInstance.floatingBtnsHideAll().toggleFormDisplay().hideBackShowResume();
     event.stopPropagation(); // Prevent event from bubbling up
     debouncedMoveForm(event); // Pass the event to the debounced function
-    loaderInstance.rePrintMemory();
+    loaderMgr.rePrintMemory();
   }
 
   // When resumePracticeBtn is clicked
@@ -227,7 +227,7 @@ export function listenerManager(loaderInstance, controlInstance, questionMgr, an
       controlInstance.toggleFormDisplay().hideResumeShowBack();
       listenerInstance.moveForm();
       statusInstance.goodToResume = false;
-      loaderInstance.resumeProgram();
+      loaderMgr.resumeProgram();
     }
     else {
       console.info("Normal resume procedures.");
@@ -247,7 +247,7 @@ export function listenerManager(loaderInstance, controlInstance, questionMgr, an
                    .toggleFormDisplay('shift-sections-to-top-center');
 
     clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer], "fast");
-    loaderInstance.listMistakes();
+    loaderMgr.listMistakes();
 
     console.groupEnd();
   }

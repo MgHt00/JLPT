@@ -1,4 +1,4 @@
-export function vocabManager(loaderInstance, questionMgr) {
+export function vocabManager(loaderMgr, questionMgr) {
   
   // to remove passed question number from the array
   function removeSpecifiedQuestion(i) {
@@ -83,7 +83,7 @@ export function vocabManager(loaderInstance, questionMgr) {
       children: selectors.readMemoryBtns,
     });
 
-    loaderInstance.loadMemoryData().resetAfterFlushingMistakes();
+    loaderMgr.loadMemoryData().resetAfterFlushingMistakes();
     console.groupEnd();
   }
 
