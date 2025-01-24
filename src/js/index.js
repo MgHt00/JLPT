@@ -8,8 +8,8 @@ import { vocabManager } from "./components/vocabManager.js";
 import { errorManager } from "./components/errorManager.js";
 import { statusManager } from "./components/statusManager.js";
 
-const listenerInstance = listenerManager(null, null, null, null);
-const loaderInstance = loaderManager(listenerInstance, null, null, null, null, null);
+const listenerMgr = listenerManager(null, null, null, null);
+const loaderInstance = loaderManager(listenerMgr, null, null, null, null, null);
 const controlInstance = controlManger();
 
 const questionMgr = questionManager(null, null, null);
@@ -19,12 +19,21 @@ const vocabMgr =  vocabManager(loaderInstance, questionMgr);
 const errorInstance = errorManager(answerMgr);
 const statusInstance = statusManager();
 
-// resetting the null instances passed while creating the Managers.
+/**
+ * Initializes and sets up dependencies for various manager instances.
+ * Each instance is provided with the required dependencies to enable
+ * communication and functionality across different components of the application.
+ * 
+ * - `answerMgr.setInstances(answerListenersMgr)`: Links the Answer Manager with the Answer Listeners Manager to handle user input and answer validation.
+ * - `questionMgr.setInstances(answerMgr, statusInstance, vocabMgr)`: Configures the Question Manager with dependencies for managing answers, status tracking, and vocabulary data.
+ * - `loaderInstance.setInstances(controlInstance, questionMgr, vocabMgr, errorInstance, statusInstance)`: Sets up the Loader Manager with control, question, vocabulary, error, and status managers for managing application flow and state.
+ * - `listenerMgr.setInstances(loaderInstance, controlInstance, questionMgr, answerMgr)`: Establishes connections for the Listener Manager, enabling it to coordinate interactions between the loader, control, question, and answer managers.
+ */
 answerMgr.setInstances(answerListenersMgr);
 questionMgr.setInstances(answerMgr, statusInstance, vocabMgr);
 
 loaderInstance.setInstances(controlInstance, questionMgr, vocabMgr, errorInstance, statusInstance);
-listenerInstance.setInstances(loaderInstance, controlInstance, questionMgr, answerMgr);
+listenerMgr.setInstances(loaderInstance, controlInstance, questionMgr, answerMgr);
 
 (function defaultState() {
   console.groupCollapsed("defaultState()");
@@ -37,7 +46,7 @@ listenerInstance.setInstances(loaderInstance, controlInstance, questionMgr, answ
   controlInstance.floatingBtnsHideAll();
   toggleClass('disabled', selectors.settingRepractice);
   toggleClass('hide', selectors.settingNoOfAnsERRblk);
-  listenerInstance.generalListeners();
+  listenerMgr.generalListeners();
 
   // if the program is still in progress, load data from local storage to global objects
   if (statusInstance.stillInProgress()) {

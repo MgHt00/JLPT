@@ -1,5 +1,14 @@
 export function loaderManager(listenerMgr, controlInstance, questionMgr, vocabMgr, errorInstance, statusInstance) {
   
+  /**
+   * Sets the instances of the control, question, vocabulary, error, and status managers.
+   * 
+   * @param {object} controlMgr - The control manager instance responsible for UI control actions.
+   * @param {object} questionInstance - The question manager instance handling question logic.
+   * @param {object} vocabInstance - The vocabulary manager instance managing vocabulary data.
+   * @param {object} errMgr - The error manager instance handling runtime errors.
+   * @param {object} statusMgr - The status manager instance tracking quiz progress and stats.
+  */
   function setInstances(controlMgr, questionInstance, vocabInstance, errMgr, statusMgr) {
     controlInstance = controlMgr;
     questionMgr = questionInstance;
