@@ -40,7 +40,7 @@ export function answerListnerManager(questionMgr, loaderInstance) {
         content: ['Yes', 'No'],
         className: 'answer-btn',
         idName: 'choice-btn',
-        eventFunction: answerListenersMgr.handleFlashCardYesNoAnswer
+        eventFunction: handleFlashCardYesNoAnswer
       });
 
       toggleClass('fade-out-light', sectionMessage, sectionAnswer);

@@ -1,4 +1,4 @@
-export function loaderManager(listenerMgr, controlInstance, questionMgr, vocabMgr, errorInstance, statusInstance) {
+export function loaderManager(listenerMgr, controlMgr, questionMgr, vocabMgr, errorInstance, statusInstance) {
   
   /**
    * Sets the instances of the control, question, vocabulary, error, and status managers.
@@ -9,8 +9,8 @@ export function loaderManager(listenerMgr, controlInstance, questionMgr, vocabMg
    * @param {object} errMgr - The error manager instance handling runtime errors.
    * @param {object} statusMgr - The status manager instance tracking quiz progress and stats.
   */
-  function setInstances(controlMgr, questionInstance, vocabInstance, errMgr, statusMgr) {
-    controlInstance = controlMgr;
+  function setInstances(controlInstance, questionInstance, vocabInstance, errMgr, statusMgr) {
+    controlMgr = controlInstance;
     questionMgr = questionInstance;
     vocabMgr = vocabInstance;
     errorInstance = errMgr;
@@ -53,7 +53,7 @@ export function loaderManager(listenerMgr, controlInstance, questionMgr, vocabMg
   // Function to initialize quiz settings and UI setup
   function initializeQuiz() {
     listenerMgr.moveForm();
-    controlInstance.floatingBtnsHideAll()
+    controlMgr.floatingBtnsHideAll()
                    .toggleFormDisplay()
                    .hideResumeShowBack();
     statusInstance.resetQuestionCount()
@@ -429,7 +429,7 @@ export function loaderManager(listenerMgr, controlInstance, questionMgr, vocabMg
     toggleClass('fade-hide', sectionMessage);
 
     //toggleClass('shift-sections-to-center', dynamicDOM);
-    controlInstance.toggleFormDisplay();
+    controlMgr.toggleFormDisplay();
     listenerMgr.debouncedMoveForm();
     rePrintMemory();
   }

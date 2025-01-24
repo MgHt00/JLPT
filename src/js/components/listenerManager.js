@@ -1,8 +1,8 @@
-export function listenerManager(loaderMgr, controlInstance, questionMgr, answerMgr) {
+export function listenerManager(loaderMgr, controlMgr, questionMgr, answerMgr) {
 
-  function setInstances(loaderInstance, controlMgr, questionInstance, answerInstance){
+  function setInstances(loaderInstance, controlInstance, questionInstance, answerInstance){
     loaderMgr = loaderInstance;
-    controlInstance = controlMgr;
+    controlMgr = controlInstance;
     questionMgr = questionInstance;
     answerMgr = answerInstance;
   }
@@ -59,7 +59,7 @@ export function listenerManager(loaderMgr, controlInstance, questionMgr, answerM
   // to handle when flash mode toogle (previously radio buttons are) is changed
   function flashModeChanges(e) {
     console.groupCollapsed("flashModeChanges()");
-    controlInstance.resetQuestionMode();
+    controlMgr.resetQuestionMode();
     toggleClass('disabled', ...selectors.noOfAnsAll);
     
     // set noOfAns to 2 to bypass runtime error if flashcard mode is selected
@@ -210,7 +210,7 @@ export function listenerManager(loaderMgr, controlInstance, questionMgr, answerM
   
   // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
   function handlebringBackBtn(event) {
-    controlInstance.floatingBtnsHideAll().toggleFormDisplay().hideBackShowResume();
+    controlMgr.floatingBtnsHideAll().toggleFormDisplay().hideBackShowResume();
     event.stopPropagation(); // Prevent event from bubbling up
     debouncedMoveForm(event); // Pass the event to the debounced function
     loaderMgr.rePrintMemory();
@@ -220,18 +220,18 @@ export function listenerManager(loaderMgr, controlInstance, questionMgr, answerM
   function handleResumePracticeBtn(event) {
     console.groupCollapsed("handleResumePracticeBtn()");
 
-    controlInstance.floatingBtnsHideAll();
+    controlMgr.floatingBtnsHideAll();
 
     if (statusInstance.goodToResume) { // if the program is still in progress,
       console.info("statusInstance.goodToResume: FALSE");
-      controlInstance.toggleFormDisplay().hideResumeShowBack();
+      controlMgr.toggleFormDisplay().hideResumeShowBack();
       listenerInstance.moveForm();
       statusInstance.goodToResume = false;
       loaderMgr.resumeProgram();
     }
     else {
       console.info("Normal resume procedures.");
-      controlInstance.toggleFormDisplay().hideResumeShowBack();
+      controlMgr.toggleFormDisplay().hideResumeShowBack();
       debouncedMoveForm(event);
     }
 
@@ -242,7 +242,7 @@ export function listenerManager(loaderMgr, controlInstance, questionMgr, answerM
   function handleListMistakeBtn() {
     console.groupCollapsed("handleListMistakeBtn()");
 
-    controlInstance.floatingBtnsHideAll()
+    controlMgr.floatingBtnsHideAll()
                    .hideResumeShowBack()
                    .toggleFormDisplay('shift-sections-to-top-center');
 
