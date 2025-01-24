@@ -1,5 +1,5 @@
-export function loaderManager(listenerInstance, controlInstance, questionMgr, vocabMgr, errorInstance, statusInstance) {
-
+export function loaderManager(listenerMgr, controlInstance, questionMgr, vocabMgr, errorInstance, statusInstance) {
+  
   function setInstances(controlMgr, questionInstance, vocabInstance, errMgr, statusMgr) {
     controlInstance = controlMgr;
     questionMgr = questionInstance;
@@ -43,7 +43,7 @@ export function loaderManager(listenerInstance, controlInstance, questionMgr, vo
 
   // Function to initialize quiz settings and UI setup
   function initializeQuiz() {
-    listenerInstance.moveForm();
+    listenerMgr.moveForm();
     controlInstance.floatingBtnsHideAll()
                    .toggleFormDisplay()
                    .hideResumeShowBack();
@@ -246,7 +246,7 @@ export function loaderManager(listenerInstance, controlInstance, questionMgr, vo
       //content: 'list',
       className: 'list-memory-setting-btn',
       idName: 'list-memory-btn',
-      eventFunction: listenerInstance.handleListMistakeBtn,
+      eventFunction: listenerMgr.handleListMistakeBtn,
     });
     
     console.groupEnd();
@@ -421,7 +421,7 @@ export function loaderManager(listenerInstance, controlInstance, questionMgr, vo
 
     //toggleClass('shift-sections-to-center', dynamicDOM);
     controlInstance.toggleFormDisplay();
-    listenerInstance.debouncedMoveForm();
+    listenerMgr.debouncedMoveForm();
     rePrintMemory();
   }
 

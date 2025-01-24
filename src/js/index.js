@@ -16,11 +16,10 @@ const questionMgr = questionManager(null, null, null);
 const answerMgr = answerManager(questionMgr, loaderInstance, null);
 const answerListenersMgr = answerListnerManager(questionMgr, loaderInstance);
 const vocabMgr =  vocabManager(loaderInstance, questionMgr);
-//const vocabInstance = vocabManager(loaderInstance, questionMgr);
 const errorInstance = errorManager(answerMgr);
 const statusInstance = statusManager();
 
-// resetting the null instaces passed while creating the Managers.
+// resetting the null instances passed while creating the Managers.
 answerMgr.setInstances(answerListenersMgr);
 questionMgr.setInstances(answerMgr, statusInstance, vocabMgr);
 
