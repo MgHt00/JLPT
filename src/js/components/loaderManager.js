@@ -1,9 +1,9 @@
-export function loaderManager(listenerInstance, controlInstance, questionMgr, vocabInstance, errorInstance, statusInstance) {
+export function loaderManager(listenerInstance, controlInstance, questionMgr, vocabMgr, errorInstance, statusInstance) {
 
-  function setInstances(controlMgr, questionInstance, vocabMgr, errMgr, statusMgr) {
+  function setInstances(controlMgr, questionInstance, vocabInstance, errMgr, statusMgr) {
     controlInstance = controlMgr;
     questionMgr = questionInstance;
-    vocabInstance = vocabMgr;
+    vocabMgr = vocabInstance;
     errorInstance = errMgr;
     statusInstance = statusMgr;
   }
@@ -134,7 +134,7 @@ export function loaderManager(listenerInstance, controlInstance, questionMgr, vo
     questionMgr.setQuestionMode("stored");
     
     // Ensure loadMistakesFromMistakeBank returns an array
-    const storedData = vocabInstance.loadMistakesFromMistakeBank();
+    const storedData = vocabMgr.loadMistakesFromMistakeBank();
     if (!Array.isArray(storedData)) {
         console.error("Error: Stored data is not an array! Check your loadMistakesFromMistakeBank function.");
         return;
@@ -165,7 +165,7 @@ export function loaderManager(listenerInstance, controlInstance, questionMgr, vo
   function resumeProgram() {
     console.groupCollapsed("resumeProgram()");
 
-    vocabInstance.loadState();
+    vocabMgr.loadState();
     console.log("loadState: ", appState, appData, currentStatus);
 
     // Fetch the relevant categories
@@ -198,7 +198,7 @@ export function loaderManager(listenerInstance, controlInstance, questionMgr, vo
   // to load stored data from local storage and show info at the settings
   function loadMemoryData() {
     console.groupCollapsed("loadMemoryData");
-    let storedLength = vocabInstance.readStoredLength;
+    let storedLength = vocabMgr.readStoredLength;
     console.info("storedLength:", storedLength);
     if (storedLength === 0) {
       buildNode({
@@ -236,7 +236,7 @@ export function loaderManager(listenerInstance, controlInstance, questionMgr, vo
       //content: 'trash',
       className: 'flush-memory-setting-btn',
       idName: 'flush-memory-btn',
-      eventFunction: vocabInstance.flushMistakeBank,
+      eventFunction: vocabMgr.flushMistakeBank,
     });
     // Build `list` button
     buildNode({
@@ -375,7 +375,7 @@ export function loaderManager(listenerInstance, controlInstance, questionMgr, vo
 
   // To validate whether is memory is empty or not
   function validateStoredMemory() {
-    let storedLength = vocabInstance.readStoredLength;
+    let storedLength = vocabMgr.readStoredLength;
     if (storedLength === 0) {
       return false;
     } else {
@@ -398,7 +398,7 @@ export function loaderManager(listenerInstance, controlInstance, questionMgr, vo
   async function continuetoStoredData() {
     console.groupCollapsed("continuetoStoredData()");
 
-    if (vocabInstance.readStoredLength <= 3) {
+    if (vocabMgr.readStoredLength <= 3) {
       appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
       console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
     }
@@ -429,7 +429,7 @@ export function loaderManager(listenerInstance, controlInstance, questionMgr, vo
   function listMistakes() {
     console.groupCollapsed("listMistakes()");
 
-    const mistakeArray = vocabInstance.loadMistakesFromMistakeBank(); // Load mistakes from localStorage
+    const mistakeArray = vocabMgr.loadMistakesFromMistakeBank(); // Load mistakes from localStorage
     
     // Create the container to display the mistakes
     buildNode({

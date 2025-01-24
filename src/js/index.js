@@ -16,7 +16,7 @@ const questionMgr = questionManager(null, null, null);
 const answerMgr = answerManager(questionMgr, loaderInstance, null);
 const answerListenersMgr = answerListnerManager(questionMgr, loaderInstance);
 const vocabMgr =  vocabManager(loaderInstance, questionMgr);
-const vocabInstance = vocabManager(loaderInstance, questionMgr);
+//const vocabInstance = vocabManager(loaderInstance, questionMgr);
 const errorInstance = errorManager(answerMgr);
 const statusInstance = statusManager();
 
@@ -24,7 +24,7 @@ const statusInstance = statusManager();
 answerMgr.setInstances(answerListenersMgr);
 questionMgr.setInstances(answerMgr, statusInstance, vocabMgr);
 
-loaderInstance.setInstances(controlInstance, questionMgr, vocabInstance, errorInstance, statusInstance);
+loaderInstance.setInstances(controlInstance, questionMgr, vocabMgr, errorInstance, statusInstance);
 listenerInstance.setInstances(loaderInstance, controlInstance, questionMgr, answerMgr);
 
 (function defaultState() {
