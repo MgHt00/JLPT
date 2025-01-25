@@ -1,3 +1,4 @@
+import { selectors } from "../services/globals.js";
 export function controlManger() {
 
   // To hide both bringBack and resumePracticeBtn

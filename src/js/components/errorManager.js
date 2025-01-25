@@ -1,3 +1,4 @@
+import { appState, selectors } from "../services/globals.js";
 export function errorManager(answerMgr) {
   const codeMapping = {
     iLoop: "infiniteloop",

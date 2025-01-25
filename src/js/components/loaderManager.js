@@ -1,3 +1,4 @@
+import { appState, appData, currentStatus, selectors } from "../services/globals.js";
 export function loaderManager(listenerMgr, controlMgr, questionMgr, vocabMgr, errorInstance, statusInstance) {
   
   /**

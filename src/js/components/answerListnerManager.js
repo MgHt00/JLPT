@@ -1,3 +1,4 @@
+import { appState } from "../services/globals.js";
 export function answerListnerManager(questionMgr, loaderInstance) {
   // Event handler for flashcard mode
   function handleFlashcardFlip() {

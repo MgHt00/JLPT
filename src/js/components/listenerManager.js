@@ -1,3 +1,5 @@
+import { appState, selectors } from "../services/globals.js";
+
 export function listenerManager(loaderMgr, controlMgr, questionMgr, answerMgr) {
 
   function setInstances(loaderInstance, controlInstance, questionInstance, answerInstance){

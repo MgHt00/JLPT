@@ -1,4 +1,4 @@
-import { defaultConfig, appState, appData, currentStatus, selectors } from "../services/globals.js";
+import { appState, appData, selectors } from "../services/globals.js";
 
 export function answerManager(questionMgr, loaderInstance, answerListenersMgr) {
   const vocabMapping = {

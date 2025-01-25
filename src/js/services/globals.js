@@ -14,7 +14,10 @@ let jpLang = "jp";
 
 let kaVocab = [];
 let hiVocab = [];
-let enVocab = [];*/
+let enVocab = [];
+
+import { defaultConfig, appState, appData, currentStatus, selectors } from "../services/globals";
+*/
 
 export const defaultConfig = {
   ka : "ka",

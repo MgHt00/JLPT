@@ -1,3 +1,4 @@
+import { appState, appData, selectors } from "../services/globals.js";
 export function questionManager(answerMgr, statusInstance, vocabMgr) {
   let questionObj = {};
 
