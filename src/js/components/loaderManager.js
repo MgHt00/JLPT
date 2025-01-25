@@ -1,4 +1,4 @@
-import { appState, appData, currentStatus, selectors } from "../services/globals.js";
+import { defaultConfig, appState, appData, currentStatus, selectors } from "../services/globals.js";
 export function loaderManager(listenerMgr, controlMgr, questionMgr, vocabMgr, errorInstance, statusInstance) {
   
   /**
@@ -74,7 +74,7 @@ export function loaderManager(listenerMgr, controlMgr, questionMgr, vocabMgr, er
     validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
     validateAndSetQuestionMode(); // Validate question mode and set default
     
-    assignLanguage(sectionMessage, enLang); // Always set message section to English
+    assignLanguage(selectors.sectionMessage, defaultConfig.enLang); // Always set message section to English
 
     /*if (appState.qMode === "fresh") { // Run the following block only if qMode is 'fresh'
       validateSyllable(); // Validate syllable choices and show an error if none are selected
@@ -130,9 +130,9 @@ export function loaderManager(listenerMgr, controlMgr, questionMgr, vocabMgr, er
     appData.vocabArray = removeBlankQuestions(appData.vocabArray);
     console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
 
-    copyOneProperty(appData.vocabArray, kaVocab, ka);
-    copyOneProperty(appData.vocabArray, hiVocab, hi);
-    copyOneProperty(appData.vocabArray, enVocab, en);
+    copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
+    copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
+    copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
 
     console.groupEnd();
   }
@@ -164,9 +164,9 @@ export function loaderManager(listenerMgr, controlMgr, questionMgr, vocabMgr, er
     }
 
     // Fetch the relevant categories
-    copyOneProperty(appData.vocabArray, kaVocab, ka);
-    copyOneProperty(appData.vocabArray, hiVocab, hi);
-    copyOneProperty(appData.vocabArray, enVocab, en);
+    copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
+    copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
+    copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
 
     console.groupEnd();
   }
@@ -179,9 +179,9 @@ export function loaderManager(listenerMgr, controlMgr, questionMgr, vocabMgr, er
     console.log("loadState: ", appState, appData, currentStatus);
 
     // Fetch the relevant categories
-    copyOneProperty(appData.vocabArray, kaVocab, ka);
-    copyOneProperty(appData.vocabArray, hiVocab, hi);
-    copyOneProperty(appData.vocabArray, enVocab, en);
+    copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
+    copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
+    copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
 
     assignLanguageBySelection();
 
@@ -301,18 +301,18 @@ export function loaderManager(listenerMgr, controlMgr, questionMgr, vocabMgr, er
     const jpLanguages = ["hi", "ka"];
 
     if(jpLanguages.includes(appState.qChoiceInput)) {
-      assignLanguage(sectionQuestion, jpLang);
+      assignLanguage(selectors.sectionQuestion, defaultConfig.jpLang);
     } else {
-      assignLanguage(sectionQuestion, enLang);
+      assignLanguage(selectors.sectionQuestion, defaultConfig.enLang);
     }
 
     if(jpLanguages.includes(appState.aChoiceInput)) {
-      assignLanguage(sectionAnswer, jpLang);
+      assignLanguage(selectors.sectionAnswer, defaultConfig.jpLang);
     } else {
-      assignLanguage(sectionAnswer, enLang);
+      assignLanguage(selectors.sectionAnswer, defaultConfig.enLang);
     }
 
-    assignLanguage(sectionMessage, enLang);
+    assignLanguage(selectors.sectionMessage, defaultConfig.enLang);
 
     return this;
   }
@@ -424,10 +424,10 @@ export function loaderManager(listenerMgr, controlMgr, questionMgr, vocabMgr, er
 
   // When user want to restart the program
   function restart() {
-    clearScreen(sectionStatus);
-    toggleClass('overlay-message', sectionMessage);
+    clearScreen(selectors.sectionStatus);
+    toggleClass('overlay-message', selectors.sectionMessage);
     
-    toggleClass('fade-hide', sectionMessage);
+    toggleClass('fade-hide', selectors.sectionMessage);
 
     //toggleClass('shift-sections-to-center', dynamicDOM);
     controlMgr.toggleFormDisplay();
@@ -443,7 +443,7 @@ export function loaderManager(listenerMgr, controlMgr, questionMgr, vocabMgr, er
     
     // Create the container to display the mistakes
     buildNode({
-      parent: sectionQuestion,
+      parent: selectors.sectionQuestion,
       child: 'div',
       content: '',
       className: 'mistake-list-container', // New class for the container

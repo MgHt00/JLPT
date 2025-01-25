@@ -19,8 +19,8 @@ export function questionManager(answerMgr, statusInstance, vocabMgr) {
       console.info("newQuestion.mode initialized.");
     }
 
-    clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
-    //clearScreen([sectionQuestion, sectionAnswer]);
+    clearScreen([selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
+    //clearScreen([selectors.sectionQuestion, selectors.sectionAnswer]);
 
     statusInstance.printQuestionStatus() // show current status
 
@@ -42,7 +42,7 @@ export function questionManager(answerMgr, statusInstance, vocabMgr) {
         //console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
         
         buildNode({ 
-          parent: sectionQuestion, 
+          parent: selectors.sectionQuestion, 
           child: 'div', 
           content: questionObj[appState.qChoiceInput],
         });

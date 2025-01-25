@@ -19,12 +19,12 @@ export function answerManager(questionMgr, loaderInstance, answerListenersMgr) {
     //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
 
     if (appState.flashYesNo) { // if it is a flash card game
-      assignLanguage(sectionAnswer, "en"); // if aChoice was set to Kanji or Hirigana, reset to "en"
-      toggleClass('fade-out-light', sectionAnswer);
+      assignLanguage(selectors.sectionAnswer, "en"); // if aChoice was set to Kanji or Hirigana, reset to "en"
+      toggleClass('fade-out-light', selectors.sectionAnswer);
       setTimeout(() => {
         // Building "Flip" button container
         buildNode({ 
-          parent: sectionAnswer, 
+          parent: selectors.sectionAnswer, 
           child: 'div', 
           content: '', 
           className: ['answer-btn', 'check-flash-mode-answer'], 
@@ -40,12 +40,12 @@ export function answerManager(questionMgr, loaderInstance, answerListenersMgr) {
           idName: 'answer-btn-text', 
           //eventFunction: handleFlashcardAnswer 
         });
-        toggleClass('fade-out-light', sectionAnswer);
+        toggleClass('fade-out-light', selectors.sectionAnswer);
       }, 350);
       
     } else { // if it is a multiple choice game
       buildNode({ 
-        parent: sectionAnswer, 
+        parent: selectors.sectionAnswer, 
         child: 'div', 
         content: ansArray, 
         className: 'answer-btn', 
@@ -122,18 +122,18 @@ export function answerManager(questionMgr, loaderInstance, answerListenersMgr) {
   // to ask user whether they want to practice the vocabs from the local storage
   function toLocalStorageYesNo() {
     console.groupCollapsed("toLocalStorageYesNo()");
-    removeClass('fade-hide', sectionMessage);
-    removeClass('overlay-message', sectionMessage);
+    removeClass('fade-hide', selectors.sectionMessage);
+    removeClass('overlay-message', selectors.sectionMessage);
 
     buildNode({ 
-        parent: sectionMessage, 
+        parent: selectors.sectionMessage, 
         child: 'div', 
         content: `There are ${vocabMgr.readStoredLength} words in mistake bank.  Would you like to practice those?`, 
         className: 'vocabs-complete', 
       });
 
       buildNode({ 
-        parent: sectionAnswer, 
+        parent: selectors.sectionAnswer, 
         child: 'div', 
         content: 'Yes', 
         className: 'answer-btn', 
@@ -142,7 +142,7 @@ export function answerManager(questionMgr, loaderInstance, answerListenersMgr) {
       });
 
       buildNode({ 
-        parent: sectionAnswer, 
+        parent: selectors.sectionAnswer, 
         child: 'div', 
         content: 'No', 
         className: 'answer-btn', 
@@ -154,18 +154,18 @@ export function answerManager(questionMgr, loaderInstance, answerListenersMgr) {
 
   // when all of the user selected vocabs are shown
   function completeAndRestart() {
-    removeClass('fade-hide', sectionMessage);
-    removeClass('overlay-message', sectionMessage);
+    removeClass('fade-hide', selectors.sectionMessage);
+    removeClass('overlay-message', selectors.sectionMessage);
 
     buildNode({ 
-      parent: sectionMessage, 
+      parent: selectors.sectionMessage, 
       child: 'div', 
       content: 'You have completed all the vocabs.  Well done!', 
       className: 'vocabs-complete', 
     });
 
     buildNode({ 
-      parent: sectionAnswer, 
+      parent: selectors.sectionAnswer, 
       child: 'div', 
       content: 'Let\'s Restart!', 
       className: 'answer-btn', 

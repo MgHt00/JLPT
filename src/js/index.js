@@ -1,3 +1,4 @@
+import { selectors } from "./services/globals.js";
 import { listenerManager } from "./components/listenerManager.js";
 import { loaderManager } from "./components/loaderManager.js";
 import { controlManger } from "./components/controlManager.js";
@@ -54,8 +55,8 @@ listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr);
   // Helper function
   function defaultStateClassChanges() {
     toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]
-    toggleClass('overlay-message', sectionMessage);
-    toggleClass('fade-hide', sectionMessage);
+    toggleClass('overlay-message', selectors.sectionMessage);
+    toggleClass('fade-hide', selectors.sectionMessage);
 
     toggleClass('disabled', selectors.settingRepractice);
     toggleClass('hide', selectors.settingNoOfAnsERRblk);

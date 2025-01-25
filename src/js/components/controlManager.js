@@ -48,7 +48,7 @@ export function controlManger() {
     toggleClass('disabled', selectors.settingForm);
     toggleClass('dim', ...selectors.allSetting);
 
-    const dynamicDOMClassList = dynamicDOM.classList;
+    const dynamicDOMClassList = selectors.dynamicDOM.classList;
     let dynamicDOMClassToToggle;
     if ((specialCSSClass === 'shift-sections-to-top-center') || dynamicDOMClassList.contains('shift-sections-to-top-center')) {
       dynamicDOMClassToToggle = 'shift-sections-to-top-center';
@@ -57,7 +57,7 @@ export function controlManger() {
     }
 
     setTimeout(() => {
-      toggleClass(dynamicDOMClassToToggle, dynamicDOM);
+      toggleClass(dynamicDOMClassToToggle, selectors.dynamicDOM);
     }, 400);
 
     toggleClass('hide',

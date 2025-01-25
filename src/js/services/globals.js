@@ -59,6 +59,13 @@ export const currentStatus = {
 }
 
 export const selectors = {
+  body : document.querySelector("#section-body"),
+  sectionQuestion : document.querySelector("#section-question"),
+  sectionMessage : document.querySelector("#section-message"),
+  sectionAnswer : document.querySelector("#section-answer"),
+  sectionStatus : document.querySelector("#section-status"),
+  dynamicDOM : document.querySelector("#dynamic-DOM"),
+
   settingForm : document.querySelector("#settingsForm"),
   switchRandomYesNo : document.querySelector("#randomYesNo"),
   settingFlashYesNo : document.querySelector("#settings-flashYesNo"),

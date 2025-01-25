@@ -53,19 +53,19 @@ export function statusManager() {
 
   // to print score and status(`#/#`) on screen
   function printQuestionStatus() {
-    clearScreen(sectionStatus);
+    clearScreen(selectors.sectionStatus);
 
     setTimeout(() => {
       if (currentStatus.totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
         buildNode({
-          parent: sectionStatus,
+          parent: selectors.sectionStatus,
           child: "div",
           content: `Average Correct Rate: ${currentStatus.averageScore}%`,
         });
       }
   
       buildNode({
-        parent: sectionStatus,
+        parent: selectors.sectionStatus,
         child: "div",
         content: `${readQuestionCount()} / ${currentStatus.totalNoOfQuestions}`,
       });

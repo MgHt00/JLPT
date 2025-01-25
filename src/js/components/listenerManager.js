@@ -248,7 +248,7 @@ export function listenerManager(loaderMgr, controlMgr, questionMgr, answerMgr) {
                    .hideResumeShowBack()
                    .toggleFormDisplay('shift-sections-to-top-center');
 
-    clearScreen([sectionStatus, sectionQuestion, sectionMessage, sectionAnswer], "fast");
+    clearScreen([selectors.sectionStatus, selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer], "fast");
     loaderMgr.listMistakes();
 
     console.groupEnd();
@@ -274,7 +274,7 @@ export function listenerManager(loaderMgr, controlMgr, questionMgr, answerMgr) {
     // Set the flag to prevent further calls
     isMoving = true;
 
-    //clearScreen([sectionQuestion, sectionMessage, sectionAnswer]);
+    //clearScreen([selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
 
     // Add an event listener for the transition end to reset the flag
     selectors.settingForm.addEventListener('transitionend', () => {
