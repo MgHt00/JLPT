@@ -1,8 +1,10 @@
+import { defaultConfig, appState, appData, currentStatus, selectors } from "../services/globals.js";
+
 export function answerManager(questionMgr, loaderInstance, answerListenersMgr) {
   const vocabMapping = {
-    ka: kaVocab,
-    hi: hiVocab,
-    en: enVocab
+    ka: appData.kaVocab,
+    hi: appData.hiVocab,
+    en: appData.enVocab,
   };
 
   function setInstances(answerListenerInstance) {
