@@ -1,5 +1,5 @@
-import { defaultConfig, appState, appData, currentStatus, selectors } from "../services/globals.js";
-export function loaderManager(listenerMgr, controlMgr, questionMgr, vocabMgr, errorInstance, statusInstance) {
+export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, vocabMgr, errorInstance, statusInstance) {
+  const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   
   /**
    * Sets the instances of the control, question, vocabulary, error, and status managers.

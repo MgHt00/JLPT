@@ -1,5 +1,5 @@
-import { appData, currentStatus } from "../services/globals.js";
-export function statusManager() {
+export function statusManager(globals) {
+  const { appData, currentStatus } = globals;
   // Initialize statusManager's properties, if it’s not defined yet ...
   if (statusManager.goodToResume === undefined) {
     statusManager.goodToResume = "false";

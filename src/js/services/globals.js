@@ -19,7 +19,7 @@ let enVocab = [];
 import { defaultConfig, appState, appData, currentStatus, selectors } from "../services/globals";
 */
 
-export const defaultConfig = {
+const defaultConfig = {
   ka : "ka",
   hi : "hi",
   en : "en",
@@ -28,7 +28,7 @@ export const defaultConfig = {
   jpLang : "jp",
 }
 
-export const appState = {
+const appState = {
   randomYesNo : true,
   qChoiceInput: "hi",
   aChoiceInput: "en",
@@ -38,7 +38,7 @@ export const appState = {
   correctAns: "",
 };
 
-export const appData = {
+const appData = {
   kaVocab : [],
   hiVocab : [],
   enVocab : [],
@@ -48,7 +48,7 @@ export const appData = {
   rePractice: [],
 };
 
-export const currentStatus = {
+const currentStatus = {
   //stillInProgress : false,
   questionCount : 0,
   totalNoOfQuestions : 0,
@@ -58,7 +58,7 @@ export const currentStatus = {
   averageScore : 0,
 }
 
-export const selectors = {
+const selectors = {
   body : document.querySelector("#section-body"),
   sectionQuestion : document.querySelector("#section-question"),
   sectionMessage : document.querySelector("#section-message"),
@@ -126,3 +126,11 @@ export const selectors = {
     return [document.querySelector("#flush-memory-btn-0"), document.querySelector("#list-memory-btn-0")];
   }
 };
+
+export const globals = {
+  defaultConfig,
+  appState,
+  appData,
+  currentStatus,
+  selectors,
+}

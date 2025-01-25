@@ -1,6 +1,5 @@
-import { appState, appData, selectors } from "../services/globals.js";
-
-export function answerManager(questionMgr, loaderInstance, answerListenersMgr) {
+export function answerManager(globals, questionMgr, loaderInstance, answerListenersMgr) {
+  const { appState, appData, selectors } = globals;
   const vocabMapping = {
     ka: appData.kaVocab,
     hi: appData.hiVocab,

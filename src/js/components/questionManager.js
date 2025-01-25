@@ -1,5 +1,5 @@
-import { appState, appData, selectors } from "../services/globals.js";
-export function questionManager(answerMgr, statusInstance, vocabMgr) {
+export function questionManager(globals, answerMgr, statusInstance, vocabMgr) {
+  const { appState, appData, selectors } = globals;
   let questionObj = {};
 
   function setInstances(answerInstance, statusMgr, vocabInstance) {

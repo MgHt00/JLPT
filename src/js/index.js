@@ -1,4 +1,4 @@
-import { selectors } from "./services/globals.js";
+import { globals } from "./services/globals.js";
 import { listenerManager } from "./components/listenerManager.js";
 import { loaderManager } from "./components/loaderManager.js";
 import { controlManger } from "./components/controlManager.js";
@@ -9,16 +9,16 @@ import { vocabManager } from "./components/vocabManager.js";
 import { errorManager } from "./components/errorManager.js";
 import { statusManager } from "./components/statusManager.js";
 
-const listenerMgr = listenerManager(null, null, null, null);
-const loaderMgr = loaderManager(listenerMgr, null, null, null, null, null);
-const controlMgr = controlManger();
+const listenerMgr = listenerManager(globals, null, null, null, null);
+const loaderMgr = loaderManager(globals, listenerMgr, null, null, null, null, null);
+const controlMgr = controlManger(globals);
 
-const questionMgr = questionManager(null, null, null);
-const answerMgr = answerManager(questionMgr, loaderMgr, null);
-const answerListenersMgr = answerListnerManager(questionMgr, loaderMgr);
-const vocabMgr =  vocabManager(loaderMgr, questionMgr);
-const errorInstance = errorManager(answerMgr);
-const statusInstance = statusManager();
+const questionMgr = questionManager(globals, null, null, null);
+const answerMgr = answerManager(globals, questionMgr, loaderMgr, null);
+const answerListenersMgr = answerListnerManager(globals, questionMgr, loaderMgr);
+const vocabMgr =  vocabManager(globals, loaderMgr, questionMgr);
+const errorInstance = errorManager(globals, answerMgr);
+const statusInstance = statusManager(globals);
 
 /**
  * Initializes and sets up dependencies for various manager instances.
@@ -35,6 +35,8 @@ questionMgr.setInstances(answerMgr, statusInstance, vocabMgr);
 
 loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errorInstance, statusInstance);
 listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr);
+
+const { selectors } = globals;
 
 (function defaultState() {
   console.groupCollapsed("defaultState()");

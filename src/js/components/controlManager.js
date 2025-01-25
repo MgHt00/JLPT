@@ -1,5 +1,5 @@
-import { selectors } from "../services/globals.js";
-export function controlManger() {
+export function controlManger(globals) {
+  const { selectors } = globals;
 
   // To hide both bringBack and resumePracticeBtn
   function floatingBtnsHideAll() {

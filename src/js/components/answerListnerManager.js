@@ -1,5 +1,5 @@
-import { appState } from "../services/globals.js";
-export function answerListnerManager(questionMgr, loaderInstance) {
+export function answerListnerManager(globals, questionMgr, loaderInstance) {
+  const { appState } = globals;
   // Event handler for flashcard mode
   function handleFlashcardFlip() {
     //console.groupCollapsed("answerManager() - handleFlashcardFlip()");

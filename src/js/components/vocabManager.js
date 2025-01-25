@@ -1,5 +1,5 @@
-import { appState, appData, currentStatus, selectors } from "../services/globals.js";
-export function vocabManager(loaderMgr, questionMgr) {
+export function vocabManager(globals, loaderMgr, questionMgr) {
+  const { appState, appData, currentStatus, selectors } = globals;
   
   // to remove passed question number from the array
   function removeSpecifiedQuestion(i) {

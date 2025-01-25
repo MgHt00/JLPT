@@ -1,5 +1,5 @@
-import { appState, selectors } from "../services/globals.js";
-export function errorManager(answerMgr) {
+export function errorManager(globals, answerMgr) {
+  const { appState, selectors } = globals;
   const codeMapping = {
     iLoop: "infiniteloop",
     noSL: "syllable-error",
