@@ -1,5 +1,6 @@
 import { globals } from "./services/globals.js";
 import { componentManager } from "./components/componentsManager.js";
+import { utilsManager } from "./utils/utilsManager.js";
 
 const { selectors } = globals;
 const {
@@ -14,7 +15,7 @@ const {
   statusManager,
 } = componentManager;
 
-const listenerMgr = listenerManager(globals, null, null, null, null);
+const listenerMgr = listenerManager(globals, utilsManager, null, null, null, null);
 const loaderMgr = loaderManager(globals, listenerMgr, null, null, null, null, null);
 const controlMgr = controlManger(globals);
 
