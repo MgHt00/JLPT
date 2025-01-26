@@ -1,6 +1,6 @@
 export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, questionMgr, answerMgr) {
   const { appState, selectors } = globals;
-  const { helpers, domUtils, displayUtils} = utilsManager;
+  const { helpers, domUtils, displayUtils } = utilsManager;
 
   function setInstances(loaderInstance, controlInstance, questionInstance, answerInstance){
     loaderMgr = loaderInstance;
@@ -37,7 +37,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     } else {
       appState.randomYesNo = false;
     }
-    toggleClass("dim", randomLabel, sequentialLabel);
+    displayUtils.toggleClass("dim", randomLabel, sequentialLabel);
     console.info("appState.randomYesNo: ", appState.randomYesNo);
     console.groupEnd();
   }
@@ -53,7 +53,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     } else {
       appState.flashYesNo = true;
     }
-    toggleClass("dim", flashLabel, multiLabel);
+    displayUtils.toggleClass("dim", flashLabel, multiLabel);
     console.info("appState.flashYesNo: ", appState.flashYesNo);
     console.groupEnd();
   }
@@ -62,7 +62,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   function flashModeChanges(e) {
     console.groupCollapsed("flashModeChanges()");
     controlMgr.resetQuestionMode();
-    toggleClass('disabled', ...selectors.noOfAnsAll);
+    displayUtils.toggleClass('disabled', ...selectors.noOfAnsAll);
     
     // set noOfAns to 2 to bypass runtime error if flashcard mode is selected
     if (selectors.readFlashYesNo) {
@@ -82,8 +82,8 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
       .filter(checkbox => checkbox !== allCheckbox);
 
-    if (checkNode({ idName: 'syllable-error' })) {
-      clearNode({
+    if (domUtils.checkNode({ idName: 'syllable-error' })) {
+      domUtils.clearNode({
         parent: selectors.fieldsetSyllable,
         children: Array.from(document.querySelectorAll('div[id^="syllable-error"]'))
       });
@@ -119,8 +119,8 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
       .filter(checkbox => checkbox !== allCheckbox);
 
-    if (checkNode({ idName: 'syllable-error' })) {
-      clearNode({
+    if (domUtils.checkNode({ idName: 'syllable-error' })) {
+      domUtils.clearNode({
         parent: selectors.fieldsetSyllable,
         children: Array.from(document.querySelectorAll('div[id^="syllable-error"]'))
       });
@@ -160,12 +160,12 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     loaderMgr.removeErrBlks();
     let selectedMode = selectors.readQuestionMode;
     if (selectedMode === "fresh") {
-      toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
+      displayUtils.toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
 
       if (document.querySelector("[id|='memory-empty-error']")) {
         // if there is an error under Memory Status Fieldset -> clean it
         const child = document.querySelector("[id|='memory-empty-error']");
-        clearNode({
+        domUtils.clearNode({
           parent: selectors.settingRepractice,
           children: [child],
         });
@@ -175,12 +175,12 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     } 
     
     else if (selectedMode === "stored") {
-      toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
+      displayUtils.toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
       
       if (document.querySelector("[id|='syllable-error']")) {
         // if there is an error under Syllable Fieldset -> clean it
         const child = document.querySelector("[id|='syllable-error']");
-        clearNode({
+        domUtils.clearNode({
           parent: selectors.settingSyllable,
           children: [child],
         });
@@ -198,14 +198,14 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
       en: { parent: selectors.aChoice, child: 'option', content: 'English', childValues:'en', idName: 'a-en'},
     };
   
-    clearNode({ parent: selectors.aChoice, children: Array.from(selectors.aChoiceOptionAll) }); 
+    domUtils.clearNode({ parent: selectors.aChoice, children: Array.from(selectors.aChoiceOptionAll) }); 
     // Array.from(aChoiceSelectorAll): Converts the NodeList (which is similar to an array but doesn't have all array methods) into a true array
   
     // Loop through the ansMapping object and call buildNode
     Object.entries(ansMapping).forEach(([key, params]) => { // [sn13]
       // Exclude the option if it matches the user's question choice
       if (key !== selectors.qChoice.value) {
-        buildNode(params);
+        domUtils.buildNode(params);
       }
     });
   }
@@ -248,7 +248,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
                    .hideResumeShowBack()
                    .toggleFormDisplay('shift-sections-to-top-center');
 
-    clearScreen([selectors.sectionStatus, selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer], "fast");
+    domUtils.clearScreen([selectors.sectionStatus, selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer], "fast");
     loaderMgr.listMistakes();
 
     console.groupEnd();
@@ -274,7 +274,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     // Set the flag to prevent further calls
     isMoving = true;
 
-    //clearScreen([selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
+    //domUtils.clearScreen([selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
 
     // Add an event listener for the transition end to reset the flag
     selectors.settingForm.addEventListener('transitionend', () => {

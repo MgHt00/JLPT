@@ -1,5 +1,7 @@
-export function errorManager(globals, answerMgr) {
+export function errorManager(globals, utilsManager, answerMgr) {
   const { appState, selectors } = globals;
+  const { domUtils } = utilsManager;
+
   const codeMapping = {
     iLoop: "infiniteloop",
     noSL: "syllable-error",
@@ -102,7 +104,7 @@ export function errorManager(globals, answerMgr) {
       `;
     }
 
-    buildNode({ 
+    domUtils.buildNode({ 
       parent: parentName, 
       child: 'div', 
       content: errorMessage, 

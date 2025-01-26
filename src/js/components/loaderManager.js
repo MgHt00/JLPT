@@ -1,5 +1,6 @@
-export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, vocabMgr, errorInstance, statusInstance) {
+export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, questionMgr, vocabMgr, errorInstance, statusInstance) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
+  const { helpers, domUtils, displayUtils } = utilsManager;
   
   /**
    * Sets the instances of the control, question, vocabulary, error, and status managers.
@@ -74,7 +75,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
     validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
     validateAndSetQuestionMode(); // Validate question mode and set default
     
-    assignLanguage(selectors.sectionMessage, defaultConfig.enLang); // Always set message section to English
+    helpers.assignLanguage(selectors.sectionMessage, defaultConfig.enLang); // Always set message section to English
 
     /*if (appState.qMode === "fresh") { // Run the following block only if qMode is 'fresh'
       validateSyllable(); // Validate syllable choices and show an error if none are selected
@@ -130,9 +131,9 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
     appData.vocabArray = removeBlankQuestions(appData.vocabArray);
     console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
 
-    copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
-    copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
-    copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
+    helpers.copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
+    helpers.copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
+    helpers.copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
 
     console.groupEnd();
   }
@@ -164,9 +165,9 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
     }
 
     // Fetch the relevant categories
-    copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
-    copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
-    copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
+    helpers.copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
+    helpers.copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
+    helpers.copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
 
     console.groupEnd();
   }
@@ -179,9 +180,9 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
     console.log("loadState: ", appState, appData, currentStatus);
 
     // Fetch the relevant categories
-    copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
-    copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
-    copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
+    helpers.copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
+    helpers.copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
+    helpers.copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
 
     assignLanguageBySelection();
 
@@ -211,7 +212,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
     let storedLength = vocabMgr.readStoredLength;
     console.info("storedLength:", storedLength);
     if (storedLength === 0) {
-      buildNode({
+      domUtils.buildNode({
         parent: selectors.memoryInfo,
         child: 'div',
         content: 'Memory is empty.',
@@ -219,7 +220,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
         idName: 'memory-info',
       });
     } else if (storedLength === 1) {
-      buildNode({
+      domUtils.buildNode({
         parent: selectors.memoryInfo,
         child: 'div',
         //content: `There is ${storedLength} word to repractice.`,
@@ -228,7 +229,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
         idName: 'memory-info',
       });
     } else {
-      buildNode({
+      domUtils.buildNode({
         parent: selectors.memoryInfo,
         child: 'div',
         content: `There are ${storedLength} words to repractice.`,
@@ -239,7 +240,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
     }
 
     // Build `flush` button
-    buildNode({
+    domUtils.buildNode({
       parent: selectors.memoryBtns,
       child: 'div',
       content: '<i class="fa-solid fa-trash-can"></i>',
@@ -249,7 +250,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
       eventFunction: vocabMgr.flushMistakeBank,
     });
     // Build `list` button
-    buildNode({
+    domUtils.buildNode({
       parent: selectors.memoryBtns,
       child: 'div',
       content: `<i class="fa-solid fa-rectangle-list"></i>`,
@@ -301,18 +302,18 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
     const jpLanguages = ["hi", "ka"];
 
     if(jpLanguages.includes(appState.qChoiceInput)) {
-      assignLanguage(selectors.sectionQuestion, defaultConfig.jpLang);
+      helpers.assignLanguage(selectors.sectionQuestion, defaultConfig.jpLang);
     } else {
-      assignLanguage(selectors.sectionQuestion, defaultConfig.enLang);
+      helpers.assignLanguage(selectors.sectionQuestion, defaultConfig.enLang);
     }
 
     if(jpLanguages.includes(appState.aChoiceInput)) {
-      assignLanguage(selectors.sectionAnswer, defaultConfig.jpLang);
+      helpers.assignLanguage(selectors.sectionAnswer, defaultConfig.jpLang);
     } else {
-      assignLanguage(selectors.sectionAnswer, defaultConfig.enLang);
+      helpers.assignLanguage(selectors.sectionAnswer, defaultConfig.enLang);
     }
 
-    assignLanguage(selectors.sectionMessage, defaultConfig.enLang);
+    helpers.assignLanguage(selectors.sectionMessage, defaultConfig.enLang);
 
     return this;
   }
@@ -321,7 +322,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
   function validateSyllable() {
     console.groupCollapsed("validateSyllable()");
     // Validate syllable choices and show an error if none are selected
-    appData.syllableChoice = convertCheckedValuesToArray('input[name="syllableChoice"]:checked');
+    appData.syllableChoice = helpers.convertCheckedValuesToArray('input[name="syllableChoice"]:checked');
     if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
       errorInstance.runtimeError("noSL");
       console.groupEnd();
@@ -397,8 +398,8 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
   function rePrintMemory() {
     //console.groupCollapsed("rePrintMemory()");
 
-    clearNode({ parent: selectors.memoryInfo });
-    clearNode({ parent: selectors.memoryBtns });
+    domUtils.clearNode({ parent: selectors.memoryInfo });
+    domUtils.clearNode({ parent: selectors.memoryBtns });
     loaderInstance.loadMemoryData()
 
     console.groupEnd();
@@ -424,12 +425,12 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
 
   // When user want to restart the program
   function restart() {
-    clearScreen(selectors.sectionStatus);
-    toggleClass('overlay-message', selectors.sectionMessage);
+    domUtils.clearScreen(selectors.sectionStatus);
+    displayUtils.toggleClass('overlay-message', selectors.sectionMessage);
     
-    toggleClass('fade-hide', selectors.sectionMessage);
+    displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
 
-    //toggleClass('shift-sections-to-center', dynamicDOM);
+    //displayUtils.toggleClass('shift-sections-to-center', dynamicDOM);
     controlMgr.toggleFormDisplay();
     listenerMgr.debouncedMoveForm();
     rePrintMemory();
@@ -442,7 +443,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
     const mistakeArray = vocabMgr.loadMistakesFromMistakeBank(); // Load mistakes from localStorage
     
     // Create the container to display the mistakes
-    buildNode({
+    domUtils.buildNode({
       parent: selectors.sectionQuestion,
       child: 'div',
       content: '',
@@ -457,7 +458,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
     const headerContent = ['#', 'Kanji', 'Hiragana', 'English'];
   
     // Build the row for headers
-    buildNode({
+    domUtils.buildNode({
       parent: mistakeListContainer,
       child: 'div',
       content: '', // Empty content, as we'll append children later
@@ -470,7 +471,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
     
     // Append header columns inside the header div
     headerContent.forEach((content) => {
-      buildNode({
+      domUtils.buildNode({
         parent: mistakeHeading, // Append to the header div
         child: 'div',
         content: content, // Assign each header title
@@ -482,7 +483,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
     // Iterate over the mistakeArray and create rows for each mistake
     mistakeArray.forEach((mistake, index) => {  
       // Create a container div for each row
-      buildNode({
+      domUtils.buildNode({
         parent: mistakeListContainer,
         child: 'div',
         content: '',
@@ -510,7 +511,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
             break;
         }
 
-        buildNode({
+        domUtils.buildNode({
           parent: mistakeListRow,
           child: 'div',
           content: content, // Assign content to each column
@@ -524,7 +525,7 @@ export function loaderManager(globals, listenerMgr, controlMgr, questionMgr, voc
 
   // Reset after flushing mistake bank
   function resetAfterFlushingMistakes() {
-    toggleClass('disabled', 
+    displayUtils.toggleClass('disabled', 
       selectors.settingRepractice, 
       selectors.settingSyllable
     );

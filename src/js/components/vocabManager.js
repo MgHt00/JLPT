@@ -1,5 +1,6 @@
-export function vocabManager(globals, loaderMgr, questionMgr) {
+export function vocabManager(globals, utilsManager, loaderMgr, questionMgr) {
   const { appState, appData, currentStatus, selectors } = globals;
+  const { domUtils } = utilsManager;
   
   // to remove passed question number from the array
   function removeSpecifiedQuestion(i) {
@@ -75,11 +76,11 @@ export function vocabManager(globals, loaderMgr, questionMgr) {
 
     localStorage.removeItem("toPractice");
     console.log("localstorage flushed.");
-    clearNode({
+    domUtils.clearNode({
       parent: selectors.memoryInfo,
       children: selectors.readMemoryInfoDOMs,
     });
-    clearNode({
+    domUtils.clearNode({
       parent: selectors.memoryBtns,
       children: selectors.readMemoryBtns,
     });

@@ -1,5 +1,7 @@
-export function answerListnerManager(globals, questionMgr, loaderInstance) {
+export function answerListnerManager(globals, utilsManager, questionMgr, loaderInstance) {
   const { appState } = globals;
+  const { domUtils, displayUtils } = utilsManager;
+
   // Event handler for flashcard mode
   function handleFlashcardFlip() {
     //console.groupCollapsed("answerManager() - handleFlashcardFlip()");
@@ -7,17 +9,17 @@ export function answerListnerManager(globals, questionMgr, loaderInstance) {
     // Remove exiting buttons
     const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
     answerButtons.forEach(button => {
-      toggleClass('fade-out-light', button);
+      displayUtils.toggleClass('fade-out-light', button);
       setTimeout(() => {
         button.remove();
       }, 350);
     });
     
-    toggleClass('fade-out-light', selectors.sectionMessage, selectors.sectionAnswer);
+    displayUtils.toggleClass('fade-out-light', selectors.sectionMessage, selectors.sectionAnswer);
 
     setTimeout(() => {
       // Show correct answer
-      buildNode({
+      domUtils.buildNode({
         parent: selectors.sectionAnswer,
         child: 'div',
         content: appState.correctAns,
@@ -26,7 +28,7 @@ export function answerListnerManager(globals, questionMgr, loaderInstance) {
       });
 
       // Show Message
-      buildNode({
+      domUtils.buildNode({
         parent: selectors.sectionAnswer,
         child: 'div',
         content: 'Did you get it right?',
@@ -35,7 +37,7 @@ export function answerListnerManager(globals, questionMgr, loaderInstance) {
       });
 
       // Show `Yes` `No` buttons
-      buildNode({
+      domUtils.buildNode({
         parent: selectors.sectionAnswer,
         child: 'div',
         content: ['Yes', 'No'],
@@ -44,7 +46,7 @@ export function answerListnerManager(globals, questionMgr, loaderInstance) {
         eventFunction: handleFlashCardYesNoAnswer
       });
 
-      toggleClass('fade-out-light', selectors.sectionMessage, selectors.sectionAnswer);
+      displayUtils.toggleClass('fade-out-light', selectors.sectionMessage, selectors.sectionAnswer);
 
     }, 350);
 
@@ -57,12 +59,12 @@ export function answerListnerManager(globals, questionMgr, loaderInstance) {
 
     const btnText = event.currentTarget.textContent;
     if (appState.correctAns === btnText) {
-      clearScreen(selectors.sectionMessage);
+      domUtils.clearScreen(selectors.sectionMessage);
 
       setTimeout(() => {
-        toggleClass('fade-hide', selectors.sectionMessage);
-        toggleClass('so-dim', selectors.sectionStatus, selectors.sectionAnswer);
-        buildNode({
+        displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
+        displayUtils.toggleClass('so-dim', selectors.sectionStatus, selectors.sectionAnswer);
+        domUtils.buildNode({
           parent: selectors.sectionMessage,
           child: 'div',
           content: 'Correct',
@@ -71,9 +73,9 @@ export function answerListnerManager(globals, questionMgr, loaderInstance) {
       }, 350);
 
       setTimeout(() => {
-        toggleClass('fade-hide', selectors.sectionMessage); // Hide fully
-        toggleClass('so-dim', selectors.sectionStatus, selectors.sectionAnswer);
-        clearScreen([selectors.sectionStatus, selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
+        displayUtils.toggleClass('fade-hide', selectors.sectionMessage); // Hide fully
+        displayUtils.toggleClass('so-dim', selectors.sectionStatus, selectors.sectionAnswer);
+        domUtils.clearScreen([selectors.sectionStatus, selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
         checkModeAndRemoveVocab();
         questionMgr.finalizeQuestionAndProceed(true);
       }, 1200); // Add delay equal to the fade-out transition duration (0.5s)
@@ -82,10 +84,10 @@ export function answerListnerManager(globals, questionMgr, loaderInstance) {
     else {
         questionMgr.finalizeQuestionAndProceed(false);
         vocabMgr.storeToMistakeBank(questionMgr); // add wrongly selected word to localstorage
-        clearScreen(selectors.sectionMessage);
+        domUtils.clearScreen(selectors.sectionMessage);
 
         setTimeout(() => {
-          buildNode({ 
+          domUtils.buildNode({ 
             parent: selectors.sectionMessage, 
             child: 'div', 
             content: 'Keep Trying', 
@@ -93,11 +95,11 @@ export function answerListnerManager(globals, questionMgr, loaderInstance) {
           });
 
           // Show overlay "wrong" message
-          toggleClass('fade-hide', selectors.sectionMessage); 
+          displayUtils.toggleClass('fade-hide', selectors.sectionMessage); 
 
           // Fully hide after fade-out completes (0.5s from .fade-out transition)
           setTimeout(() => {
-              toggleClass('fade-hide', selectors.sectionMessage); // Hide fully
+              displayUtils.toggleClass('fade-hide', selectors.sectionMessage); // Hide fully
           }, 1000); // Add delay equal to the fade-out transition duration (0.5s)
         }, 350);
            
@@ -131,8 +133,8 @@ export function answerListnerManager(globals, questionMgr, loaderInstance) {
   function handleContinueToStoredData(event) {
     console.groupCollapsed("answerManager() - handleContinueToStoredData()");
 
-    toggleClass('fade-hide', selectors.sectionMessage);
-    toggleClass('overlay-message', selectors.sectionMessage);
+    displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
+    displayUtils.toggleClass('overlay-message', selectors.sectionMessage);
 
     const btnID = event.currentTarget.id;
 

@@ -16,15 +16,15 @@ const {
 } = componentManager;
 
 const listenerMgr = listenerManager(globals, utilsManager, null, null, null, null);
-const loaderMgr = loaderManager(globals, listenerMgr, null, null, null, null, null);
-const controlMgr = controlManger(globals);
+const loaderMgr = loaderManager(globals, utilsManager, listenerMgr, null, null, null, null, null);
+const controlMgr = controlManger(globals, utilsManager);
 
-const questionMgr = questionManager(globals, null, null, null);
-const answerMgr = answerManager(globals, questionMgr, loaderMgr, null);
-const answerListenersMgr = answerListnerManager(globals, questionMgr, loaderMgr);
-const vocabMgr =  vocabManager(globals, loaderMgr, questionMgr);
-const errorInstance = errorManager(globals, answerMgr);
-const statusInstance = statusManager(globals);
+const questionMgr = questionManager(globals, utilsManager, null, null, null);
+const answerMgr = answerManager(globals, utilsManager, questionMgr, loaderMgr, null);
+const answerListenersMgr = answerListnerManager(globals, utilsManager, questionMgr, loaderMgr);
+const vocabMgr =  vocabManager(globals, utilsManager, loaderMgr, questionMgr);
+const errorInstance = errorManager(globals, utilsManager, answerMgr);
+const statusInstance = statusManager(globals, utilsManager);
 
 /**
  * Initializes and sets up dependencies for various manager instances.

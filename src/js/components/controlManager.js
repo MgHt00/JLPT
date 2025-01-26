@@ -1,15 +1,16 @@
-export function controlManger(globals) {
+export function controlManger(globals, utilsManager) {
   const { selectors } = globals;
+  const { displayUtils} = utilsManager;
 
   // To hide both bringBack and resumePracticeBtn
   function floatingBtnsHideAll() {
     console.groupCollapsed("floatingBtnsHideAll()");
 
-    removeClass('hide', // remove 'hide' class
+    displayUtils.removeClass('hide', // remove 'hide' class
       selectors.bringBackBtn,
       selectors.resumePracticeBtn,
     );
-    addClass('hide', // add 'hide' class
+    displayUtils.addClass('hide', // add 'hide' class
       selectors.bringBackBtn,
       selectors.resumePracticeBtn,
     );
@@ -19,11 +20,11 @@ export function controlManger(globals) {
 
   // To hide resumePracticeBtn; show bringBackBtn
   function hideResumeShowBack() {
-    removeClass('hide', // remove 'hide' class
+    displayUtils.removeClass('hide', // remove 'hide' class
       selectors.bringBackBtn,
       selectors.resumePracticeBtn,
     );
-    addClass('hide', // add 'hide' class
+    displayUtils.addClass('hide', // add 'hide' class
       selectors.resumePracticeBtn,
     );
     return this;
@@ -31,11 +32,11 @@ export function controlManger(globals) {
 
   // To hide bringBackBtn; show resumePracticeBtn
   function hideBackShowResume() {
-    removeClass('hide', // remove 'hide' class
+    displayUtils.removeClass('hide', // remove 'hide' class
       selectors.bringBackBtn,
       selectors.resumePracticeBtn,
     );
-    addClass('hide', // add 'hide' class
+    displayUtils.addClass('hide', // add 'hide' class
       selectors.bringBackBtn,
     );
     return this;
@@ -44,9 +45,9 @@ export function controlManger(globals) {
   // To toggle buttons and sections when move / resume btn is clicked
   function toggleFormDisplay(specialCSSClass) {
     console.groupCollapsed("toggleFormDisplay()");
-    toggleClass('moved', selectors.settingForm);
-    toggleClass('disabled', selectors.settingForm);
-    toggleClass('dim', ...selectors.allSetting);
+    displayUtils.toggleClass('moved', selectors.settingForm);
+    displayUtils.toggleClass('disabled', selectors.settingForm);
+    displayUtils.toggleClass('dim', ...selectors.allSetting);
 
     const dynamicDOMClassList = selectors.dynamicDOM.classList;
     let dynamicDOMClassToToggle;
@@ -57,10 +58,10 @@ export function controlManger(globals) {
     }
 
     setTimeout(() => {
-      toggleClass(dynamicDOMClassToToggle, selectors.dynamicDOM);
+      displayUtils.toggleClass(dynamicDOMClassToToggle, selectors.dynamicDOM);
     }, 400);
 
-    toggleClass('hide',
+    displayUtils.toggleClass('hide',
       sectionStatus,
     );
 
@@ -70,11 +71,11 @@ export function controlManger(globals) {
 
   // To reset Question mode when something changes on the setting form
   function resetQuestionMode() {
-    removeClass('disabled',
+    displayUtils.removeClass('disabled',
       selectors.settingSyllable,
       selectors.settingRepractice, 
     );
-    addClass('disabled',
+    displayUtils.addClass('disabled',
       selectors.settingRepractice, 
     );
 

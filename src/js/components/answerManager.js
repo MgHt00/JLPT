@@ -1,5 +1,7 @@
-export function answerManager(globals, questionMgr, loaderInstance, answerListenersMgr) {
+export function answerManager(globals, utilsManager, questionMgr, loaderInstance, answerListenersMgr) {
   const { appState, appData, selectors } = globals;
+  const { helpers, domUtils, displayUtils } = utilsManager;
+
   const vocabMapping = {
     ka: appData.kaVocab,
     hi: appData.hiVocab,
@@ -18,11 +20,11 @@ export function answerManager(globals, questionMgr, loaderInstance, answerListen
     //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
 
     if (appState.flashYesNo) { // if it is a flash card game
-      assignLanguage(selectors.sectionAnswer, "en"); // if aChoice was set to Kanji or Hirigana, reset to "en"
-      toggleClass('fade-out-light', selectors.sectionAnswer);
+      helpers.assignLanguage(selectors.sectionAnswer, "en"); // if aChoice was set to Kanji or Hirigana, reset to "en"
+      displayUtils.toggleClass('fade-out-light', selectors.sectionAnswer);
       setTimeout(() => {
         // Building "Flip" button container
-        buildNode({ 
+        domUtils.buildNode({ 
           parent: selectors.sectionAnswer, 
           child: 'div', 
           content: '', 
@@ -31,7 +33,7 @@ export function answerManager(globals, questionMgr, loaderInstance, answerListen
           eventFunction: answerListenersMgr.handleFlashcardFlip
         });
         // Building "Flip" text
-        buildNode({ 
+        domUtils.buildNode({ 
           parent: document.querySelector("#answer-btn-0"), 
           child: 'div', 
           content: 'Flip', 
@@ -39,11 +41,11 @@ export function answerManager(globals, questionMgr, loaderInstance, answerListen
           idName: 'answer-btn-text', 
           //eventFunction: handleFlashcardAnswer 
         });
-        toggleClass('fade-out-light', selectors.sectionAnswer);
+        displayUtils.toggleClass('fade-out-light', selectors.sectionAnswer);
       }, 350);
       
     } else { // if it is a multiple choice game
-      buildNode({ 
+      domUtils.buildNode({ 
         parent: selectors.sectionAnswer, 
         child: 'div', 
         content: ansArray, 
@@ -121,17 +123,17 @@ export function answerManager(globals, questionMgr, loaderInstance, answerListen
   // to ask user whether they want to practice the vocabs from the local storage
   function toLocalStorageYesNo() {
     console.groupCollapsed("toLocalStorageYesNo()");
-    removeClass('fade-hide', selectors.sectionMessage);
-    removeClass('overlay-message', selectors.sectionMessage);
+    displayUtils.removeClass('fade-hide', selectors.sectionMessage);
+    displayUtils.removeClass('overlay-message', selectors.sectionMessage);
 
-    buildNode({ 
+    domUtils.buildNode({ 
         parent: selectors.sectionMessage, 
         child: 'div', 
         content: `There are ${vocabMgr.readStoredLength} words in mistake bank.  Would you like to practice those?`, 
         className: 'vocabs-complete', 
       });
 
-      buildNode({ 
+      domUtils.buildNode({ 
         parent: selectors.sectionAnswer, 
         child: 'div', 
         content: 'Yes', 
@@ -140,7 +142,7 @@ export function answerManager(globals, questionMgr, loaderInstance, answerListen
         eventFunction: answerListenersMgr.handleContinueToStoredData,
       });
 
-      buildNode({ 
+      domUtils.buildNode({ 
         parent: selectors.sectionAnswer, 
         child: 'div', 
         content: 'No', 
@@ -153,17 +155,17 @@ export function answerManager(globals, questionMgr, loaderInstance, answerListen
 
   // when all of the user selected vocabs are shown
   function completeAndRestart() {
-    removeClass('fade-hide', selectors.sectionMessage);
-    removeClass('overlay-message', selectors.sectionMessage);
+    displayUtils.removeClass('fade-hide', selectors.sectionMessage);
+    displayUtils.removeClass('overlay-message', selectors.sectionMessage);
 
-    buildNode({ 
+    domUtils.buildNode({ 
       parent: selectors.sectionMessage, 
       child: 'div', 
       content: 'You have completed all the vocabs.  Well done!', 
       className: 'vocabs-complete', 
     });
 
-    buildNode({ 
+    domUtils.buildNode({ 
       parent: selectors.sectionAnswer, 
       child: 'div', 
       content: 'Let\'s Restart!', 
@@ -205,14 +207,14 @@ export function answerManager(globals, questionMgr, loaderInstance, answerListen
       let randomAnswer;
 
       do { // [le3] Loop to ensure no duplicates are added 
-        randomIndex = randomNo(0, selectedArray.length - 1);
+        randomIndex = helpers.randomNo(0, selectedArray.length - 1);
         randomAnswer = selectedArray[randomIndex];
       } while (tempAnsArray.includes(randomAnswer) || randomAnswer === ""); // Check for duplicates and empty
 
       tempAnsArray[i] = randomAnswer;
     }
 
-    tempAnsArray = shuffleArray(tempAnsArray);
+    tempAnsArray = helpers.shuffleArray(tempAnsArray);
     console.groupEnd();
     return tempAnsArray;
   }

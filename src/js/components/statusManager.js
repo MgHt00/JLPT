@@ -1,5 +1,7 @@
-export function statusManager(globals) {
+export function statusManager(globals, utilsManager) {
   const { appData, currentStatus } = globals;
+  const { domUtils } = utilsManager;
+
   // Initialize statusManager's properties, if it’s not defined yet ...
   if (statusManager.goodToResume === undefined) {
     statusManager.goodToResume = "false";
@@ -53,18 +55,18 @@ export function statusManager(globals) {
 
   // to print score and status(`#/#`) on screen
   function printQuestionStatus() {
-    clearScreen(selectors.sectionStatus);
+    domUtils.clearScreen(selectors.sectionStatus);
 
     setTimeout(() => {
       if (currentStatus.totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
-        buildNode({
+        domUtils.buildNode({
           parent: selectors.sectionStatus,
           child: "div",
           content: `Average Correct Rate: ${currentStatus.averageScore}%`,
         });
       }
   
-      buildNode({
+      domUtils.buildNode({
         parent: selectors.sectionStatus,
         child: "div",
         content: `${readQuestionCount()} / ${currentStatus.totalNoOfQuestions}`,

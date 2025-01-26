@@ -1,5 +1,7 @@
-export function questionManager(globals, answerMgr, statusInstance, vocabMgr) {
+export function questionManager(globals, utilsManager, answerMgr, statusInstance, vocabMgr) {
   const { appState, appData, selectors } = globals;
+  const { helpers, domUtils } = utilsManager;
+
   let questionObj = {};
 
   function setInstances(answerInstance, statusMgr, vocabInstance) {
@@ -19,8 +21,8 @@ export function questionManager(globals, answerMgr, statusInstance, vocabMgr) {
       console.info("newQuestion.mode initialized.");
     }
 
-    clearScreen([selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
-    //clearScreen([selectors.sectionQuestion, selectors.sectionAnswer]);
+    domUtils.clearScreen([selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
+    //domUtils.clearScreen([selectors.sectionQuestion, selectors.sectionAnswer]);
 
     statusInstance.printQuestionStatus() // show current status
 
@@ -41,7 +43,7 @@ export function questionManager(globals, answerMgr, statusInstance, vocabMgr) {
   
         //console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
         
-        buildNode({ 
+        domUtils.buildNode({ 
           parent: selectors.sectionQuestion, 
           child: 'div', 
           content: questionObj[appState.qChoiceInput],
@@ -82,7 +84,7 @@ export function questionManager(globals, answerMgr, statusInstance, vocabMgr) {
     }
 
     if (appState.randomYesNo) {
-      fetchOneQuestion.index = randomNo(0, (appData.vocabArray.length - 1));
+      fetchOneQuestion.index = helpers.randomNo(0, (appData.vocabArray.length - 1));
     } else {
       fetchOneQuestion.index = 0;
     }
