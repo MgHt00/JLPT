@@ -400,7 +400,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
     domUtils.clearNode({ parent: selectors.memoryInfo });
     domUtils.clearNode({ parent: selectors.memoryBtns });
-    loaderInstance.loadMemoryData()
+    loadMemoryData()
 
     console.groupEnd();
   }
@@ -413,7 +413,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
       console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
     }
-    await loaderInstance.loadStoredJSON();// Wait for loadStoredJSON to complete
+    await loadStoredJSON();// Wait for loadStoredJSON to complete
 
     //statusMgr.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
     //statusMgr.resetCumulativeVariables(); // reset all variables concerning with cumulative average

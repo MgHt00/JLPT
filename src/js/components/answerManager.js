@@ -179,7 +179,8 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
   function createAnswerArray() {
     //console.groupCollapsed("answerManager() - createAnswerArray()");
 
-    let selectedArray = vocabMapping[selectors.aChoice.value];
+    //let selectedArray = vocabMapping[selectors.aChoice.value];
+    let selectedArray = vocabMapping[selectors.readaChoiceInput];
     //console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
     let tempAnsArray = [];
 

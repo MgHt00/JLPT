@@ -15,7 +15,7 @@ const {
   statusManager,
 } = componentManager;
 
-const listenerMgr = listenerManager(globals, utilsManager, null, null, null, null);
+const listenerMgr = listenerManager(globals, utilsManager, null, null, null, null, null);
 const loaderMgr = loaderManager(globals, utilsManager, listenerMgr, null, null, null, null, null);
 const controlMgr = controlManger(globals, utilsManager);
 
@@ -40,7 +40,7 @@ answerMgr.setInstances(answerListenersMgr);
 questionMgr.setInstances(answerMgr, statusMgr, vocabMgr);
 
 loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errMgr, statusMgr);
-listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr);
+listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMgr);
 
 (function defaultState() {
   console.groupCollapsed("defaultState()");
