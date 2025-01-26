@@ -1,5 +1,5 @@
 export function statusManager(globals, utilsManager) {
-  const { appData, currentStatus } = globals;
+  const { appData, currentStatus, selectors } = globals;
   const { domUtils } = utilsManager;
 
   // Initialize statusManager's properties, if it’s not defined yet ...

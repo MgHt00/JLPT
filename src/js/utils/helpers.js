@@ -40,7 +40,7 @@ export const helpers = {
     console.info("propertyName: ", propertyName);
 
     source.forEach((element, i) => {
-      if (propertyName === en) {
+      if (propertyName === "en") {
         console.info("Going through .toLowerCase() & trim()");
         target[i] = element[propertyName].toLowerCase().trim();
       } else {

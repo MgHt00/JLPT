@@ -62,7 +62,7 @@ export function controlManger(globals, utilsManager) {
     }, 400);
 
     displayUtils.toggleClass('hide',
-      sectionStatus,
+      selectors.sectionStatus,
     );
 
     console.groupEnd();

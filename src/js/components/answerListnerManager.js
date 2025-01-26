@@ -1,5 +1,5 @@
-export function answerListnerManager(globals, utilsManager, questionMgr, loaderInstance) {
-  const { appState } = globals;
+export function answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr) {
+  const { appState, selectors } = globals;
   const { domUtils, displayUtils } = utilsManager;
 
   // Event handler for flashcard mode
@@ -143,11 +143,11 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderI
       questionMgr.setQuestionMode("stored");
       answerMgr.setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       //console.info("noMoreQuestion.ranOnce CHANGED :", answerMgr.noMoreQuestion.ranOnce);
-      loaderInstance.continuetoStoredData();
+      loaderMgr.continuetoStoredData();
     } else if (btnID === "continue-no-0") {
       console.log("Clicked No");
       answerMgr.setRanOnce(false);
-      loaderInstance.restart();
+      loaderMgr.restart();
     }
     console.groupEnd();
   }

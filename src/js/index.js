@@ -21,8 +21,8 @@ const controlMgr = controlManger(globals, utilsManager);
 
 const questionMgr = questionManager(globals, utilsManager, null, null, null);
 const answerMgr = answerManager(globals, utilsManager, questionMgr, loaderMgr, null);
-const answerListenersMgr = answerListnerManager(globals, utilsManager, questionMgr, loaderMgr);
 const vocabMgr =  vocabManager(globals, utilsManager, loaderMgr, questionMgr);
+const answerListenersMgr = answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr);
 const errorInstance = errorManager(globals, utilsManager, answerMgr);
 const statusInstance = statusManager(globals, utilsManager);
 
