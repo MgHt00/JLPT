@@ -1,13 +1,18 @@
 import { globals } from "./services/globals.js";
-import { listenerManager } from "./components/listenerManager.js";
-import { loaderManager } from "./components/loaderManager.js";
-import { controlManger } from "./components/controlManager.js";
-import { questionManager } from "./components/questionManager.js";
-import { answerManager } from "./components/answerManager.js";
-import { answerListnerManager } from "./components/answerListnerManager.js";
-import { vocabManager } from "./components/vocabManager.js";
-import { errorManager } from "./components/errorManager.js";
-import { statusManager } from "./components/statusManager.js";
+import { componentManager } from "./components/componentsManager.js";
+
+const { selectors } = globals;
+const {
+  listenerManager,
+  loaderManager,
+  controlManger,
+  questionManager,
+  answerManager,
+  answerListnerManager,
+  vocabManager,
+  errorManager,
+  statusManager,
+} = componentManager;
 
 const listenerMgr = listenerManager(globals, null, null, null, null);
 const loaderMgr = loaderManager(globals, listenerMgr, null, null, null, null, null);
@@ -35,8 +40,6 @@ questionMgr.setInstances(answerMgr, statusInstance, vocabMgr);
 
 loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errorInstance, statusInstance);
 listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr);
-
-const { selectors } = globals;
 
 (function defaultState() {
   console.groupCollapsed("defaultState()");
