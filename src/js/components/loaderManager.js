@@ -1,4 +1,4 @@
-export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, questionMgr, vocabMgr, errorInstance, statusInstance) {
+export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, questionMgr, vocabMgr, errorMgr, statusMgr) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
   
@@ -11,12 +11,12 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
    * @param {object} errMgr - The error manager instance handling runtime errors.
    * @param {object} statusMgr - The status manager instance tracking quiz progress and stats.
   */
-  function setInstances(controlInstance, questionInstance, vocabInstance, errMgr, statusMgr) {
+  function setInstances(controlInstance, questionInstance, vocabInstance, errorInstance, statusInstance) {
     controlMgr = controlInstance;
     questionMgr = questionInstance;
     vocabMgr = vocabInstance;
-    errorInstance = errMgr;
-    statusInstance = statusMgr;
+    errorMgr = errorInstance;
+    statusMgr = statusInstance;
   }
 
   // when user click submit(start) button of the setting form
@@ -26,7 +26,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
     if (appState.qMode === "stored") {
       if(!validateStoredMemory()) {
-        errorInstance.runtimeError("mem0");
+        errorMgr.runtimeError("mem0");
         return;
       }
       // Continue if there is no runtime error.
@@ -40,7 +40,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
         // Only check the runtime error if validateSyllable() returns true ...
         // ... Otherwise program shows infinite loop error without necessary.
-        const hasSufficientAnswers = errorInstance.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
+        const hasSufficientAnswers = errorMgr.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
         if (!hasSufficientAnswers) {  // Now checks if there is NOT a runtime error
           console.error("Program failed at loaderManager()");
           return; // Exit if there is an infinite loop error
@@ -58,10 +58,10 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     controlMgr.floatingBtnsHideAll()
                    .toggleFormDisplay()
                    .hideResumeShowBack();
-    statusInstance.resetQuestionCount()
+    statusMgr.resetQuestionCount()
                   .resetTotalNoOfQuestion()
                   .getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
-    statusInstance.resetCumulativeVariables(); // reset cumulative variables
+    statusMgr.resetCumulativeVariables(); // reset cumulative variables
     questionMgr.newQuestion();
     removeErrBlks();
   }
@@ -324,7 +324,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     // Validate syllable choices and show an error if none are selected
     appData.syllableChoice = helpers.convertCheckedValuesToArray('input[name="syllableChoice"]:checked');
     if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
-      errorInstance.runtimeError("noSL");
+      errorMgr.runtimeError("noSL");
       console.groupEnd();
       return false; // Signal that inputData validation failed
     }
@@ -415,9 +415,9 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     }
     await loaderInstance.loadStoredJSON();// Wait for loadStoredJSON to complete
 
-    //statusInstance.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
-    //statusInstance.resetCumulativeVariables(); // reset all variables concerning with cumulative average
-    statusInstance.getTotalNoOfQuestions("stored");
+    //statusMgr.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
+    //statusMgr.resetCumulativeVariables(); // reset all variables concerning with cumulative average
+    statusMgr.getTotalNoOfQuestions("stored");
     questionMgr.newQuestion();
 
     console.groupEnd();
