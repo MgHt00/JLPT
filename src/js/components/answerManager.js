@@ -14,7 +14,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
 
   // to prepare all the answers
   function renderAnswers() {
-    //console.groupCollapsed("answerManager() - renderAnswers()");
+    console.groupCollapsed("answerManager() - renderAnswers()");
 
     let ansArray = createAnswerArray();
     //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
@@ -177,21 +177,20 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
 
   // to create an array filled with answers including the correct one.
   function createAnswerArray() {
-    //console.groupCollapsed("answerManager() - createAnswerArray()");
+    console.groupCollapsed("answerManager() - createAnswerArray()");
 
-    //let selectedArray = vocabMapping[selectors.aChoice.value];
     let selectedArray = vocabMapping[selectors.readaChoiceInput];
-    //console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
+    console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
     let tempAnsArray = [];
 
     tempAnsArray[0] = appState.correctAns; // add correct answer in index. 0
 
-    if (!selectedArray) {
+    if ((appState.qMode !== "fresh") && !selectedArray) {
       console.error(`No vocab array found for choice: ${selectors.aChoice.value}`);
       return;
     }
 
-    if (selectedArray.length === 0) {
+    if ((appState.qMode !== "fresh") && selectedArray.length === 0) {
       console.error(`The vocab array is empty for choice: ${selectors.aChoice.value}`);
       return;
     }

@@ -14,6 +14,7 @@ const {
   errorManager,
   statusManager,
 } = componentManager;
+const { displayUtils } = utilsManager;
 
 const listenerMgr = listenerManager(globals, utilsManager, null, null, null, null, null);
 const loaderMgr = loaderManager(globals, utilsManager, listenerMgr, null, null, null, null, null);
@@ -60,11 +61,11 @@ listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMg
 
   // Helper function
   function defaultStateClassChanges() {
-    toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]
-    toggleClass('overlay-message', selectors.sectionMessage);
-    toggleClass('fade-hide', selectors.sectionMessage);
+    displayUtils.toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]
+    displayUtils.toggleClass('overlay-message', selectors.sectionMessage);
+    displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
 
-    toggleClass('disabled', selectors.settingRepractice);
-    toggleClass('hide', selectors.settingNoOfAnsERRblk);
+    displayUtils.toggleClass('disabled', selectors.settingRepractice);
+    displayUtils.toggleClass('hide', selectors.settingNoOfAnsERRblk);
   }
 })();
