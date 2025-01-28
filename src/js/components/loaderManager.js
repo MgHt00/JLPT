@@ -228,7 +228,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         break;
     }
     
-    // build `flush` and `list` buttons
+    // building `flush` and `list` buttons
     buildMemoryBtns("flush");
     buildMemoryBtns("list");
     
@@ -247,22 +247,36 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     }
 
     function buildMemoryBtns(key) {
-      const faClassMapping = {
-        flush: '<i class="fa-solid fa-trash-can"></i>',
-        list: '<i class="fa-solid fa-rectangle-list"></i>',
+      const MEMORY_BUTTON_CONFIG = {
+        flush: {
+          icon: '<i class="fa-solid fa-trash-can"></i>',
+          className: 'flush-memory-setting-btn',
+          id: 'flush-memory-btn',
+          handler: vocabMgr.flushMistakeBank,
+        },
+    
+        list: {
+          icon: '<i class="fa-solid fa-rectangle-list"></i>',
+          className:'list-memory-setting-btn',
+          id: 'list-memory-btn',
+          handler: listenerMgr.handleListMistakeBtn,
+        }
+      }  
+      
+      if (!MEMORY_BUTTON_CONFIG[key]) {
+        console.error(`Invalid key "${key}" passed to buildMemoryBtns`);
+        return;
       }
-      const handlerMapping = {
-        flush: vocabMgr.flushMistakeBank,
-        list: listenerMgr.handleListMistakeBtn,
-      }
+      
+      const { icon, className, id, handler } = MEMORY_BUTTON_CONFIG[key];
 
       domUtils.buildNode({
         parent: selectors.memoryBtns,
         child: 'div',
-        content: faClassMapping[key],
-        className: `${key}-memory-setting-btn`,
-        idName: `${key}-memory-btn`,
-        eventFunction: handlerMapping[key],
+        content: icon,
+        className: className,
+        idName: id,
+        eventFunction: handler,
       });
     }
   }
