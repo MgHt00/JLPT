@@ -211,59 +211,60 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   // to load stored data from local storage and show info at the settings
   function loadMemoryData() {
     console.groupCollapsed("loadMemoryData");
+
     let storedLength = vocabMgr.readStoredLength;
     console.info("storedLength:", storedLength);
-    if (storedLength === 0) {
+
+    // building `mistake status` on home screen
+    switch (storedLength) {
+      case 0:
+        buildMemoryStatus('Memory is empty.');
+        break;
+      case 1:
+        buildMemoryStatus(`${storedLength} word to repractice.`);
+        break;
+      default:
+        buildMemoryStatus(`There are ${storedLength} words to repractice.`);
+        break;
+    }
+    
+    // build `flush` and `list` buttons
+    buildMemoryBtns("flush");
+    buildMemoryBtns("list");
+    
+    console.groupEnd();
+    return this;
+
+    // utility functions private to the module
+    function buildMemoryStatus(content) {
       domUtils.buildNode({
         parent: selectors.memoryInfo,
         child: 'div',
-        content: 'Memory is empty.',
-        className: 'memory-info',
-        idName: 'memory-info',
-      });
-    } else if (storedLength === 1) {
-      domUtils.buildNode({
-        parent: selectors.memoryInfo,
-        child: 'div',
-        //content: `There is ${storedLength} word to repractice.`,
-        content: `${storedLength} word to repractice.`,
-        className: 'memory-info',
-        idName: 'memory-info',
-      });
-    } else {
-      domUtils.buildNode({
-        parent: selectors.memoryInfo,
-        child: 'div',
-        content: `There are ${storedLength} words to repractice.`,
-        //content: `${storedLength} words to repractice.`,
+        content: content,
         className: 'memory-info',
         idName: 'memory-info',
       });
     }
 
-    // Build `flush` button
-    domUtils.buildNode({
-      parent: selectors.memoryBtns,
-      child: 'div',
-      content: '<i class="fa-solid fa-trash-can"></i>',
-      //content: 'trash',
-      className: 'flush-memory-setting-btn',
-      idName: 'flush-memory-btn',
-      eventFunction: vocabMgr.flushMistakeBank,
-    });
-    // Build `list` button
-    domUtils.buildNode({
-      parent: selectors.memoryBtns,
-      child: 'div',
-      content: `<i class="fa-solid fa-rectangle-list"></i>`,
-      //content: 'list',
-      className: 'list-memory-setting-btn',
-      idName: 'list-memory-btn',
-      eventFunction: listenerMgr.handleListMistakeBtn,
-    });
-    
-    console.groupEnd();
-    return this;
+    function buildMemoryBtns(key) {
+      const faClassMapping = {
+        flush: '<i class="fa-solid fa-trash-can"></i>',
+        list: '<i class="fa-solid fa-rectangle-list"></i>',
+      }
+      const handlerMapping = {
+        flush: vocabMgr.flushMistakeBank,
+        list: listenerMgr.handleListMistakeBtn,
+      }
+
+      domUtils.buildNode({
+        parent: selectors.memoryBtns,
+        child: 'div',
+        content: faClassMapping[key],
+        className: `${key}-memory-setting-btn`,
+        idName: `${key}-memory-btn`,
+        eventFunction: handlerMapping[key],
+      });
+    }
   }
 
   // Validate (setting's) number of answers and set default if invalid
@@ -287,6 +288,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     console.groupCollapsed("validateAndSetQuestionMode()");
 
     appState.qMode = selectors.readQuestionMode;
+
     const validModes = ["fresh", "stored"];
     if (!validModes.includes(selectors.readQuestionMode)) {
       appState.qMode = "fresh"; // Default to 'fresh'
