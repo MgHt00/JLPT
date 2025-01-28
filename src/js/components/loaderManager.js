@@ -71,14 +71,19 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   // Function to initialize quiz settings and UI setup
   function initializeQuiz() {
     listenerMgr.moveForm();
+    
     controlMgr.floatingBtnsHideAll()
-                   .toggleFormDisplay()
-                   .hideResumeShowBack();
-    statusMgr.resetQuestionCount()
-                  .resetTotalNoOfQuestion()
-                  .getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
-    statusMgr.resetCumulativeVariables(); // reset cumulative variables
+              .toggleFormDisplay()
+              .hideResumeShowBack();
+
+    statusMgr .resetQuestionCount()
+              .resetTotalNoOfQuestion()
+              .getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
+              
+    statusMgr.resetCumulativeVariables(); // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
+
     questionMgr.newQuestion();
+    
     removeErrBlks();
   }
 
@@ -86,16 +91,11 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   function validateAndSetInputData(e) {
     console.groupCollapsed("validateAndSetInputData()");
 
-    //convertToBoolean(['randomYesNo', 'flashYesNo']); // (Formly randonYesNo and flashYesNo were radio, so that need to used this.) Convert the string values "true"/"false" to boolean values
     validateToggleSwitch(['randomYesNo', 'flashYesNo']);
     validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
     validateAndSetQuestionMode(); // Validate question mode and set default
     
     helpers.assignLanguage(selectors.sectionMessage, defaultConfig.enLang); // Always set message section to English
-
-    /*if (appState.qMode === "fresh") { // Run the following block only if qMode is 'fresh'
-      validateSyllable(); // Validate syllable choices and show an error if none are selected
-    }*/
 
     appState.qChoiceInput = selectors.readqChoiceInput ?? "hi";
     appState.aChoiceInput = selectors.readaChoiceInput ?? "en";
@@ -127,7 +127,8 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
     const results = await Promise.all(promises);
     appData.vocabArray = results.flat();
-    //console.log("vocabArray(before removeBlankQuestion(): ", appData.vocabArray);
+
+    // if the question is blank (no kanji character etc.), remove it
     appData.vocabArray = removeBlankQuestions(appData.vocabArray);
     console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
 
@@ -154,11 +155,12 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     // Assign storedData to appData.vocabArray
     appData.vocabArray = storedData;
     console.log("vocabArray(before removeBlankQuestion(): ", appData.vocabArray);
+    
     appData.vocabArray = removeBlankQuestions(appData.vocabArray);
     console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
-    console.log("Inside loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length);
     
     // Check if the array is empty
+    console.log("Inside loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length);
     if (appData.vocabArray.length === 0) {
         console.error("Error: vocabArray is empty after loading stored data!");
         return;
@@ -415,8 +417,6 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     }
     await loadStoredJSON();// Wait for loadStoredJSON to complete
 
-    //statusMgr.resetQuestionCount().resetTotalNoOfQuestion().getTotalNoOfQuestions(); // for status bar, reset and set No. of Question
-    //statusMgr.resetCumulativeVariables(); // reset all variables concerning with cumulative average
     statusMgr.getTotalNoOfQuestions("stored");
     questionMgr.newQuestion();
 
@@ -426,13 +426,13 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   // When user want to restart the program
   function restart() {
     domUtils.clearScreen(selectors.sectionStatus);
-    displayUtils.toggleClass('overlay-message', selectors.sectionMessage);
     
-    displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
+    displayUtils.toggleClass('overlay-message', selectors.sectionMessage)
+                .toggleClass('fade-hide', selectors.sectionMessage);
 
-    //displayUtils.toggleClass('shift-sections-to-center', dynamicDOM);
     controlMgr.toggleFormDisplay();
     listenerMgr.debouncedMoveForm();
+    
     rePrintMemory();
   }
 
