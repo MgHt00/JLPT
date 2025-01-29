@@ -41,6 +41,27 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     shi: "../../../assets/data/n5-vocab-shi.json",
   }
 
+  async function preloadVocabData() {
+    console.groupCollapsed("preloadVocabData()");
+    console.info("Preloading vocab JSON files...");
+
+    const allKeys = mergeVocabKeys();
+
+    const promises = allKeys.map(key => {
+      const jsonPath = 
+        vowels[key] || k[key] || s[key] || null;
+    });
+  }
+
+  // To combine all keys dynamically from vowels, k, s, etc.
+  function mergeVocabKeys() {
+    return [
+      ...Object.keys(vowels),  
+      ...Object.keys(k),
+      ...Object.keys(s),
+    ]
+  }
+
   // when user click submit(start) button of the setting form
   async function start(e) {  
     e.preventDefault(); // Prevent form from submitting the usual way
@@ -121,11 +142,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   
     // Dynamically fetch all keys if "all" is selected
     if (appData.syllableChoice.includes("all")) {
-      appData.syllableChoice = [ // Combine all keys dynamically from vowels, k, s, etc.
-        ...Object.keys(vowels),  // [sn9] This replaces syllableChoice with all syllables
-        ...Object.keys(k),
-        ...Object.keys(s),
-      ]; 
+      appData.syllableChoice = mergeVocabKeys(); //[sn9] This replaces syllableChoice with all syllables
     }
 
     // Create an array of Promises dynamically resolving the key's group
