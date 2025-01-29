@@ -42,7 +42,6 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   }
 
   async function preloadVocabData() {
-    console.groupCollapsed("preloadVocabData()");
     console.info("Preloading vocab JSON files...");
 
     const allKeys = mergeVocabKeys();
@@ -50,7 +49,23 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     const promises = allKeys.map(key => {
       const jsonPath = 
         vowels[key] || k[key] || s[key] || null;
+
+      console.info("jsonPath:", jsonPath);
+      return jsonPath
+        ? fetch(jsonPath)
+          .then(response => response.json())
+          .then(data => ({ key, data}))
+          .catch(error => {
+            console.warn(`Failed to load ${key}:`, error);
+            return { key, data: [] }; // Store empty array on failure
+          })
+        : Promise.resolve({ key, data: [] });
     });
+
+    const results = await Promise.all(promises);
+    console.info("results:". results)
+    appData.preloadVocabData = Object.fromEntries(results.map( ({ key, data}) => [key, data] ));
+    console.info("Preloading completed.", appData.preloadVocabData);
   }
 
   // To combine all keys dynamically from vowels, k, s, etc.
@@ -599,6 +614,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
   return {
     setInstances,
+    preloadVocabData,
     start,
     loadMemoryData,
     loadStoredJSON,

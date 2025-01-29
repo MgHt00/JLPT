@@ -46,7 +46,9 @@ listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMg
 (function defaultState() {
   console.groupCollapsed("defaultState()");
 
-  loaderMgr.loadMemoryData();
+  loaderMgr
+    .loadMemoryData()
+    .preloadVocabData();
   defaultStateClassChanges();
   controlMgr.floatingBtnsHideAll();
   listenerMgr.generalListeners();
