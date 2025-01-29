@@ -34,7 +34,7 @@ export const helpers = {
   },
 
   // to copy `propertyName` property from source array of objects to target array
-  // used to fetch all the answers and mix up with the correct answer
+  // usage: to fetch all the answers and mix up with the correct answer
   copyOneProperty(source, target, propertyName) {
     console.groupCollapsed("copyOneProperty()");
     console.info("propertyName: ", propertyName);

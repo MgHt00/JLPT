@@ -146,37 +146,18 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     }
 
     // Create an array of Promises dynamically resolving the key's group
-    const promises = appData.syllableChoice.map(element => {
-      let selectedJSON;
+    const promises = appData.syllableChoice.map(key => {
+      const selectedJSON = 
+        vowels[key] || k[key] || s[key] || null;
 
-      // Extract the first character of the syllableChoice
-      const firstChar = element[0];
-
-      switch (firstChar) {
-        case "a":
-        case "e":
-        case "i":
-        case "o":
-        case "u":  
-          selectedJSON = vowels[element]; // fetch related jason from `vowels` object.
-          break;
-        case "k":
-          selectedJSON = k[element];
-          break;
-        case "s":
-          selectedJSON = s[element];
-          break;
-        default: 
-          console.warn(`Key "${element}" not found in any group.`);
-          return Promise.resolve([]); // Skip missing keys gracefully
+      if (!selectedJSON) {          // If selectedJSON is null or undefined,
+        console.warn(`Key "${element}" not found in any group.`);
+        return Promise.resolve([]); // [sn22] Skip missing keys gracefully by returning a resolved Promise with an empty array ([]).
       }
       
       // Fetch the JSON for the resolved key
-      return selectedJSON                     // selectedJSON ? ... : ...
-      ? fetch(selectedJSON)                   // [sn21] Fetch the JSON file from selectedJSON ("../../../assets/data/n5-vocab-ka.json")
-          .then((response) => response.json())// Processes the response by converting it into a JavaScript object. 
-      : Promise                               // If selectedJSON is null or undefined,
-          .resolve([]);                       // [sn22] returns a resolved Promise with an empty array ([]).
+      return fetch(selectedJSON)               // [sn21] Fetch the JSON file from selectedJSON ("../../../assets/data/n5-vocab-ka.json")
+          .then((response) => response.json()) // Processes the response by converting it into a JavaScript object. 
     });
 
     const results = await Promise.all(promises);
