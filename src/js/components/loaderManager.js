@@ -41,8 +41,6 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     shi: "../../../assets/data/n5-vocab-shi.json",
   }
 
-  const syllableMapping = {...vowels, ...k, ...s};
-
   // when user click submit(start) button of the setting form
   async function start(e) {  
     e.preventDefault(); // Prevent form from submitting the usual way
@@ -121,22 +119,53 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
     questionMgr.setQuestionMode("fresh");
   
-    // if user selects "all", load all property names from `syllableMapping`
+    // Dynamically fetch all keys if "all" is selected
     if (appData.syllableChoice.includes("all")) {
-      // Dynamically get all syllable keys from syllableMapping
-      appData.syllableChoice = Object.keys(syllableMapping); // [sn9] This replaces syllableChoice with all syllables
+      appData.syllableChoice = [ // Combine all keys dynamically from vowels, k, s, etc.
+        ...Object.keys(vowels),  // [sn9] This replaces syllableChoice with all syllables
+        ...Object.keys(k),
+        ...Object.keys(s),
+      ]; 
     }
-    
-    // Create an array of Promises
+
+    // Create an array of Promises dynamically resolving the key's group
     const promises = appData.syllableChoice.map(element => {
-      let selectedJSON = syllableMapping[element];
-      return fetch(selectedJSON).then(response => response.json());
+      let selectedJSON;
+
+      // Extract the first character of the syllableChoice
+      const firstChar = element[0];
+
+      switch (firstChar) {
+        case "a":
+        case "e":
+        case "i":
+        case "o":
+        case "u":  
+          selectedJSON = vowels[element]; // fetch related jason from `vowels` object.
+          break;
+        case "k":
+          selectedJSON = k[element];
+          break;
+        case "s":
+          selectedJSON = s[element];
+          break;
+        default: 
+          console.warn(`Key "${element}" not found in any group.`);
+          return Promise.resolve([]); // Skip missing keys gracefully
+      }
+      
+      // Fetch the JSON for the resolved key
+      return selectedJSON                     // selectedJSON ? ... : ...
+      ? fetch(selectedJSON)                   // [sn21] Fetch the JSON file from selectedJSON ("../../../assets/data/n5-vocab-ka.json")
+          .then((response) => response.json())// Processes the response by converting it into a JavaScript object. 
+      : Promise                               // If selectedJSON is null or undefined,
+          .resolve([]);                       // [sn22] returns a resolved Promise with an empty array ([]).
     });
 
     const results = await Promise.all(promises);
     appData.vocabArray = results.flat();
 
-    // if the question is blank (no kanji character etc.), remove it
+    // Filter out blank questions (no kanji character etc.)
     appData.vocabArray = removeBlankQuestions(appData.vocabArray);
     console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
 
