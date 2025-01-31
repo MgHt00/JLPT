@@ -41,30 +41,33 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     shi: "../../../assets/data/n5-vocab-shi.json",
   }
 
-  async function preloadVocabData() {
+  async function preloadVocabData() {           // [LE7]
     console.info("Preloading vocab JSON files...");
-
+    
+    // Combine all syllable keys into one array
     const allKeys = mergeVocabKeys();
 
+    // Create an array of Promises to fetch JSON files
     const promises = allKeys.map(key => {
-      const jsonPath = 
-        vowels[key] || k[key] || s[key] || null;
+      const jsonPath = getJSONPath(key);        // Finds the file path
 
-      console.info("jsonPath:", jsonPath);
       return jsonPath
         ? fetch(jsonPath)
-          .then(response => response.json())
-          .then(data => ({ key, data}))
+          .then(response => response.json())    // Convert response to JSON
+          .then(data => ({ key, data }))        // Wraps data with key { key: "a", data: [...data from n5-vocab-a.json...]}
           .catch(error => {
             console.warn(`Failed to load ${key}:`, error);
-            return { key, data: [] }; // Store empty array on failure
+            return { key, data: [] };           // Store empty array on failure
           })
-        : Promise.resolve({ key, data: [] });
+        : Promise.resolve({ key, data: [] });   // Handle missing keys gracefully
     });
 
-    const results = await Promise.all(promises);
-    console.info("results:". results)
-    appData.preloadVocabData = Object.fromEntries(results.map( ({ key, data}) => [key, data] ));
+    // Wait for all JSON files to load
+    const results = await Promise.all(promises);// [ {key: "a", data: []}, {key: "i, data: []}, {}, {}]
+
+    // Convert results 'array' into an 'object' and store in appData.preloadedVocab
+    appData.preloadVocabData = Object.fromEntries(results.map( ({ key, data }) => [key, data] )); // [sn23] Object.fromEntries => {a: [], i: []}
+
     console.info("Preloading completed.", appData.preloadVocabData);
   }
 
@@ -75,6 +78,10 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       ...Object.keys(k),
       ...Object.keys(s),
     ]
+  }
+
+  function getJSONPath(key) {
+    return vowels[key] || k[key] || s[key] || null;
   }
 
   // when user click submit(start) button of the setting form
@@ -166,7 +173,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         vowels[key] || k[key] || s[key] || null;
 
       if (!selectedJSON) {          // If selectedJSON is null or undefined,
-        console.warn(`Key "${element}" not found in any group.`);
+        console.warn(`Key "${key}" not found in any group.`);
         return Promise.resolve([]); // [sn22] Skip missing keys gracefully by returning a resolved Promise with an empty array ([]).
       }
       
