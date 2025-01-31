@@ -41,7 +41,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     shi: "../../../assets/data/n5-vocab-shi.json",
   }
 
-  async function preloadVocabData() {           // [LE7]
+  async function preloadVocabData() {           // [LE7] [LE8]
     console.info("Preloading vocab JSON files...");
     
     // Combine all syllable keys into one array
@@ -66,9 +66,8 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     const results = await Promise.all(promises);// [ {key: "a", data: []}, {key: "i, data: []}, {}, {}]
 
     // Convert results 'array' into an 'object' and store in appData.preloadedVocab
-    appData.preloadVocabData = Object.fromEntries(results.map( ({ key, data }) => [key, data] )); // [sn23] Object.fromEntries => {a: [], i: []}
-
-    console.info("Preloading completed.", appData.preloadVocabData);
+    appData.preloadVocab = Object.fromEntries(results.map( ({ key, data }) => [key, data] )); // [sn23] Object.fromEntries => {a: [], i: []}
+    console.info("Preloading completed.", appData.preloadVocab);
   }
 
   // To combine all keys dynamically from vowels, k, s, etc.
@@ -80,7 +79,8 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     ]
   }
 
-  function getJSONPath(key) {
+  // To find JSON path depending on the key given
+  function getJSONPath(key) { 
     return vowels[key] || k[key] || s[key] || null;
   }
 
@@ -159,27 +159,27 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   // to load user selected sylable-json when program mode is "fresh"
   async function loadFreshJSON() {
     console.groupCollapsed("loadFreshJSON()");
+    console.info("appData.preloadedVocab:", appData.preloadedVocab);
 
     questionMgr.setQuestionMode("fresh");
   
-    // Dynamically fetch all keys if "all" is selected
+    // If "all" is selected
     if (appData.syllableChoice.includes("all")) {
       appData.syllableChoice = mergeVocabKeys(); //[sn9] This replaces syllableChoice with all syllables
     }
 
     // Create an array of Promises dynamically resolving the key's group
     const promises = appData.syllableChoice.map(key => {
-      const selectedJSON = 
-        vowels[key] || k[key] || s[key] || null;
-
-      if (!selectedJSON) {          // If selectedJSON is null or undefined,
-        console.warn(`Key "${key}" not found in any group.`);
-        return Promise.resolve([]); // [sn22] Skip missing keys gracefully by returning a resolved Promise with an empty array ([]).
+      console.info("key:", key, "Value:", appData.preloadedVocab[key]);
+      if (appData.preloadedVocab[key]) { 
+        return Promise.resolve(appData.preloadedVocab[key]); // Use preloaded data
+      } else {
+        let jsonPath = getJSONPath(key);
+        return jsonPath 
+          ? fetch(jsonPath)                     // [sn21] Fetch the JSON file
+            .then(response => response.json())  // Processes the response by converting it into a JavaScript object.
+            : Promise.resolve([]);              // [sn22] Skip missing keys gracefully by returning a resolved Promise with an empty array ([]).
       }
-      
-      // Fetch the JSON for the resolved key
-      return fetch(selectedJSON)               // [sn21] Fetch the JSON file from selectedJSON ("../../../assets/data/n5-vocab-ka.json")
-          .then((response) => response.json()) // Processes the response by converting it into a JavaScript object. 
     });
 
     const results = await Promise.all(promises);
@@ -189,11 +189,15 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     appData.vocabArray = removeBlankQuestions(appData.vocabArray);
     console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
 
+    populateVocabProperties();
+
+    console.groupEnd();
+  }
+
+  function populateVocabProperties() {
     helpers.copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
     helpers.copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
     helpers.copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
-
-    console.groupEnd();
   }
 
   // to load local storage json when program mode is "stored"
@@ -635,3 +639,8 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     removeErrBlks,
   }
 }
+
+Object.defineProperty(window, "appData", {
+  configurable: false,
+  writable: false,
+});

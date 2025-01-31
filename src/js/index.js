@@ -48,7 +48,7 @@ listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMg
 
   loaderMgr
     .loadMemoryData()
-    .preloadVocabData();
+  
   defaultStateClassChanges();
   controlMgr.floatingBtnsHideAll();
   listenerMgr.generalListeners();
@@ -71,3 +71,9 @@ listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMg
     displayUtils.toggleClass('hide', selectors.settingNoOfAnsERRblk);
   }
 })();
+
+(async function preload(){
+  console.group("preload()");
+  await loaderMgr.preloadVocabData();
+  console.groupEnd();
+})()
