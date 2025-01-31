@@ -43,12 +43,21 @@ questionMgr.setInstances(answerMgr, statusMgr, vocabMgr);
 loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errMgr, statusMgr);
 listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMgr);
 
-(function defaultState() {
+(async function preload(){
+  console.group("preload()");
+  await loaderMgr.preloadVocabData();
+
+  defaultState(); 
+  console.groupEnd();
+})();
+
+function defaultState() {
   console.groupCollapsed("defaultState()");
 
-  loaderMgr
-    .loadMemoryData()
+  loaderMgr.loadMemoryData()
   
+  console.info("Preloading completed.", appData.preloadVocab);
+
   defaultStateClassChanges();
   controlMgr.floatingBtnsHideAll();
   listenerMgr.generalListeners();
@@ -70,10 +79,4 @@ listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMg
     displayUtils.toggleClass('disabled', selectors.settingRepractice);
     displayUtils.toggleClass('hide', selectors.settingNoOfAnsERRblk);
   }
-})();
-
-(async function preload(){
-  console.group("preload()");
-  await loaderMgr.preloadVocabData();
-  console.groupEnd();
-})()
+}

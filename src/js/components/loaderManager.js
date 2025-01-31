@@ -67,7 +67,6 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
     // Convert results 'array' into an 'object' and store in appData.preloadedVocab
     appData.preloadVocab = Object.fromEntries(results.map( ({ key, data }) => [key, data] )); // [sn23] Object.fromEntries => {a: [], i: []}
-    console.info("Preloading completed.", appData.preloadVocab);
   }
 
   // To combine all keys dynamically from vowels, k, s, etc.
