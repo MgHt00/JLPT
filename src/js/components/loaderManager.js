@@ -42,6 +42,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   }
 
   async function preloadVocabData() {           // [LE7] [LE8]
+    console.group("preloadVocabData()");
     console.info("Preloading vocab JSON files...");
     
     // Combine all syllable keys into one array
@@ -66,7 +67,8 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     const results = await Promise.all(promises);// [ {key: "a", data: []}, {key: "i, data: []}, {}, {}]
 
     // Convert results 'array' into an 'object' and store in appData.preloadedVocab
-    appData.preloadVocab = Object.fromEntries(results.map( ({ key, data }) => [key, data] )); // [sn23] Object.fromEntries => {a: [], i: []}
+    appData.preloadedVocab = Object.fromEntries(results.map( ({ key, data }) => [key, data] )); // [sn23] Object.fromEntries => {a: [], i: []}
+    console.info("Preloading completed.", appData.preloadedVocab);
   }
 
   // To combine all keys dynamically from vowels, k, s, etc.

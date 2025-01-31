@@ -2,7 +2,7 @@ import { globals } from "./services/globals.js";
 import { componentManager } from "./components/componentsManager.js";
 import { utilsManager } from "./utils/utilsManager.js";
 
-const { selectors } = globals;
+const { appData, selectors } = globals;
 const {
   listenerManager,
   loaderManager,
@@ -43,20 +43,17 @@ questionMgr.setInstances(answerMgr, statusMgr, vocabMgr);
 loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errMgr, statusMgr);
 listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMgr);
 
-(async function preload(){
+async function preload(){
   console.group("preload()");
   await loaderMgr.preloadVocabData();
-
-  defaultState(); 
   console.groupEnd();
-})();
+}
 
-function defaultState() {
+(async function defaultState() {
   console.groupCollapsed("defaultState()");
-
-  loaderMgr.loadMemoryData()
   
-  console.info("Preloading completed.", appData.preloadVocab);
+  await preload().then(() => console.log("Preloading finished, appData:", appData));
+  loaderMgr.loadMemoryData();
 
   defaultStateClassChanges();
   controlMgr.floatingBtnsHideAll();
@@ -79,4 +76,4 @@ function defaultState() {
     displayUtils.toggleClass('disabled', selectors.settingRepractice);
     displayUtils.toggleClass('hide', selectors.settingNoOfAnsERRblk);
   }
-}
+})();
