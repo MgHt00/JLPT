@@ -120,6 +120,7 @@
 }
 
 #settings-repractice #fieldset-repractice {
+  min-height: 143px;
   flex-direction: column;
   gap: 5px;
 }
