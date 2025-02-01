@@ -44,29 +44,33 @@ loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errMgr, statusMgr);
 listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMgr);
 
 async function preload(){
-  console.group("preload()");
+  console.groupCollapsed("preload()");
   await loaderMgr.preloadVocabData();
   console.groupEnd();
 }
 
 (async function defaultState() {
   console.groupCollapsed("defaultState()");
-  
-  await preload().then(() => console.log("Preloading finished, appData:", appData));
+
   loaderMgr.loadMemoryData();
+  
+  await preload().then(() => {
+    console.log("Preloading finished, appData:", appData);
+    
+    listenerMgr.generalListeners();
+    controlMgr.floatingBtnsHideAll();
+    
+    defaultStateClassChanges(); 
+  });
 
-  defaultStateClassChanges();
-  controlMgr.floatingBtnsHideAll();
-  listenerMgr.generalListeners();
-
-  // if the program is still in progress, load data from local storage to global objects
+   // if the program is still in progress, load data from local storage to global objects
   if (statusMgr.stillInProgress()) {
     statusMgr.goodToResume =  true;
     controlMgr.hideBackShowResume();
   }
 
   console.groupEnd();
-
+ 
   // Helper function
   function defaultStateClassChanges() {
     displayUtils.toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]

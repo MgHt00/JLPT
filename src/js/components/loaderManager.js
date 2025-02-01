@@ -42,7 +42,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   }
 
   async function preloadVocabData() {           // [LE7] [LE8]
-    console.group("preloadVocabData()");
+    console.groupCollapsed("preloadVocabData()");
     console.info("Preloading vocab JSON files...");
     
     // Combine all syllable keys into one array

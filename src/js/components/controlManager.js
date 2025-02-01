@@ -1,3 +1,5 @@
+import { domUtils } from "../utils/domUtils";
+
 export function controlManger(globals, utilsManager) {
   const { selectors } = globals;
   const { displayUtils} = utilsManager;
@@ -80,6 +82,16 @@ export function controlManger(globals, utilsManager) {
     );
 
     document.querySelector("#source-fresh").checked = true; // Set the 'source-fresh' radio input to checked
+  }
+
+  function preloadState() {
+    displayUtils.toggleClass('dim', selectors.settingForm);
+    domUtils.buildNode({
+      parent: selectors.body,
+      child: "div",
+      content: "Loading...",
+      idName: "preload-info",
+    })
   }
 
   return {
