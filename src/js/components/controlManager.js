@@ -1,8 +1,6 @@
-import { domUtils } from "../utils/domUtils";
-
 export function controlManger(globals, utilsManager) {
   const { selectors } = globals;
-  const { displayUtils} = utilsManager;
+  const { displayUtils, domUtils } = utilsManager;
 
   // To hide both bringBack and resumePracticeBtn
   function floatingBtnsHideAll() {
@@ -85,13 +83,26 @@ export function controlManger(globals, utilsManager) {
   }
 
   function preloadState() {
-    displayUtils.toggleClass('dim', selectors.settingForm);
+    console.groupCollapsed("preloadState()");
+    //displayUtils.toggleClass('so-dim', selectors.settingForm);
     domUtils.buildNode({
       parent: selectors.body,
-      child: "div",
-      content: "Loading...",
-      idName: "preload-info",
-    })
+      child: 'div',
+      content: 'Loading...',
+      className: 'poppins-regular',
+      idName: 'preload-info',
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const loading = document.querySelector("#preload-info-0");
+      if (loading) {
+        displayUtils.addClass('show', loading);
+      } else {
+        console.error("Element #preload-info-0 not found in the DOM.");
+      }
+    });
+
+    console.groupEnd();
   }
 
   return {
@@ -100,5 +111,6 @@ export function controlManger(globals, utilsManager) {
     hideBackShowResume,
     toggleFormDisplay,
     resetQuestionMode,
+    preloadState,
   }
 }

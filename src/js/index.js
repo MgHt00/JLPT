@@ -53,6 +53,7 @@ async function preload(){
   console.groupCollapsed("defaultState()");
 
   loaderMgr.loadMemoryData();
+  controlMgr.preloadState();
   
   await preload().then(() => {
     console.log("Preloading finished, appData:", appData);

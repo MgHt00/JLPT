@@ -318,7 +318,20 @@ input:checked + .slider:before {
   padding: 30px 0;
 }*/
 
-#preload-info {
-  position: relative;
+[id|="preload-info"]{
+  position: fixed; /* Stays in place even when scrolling */
   top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* Centers the div */
+  z-index: 9999; /* Ensures it's on top */
+  color: black;
+  background-color: rgba(255, 255, 255, 0.8); /* Optional: Add a semi-transparent background */
+  padding: 20px; /* Optional: Add some padding */
+  border-radius: 5px; /* Optional: Add rounded corners */
+  opacity: 0;
+  transition: opacity 0.7s ease-in-out;
+}
+
+[id|="preload-info"].show {
+  opacity: 1;
 }
