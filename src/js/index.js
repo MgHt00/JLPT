@@ -58,6 +58,7 @@ async function preload(){
   await preload().then(() => {
     console.log("Preloading finished, appData:", appData);
     
+    controlMgr.releasePreLoadState();
     listenerMgr.generalListeners();
     controlMgr.floatingBtnsHideAll();
     

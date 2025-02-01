@@ -84,7 +84,7 @@ export function controlManger(globals, utilsManager) {
 
   function preloadState() {
     console.groupCollapsed("preloadState()");
-    //displayUtils.toggleClass('so-dim', selectors.settingForm);
+    
     domUtils.buildNode({
       parent: selectors.body,
       child: 'div',
@@ -105,6 +105,21 @@ export function controlManger(globals, utilsManager) {
     console.groupEnd();
   }
 
+  function releasePreLoadState() {
+    console.groupCollapsed("releasePreLoadState()");
+    
+    displayUtils.toggleClass('so-dim', selectors.settingForm);
+
+    const loading = document.querySelector("#preload-info-0");
+    console.info(loading);
+    domUtils.clearNode({
+      parent: selectors.body,
+      children: loading,
+    })
+
+    console.groupEnd();
+  }
+
   return {
     floatingBtnsHideAll,
     hideResumeShowBack,
@@ -112,5 +127,6 @@ export function controlManger(globals, utilsManager) {
     toggleFormDisplay,
     resetQuestionMode,
     preloadState,
+    releasePreLoadState,
   }
 }
