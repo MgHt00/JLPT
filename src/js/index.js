@@ -46,13 +46,13 @@ listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMg
 async function preload(){
   console.groupCollapsed("preload()");
   await loaderMgr.preloadVocabData();
+  loaderMgr.loadMemoryData();
   console.groupEnd();
 }
 
 (async function defaultState() {
   console.groupCollapsed("defaultState()");
 
-  loaderMgr.loadMemoryData();
   controlMgr.preloadState();
   
   await preload().then(() => {
@@ -62,18 +62,13 @@ async function preload(){
     listenerMgr.generalListeners();
     controlMgr.floatingBtnsHideAll();
     
-    defaultStateClassChanges(); 
+    defaultStateClassChanges();
+    checkInProgress();
   });
-
-   // if the program is still in progress, load data from local storage to global objects
-  if (statusMgr.stillInProgress()) {
-    statusMgr.goodToResume =  true;
-    controlMgr.hideBackShowResume();
-  }
 
   console.groupEnd();
  
-  // Helper function
+  // Helper functions
   function defaultStateClassChanges() {
     displayUtils.toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]
     displayUtils.toggleClass('overlay-message', selectors.sectionMessage);
@@ -81,5 +76,13 @@ async function preload(){
 
     displayUtils.toggleClass('disabled', selectors.settingRepractice);
     displayUtils.toggleClass('hide', selectors.settingNoOfAnsERRblk);
+  }
+
+  // if the program is still in progress, load data from local storage to global objects
+  function checkInProgress() {
+    if (statusMgr.stillInProgress()) {
+      statusMgr.goodToResume =  true;
+      controlMgr.hideBackShowResume();
+    }
   }
 })();
