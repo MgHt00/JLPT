@@ -50,12 +50,17 @@ async function preload(){
   console.groupEnd();
 }
 
-(async function defaultState() {
-  console.groupCollapsed("defaultState()");
+(async function initialize() {
+  console.groupCollapsed("initialize()");
 
   controlMgr.preloadState();
-  
-  await preload().then(() => {
+  await preload().then(onPreloadComplete());
+
+  console.groupEnd();
+ 
+  // Helper functions
+  function onPreloadComplete() {
+    console.groupCollapsed("onPreloadComplete()");
     console.log("Preloading finished, appData:", appData);
     
     controlMgr.releasePreLoadState();
@@ -64,11 +69,10 @@ async function preload(){
     
     defaultStateClassChanges();
     checkInProgress();
-  });
+    
+    console.groupEnd();
+  }
 
-  console.groupEnd();
- 
-  // Helper functions
   function defaultStateClassChanges() {
     displayUtils.toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]
     displayUtils.toggleClass('overlay-message', selectors.sectionMessage);
