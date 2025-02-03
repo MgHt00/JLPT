@@ -87,35 +87,44 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
   // when user click submit(start) button of the setting form
   async function start(e) {  
-    e.preventDefault(); // Prevent form from submitting the usual way
-    validateAndSetInputData(e); // validate and set defaults to the input data.
+    e.preventDefault();                 // Prevent form from submitting the usual way
+    validateAndSetInputData(e);         // validate and set defaults to the input data.
 
     if (appState.qMode === "stored") {
-      if(!validateStoredMemory()) {
+      if(!validateStoredMemory()) {     // To validate whether memory is empty or not
         errorMgr.runtimeError("mem0");
         return;
       }
-      // Continue if there is no runtime error.
-      await loadStoredJSON();// Wait for loadStoredJSON to complete
+      await loadStoredJSON();           // Continue if there is no runtime error. (Wait for loadStoredJSON to complete)
       initializeQuiz();
     }
        
     if (appState.qMode === "fresh") {
       if (validateSyllable()) {
-        await loadFreshJSON(); // Wait for loadFreshJSON to complete
+        await loadFreshJSON();          // Wait for loadFreshJSON to complete
 
         // Only check the runtime error if validateSyllable() returns true ...
         // ... Otherwise program shows infinite loop error without necessary.
         const hasSufficientAnswers = errorMgr.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
-        if (!hasSufficientAnswers) {  // Now checks if there is NOT a runtime error
+        if (!hasSufficientAnswers) {    // Now checks if there is NOT a runtime error
           console.error("Program failed at loaderManager()");
-          return; // Exit if there is an infinite loop error
+          return;                       // Exit if there is an infinite loop error
         }
         
         // Continue if there is no runtime error.
         initializeQuiz();
       }
     } 
+  }
+
+  // To validate whether memory is empty or not
+  function validateStoredMemory() {
+    let storedLength = vocabMgr.readStoredLength;
+    if (storedLength === 0) {
+      return false;
+    } else {
+      return true;
+    }
   }
 
   // Function to initialize quiz settings and UI setup
@@ -128,13 +137,13 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
     statusMgr .resetQuestionCount()
               .resetTotalNoOfQuestion()
-              .getTotalNoOfQuestions("fresh"); // for status bar, reset and set No. of Question
+              .getTotalNoOfQuestions("fresh");  // for status bar, reset and set No. of Question
               
-    statusMgr.resetCumulativeVariables(); // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
+    statusMgr.resetCumulativeVariables();       // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
 
     questionMgr.newQuestion();
     
-    removeErrBlks();
+    removeErrBlks();                            // To remove error messages
   }
 
   // to validate input data and set defaults if necessary
@@ -142,15 +151,18 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     console.groupCollapsed("validateAndSetInputData()");
 
     validateToggleSwitch(['randomYesNo', 'flashYesNo']);
-    validateAndSetAnswerCount(); // Validate number of answers and set default if invalid
-    validateAndSetQuestionMode(); // Validate question mode and set default
+    validateAndSetAnswerCount();      // Validate number of answers and set default if invalid
+    validateAndSetQuestionMode();     // Validate question mode and set default
     
-    helpers.assignLanguage(selectors.sectionMessage, defaultConfig.enLang); // Always set message section to English
+    helpers.assignLanguage(           // Always set message section of the form to English
+      selectors.sectionMessage, 
+      defaultConfig.enLang
+    ); 
 
-    appState.qChoiceInput = selectors.readqChoiceInput ?? "hi";
-    appState.aChoiceInput = selectors.readaChoiceInput ?? "en";
+    appState.qChoiceInput = selectors.readqChoiceInput ?? "hi"; // read user's question choice and assign it to global variable
+    appState.aChoiceInput = selectors.readaChoiceInput ?? "en"; 
 
-    assignLanguageBySelection(); // Validate and assign the correct language for the question and answer sections
+    assignLanguageBySelection();      // Validate and assign the correct language for the question and answer sections
 
     console.info("appState.qChoiceInput: ", appState.qChoiceInput, "appState.aChoiceInput: ", appState.aChoiceInput);
     
@@ -164,14 +176,14 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
     questionMgr.setQuestionMode("fresh");
   
-    // If "all" is selected
-    if (appData.syllableChoice.includes("all")) {
-      appData.syllableChoice = mergeVocabKeys(); //[sn9] This replaces syllableChoice with all syllables
+    if (appData.syllableChoice.includes("all")) {     // If "all" is selected
+      appData.syllableChoice = mergeVocabKeys();      //[sn9] This replaces syllableChoice with all syllables
     }
 
     // Create an array of Promises dynamically resolving the key's group
     const promises = appData.syllableChoice.map(key => {
       console.info("key:", key, "Value:", appData.preloadedVocab[key]);
+
       if (appData.preloadedVocab[key]) { 
         return Promise.resolve(appData.preloadedVocab[key]); // Use preloaded data
       } else {
@@ -195,59 +207,48 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     console.groupEnd();
   }
 
+  // To Fetch the relevant categories
   function populateVocabProperties() {
     helpers.copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
     helpers.copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
     helpers.copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
   }
 
-  // to load local storage json when program mode is "stored"
+  // To load local storage json when program mode is "stored"
   async function loadStoredJSON() {
     console.groupCollapsed("loadStoredJSON()");
 
-    questionMgr.setQuestionMode("stored");
+    questionMgr.setQuestionMode("stored");                        // Set program's question mode to 'stored'
     
-    // Ensure loadMistakesFromMistakeBank returns an array
     const storedData = vocabMgr.loadMistakesFromMistakeBank();
-    if (!Array.isArray(storedData)) {
+    if (!Array.isArray(storedData)) {                             // Ensure loadMistakesFromMistakeBank returns an array
         console.error("Error: Stored data is not an array! Check your loadMistakesFromMistakeBank function.");
         return;
     }
     
-    // Assign storedData to appData.vocabArray
-    appData.vocabArray = storedData;
-    console.log("vocabArray(before removeBlankQuestion(): ", appData.vocabArray);
-    
-    appData.vocabArray = removeBlankQuestions(appData.vocabArray);
+    appData.vocabArray = storedData;                               // Assign fetched storedData to appData.vocabArray    
+    appData.vocabArray = removeBlankQuestions(appData.vocabArray); // Filter out blank questions (missing kanji etc.)
     console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
     
-    // Check if the array is empty
-    console.log("Inside loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length);
-    if (appData.vocabArray.length === 0) {
+    if (appData.vocabArray.length === 0) {  
+        console.log("Inside loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length);
         console.error("Error: vocabArray is empty after loading stored data!");
         return;
     }
 
-    // Fetch the relevant categories
-    helpers.copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
-    helpers.copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
-    helpers.copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
+    populateVocabProperties();                                      // Fetch the relevant categories
 
     console.groupEnd();
   }
 
-  // to resume the existing program
+  // To resume the existing program
   function resumeProgram() {
     console.groupCollapsed("resumeProgram()");
 
     vocabMgr.loadState();
     console.log("loadState: ", appState, appData, currentStatus);
 
-    // Fetch the relevant categories
-    helpers.copyOneProperty(appData.vocabArray, appData.kaVocab, defaultConfig.ka);
-    helpers.copyOneProperty(appData.vocabArray, appData.hiVocab, defaultConfig.hi);
-    helpers.copyOneProperty(appData.vocabArray, appData.enVocab, defaultConfig.en);
-
+    populateVocabProperties(); // Fetch the relevant categories
     assignLanguageBySelection();
 
     questionMgr.newQuestion();
@@ -255,10 +256,9 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     console.groupEnd();
   }
 
-  // there are some questions without kanji, this function is to remove if user select the
-  // question option to kanji and to prevent showing blank question on screen
+  // There are some questions without kanji; if user select 'kanji' in 'question', 
+  // ... this function is to prevent showing blank question on screen
   function removeBlankQuestions(originalArr) {
-    //console.groupCollapsed("removeBlankQuestions()");
     let updatedArr = [];
     for (let i of originalArr) {
       if (appState.qChoiceInput && i[appState.qChoiceInput] !== "") {
@@ -266,19 +266,17 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       }
     }
 
-    console.groupEnd();
     return updatedArr; // Return the updated array
   }
 
-  // to load stored data from local storage and show info at the settings
+  // To load stored data from local storage and show info at the settings
   function loadMemoryData() {
     console.groupCollapsed("loadMemoryData");
 
     let storedLength = vocabMgr.readStoredLength;
     console.info("storedLength:", storedLength);
 
-    // building `mistake status` on home screen
-    switch (storedLength) {
+    switch (storedLength) {     // build 'mistake status' on home screen
       case 0:
         buildMemoryStatus('Memory is empty.');
         break;
@@ -290,14 +288,13 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         break;
     }
     
-    // building `flush` and `list` buttons
-    buildMemoryBtns("flush");
+    buildMemoryBtns("flush");   // build 'flush' and 'list' buttons on screen
     buildMemoryBtns("list");
     
     console.groupEnd();
     return this;
 
-    // utility functions private to the module
+    // Utility functions private to the module
     function buildMemoryStatus(content) {
       domUtils.buildNode({
         parent: selectors.memoryInfo,
@@ -398,7 +395,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     return this;
   }
 
-  // Vvalidate syllable choices and show error if necessary
+  // Validate syllable choices and show error if necessary
   function validateSyllable() {
     console.groupCollapsed("validateSyllable()");
     // Validate syllable choices and show an error if none are selected
@@ -464,16 +461,6 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     console.groupEnd();
   }
 
-  // To validate whether is memory is empty or not
-  function validateStoredMemory() {
-    let storedLength = vocabMgr.readStoredLength;
-    if (storedLength === 0) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
   // to print local storage data on screen
   function rePrintMemory() {
     //console.groupCollapsed("rePrintMemory()");
@@ -493,7 +480,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
       console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
     }
-    await loadStoredJSON();// Wait for loadStoredJSON to complete
+    await loadStoredJSON();   // Wait for loadStoredJSON to complete
 
     statusMgr.getTotalNoOfQuestions("stored");
     questionMgr.newQuestion();
@@ -520,8 +507,8 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
     const mistakeArray = vocabMgr.loadMistakesFromMistakeBank(); // Load mistakes from localStorage
     
-    // Create the container to display the mistakes
-    domUtils.buildNode({
+    // Container to display the mistakes
+    domUtils.buildNode({                  
       parent: selectors.sectionQuestion,
       child: 'div',
       content: '',
@@ -529,7 +516,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       idName: 'mistake-list-div',
     });
   
-    // Now that the mistake-list-container is created, select it
+    // Select the mistake-list-container created
     const mistakeListContainer = document.querySelector("#mistake-list-div-0");
   
     // Header for the mistake list (4 columns: #, Kanji, Hiragana, English)
@@ -544,7 +531,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       idName: 'mistakes-heading',
     });
   
-    // Now, select the newly created header div
+    // Select the newly created header div
     const mistakeHeading = document.querySelector("#mistakes-heading-0");
     
     // Append header columns inside the header div
@@ -614,8 +601,13 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   // To remove error messages after "Start New" is clicked
   function removeErrBlks() {
     console.groupCollapsed("cleanUpErrMsgs()");
-    const errBlocks = [document.querySelector("[id|='syllable-error']"), document.querySelector("[id|='runtime-error']")];
-    errBlocks.forEach((blk) => {
+
+    const errBlocks = [
+      document.querySelector("[id|='syllable-error']"), 
+      document.querySelector("[id|='runtime-error']")
+    ];
+
+    errBlocks.forEach((blk) => {  // check whether there is an error message on screen
       if (blk){
         console.info("Error block found");
         blk.remove();
@@ -628,7 +620,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   function preloadState() {
     console.groupCollapsed("preloadState()");
     
-    domUtils.buildNode({
+    domUtils.buildNode({                                      // temporarily create a new node on 'body'
       parent: selectors.body,
       child: 'div',
       content: 'Loading...',
@@ -636,7 +628,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       idName: 'preload-info',
     });
 
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function() { // show 'loading' only after the doc is loaded.
       const loading = document.querySelector("#preload-info-0");
       if (loading) {
         displayUtils.addClass('show', loading);
@@ -654,8 +646,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     
     displayUtils.toggleClass('so-dim', selectors.settingForm);
 
-    const loading = document.querySelector("#preload-info-0");
-    console.info(loading);
+    const loading = document.querySelector("#preload-info-0");    
     domUtils.clearNode({
       parent: selectors.body,
       children: loading,

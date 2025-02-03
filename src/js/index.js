@@ -60,7 +60,7 @@ async function preload(){
 
   console.groupEnd();
  
-  // Helper functions
+  // Utility functions private to the module
   function onPreloadComplete() {
     console.groupCollapsed("onPreloadComplete()");
     console.log("Preloading finished, appData:", appData);
@@ -84,7 +84,7 @@ async function preload(){
     displayUtils.toggleClass('hide', selectors.settingNoOfAnsERRblk);
   }
 
-  // if the program is still in progress, load data from local storage to global objects
+  // If the program is still in progress, load data from local storage to global objects
   function checkInProgress() {
     if (statusMgr.stillInProgress()) {
       statusMgr.goodToResume =  true;
