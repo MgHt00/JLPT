@@ -129,6 +129,13 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       ...Object.keys(vowels),  
       ...Object.keys(k),
       ...Object.keys(s),
+      ...Object.keys(t),
+      ...Object.keys(n),
+      ...Object.keys(h),
+      ...Object.keys(m),
+      ...Object.keys(y),
+      ...Object.keys(r),
+      ...Object.keys(wa),
     ]
   }
 
@@ -680,14 +687,20 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       idName: 'preload-info',
     });
 
-    document.addEventListener('DOMContentLoaded', function() { // show 'loading' only after the doc is loaded.
+    const loading = document.querySelector("#preload-info-0");
+      if (loading) {
+        console.info("Adds 'loading' on screen.");
+        displayUtils.addClass('show', loading);
+      }
+
+    /*document.addEventListener('DOMContentLoaded', function() { // show 'loading' only after the doc is loaded.
       const loading = document.querySelector("#preload-info-0");
       if (loading) {
         displayUtils.addClass('show', loading);
       } else {
         console.error("Element #preload-info-0 not found in the DOM.");
       }
-    });
+    });*/
 
     console.groupEnd();
   }
