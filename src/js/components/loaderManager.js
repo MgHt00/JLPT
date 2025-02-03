@@ -39,6 +39,58 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   const s = {
     sa: "../../../assets/data/n5-vocab-sa.json",
     shi: "../../../assets/data/n5-vocab-shi.json",
+    su: "../../../assets/data/n5-vocab-su.json",
+    se: "../../../assets/data/n5-vocab-se.json",
+    so: "../../../assets/data/n5-vocab-so.json",
+  }
+
+  const t = {
+    ta: "../../../assets/data/n5-vocab-ta.json",
+    chi: "../../../assets/data/n5-vocab-chi.json",
+    tsu: "../../../assets/data/n5-vocab-tsu.json",
+    te: "../../../assets/data/n5-vocab-te.json",
+    to: "../../../assets/data/n5-vocab-to.json",
+  }
+
+  const n = {
+    na: "../../../assets/data/n5-vocab-na.json",
+    ni: "../../../assets/data/n5-vocab-ni.json",
+    nu: "../../../assets/data/n5-vocab-nu.json",
+    ne: "../../../assets/data/n5-vocab-ne.json",
+    no: "../../../assets/data/n5-vocab-no.json",
+  }
+
+  const h = {
+    ha: "../../../assets/data/n5-vocab-ha.json",
+    hi: "../../../assets/data/n5-vocab-hi.json",
+    fu: "../../../assets/data/n5-vocab-fu.json",
+    he: "../../../assets/data/n5-vocab-he.json",
+    ho: "../../../assets/data/n5-vocab-ho.json",
+  }
+
+  const m = {
+    ma: "../../../assets/data/n5-vocab-ma.json",
+    mi: "../../../assets/data/n5-vocab-mi.json",
+    mu: "../../../assets/data/n5-vocab-mu.json",
+    me: "../../../assets/data/n5-vocab-me.json",
+    mo: "../../../assets/data/n5-vocab-mo.json",
+  }
+
+  const y = {
+    ya: "../../../assets/data/n5-vocab-ya.json",
+    yu: "../../../assets/data/n5-vocab-yu.json",
+    yo: "../../../assets/data/n5-vocab-yo.json",
+  }
+
+  const r = {
+    ra: "../../../assets/data/n5-vocab-ra.json",
+    ri: "../../../assets/data/n5-vocab-ri.json",
+    re: "../../../assets/data/n5-vocab-re.json",
+    ro: "../../../assets/data/n5-vocab-ro.json",
+  }
+
+  const wa = {
+    wa: "../../../assets/data/n5-vocab-wa.json",
   }
 
   async function preloadVocabData() {           // [LE7] [LE8]
