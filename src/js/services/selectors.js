@@ -1,48 +1,11 @@
-const body = document.querySelector("#section-body");
-const sectionQuestion = document.querySelector("#section-question");
-const sectionMessage = document.querySelector("#section-message");
-const sectionAnswer = document.querySelector("#section-answer");
-const sectionStatus = document.querySelector("#section-status");
-const dynamicDOM = document.querySelector("#dynamic-DOM");
+export const selectors = {
+  body : document.body,
+  sectionQuestion : document.querySelector("#section-question"),
+  sectionMessage : document.querySelector("#section-message"),
+  sectionAnswer : document.querySelector("#section-answer"),
+  sectionStatus : document.querySelector("#section-status"),
+  dynamicDOM : document.querySelector("#dynamic-DOM"),
 
-let ka = "ka";
-let hi = "hi";
-let en = "en";
-
-let enLang = "en";
-let jpLang = "jp";
-
-let kaVocab = [];
-let hiVocab = [];
-let enVocab = [];
-
-const appState = {
-  randomYesNo : true,
-  qChoiceInput: "hi",
-  aChoiceInput: "en",
-  flashYesNo: true,
-  qMode: "fresh",
-  noOfAnswers: 2,
-  correctAns: "",
-};
-
-const appData = {
-  syllableChoice: [],
-  vocabArray : [],
-  rePractice: [],
-};
-
-const currentStatus = {
-  //stillInProgress : false,
-  questionCount : 0,
-  totalNoOfQuestions : 0,
-  cumulativeAverage : 0,
-  totalCorrectAnswers : 0,
-  totalQuestionsAnswered : 0,
-  averageScore : 0,
-}
-
-const selectors = {
   settingForm : document.querySelector("#settingsForm"),
   switchRandomYesNo : document.querySelector("#randomYesNo"),
   settingFlashYesNo : document.querySelector("#settings-flashYesNo"),
@@ -103,5 +66,3 @@ const selectors = {
     return [document.querySelector("#flush-memory-btn-0"), document.querySelector("#list-memory-btn-0")];
   }
 };
-
-//let qNo = 0;
