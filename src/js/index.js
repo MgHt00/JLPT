@@ -2,7 +2,7 @@ import { globals } from "./services/globals.js";
 import { componentManager } from "./components/componentsManager.js";
 import { utilsManager } from "./utils/utilsManager.js";
 
-const { selectors } = globals;
+const { appData, selectors } = globals;
 const {
   listenerManager,
   loaderManager,
@@ -43,23 +43,38 @@ questionMgr.setInstances(answerMgr, statusMgr, vocabMgr);
 loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errMgr, statusMgr);
 listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMgr);
 
-(function defaultState() {
-  console.groupCollapsed("defaultState()");
+async function preload(){
+  console.groupCollapsed("preload()");
 
+  await loaderMgr.preloadVocabData();
   loaderMgr.loadMemoryData();
-  defaultStateClassChanges();
-  controlMgr.floatingBtnsHideAll();
-  listenerMgr.generalListeners();
+  
+  console.groupEnd();
+}
 
-  // if the program is still in progress, load data from local storage to global objects
-  if (statusMgr.stillInProgress()) {
-    statusMgr.goodToResume =  true;
-    controlMgr.hideBackShowResume();
-  }
+(async function initialize() {
+  console.groupCollapsed("initialize()");
+
+  loaderMgr.preloadState();
+  await preload().then(onPreloadComplete());
 
   console.groupEnd();
+ 
+  // Helper functions
+  function onPreloadComplete() {
+    console.groupCollapsed("onPreloadComplete()");
+    console.log("Preloading finished, appData:", appData);
+    
+    loaderMgr.releasePreLoadState();
+    listenerMgr.generalListeners();
+    controlMgr.floatingBtnsHideAll();
+    
+    defaultStateClassChanges();
+    checkInProgress();
+    
+    console.groupEnd();
+  }
 
-  // Helper function
   function defaultStateClassChanges() {
     displayUtils.toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]
     displayUtils.toggleClass('overlay-message', selectors.sectionMessage);
@@ -67,5 +82,13 @@ listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMg
 
     displayUtils.toggleClass('disabled', selectors.settingRepractice);
     displayUtils.toggleClass('hide', selectors.settingNoOfAnsERRblk);
+  }
+
+  // if the program is still in progress, load data from local storage to global objects
+  function checkInProgress() {
+    if (statusMgr.stillInProgress()) {
+      statusMgr.goodToResume =  true;
+      controlMgr.hideBackShowResume();
+    }
   }
 })();

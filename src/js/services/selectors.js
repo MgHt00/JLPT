@@ -1,5 +1,5 @@
 export const selectors = {
-  body : document.querySelector("#section-body"),
+  body : document.body,
   sectionQuestion : document.querySelector("#section-question"),
   sectionMessage : document.querySelector("#section-message"),
   sectionAnswer : document.querySelector("#section-answer"),

@@ -20,6 +20,8 @@ const appState = {
 };
 
 const appData = {
+  preloadedVocab : {},
+
   kaVocab : [],
   hiVocab : [],
   enVocab : [],

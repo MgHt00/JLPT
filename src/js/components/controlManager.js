@@ -1,6 +1,6 @@
 export function controlManger(globals, utilsManager) {
   const { selectors } = globals;
-  const { displayUtils} = utilsManager;
+  const { displayUtils, domUtils } = utilsManager;
 
   // To hide both bringBack and resumePracticeBtn
   function floatingBtnsHideAll() {
