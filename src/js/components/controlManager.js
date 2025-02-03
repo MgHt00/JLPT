@@ -82,51 +82,11 @@ export function controlManger(globals, utilsManager) {
     document.querySelector("#source-fresh").checked = true; // Set the 'source-fresh' radio input to checked
   }
 
-  function preloadState() {
-    console.groupCollapsed("preloadState()");
-    
-    domUtils.buildNode({
-      parent: selectors.body,
-      child: 'div',
-      content: 'Loading...',
-      className: 'poppins-regular',
-      idName: 'preload-info',
-    });
-
-    document.addEventListener('DOMContentLoaded', function() {
-      const loading = document.querySelector("#preload-info-0");
-      if (loading) {
-        displayUtils.addClass('show', loading);
-      } else {
-        console.error("Element #preload-info-0 not found in the DOM.");
-      }
-    });
-
-    console.groupEnd();
-  }
-
-  function releasePreLoadState() {
-    console.groupCollapsed("releasePreLoadState()");
-    
-    displayUtils.toggleClass('so-dim', selectors.settingForm);
-
-    const loading = document.querySelector("#preload-info-0");
-    console.info(loading);
-    domUtils.clearNode({
-      parent: selectors.body,
-      children: loading,
-    })
-
-    console.groupEnd();
-  }
-
   return {
     floatingBtnsHideAll,
     hideResumeShowBack,
     hideBackShowResume,
     toggleFormDisplay,
     resetQuestionMode,
-    preloadState,
-    releasePreLoadState,
   }
 }

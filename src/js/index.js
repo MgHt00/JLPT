@@ -45,15 +45,17 @@ listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMg
 
 async function preload(){
   console.groupCollapsed("preload()");
+
   await loaderMgr.preloadVocabData();
   loaderMgr.loadMemoryData();
+  
   console.groupEnd();
 }
 
 (async function initialize() {
   console.groupCollapsed("initialize()");
 
-  controlMgr.preloadState();
+  loaderMgr.preloadState();
   await preload().then(onPreloadComplete());
 
   console.groupEnd();
@@ -63,7 +65,7 @@ async function preload(){
     console.groupCollapsed("onPreloadComplete()");
     console.log("Preloading finished, appData:", appData);
     
-    controlMgr.releasePreLoadState();
+    loaderMgr.releasePreLoadState();
     listenerMgr.generalListeners();
     controlMgr.floatingBtnsHideAll();
     

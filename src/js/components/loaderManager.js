@@ -624,6 +624,46 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     console.groupEnd();
   }
 
+  // To show 'loading...' while preloading all jsons
+  function preloadState() {
+    console.groupCollapsed("preloadState()");
+    
+    domUtils.buildNode({
+      parent: selectors.body,
+      child: 'div',
+      content: 'Loading...',
+      className: 'poppins-regular',
+      idName: 'preload-info',
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const loading = document.querySelector("#preload-info-0");
+      if (loading) {
+        displayUtils.addClass('show', loading);
+      } else {
+        console.error("Element #preload-info-0 not found in the DOM.");
+      }
+    });
+
+    console.groupEnd();
+  }
+
+  // To clean up 'loading...' message from screen
+  function releasePreLoadState() {
+    console.groupCollapsed("releasePreLoadState()");
+    
+    displayUtils.toggleClass('so-dim', selectors.settingForm);
+
+    const loading = document.querySelector("#preload-info-0");
+    console.info(loading);
+    domUtils.clearNode({
+      parent: selectors.body,
+      children: loading,
+    })
+
+    console.groupEnd();
+  }
+
   return {
     setInstances,
     preloadVocabData,
@@ -638,10 +678,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     resumeProgram,
     resetAfterFlushingMistakes,
     removeErrBlks,
+    preloadState,
+    releasePreLoadState,
   }
 }
-
-Object.defineProperty(window, "appData", {
-  configurable: false,
-  writable: false,
-});
