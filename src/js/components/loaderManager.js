@@ -93,24 +93,38 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     wa: "../../../assets/data/n5-vocab-wa.json",
   }
 
+  let isPreLoadSuccessful = true;
+
   async function preloadVocabData() {           // [LE7] [LE8]
     console.groupCollapsed("preloadVocabData()");
     console.info("Preloading vocab JSON files...");
+
+    showLoadingMsg();
     
     // Combine all syllable keys into one array
     const allKeys = mergeVocabKeys();
 
-    // Create an array of Promises to fetch JSON files
     const promises = allKeys.map(key => {
       const jsonPath = getJSONPath(key);        // Finds the file path
 
-      return jsonPath
-        ? fetch(jsonPath)
-          .then(response => response.json())    // Convert response to JSON
-          .then(data => ({ key, data }))        // Wraps data with key { key: "a", data: [...data from n5-vocab-a.json...]}
+      return jsonPath ? fetch(jsonPath)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error ("File not found!");
+            }
+
+            let type = response.headers.get("content-type");
+            if (!type || type !== "application/json") {
+              throw new TypeError(`Expected JSON, got ${type}`);
+            }
+
+            return response.json();             // Convert response to JSON
+          })    
+          .then(data => { ({ key, data }) })    // Wraps data with key { key: "a", data: [...data from n5-vocab-a.json...]}                
           .catch(error => {
             console.warn(`Failed to load ${key}:`, error);
-            return { key, data: [] };           // Store empty array on failure
+            isPreLoadSuccessful = false;        // Set flag only in catch
+            return { key, data: [] };           // Store empty array on failure (Ensure structure remains consistent)
           })
         : Promise.resolve({ key, data: [] });   // Handle missing keys gracefully
     });
@@ -120,7 +134,9 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
     // Convert results 'array' into an 'object' and store in appData.preloadedVocab
     appData.preloadedVocab = Object.fromEntries(results.map( ({ key, data }) => [key, data] )); // [sn23] Object.fromEntries => {a: [], i: []}
-    console.info("Preloading completed.", appData.preloadedVocab);
+    
+    console.info("Preloading completed.", isPreLoadSuccessful, appData.preloadedVocab);
+    console.groupEnd();
   }
 
   // To combine all keys dynamically from vowels, k, s, etc.
@@ -676,48 +692,67 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   }
 
   // To show 'loading...' while preloading all jsons
-  function preloadState() {
-    console.groupCollapsed("preloadState()");
+  function showLoadingMsg() {
+    console.groupCollapsed("showLoadingMsg()");
     
-    domUtils.buildNode({                                      // temporarily create a new node on 'body'
-      parent: selectors.body,
-      child: 'div',
-      content: 'Loading...',
-      className: 'poppins-regular',
-      idName: 'preload-info',
-    });
-
-    const loading = document.querySelector("#preload-info-0");
-      if (loading) {
-        console.info("Adds 'loading' on screen.");
-        displayUtils.addClass('show', loading);
-      }
-
-    /*document.addEventListener('DOMContentLoaded', function() { // show 'loading' only after the doc is loaded.
-      const loading = document.querySelector("#preload-info-0");
-      if (loading) {
-        displayUtils.addClass('show', loading);
-      } else {
-        console.error("Element #preload-info-0 not found in the DOM.");
-      }
-    });*/
-
+    addLoadingMsg('Loading...');
+    
     console.groupEnd();
+    
+    // To add loading message on `body`
+    function addLoadingMsg(msg) {
+      domUtils.buildNode({                      // temporarily create a new node on 'body'
+        parent: selectors.body,
+        child: 'div',
+        content: msg,
+        className: 'poppins-regular',
+        idName: 'preload-info',
+      });
+
+      const loadingMsg = document.querySelector("#preload-info-0"); 
+      displayUtils.addClass('show', loadingMsg);
+    }
   }
 
-  // To clean up 'loading...' message from screen
-  function releasePreLoadState() {
-    console.groupCollapsed("releasePreLoadState()");
+  // Depending on the `isPreLoadSuccessful` flag, cleans up 'loading...' message or adds 'fail' on screen
+  async function checkPreLoadState() {
+    console.groupCollapsed("checkPreLoadState()");
     
-    displayUtils.toggleClass('so-dim', selectors.settingForm);
+    console.info("isPreLoadSuccessful:", isPreLoadSuccessful);
 
-    const loading = document.querySelector("#preload-info-0");    
-    domUtils.clearNode({
-      parent: selectors.body,
-      children: loading,
-    })
+    if (isPreLoadSuccessful) preloadSuccess();
+    else preloadFail();
 
     console.groupEnd();
+
+    // Utility functions private to the module
+    function preloadSuccess() {
+      console.info("Preload successful");
+      const loadingMsg = document.querySelector("#preload-info-0");  
+      removeLoadingMsg(loadingMsg);                               // remove 'loading...' from screen
+      displayUtils.toggleClass('so-dim', selectors.settingForm);  // release the form from 'so-dim' state
+      return true;
+    }
+
+    function preloadFail() {
+      console.info("Preload fail");
+      const loadingMsg = document.querySelector("#preload-info-0"); 
+      if (loadingMsg) {
+        loadingMsg.textContent = 'Preloading fail!';
+      } else {
+        console.error("Preload message element not found.");
+      }
+      return false;
+    }
+
+    // To remove the loading message from `body`
+    function removeLoadingMsg(msg) {
+      domUtils.clearNode({
+        parent: selectors.body,
+        children: msg,
+      });
+      console.info("removed preload message from screen:", msg);
+    }
   }
 
   return {
@@ -734,7 +769,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     resumeProgram,
     resetAfterFlushingMistakes,
     removeErrBlks,
-    preloadState,
-    releasePreLoadState,
+    showLoadingMsg,
+    checkPreLoadState,
   }
 }
