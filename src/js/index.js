@@ -52,7 +52,7 @@ async function preload(){
 (async function initialize() {
   console.groupCollapsed("initialize()");
 
-  await preload();
+  await preload();                      // ensures that the function fully completes before moving on 
   await loaderMgr.checkPreLoadState();
   onPreloadComplete();
 

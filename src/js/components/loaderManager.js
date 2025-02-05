@@ -26,7 +26,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     u: "../../../assets/data/n5-vocab-u.json",
     e: "../../../assets/data/n5-vocab-e.json",
     o: "../../../assets/data/n5-vocab-o.json",
-  };
+  }
 
   const k = {
     ka: "../../../assets/data/n5-vocab-ka.json",
@@ -100,6 +100,12 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     console.info("Preloading vocab JSON files...");
 
     showLoadingMsg();
+
+    /*fetch('../../../assets/data/n5-vocab-a.json')
+    .then(response => response.json())
+    .then(data => console.log("JSON Data:", data))
+    .catch(error => console.error("Fetch error:", error));*/
+
     
     // Combine all syllable keys into one array
     const allKeys = mergeVocabKeys();
@@ -730,7 +736,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       console.info("Preload successful");
       const loadingMsg = document.querySelector("#preload-info-0");  
       removeLoadingMsg(loadingMsg);                               // remove 'loading...' from screen
-      displayUtils.toggleClass('so-dim', selectors.settingForm);  // release the form from 'so-dim' state
+      displayUtils.toggleClass('disabled', selectors.settingForm);  // release the form from 'so-dim' state
       return true;
     }
 
