@@ -43,16 +43,11 @@ questionMgr.setInstances(answerMgr, statusMgr, vocabMgr);
 loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errMgr, statusMgr);
 listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMgr);
 
-async function preload(){
-  console.groupCollapsed("preload()");
-  await loaderMgr.preloadVocabData();  
-  console.groupEnd();
-}
 
 (async function initialize() {
   console.groupCollapsed("initialize()");
 
-  await preload();                      // ensures that the function fully completes before moving on 
+  await loaderMgr.preloadVocabData();            // ensures that the function fully completes before moving on 
   await loaderMgr.checkPreLoadState();
   onPreloadComplete();
 

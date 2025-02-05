@@ -100,12 +100,6 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     console.info("Preloading vocab JSON files...");
 
     showLoadingMsg();
-
-    /*fetch('../../../assets/data/n5-vocab-a.json')
-    .then(response => response.json())
-    .then(data => console.log("JSON Data:", data))
-    .catch(error => console.error("Fetch error:", error));*/
-
     
     // Combine all syllable keys into one array
     const allKeys = mergeVocabKeys();
@@ -119,14 +113,14 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
               throw new Error ("File not found!");
             }
 
-            let type = response.headers.get("content-type");
-            if (!type || type !== "application/json") {
-              throw new TypeError(`Expected JSON, got ${type}`);
+            const contentType = response.headers.get("content-type") || ""; // [sn24]  If the header doesn’t exist, it defaults to an empty string (""), preventing errors when checking.
+            if (!contentType.includes("application/json")) {                // If the server responds with Content-Type: 'application/json; charset=UTF-8' instead of 'application/json', 
+              throw new TypeError(`Expected JSON, got ${type}`);            // ...this allows variations like "application/json; charset=UTF-8" to pass the check.
             }
 
             return response.json();             // Convert response to JSON
           })    
-          .then(data => { ({ key, data }) })    // Wraps data with key { key: "a", data: [...data from n5-vocab-a.json...]}                
+          .then(data => ({ key, data }))        // Wraps data with key { key: "a", data: [...data from n5-vocab-a.json...]}                
           .catch(error => {
             console.warn(`Failed to load ${key}:`, error);
             isPreLoadSuccessful = false;        // Set flag only in catch
@@ -163,7 +157,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
   // To find JSON path depending on the key given
   function getJSONPath(key) { 
-    return vowels[key] || k[key] || s[key] || null;
+    return vowels[key] || k[key] || s[key] || t[key] || n[key] || h[key] || m[key] || y[key] || r[key] || wa[key] || null;
   }
 
   // when user click submit(start) button of the setting form
@@ -744,7 +738,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       console.info("Preload fail");
       const loadingMsg = document.querySelector("#preload-info-0"); 
       if (loadingMsg) {
-        loadingMsg.textContent = 'Preloading fail!';
+        loadingMsg.textContent = 'Loading fail!';
       } else {
         console.error("Preload message element not found.");
       }
