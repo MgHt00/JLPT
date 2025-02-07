@@ -105,18 +105,28 @@
   gap: 8px;
 }
 
-#settings-syllableChoice #fieldset-syllable,
 #settings-repractice #fieldset-repractice {
   display: flex;
   padding: 2px 10px;
   width: 250px;
-  gap: 15px;
 }
 
 #settings-syllableChoice #fieldset-syllable {
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 10px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(33px, 1fr));
+  gap: 2px 10px;
+  padding: 2px 5px;
+  width: 250px;
+}
+
+#settings-syllableChoice #fieldset-syllable .single-syllable-div {
+  display: flex;
+  align-items: center;
+}
+
+#settings-syllableChoice #fieldset-syllable label {
+  white-space: nowrap; /* Prevent labels from wrapping */
+  cursor: pointer;
 }
 
 #settings-repractice #fieldset-repractice {
@@ -329,7 +339,7 @@ input:checked + .slider:before {
   padding: 20px; /* Optional: Add some padding */
   border-radius: 5px; /* Optional: Add rounded corners */
   opacity: 0;
-  transition: opacity 0.7s ease-in-out;
+  transition: opacity 0.3s ease-in-out;
 }
 
 [id|="preload-info"].show {

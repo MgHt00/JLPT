@@ -43,29 +43,21 @@ questionMgr.setInstances(answerMgr, statusMgr, vocabMgr);
 loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errMgr, statusMgr);
 listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMgr);
 
-async function preload(){
-  console.groupCollapsed("preload()");
-
-  await loaderMgr.preloadVocabData();
-  loaderMgr.loadMemoryData();
-  
-  console.groupEnd();
-}
 
 (async function initialize() {
   console.groupCollapsed("initialize()");
 
-  loaderMgr.preloadState();
-  await preload().then(onPreloadComplete());
+  await loaderMgr.preloadVocabData();            // ensures that the function fully completes before moving on 
+  await loaderMgr.checkPreLoadState();
+  onPreloadComplete();
 
   console.groupEnd();
  
   // Utility functions private to the module
   function onPreloadComplete() {
     console.groupCollapsed("onPreloadComplete()");
-    console.log("Preloading finished, appData:", appData);
     
-    loaderMgr.releasePreLoadState();
+    loaderMgr.loadMemoryData();
     listenerMgr.generalListeners();
     controlMgr.floatingBtnsHideAll();
     
