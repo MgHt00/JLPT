@@ -110,13 +110,13 @@
   display: flex;
   padding: 2px 10px;
   width: 250px;
-  gap: 15px;
 }
 
 #settings-syllableChoice #fieldset-syllable {
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 10px;
+  row-gap: 5px;
+  column-gap: 10px;
 }
 
 #settings-repractice #fieldset-repractice {
