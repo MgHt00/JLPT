@@ -19,15 +19,16 @@ export function errorManager(globals, utilsManager, answerMgr) {
         let choiceInput = parseInt(appState.noOfAnswers, 10);
         let noOfChoice = Math.min(choiceInput, selectedArray.length);
 
-        console.info("selectedArray :", selectedArray);
-        console.info("choiceInput :", choiceInput);
-        console.info("noOfChoice: ", noOfChoice);
+        console.info("selectedArray:", selectedArray);
+        console.info("choiceInput:", choiceInput);
+        console.info("noOfChoice:", noOfChoice);
+        console.info("flashYesNo:", appState.flashYesNo);
 
         // Infinite Loop Prevention: If selectedArray contains very few elements, 
         // the loop inside do...while of `createAnswerArray()` could run infinitely because it’s trying to pick a unique answer from a small pool, 
         // but keeps failing due to duplicates. This is less likely, but worth checking.
 
-        if (selectedArray.length <= noOfChoice) {
+        if (!appState.flashYesNo && selectedArray.length <= noOfChoice) { // If flashYesNo is true → The entire condition is false, and selectedArray.length <= noOfChoice is not evaluated.
           console.error("Not enough unique answers to generate.");
 
           if (!document.querySelector("[id|='runtime-error']")) { // if error is not already shown
