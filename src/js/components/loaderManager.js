@@ -157,7 +157,11 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
   // To find JSON path depending on the key given
   function getJSONPath(key) { 
-    return vowels[key] || k[key] || s[key] || t[key] || n[key] || h[key] || m[key] || y[key] || r[key] || wa[key] || null;
+    const groups = [vowels, k, s, t, n, h, m, y, r, wa];
+    for (const group of groups) {
+      if (group[key]) return group[key];
+    }
+    return null;
   }
 
   // when user click submit(start) button of the setting form
