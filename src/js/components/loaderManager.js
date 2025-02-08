@@ -101,29 +101,26 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
     showLoadingMsg();
     
-    // Combine all syllable keys into one array
-    const allKeys = mergeVocabKeys();
+    const allKeys = mergeVocabKeys();           // Combine all syllable keys into one array
 
     const promises = allKeys.map(key => {
       const jsonPath = getJSONPath(key);        // Finds the file path
 
       return jsonPath ? fetch(jsonPath)
           .then(response => {
-            if (!response.ok) {
-              throw new Error ("File not found!");
-            }
+            if (!response.ok) throw new Error ("File not found!");
 
             const contentType = response.headers.get("content-type") || ""; // [sn24]  If the header doesn’t exist, it defaults to an empty string (""), preventing errors when checking.
             if (!contentType.includes("application/json")) {                // If the server responds with Content-Type: 'application/json; charset=UTF-8' instead of 'application/json', 
               throw new TypeError(`Expected JSON, got ${type}`);            // ...this allows variations like "application/json; charset=UTF-8" to pass the check.
             }
 
-            return response.json();             // Convert response to JSON
+            return response.json();             // If everything's ok, convert response to JSON
           })    
           .then(data => ({ key, data }))        // Wraps data with key { key: "a", data: [...data from n5-vocab-a.json...]}                
           .catch(error => {
             console.warn(`Failed to load ${key}:`, error);
-            isPreLoadSuccessful = false;        // Set flag only in catch
+            isPreLoadSuccessful = false;        // Set flag 
             return { key, data: [] };           // Store empty array on failure (Ensure structure remains consistent)
           })
         : Promise.resolve({ key, data: [] });   // Handle missing keys gracefully
