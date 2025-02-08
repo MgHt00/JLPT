@@ -165,7 +165,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   async function start(e) {  
     e.preventDefault();                 // Prevent form from submitting the usual way
     validateAndSetInputData(e);         // validate and set defaults to the input data.
-
+    removeErrBlks();                    // Remove error messages
     if (appState.qMode === "stored") {
       if(!validateStoredMemory()) {     // To validate whether memory is empty or not
         errorMgr.runtimeError("mem0");
