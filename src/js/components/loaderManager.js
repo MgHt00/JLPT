@@ -676,7 +676,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
   // To remove error messages after "Start New" is clicked
   function removeErrBlks() {
-    console.groupCollapsed("cleanUpErrMsgs()");
+    console.groupCollapsed("removeErrBlks()");
 
     const errBlocks = [
       document.querySelector("[id|='syllable-error']"), 
