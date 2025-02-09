@@ -115,31 +115,14 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     if (domUtils.checkNode({ idName: 'syllable-error' })) removeSyllableError();
 
     if (event.target === allCheckbox) {       // Check whether event is `allCheckbox`
-      if (allCheckbox.checked) {              // If "all" is checked,
-        otherCheckboxes.forEach(checkbox => { 
-          checkbox.checked = true;            // ...make every other checkbox checked.
-        });
-      } else {                                // If "all" is unchecked
-        otherCheckboxes.forEach(checkbox => {
-          checkbox.checked = false;           // ...make every other checkbox UNchecked.
-        });
-      }
+      otherCheckboxes.forEach(checkbox => checkbox.checked = allCheckbox.checked);
+      // [le9] If allCheckbox.checked === true, all individual checkboxes are checked.
+      //       If allCheckbox.checked === false, all individual checkboxes are unchecked.
+      console.groupEnd();
+      return;
     } 
-    
-    else {                                    // If the event is NOT `allCheckbox`
-      if (event.target.checked) {             //[sn8] if individual syllable is checked
-        const allAreChecked = otherCheckboxes.every(checkbox => checkbox.checked); // Check if **all** other checkboxes are checked
 
-        if (allAreChecked) { 
-          allCheckbox.checked = true;         // If all individual syllables are checked, check "All"
-        } else {
-          allCheckbox.checked = false;        // If not all are checked, uncheck "All"
-        }
-      } 
-      else {                                  // If individual syllable is unchecked
-        allCheckbox.checked = false; 
-      }
-    }
+    allCheckbox.checked = otherCheckboxes.every(checkbox => checkbox.checked);
     console.groupEnd();
 
     // utility functions private to the module
