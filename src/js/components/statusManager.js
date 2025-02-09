@@ -121,11 +121,18 @@ export function statusManager(globals, utilsManager) {
     console.groupCollapsed("stillInProgress()");
 
     const savedCurrentStatus = JSON.parse(localStorage.getItem("currentStatus")); // Parse JSON
+    console.info("savedCurrentStatus:",savedCurrentStatus);
+
+    if (!savedCurrentStatus) {             // Handle first-time run (no saved data)
+      console.info("FALSE - No saved progress found.");
+      console.groupEnd();
+      return false;
+    }
+
     const savedTotalQuestionsAnswered = savedCurrentStatus.totalQuestionsAnswered;
     const savedTotalNoOfQuestions = savedCurrentStatus.totalNoOfQuestions;
 
-    //if (savedCurrentStatus && (savedCurrentStatus.questionCount >= 1)) {
-    if (savedCurrentStatus && (savedTotalQuestionsAnswered < savedTotalNoOfQuestions)) {
+    if (savedTotalQuestionsAnswered < savedTotalNoOfQuestions) {
       console.info("TRUE - program still in progress.  ", savedTotalQuestionsAnswered, "/", savedTotalNoOfQuestions);
       console.groupEnd();
       return true;
