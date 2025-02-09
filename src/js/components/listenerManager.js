@@ -82,7 +82,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
       .filter(checkbox => checkbox !== allCheckbox);
 
-    if (domUtils.checkNode({ idName: 'syllable-error' })) removeSyllableError();
+    if (domUtils.checkNode({ id: 'syllable-error' })) removeSyllableError();
 
     if (event.target === allCheckbox) {
       if (allCheckbox.checked) {
@@ -112,7 +112,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     console.groupCollapsed("syllableChangesImprovedVer()");
 
     const { allCheckbox, otherCheckboxes } = getCheckboxes();
-    if (domUtils.checkNode({ idName: 'syllable-error' })) removeSyllableError();
+    if (domUtils.checkNode({ id: 'syllable-error' })) removeSyllableError();
 
     if (event.target === allCheckbox) {       // Check whether event is `allCheckbox`
       otherCheckboxes.forEach(checkbox => checkbox.checked = allCheckbox.checked);
@@ -148,7 +148,8 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     let selectedMode = selectors.readQuestionMode;
     if (selectedMode === "fresh") {
       displayUtils.toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
-
+      
+      //if ( domUtils.checkNode() ) {
       if (document.querySelector("[id|='memory-empty-error']")) {
         // if there is an error under Memory Status Fieldset -> clean it
         const child = document.querySelector("[id|='memory-empty-error']");

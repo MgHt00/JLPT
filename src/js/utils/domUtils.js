@@ -96,8 +96,8 @@ export const domUtils = {
     }
   },
 
-  checkNode({idName}) {
-    return document.querySelectorAll(`[id^=${idName}]`).length > 0;
+  checkNode({id}) {
+    return document.querySelectorAll(`[id^=${id}]`).length > 0;
   },
 
   // (replaced using with `toggleClass`) Iterate over the nodes and toggle the disabled state
