@@ -1,12 +1,13 @@
-export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, questionMgr, answerMgr, statusMgr) {
+export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, questionMgr, answerMgr, errorMgr, statusMgr) {
   const { appState, selectors } = globals;
   const { domUtils, displayUtils } = utilsManager;
 
-  function setInstances(loaderInstance, controlInstance, questionInstance, answerInstance, statusInstance){
+  function setInstances(loaderInstance, controlInstance, questionInstance, answerInstance, errorInstance, statusInstance){
     loaderMgr = loaderInstance;
     controlMgr = controlInstance;
     questionMgr = questionInstance;
     answerMgr = answerInstance;
+    errorMgr = errorInstance;
     statusMgr = statusInstance;
   }
 
@@ -144,37 +145,24 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
 
   // to handle when program question mode (fresh / stored) is changed
   function questionModeChanges(e) {
-    loaderMgr.removeErrBlks();
+    toggleSettingSyllable();
+    errorMgr.clearError();
+
     let selectedMode = selectors.readQuestionMode;
+
     if (selectedMode === "fresh") {
-      displayUtils.toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
-      
-      //if ( domUtils.checkNode() ) {
-      if (document.querySelector("[id|='memory-empty-error']")) {
-        // if there is an error under Memory Status Fieldset -> clean it
-        const child = document.querySelector("[id|='memory-empty-error']");
-        domUtils.clearNode({
-          parent: selectors.settingRepractice,
-          children: [child],
-        });
-      }
       questionMgr.setQuestionMode("fresh");
       answerMgr.setRanOnce(false);
     } 
     
     else if (selectedMode === "stored") {
-      displayUtils.toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
-      
-      if (document.querySelector("[id|='syllable-error']")) {
-        // if there is an error under Syllable Fieldset -> clean it
-        const child = document.querySelector("[id|='syllable-error']");
-        domUtils.clearNode({
-          parent: selectors.settingSyllable,
-          children: [child],
-        });
-      }
       questionMgr.setQuestionMode("stored");
       answerMgr.setRanOnce(true);
+    }
+
+    // private functions
+    function toggleSettingSyllable() {
+      displayUtils.toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
     }
   }
    
