@@ -165,7 +165,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   async function start(e) {  
     e.preventDefault();                 // Prevent form from submitting the usual way
     validateAndSetInputData(e);         // validate and set defaults to the input data.
-    removeErrBlks();                    // Remove error messages
+    errorMgr.clearError();                    // Remove error messages
     if (appState.qMode === "stored") {
       if(!validateStoredMemory()) {     // To validate whether memory is empty or not
         errorMgr.runtimeError("mem0");
@@ -219,7 +219,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
     questionMgr.newQuestion();
     
-    removeErrBlks();                            // To remove error messages
+    errorMgr.clearError();                            // To remove error messages
   }
 
   // to validate input data and set defaults if necessary
@@ -674,24 +674,6 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     return this;
   }
 
-  // To remove error messages after "Start New" is clicked
-  function removeErrBlks() {
-    console.groupCollapsed("removeErrBlks()");
-
-    const errBlocks = [
-      document.querySelector("[id|='syllable-error']"), 
-      document.querySelector("[id|='runtime-error']")
-    ];
-
-    errBlocks.forEach((blk) => {  // check whether there is an error message on screen
-      if (blk){
-        console.info("Error block found");
-        blk.remove();
-      }
-    });
-    console.groupEnd();
-  }
-
   // To show 'loading...' while preloading all jsons
   function showLoadingMsg() {
     console.groupCollapsed("showLoadingMsg()");
@@ -769,7 +751,6 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     listMistakes,
     resumeProgram,
     resetAfterFlushingMistakes,
-    removeErrBlks,
     showLoadingMsg,
     checkPreLoadState,
   }

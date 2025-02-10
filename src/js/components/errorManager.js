@@ -103,9 +103,27 @@ export function errorManager(globals, utilsManager, answerMgr) {
     console.groupEnd();
     return this;
   }
+
+  function clearError() {
+    console.groupCollapsed("clearError()");
+
+    const errBlocks = [
+      document.querySelector("[id|='infiniteloop']"), 
+      document.querySelector("[id|='syllable-error']"), 
+    ];
+
+    errBlocks.forEach((blk) => {  // check whether there is an error message on screen
+      if (blk){
+        console.info("Error block found");
+        blk.remove();
+      }
+    });
+    console.groupEnd();
+  }
   
   return {  
     runtimeError,
     showError,
+    clearError,
   }
 }
