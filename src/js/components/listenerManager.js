@@ -77,7 +77,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     console.groupEnd();
   }
   
-  // to handle when syllable checkboxs are changed
+  // UNUSED FUNCTION to handle when syllable checkboxs are changed
   function syllableChanges(event) { // [le4]
     const allCheckbox = document.getElementById('syllableAll');
     const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
@@ -188,7 +188,10 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   
   // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
   function handlebringBackBtn(event) {
-    controlMgr.floatingBtnsHideAll().toggleFormDisplay().hideBackShowResume();
+    controlMgr
+      .floatingBtnsHideAll()
+      .toggleFormDisplay()
+      .hideBackShowResume();
     event.stopPropagation(); // Prevent event from bubbling up
     debouncedMoveForm(event); // Pass the event to the debounced function
     loaderMgr.rePrintMemory();
@@ -202,14 +205,18 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
 
     if (statusMgr.goodToResume) { // if the program is still in progress,
       console.info("statusMgr.goodToResume: FALSE");
-      controlMgr.toggleFormDisplay().hideResumeShowBack();
+      controlMgr
+        .toggleFormDisplay()
+        .hideResumeShowBack();
       moveForm();
       statusMgr.goodToResume = false;
       loaderMgr.resumeProgram();
     }
     else {
       console.info("Normal resume procedures.");
-      controlMgr.toggleFormDisplay().hideResumeShowBack();
+      controlMgr
+        .toggleFormDisplay()
+        .hideResumeShowBack();
       debouncedMoveForm(event);
     }
 
@@ -221,10 +228,16 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     console.groupCollapsed("handleListMistakeBtn()");
 
     controlMgr.floatingBtnsHideAll()
-                   .hideResumeShowBack()
-                   .toggleFormDisplay('shift-sections-to-top-center');
+              .hideResumeShowBack()
+              .toggleFormDisplay('shift-sections-to-top-center');
 
-    domUtils.clearScreen([selectors.sectionStatus, selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer], "fast");
+    domUtils.clearScreen([
+      selectors.sectionStatus, 
+      selectors.sectionQuestion, 
+      selectors.sectionMessage, 
+      selectors.sectionAnswer
+    ], "fast");
+
     loaderMgr.listMistakes();
 
     console.groupEnd();
@@ -249,8 +262,6 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
 
     // Set the flag to prevent further calls
     isMoving = true;
-
-    //domUtils.clearScreen([selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
 
     // Add an event listener for the transition end to reset the flag
     selectors.settingForm.addEventListener('transitionend', () => {
