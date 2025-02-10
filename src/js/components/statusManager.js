@@ -58,20 +58,22 @@ export function statusManager(globals, utilsManager) {
     domUtils.clearScreen(selectors.sectionStatus);
 
     setTimeout(() => {
-      if (currentStatus.totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
-        domUtils.buildNode({
-          parent: selectors.sectionStatus,
-          child: "div",
-          content: `Average Correct Rate: ${currentStatus.averageScore}%`,
-        });
+      if (currentStatus.totalQuestionsAnswered >= 1) printSectionStatus("questionCount"); // show cumulative average only it is not the first question shown
+      printSectionStatus("averagescore");
+    }, 350);
+
+    // private functions
+    function printSectionStatus(key) {
+      const CONFIG = {
+        questionCount : `${readQuestionCount()} / ${currentStatus.totalNoOfQuestions}`,
+        averagescore : `Average Correct Rate: ${currentStatus.averageScore}%`
       }
-  
       domUtils.buildNode({
         parent: selectors.sectionStatus,
         child: "div",
-        content: `${readQuestionCount()} / ${currentStatus.totalNoOfQuestions}`,
+        content: CONFIG[key],
       });
-    }, 350);
+    }
   }
 
   // to reset all variables concerning with calculating the cumulative average
