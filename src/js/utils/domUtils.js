@@ -1,6 +1,6 @@
 export const domUtils = {
   // to create node at the front end
-  buildNode({parent, child, content, childValues = [], className = "", idName = "", eventFunction = "" }) {
+  buildNode({parent, child, content, childValues = [], className = "", id = "", eventFunction = "" }) {
     //console.log("Entering buildNode()");
     // Ensure className is always treated as an array
     className = Array.isArray(className) ? className : className.split(' ').filter(c => c.trim() !== ''); // 1) split with ' '; 2) remove excess spaces; 3) store if only it is not empty.
@@ -29,7 +29,7 @@ export const domUtils = {
         });
       }
 
-      newChild.id = `${idName}-${contentIndex}`;
+      newChild.id = `${id}-${contentIndex}`;
 
       // Add an event listener (if any)
       if (eventFunction) {

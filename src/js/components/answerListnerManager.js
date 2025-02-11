@@ -6,14 +6,7 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
   function handleFlashcardFlip() {
     //console.groupCollapsed("answerManager() - handleFlashcardFlip()");
 
-    // Remove exiting buttons
-    const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
-    answerButtons.forEach(button => {
-      displayUtils.toggleClass('fade-out-light', button);
-      setTimeout(() => {
-        button.remove();
-      }, 350);
-    });
+    removeExistingButtons();
     
     displayUtils.toggleClass('fade-out-light', selectors.sectionMessage, selectors.sectionAnswer);
 
@@ -24,7 +17,7 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
         child: 'div',
         content: appState.correctAns,
         className: 'flash-correct-answer',
-        idName: 'correct-answer'
+        id: 'correct-answer'
       });
 
       // Show Message
@@ -33,7 +26,7 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
         child: 'div',
         content: 'Did you get it right?',
         className: 'answer-message',
-        idName: 'answer-message'
+        id: 'answer-message'
       });
 
       // Show `Yes` `No` buttons
@@ -42,7 +35,7 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
         child: 'div',
         content: ['Yes', 'No'],
         className: 'answer-btn',
-        idName: 'choice-btn',
+        id: 'choice-btn',
         eventFunction: handleFlashCardYesNoAnswer
       });
 
@@ -51,6 +44,44 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
     }, 350);
 
     console.groupEnd();
+
+    // utility functions private to the module
+    function removeExistingButtons() { // Remove exiting buttons
+      const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
+      answerButtons.forEach(button => {
+        displayUtils.toggleClass('fade-out-light', button);
+        setTimeout(() => {
+          button.remove();
+        }, 350);
+      });
+    }
+
+    function showContent() {
+      const CONFIG = {
+        correctAns: {
+          parent: selectors.sectionAnswer,
+          child: 'div',
+          content: appState.correctAns,
+          className: 'flash-correct-answer',
+          id: 'correct-answer'
+        },
+        info: {
+          parent: selectors.sectionAnswer,
+          child: 'div',
+          content: 'Did you get it right?',
+          className: 'answer-message',
+          id: 'answer-message'
+        },
+        yesNO: {
+          parent: selectors.sectionAnswer,
+          child: 'div',
+          content: ['Yes', 'No'],
+          className: 'answer-btn',
+          id: 'choice-btn',
+          eventFunction: handleFlashCardYesNoAnswer
+        },
+      }
+    }
   }
 
   // event handler for multiple choice mode

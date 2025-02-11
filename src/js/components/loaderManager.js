@@ -377,7 +377,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         child: 'div',
         content: content,
         className: 'memory-info',
-        idName: 'memory-info',
+        id: 'memory-info',
       });
     }
 
@@ -410,7 +410,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         child: 'div',
         content: icon,
         className: className,
-        idName: id,
+        id: id,
         eventFunction: handler,
       });
     }
@@ -589,7 +589,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       child: 'div',
       content: '',
       className: 'mistake-list-container', // New class for the container
-      idName: 'mistake-list-div',
+      id: 'mistake-list-div',
     });
   
     // Select the mistake-list-container created
@@ -604,7 +604,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       child: 'div',
       content: '', // Empty content, as we'll append children later
       className: 'mistakes-row-header', 
-      idName: 'mistakes-heading',
+      id: 'mistakes-heading',
     });
   
     // Select the newly created header div
@@ -629,7 +629,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         child: 'div',
         content: '',
         className: 'mistakes-row', // Styling class for row
-        idName: `mistakeList-row-${index}`, // Unique ID for each row
+        id: `mistakeList-row-${index}`, // Unique ID for each row
       });
 
       // Now, select the newly created mistake-row
@@ -689,7 +689,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         child: 'div',
         content: msg,
         className: 'poppins-regular',
-        idName: 'preload-info',
+        id: 'preload-info',
       });
 
       const loadingMsg = document.querySelector("#preload-info-0"); 

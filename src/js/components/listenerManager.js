@@ -169,9 +169,9 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   // to build options for the setting's answer language
   function buildAnswerOptions() {
     const ansMapping = { // [sn11]
-      ka: { parent: selectors.aChoice, child: 'option', content: 'Kanji', childValues: 'ka', idName: 'a-ka'},
-      hi: { parent: selectors.aChoice, child: 'option', content: 'Hiragana', childValues: 'hi', idName: 'a-hi'},
-      en: { parent: selectors.aChoice, child: 'option', content: 'English', childValues:'en', idName: 'a-en'},
+      ka: { parent: selectors.aChoice, child: 'option', content: 'Kanji', childValues: 'ka', id: 'a-ka'},
+      hi: { parent: selectors.aChoice, child: 'option', content: 'Hiragana', childValues: 'hi', id: 'a-hi'},
+      en: { parent: selectors.aChoice, child: 'option', content: 'English', childValues:'en', id: 'a-en'},
     };
   
     domUtils.clearNode({ parent: selectors.aChoice, children: Array.from(selectors.aChoiceOptionAll) }); 

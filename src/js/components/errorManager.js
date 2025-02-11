@@ -96,7 +96,7 @@ export function errorManager(globals, utilsManager, answerMgr) {
       child: 'div',
       content: config.errorMessage,
       className: "setting-error",
-      idName: config.id,
+      id: config.id,
     });
     console.warn(config.consoleMessage);
 

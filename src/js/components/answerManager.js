@@ -29,7 +29,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
           child: 'div', 
           content: '', 
           className: ['answer-btn', 'check-flash-mode-answer'], 
-          idName: 'answer-btn', 
+          id: 'answer-btn', 
           eventFunction: answerListenersMgr.handleFlashcardFlip
         });
         // Building "Flip" text
@@ -38,7 +38,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
           child: 'div', 
           content: 'Flip', 
           className: '', 
-          idName: 'answer-btn-text', 
+          id: 'answer-btn-text', 
           //eventFunction: handleFlashcardAnswer 
         });
         displayUtils.toggleClass('fade-out-light', selectors.sectionAnswer);
@@ -138,7 +138,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
         child: 'div', 
         content: 'Yes', 
         className: 'answer-btn', 
-        idName: 'continue-yes', 
+        id: 'continue-yes', 
         eventFunction: answerListenersMgr.handleContinueToStoredData,
       });
 
@@ -147,7 +147,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
         child: 'div', 
         content: 'No', 
         className: 'answer-btn', 
-        idName: 'continue-no', 
+        id: 'continue-no', 
         eventFunction: answerListenersMgr.handleContinueToStoredData,
       });
       console.groupEnd();
@@ -170,7 +170,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
       child: 'div', 
       content: 'Let\'s Restart!', 
       className: 'answer-btn', 
-      idName: 'answer-btn', 
+      id: 'answer-btn', 
       eventFunction: loaderInstance.restart,
     });
   }
