@@ -7,40 +7,13 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
     //console.groupCollapsed("answerManager() - handleFlashcardFlip()");
 
     removeExistingButtons();
-    
-    displayUtils.toggleClass('fade-out-light', selectors.sectionMessage, selectors.sectionAnswer);
+    fadeMessangeAndAnswer();
 
     setTimeout(() => {
-      // Show correct answer
-      domUtils.buildNode({
-        parent: selectors.sectionAnswer,
-        child: 'div',
-        content: appState.correctAns,
-        className: 'flash-correct-answer',
-        id: 'correct-answer'
-      });
-
-      // Show Message
-      domUtils.buildNode({
-        parent: selectors.sectionAnswer,
-        child: 'div',
-        content: 'Did you get it right?',
-        className: 'answer-message',
-        id: 'answer-message'
-      });
-
-      // Show `Yes` `No` buttons
-      domUtils.buildNode({
-        parent: selectors.sectionAnswer,
-        child: 'div',
-        content: ['Yes', 'No'],
-        className: 'answer-btn',
-        id: 'choice-btn',
-        eventFunction: handleFlashCardYesNoAnswer
-      });
-
-      displayUtils.toggleClass('fade-out-light', selectors.sectionMessage, selectors.sectionAnswer);
-
+      showContent("correctAns");    // Show correct answer
+      showContent("message");       // Show Message
+      showContent("yesNo");         // Show `Yes` `No` buttons
+      fadeMessangeAndAnswer();
     }, 350);
 
     console.groupEnd();
@@ -56,31 +29,44 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
       });
     }
 
-    function showContent() {
-      const CONFIG = {
-        correctAns: {
-          parent: selectors.sectionAnswer,
-          child: 'div',
-          content: appState.correctAns,
-          className: 'flash-correct-answer',
-          id: 'correct-answer'
-        },
-        info: {
-          parent: selectors.sectionAnswer,
-          child: 'div',
-          content: 'Did you get it right?',
-          className: 'answer-message',
-          id: 'answer-message'
-        },
-        yesNO: {
-          parent: selectors.sectionAnswer,
-          child: 'div',
-          content: ['Yes', 'No'],
-          className: 'answer-btn',
-          id: 'choice-btn',
-          eventFunction: handleFlashCardYesNoAnswer
-        },
+    function fadeMessangeAndAnswer() {
+      displayUtils.toggleClass('fade-out-light', selectors.sectionMessage, selectors.sectionAnswer);
+    }
+
+    const CONTENT_CONFIG = {
+      correctAns: {
+        content: appState.correctAns,
+        className: 'flash-correct-answer',
+        id: 'correct-answer'
+      },
+      message: {
+        content: 'Did you get it right?',
+        className: 'answer-message',
+        id: 'answer-message'
+      },
+      yesNo: {
+        content: ['Yes', 'No'],
+        className: 'answer-btn',
+        id: 'choice-btn',
+        eventFunction: handleFlashCardYesNoAnswer
+      },
+    }
+
+    function showContent(key) {
+      const config = CONTENT_CONFIG[key];
+      if (!config) {
+        console.warn(`handleFlashcardFlip() - showContent() - No config found for key: "${key}"`);
+        return;
       }
+
+      domUtils.buildNode({
+        parent: selectors.sectionAnswer,
+        child: 'div',
+        content: config.content,
+        className: config.className,
+        id: config.id,
+        eventFunction: config.eventFunction
+      });
     }
   }
 
