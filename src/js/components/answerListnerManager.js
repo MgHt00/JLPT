@@ -214,9 +214,12 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
   }
 
   function toggleFadeAndDim(key) {
-    const shouldFade = [ "fadeOnly", "fadeAndDim", "overlay"].includes(key); // Passing "fadeAndDim" ensures that both effects are toggled!
+    const shouldFade = [ "fadeOnly", "fadeAndDim", "overlay"].includes(key); 
     const shouldDim = key === "fadeAndDim";
     const shouldOverlay = key === "overlay";
+    // If key: "fadeOnly", "fadeAndDim", or "overlay" => toggle 'fade-hide'
+    // key: "fadeAndDim" => toggle 'so-dim'
+    // key: "overlay" => toggle 'overlay-message'
     
     if (shouldFade) {
       displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
