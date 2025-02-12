@@ -1,4 +1,4 @@
-export function answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr) {
+export function answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr, answerMgr) {
   const { appState, selectors } = globals;
   const { domUtils, displayUtils } = utilsManager;
 

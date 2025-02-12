@@ -1,4 +1,4 @@
-export function answerManager(globals, utilsManager, questionMgr, loaderInstance, answerListenersMgr) {
+export function answerManager(globals, utilsManager, questionMgr, loaderInstance, answerListenersMgr, vocabMgr) {
   const { appState, appData, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
 
@@ -8,8 +8,9 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
     en: appData.enVocab,
   };
 
-  function setInstances(answerListenerInstance) {
+  function setInstances(answerListenerInstance, vocabInstance) {
     answerListenersMgr = answerListenerInstance;
+    vocabMgr = vocabInstance;
   }
 
   // to prepare all the answers
