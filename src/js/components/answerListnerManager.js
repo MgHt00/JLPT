@@ -75,53 +75,98 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
     //console.groupCollapsed("answerManager() - handleMultipleChoiceAnswer()");
 
     const btnText = event.currentTarget.textContent;
-    if (appState.correctAns === btnText) {
-      domUtils.clearScreen(selectors.sectionMessage);
+    if (appState.correctAns === btnText) {  // If the answer is CORRECT
+      clearScreen("light");
 
       setTimeout(() => {
-        displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
-        displayUtils.toggleClass('so-dim', selectors.sectionStatus, selectors.sectionAnswer);
-        domUtils.buildNode({
-          parent: selectors.sectionMessage,
-          child: 'div',
-          content: 'Correct',
-          className: 'mcq-correct-answer'
-        });
+        toggleFadeAndDim("fadeAndDim");
+        showContent("correct");
       }, 350);
 
       setTimeout(() => {
-        displayUtils.toggleClass('fade-hide', selectors.sectionMessage); // Hide fully
-        displayUtils.toggleClass('so-dim', selectors.sectionStatus, selectors.sectionAnswer);
-        domUtils.clearScreen([selectors.sectionStatus, selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
+        toggleFadeAndDim("fadeAndDim");     // Hide fully
+        clearScreen("deep");
         checkModeAndRemoveVocab();
         questionMgr.finalizeQuestionAndProceed(true);
-      }, 1200); // Add delay equal to the fade-out transition duration (0.5s)
+      }, 1200);                             // Add delay equal to the fade-out transition duration
     } 
     
-    else {
+    else {                                  // If the answer is INCORRECT
         questionMgr.finalizeQuestionAndProceed(false);
         vocabMgr.storeToMistakeBank(questionMgr); // add wrongly selected word to localstorage
         domUtils.clearScreen(selectors.sectionMessage);
 
         setTimeout(() => {
-          domUtils.buildNode({ 
-            parent: selectors.sectionMessage, 
-            child: 'div', 
-            content: 'Keep Trying', 
-            className: 'wrong-answer' 
-          });
+          showContent("incorrect");         // Show overlay "wrong" message
+          toggleFadeAndDim("fadeOnly");
 
-          // Show overlay "wrong" message
-          displayUtils.toggleClass('fade-hide', selectors.sectionMessage); 
-
-          // Fully hide after fade-out completes (0.5s from .fade-out transition)
-          setTimeout(() => {
-              displayUtils.toggleClass('fade-hide', selectors.sectionMessage); // Hide fully
-          }, 1000); // Add delay equal to the fade-out transition duration (0.5s)
+          setTimeout(() => {                 // Fully hide after fade-out completes (1s from .fade-out transition)
+            toggleFadeAndDim("fadeOnly");    // Hide fully
+          }, 1000);                          // Add delay equal to the fade-out transition duration
         }, 350);
            
     }
     console.groupEnd();
+
+    // utility functions private to the module
+    function toggleFadeAndDim(key) {
+      const shouldFade = [ "fadeOnly", "fadeAndDim"].includes(key); // Passing "fadeAndDim" ensures that both effects are toggled!
+      const shouldDim = key === "fadeAndDim";
+      
+      if (shouldFade) {
+        displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
+      }
+
+      if (shouldDim) {
+        displayUtils.toggleClass('so-dim', selectors.sectionStatus, selectors.sectionAnswer);
+      }
+
+      if (!shouldFade && !shouldDim) {
+        console.warn(`handleMultipleChoiceAnswer() - toggleFadeAndDim() - invalid key: "${key}"`);
+      }
+    }
+
+    function getContentConfig() {
+      return {
+        correct: {
+          content: 'Correct',
+          className: 'mcq-correct-answer'
+        },
+        incorrect: {
+          content: 'Keep Trying',
+          className: 'wrong-answer'
+        },
+      }
+    }
+
+    function showContent(key) {
+      const config = getContentConfig()[key];
+      domUtils.buildNode({ 
+        parent: selectors.sectionMessage, 
+        child: 'div', 
+        content: config.content, 
+        className: config.className 
+      });
+    }
+
+    function getClearConfig() {             // To avoide JS temporal dead zone (TDZ)
+      return {
+        light: { 
+          target: selectors.sectionMessage,
+        },
+        deep: {
+          target: [selectors.sectionStatus, 
+                  selectors.sectionQuestion, 
+                  selectors.sectionMessage, 
+                  selectors.sectionAnswer] 
+        },
+      };
+    }
+
+    function clearScreen(mode) {
+      const config = getClearConfig()[mode]; // [sn26] 
+      domUtils.clearScreen(config.target);
+    }
   }
 
   // event handler for flashcard mode
