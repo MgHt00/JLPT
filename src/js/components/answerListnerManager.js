@@ -178,19 +178,19 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
   function handleContinueToStoredData(event) {
     console.groupCollapsed("answerManager() - handleContinueToStoredData()");
 
-    /*displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
-    displayUtils.toggleClass('overlay-message', selectors.sectionMessage);*/
     toggleFadeAndDim("overlay");
 
     const btnID = event.currentTarget.id;
 
     if (btnID === "continue-yes-0") {
-      console.log("Clicked Yes");
+      console.info("Clicked Yes");
       questionMgr.setQuestionMode("stored");
       answerMgr.setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       loaderMgr.continuetoStoredData();
-    } else if (btnID === "continue-no-0") {
-      console.log("Clicked No");
+    } 
+    
+    else if (btnID === "continue-no-0") {
+      console.info("Clicked No");
       answerMgr.setRanOnce(false);
       loaderMgr.restart();
     }
