@@ -568,8 +568,9 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   function restart() {
     domUtils.clearScreen(selectors.sectionStatus);
     
-    displayUtils.toggleClass('overlay-message', selectors.sectionMessage)
-                .toggleClass('fade-hide', selectors.sectionMessage);
+    /*displayUtils
+      .toggleClass('overlay-message', selectors.sectionMessage)
+      .toggleClass('fade-hide', selectors.sectionMessage);*/
 
     controlMgr.toggleFormDisplay();
     listenerMgr.debouncedMoveForm();
