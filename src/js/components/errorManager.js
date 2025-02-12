@@ -20,7 +20,7 @@ export function errorManager(globals, utilsManager, answerMgr) {
       "infiniteloop": () => {
         const {selectedArray, noOfChoice} = fetchInputData();
 
-        if (!appState.flashYesNo && selectedArray.length <= noOfChoice) {         // If flashYesNo is true → The entire condition is false, // ... and selectedArray.length <= noOfChoice is not evaluated.                                                                                        
+        if (!appState.flashYesNo && selectedArray.length < noOfChoice) {             // If flashYesNo is true → The entire condition is false, // ... and selectedArray.length <= noOfChoice is not evaluated.                                                                                        
           if (!domUtils.checkNode({ id: codeMapping[errcode] })) showError("iLoop"); // if error is not already shown  
           console.groupEnd();
           return false;                        // Return false when there is an error
