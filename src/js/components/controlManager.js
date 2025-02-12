@@ -45,28 +45,38 @@ export function controlManger(globals, utilsManager) {
   // To toggle buttons and sections when move / resume btn is clicked
   function toggleFormDisplay(specialCSSClass) {
     console.groupCollapsed("toggleFormDisplay()");
-    displayUtils.toggleClass('moved', selectors.settingForm);
-    displayUtils.toggleClass('disabled', selectors.settingForm);
-    displayUtils.toggleClass('dim', ...selectors.allSetting);
+
+    toggleClasses();
 
     const dynamicDOMClassList = selectors.dynamicDOM.classList;
+
+    const shiftTopCenter = 'shift-sections-to-top-center';
+    const shiftCenter = 'shift-sections-to-center';
+
     let dynamicDOMClassToToggle;
-    if ((specialCSSClass === 'shift-sections-to-top-center') || dynamicDOMClassList.contains('shift-sections-to-top-center')) {
-      dynamicDOMClassToToggle = 'shift-sections-to-top-center';
+
+    if ((specialCSSClass === shiftTopCenter) || dynamicDOMClassList.contains(shiftTopCenter)) {
+      dynamicDOMClassToToggle = shiftTopCenter;
     } else {
-      dynamicDOMClassToToggle = 'shift-sections-to-center';
+      dynamicDOMClassToToggle = shiftCenter;
     }
 
     setTimeout(() => {
       displayUtils.toggleClass(dynamicDOMClassToToggle, selectors.dynamicDOM);
     }, 400);
 
-    displayUtils.toggleClass('hide',
-      selectors.sectionStatus,
-    );
+    displayUtils.toggleClass('hide', selectors.sectionStatus);
 
     console.groupEnd();
     return this;
+
+    // functions private to the module
+    function toggleClasses() {
+      displayUtils
+        .toggleClass('moved', selectors.settingForm)
+        .toggleClass('disabled', selectors.settingForm)
+        .toggleClass('dim', ...selectors.allSetting);
+    }
   }
 
   // To reset Question mode when something changes on the setting form
