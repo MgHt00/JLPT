@@ -109,23 +109,6 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
     console.groupEnd();
 
     // utility functions private to the module
-    function toggleFadeAndDim(key) {
-      const shouldFade = [ "fadeOnly", "fadeAndDim"].includes(key); // Passing "fadeAndDim" ensures that both effects are toggled!
-      const shouldDim = key === "fadeAndDim";
-      
-      if (shouldFade) {
-        displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
-      }
-
-      if (shouldDim) {
-        displayUtils.toggleClass('so-dim', selectors.sectionStatus, selectors.sectionAnswer);
-      }
-
-      if (!shouldFade && !shouldDim) {
-        console.warn(`handleMultipleChoiceAnswer() - toggleFadeAndDim() - invalid key: "${key}"`);
-      }
-    }
-
     function getContentConfig() {
       return {
         correct: {
@@ -195,8 +178,9 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
   function handleContinueToStoredData(event) {
     console.groupCollapsed("answerManager() - handleContinueToStoredData()");
 
-    displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
-    displayUtils.toggleClass('overlay-message', selectors.sectionMessage);
+    /*displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
+    displayUtils.toggleClass('overlay-message', selectors.sectionMessage);*/
+    toggleFadeAndDim("overlay");
 
     const btnID = event.currentTarget.id;
 
@@ -204,7 +188,6 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
       console.log("Clicked Yes");
       questionMgr.setQuestionMode("stored");
       answerMgr.setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
-      //console.info("noMoreQuestion.ranOnce CHANGED :", answerMgr.noMoreQuestion.ranOnce);
       loaderMgr.continuetoStoredData();
     } else if (btnID === "continue-no-0") {
       console.log("Clicked No");
@@ -228,6 +211,28 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
     }
 
     console.groupEnd();
+  }
+
+  function toggleFadeAndDim(key) {
+    const shouldFade = [ "fadeOnly", "fadeAndDim", "overlay"].includes(key); // Passing "fadeAndDim" ensures that both effects are toggled!
+    const shouldDim = key === "fadeAndDim";
+    const shouldOverlay = key === "overlay";
+    
+    if (shouldFade) {
+      displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
+    }
+
+    if (shouldDim) {
+      displayUtils.toggleClass('so-dim', selectors.sectionStatus, selectors.sectionAnswer);
+    }
+
+    if (shouldOverlay) {
+      displayUtils.toggleClass('overlay-message', selectors.sectionMessage);
+    }
+
+    if (!shouldFade && !shouldDim && !shouldOverlay) {
+      console.warn(`handleMultipleChoiceAnswer() - toggleFadeAndDim() - invalid key: "${key}"`);
+    }
   }
 
   return {
