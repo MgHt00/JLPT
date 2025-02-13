@@ -182,14 +182,14 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
 
     const btnID = event.currentTarget.id;
 
-    if (btnID === "continue-yes-0") {
+    if (btnID === "continueYes-0") {
       console.info("Clicked Yes");
       questionMgr.setQuestionMode("stored");
       answerMgr.setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       loaderMgr.continuetoStoredData();
     } 
     
-    else if (btnID === "continue-no-0") {
+    else if (btnID === "continueNo-0") {
       console.info("Clicked No");
       answerMgr.setRanOnce(false);
       loaderMgr.restart();

@@ -62,14 +62,13 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
         ? selectors.sectionAnswer 
         : document.querySelector("#answer-btn-0");
         
-      console.info("createAnswerElement()", config);
       domUtils.buildNode({
         parent: config.parent,
         child: 'div',
         content: config.content,
         className: config.className,
-        id: config.id ?? key,                 // ?? first-defined operator 
-        eventFunction: config.eventFunction ?? (() => { }),
+        id: config.id,                
+        eventFunction: config.eventFunction,
       });
     }
   }
@@ -140,34 +139,38 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
   // to ask user whether they want to practice the vocabs from the local storage
   function toLocalStorageYesNo() {
     console.groupCollapsed("toLocalStorageYesNo()");
-    displayUtils.removeClass('fade-hide', selectors.sectionMessage);
-    displayUtils.removeClass('overlay-message', selectors.sectionMessage);
 
-    domUtils.buildNode({ 
-        parent: selectors.sectionMessage, 
-        child: 'div', 
-        content: `There are ${vocabMgr.readStoredLength} words in mistake bank.  Would you like to practice those?`, 
-        className: 'vocabs-complete', 
-      });
+    displayUtils.removeClass('fade-hide', selectors.sectionMessage)
+                .removeClass('overlay-message', selectors.sectionMessage);
 
-      domUtils.buildNode({ 
-        parent: selectors.sectionAnswer, 
-        child: 'div', 
-        content: 'Yes', 
-        className: 'answer-btn', 
-        id: 'continue-yes', 
-        eventFunction: answerListenersMgr.handleContinueToStoredData,
-      });
+    constructElement('vocabsComplete');
+    constructElement('continueYes');
+    constructElement('continueNo');
+    
+    console.groupEnd();
 
-      domUtils.buildNode({ 
-        parent: selectors.sectionAnswer, 
-        child: 'div', 
-        content: 'No', 
-        className: 'answer-btn', 
-        id: 'continue-no', 
-        eventFunction: answerListenersMgr.handleContinueToStoredData,
+    // private functions
+    function getContent() {
+      return {
+        vocabsComplete: { content: `There are ${vocabMgr.readStoredLength} words in mistake bank.  Would you like to practice those?` },
+        continueYes: { content: 'Yes' },
+        continueNo: { content: 'No' },
+      }
+    }
+
+    function constructElement(key) {
+      const contentConfig = getContent()[key];
+      const isVC = key === "vocabsComplete";
+
+      domUtils.buildNode({
+        parent: isVC ? selectors.sectionMessage : selectors.sectionAnswer,
+        child: 'div',
+        content: contentConfig.content,
+        className: isVC ? "vocabs-complete" : "answer-btn",
+        id: key,
+        eventFunction: isVC ? null : answerListenersMgr.handleContinueToStoredData,
       });
-      console.groupEnd();
+    }
   }
 
   // when all of the user selected vocabs are shown
