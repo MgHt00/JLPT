@@ -146,10 +146,10 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
     constructElement('vocabsComplete');
     constructElement('continueYes');
     constructElement('continueNo');
-    
+
     console.groupEnd();
 
-    // private functions
+    // private helper functions
     function getContent() {
       return {
         vocabsComplete: { content: `There are ${vocabMgr.readStoredLength} words in mistake bank.  Would you like to practice those?` },
@@ -175,24 +175,40 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
 
   // when all of the user selected vocabs are shown
   function completeAndRestart() {
-    displayUtils.removeClass('fade-hide', selectors.sectionMessage);
-    displayUtils.removeClass('overlay-message', selectors.sectionMessage);
+    displayUtils.removeClass('fade-hide', selectors.sectionMessage)
+                .removeClass('overlay-message', selectors.sectionMessage);
 
-    domUtils.buildNode({ 
-      parent: selectors.sectionMessage, 
-      child: 'div', 
-      content: 'You have completed all the vocabs.  Well done!', 
-      className: 'vocabs-complete', 
-    });
+    createElement("info");
+    createElement("btn");
 
-    domUtils.buildNode({ 
-      parent: selectors.sectionAnswer, 
-      child: 'div', 
-      content: 'Let\'s Restart!', 
-      className: 'answer-btn', 
-      id: 'answer-btn', 
-      eventFunction: loaderInstance.restart,
-    });
+    // private helper functions 
+    function getConfig() {
+      return {
+        info: {
+          parent: selectors.sectionMessage,
+          content: 'You have completed all the vocabs.  Well done!',
+          className: 'vocabs-complete',
+        },
+        btn: {
+          parent: selectors.sectionAnswer,
+          content: 'Let\'s Restart!',
+          className: 'answer-btn',
+          eventFunction: loaderInstance.restart,
+        },
+      }
+    }
+
+    function createElement(key) {
+      const config = getConfig()[key];
+      domUtils.buildNode({ 
+        parent: config.parent, 
+        child: 'div', 
+        content: config.content, 
+        className: config.className, 
+        id: config.id ?? 'answer-btn', 
+        eventFunction: config.eventFunction ?? loaderInstance.restart,
+      });
+    }
   }
 
   // to create an array filled with answers including the correct one.
