@@ -20,42 +20,58 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
     let ansArray = createAnswerArray();
     //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
 
-    if (appState.flashYesNo) { // if it is a flash card game
+    if (appState.flashYesNo) {            // if it is a flash card game
       helpers.assignLanguage(selectors.sectionAnswer, "en"); // if aChoice was set to Kanji or Hirigana, reset to "en"
       displayUtils.toggleClass('fade-out-light', selectors.sectionAnswer);
       setTimeout(() => {
-        // Building "Flip" button container
-        domUtils.buildNode({ 
-          parent: selectors.sectionAnswer, 
-          child: 'div', 
-          content: '', 
-          className: ['answer-btn', 'check-flash-mode-answer'], 
-          id: 'answer-btn', 
-          eventFunction: answerListenersMgr.handleFlashcardFlip
-        });
-        // Building "Flip" text
-        domUtils.buildNode({ 
-          parent: document.querySelector("#answer-btn-0"), 
-          child: 'div', 
-          content: 'Flip', 
-          className: '', 
-          id: 'answer-btn-text', 
-          //eventFunction: handleFlashcardAnswer 
-        });
+        createAnswerElement("flipBtn");   // Building "Flip" button container
+        createAnswerElement("flipText");  // Building "Flip" text
         displayUtils.toggleClass('fade-out-light', selectors.sectionAnswer);
       }, 350);
       
-    } else { // if it is a multiple choice game
-      domUtils.buildNode({ 
-        parent: selectors.sectionAnswer, 
-        child: 'div', 
-        content: ansArray, 
-        className: 'answer-btn', 
-        eventFunction: answerListenersMgr.handleMultipleChoiceAnswer 
-      });
+    } else {                              // if it is a multiple choice game
+      createAnswerElement("ansArray");
     }
 
     console.groupEnd();
+
+    // functions private to the modules
+    function getConfig() {
+      return {
+        flipBtn: {
+          content: '',
+          className: ['answer-btn', 'check-flash-mode-answer'], 
+          id: 'answer-btn', 
+          eventFunction: answerListenersMgr.handleFlashcardFlip,
+        },
+        flipText: {
+          content: 'Flip', 
+          className: '', 
+          id: 'answer-btn-text', 
+        },
+        ansArray: {
+          content: ansArray, 
+          className: 'answer-btn', 
+          eventFunction: answerListenersMgr.handleMultipleChoiceAnswer 
+        },
+      }
+    }
+    function createAnswerElement(key) {
+      const config = { ...getConfig()[key] };   // create a new object instead of mutating the original. [sn27]
+      config.parent = ["flipBtn", "ansArray"].includes(key) 
+        ? selectors.sectionAnswer 
+        : document.querySelector("#answer-btn-0");
+        
+      console.info("createAnswerElement()", config);
+      domUtils.buildNode({
+        parent: config.parent,
+        child: 'div',
+        content: config.content,
+        className: config.className,
+        id: config.id ?? key,                 // ?? first-defined operator 
+        eventFunction: config.eventFunction ?? (() => { }),
+      });
+    }
   }
 
   // when there is no more question to shown.
