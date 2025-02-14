@@ -122,24 +122,46 @@ export function statusManager(globals, utilsManager) {
   function stillInProgress() {
     console.groupCollapsed("stillInProgress()");
 
-    const savedCurrentStatus = JSON.parse(localStorage.getItem("currentStatus")); // Parse JSON
-    console.info("savedCurrentStatus:",savedCurrentStatus);
+    // Get and safely parse localStorage item
+    let savedCurrentStatus = localStorage.getItem("currentStatus");
 
-    if (!savedCurrentStatus) {             // Handle first-time run (no saved data)
+    // Handle cases where localStorage item is "null", empty, or invalid
+    if (!savedCurrentStatus || savedCurrentStatus === "null") { 
       console.info("FALSE - No saved progress found.");
       console.groupEnd();
       return false;
     }
 
-    const savedTotalQuestionsAnswered = savedCurrentStatus.totalQuestionsAnswered;
-    const savedTotalNoOfQuestions = savedCurrentStatus.totalNoOfQuestions;
+    try {
+      savedCurrentStatus = JSON.parse(savedCurrentStatus); // Now safe to parse
+    } catch (error) {
+      console.warn("Invalid JSON in localStorage:", error);
+      console.groupEnd();
+      return false;
+    }
 
-    if (savedTotalQuestionsAnswered < savedTotalNoOfQuestions) {
-      console.info("TRUE - program still in progress.  ", savedTotalQuestionsAnswered, "/", savedTotalNoOfQuestions);
+    console.info("savedCurrentStatus:", savedCurrentStatus);
+
+    // Ensure the parsed object contains the required properties
+    if (
+      typeof savedCurrentStatus !== "object" ||
+      savedCurrentStatus === null ||
+      !("totalQuestionsAnswered" in savedCurrentStatus) ||
+      !("totalNoOfQuestions" in savedCurrentStatus)
+    ) {
+      console.warn("Invalid saved progress format:", savedCurrentStatus);
+      console.groupEnd();
+      return false;
+    }
+
+    const { totalQuestionsAnswered, totalNoOfQuestions } = savedCurrentStatus;
+
+    if (totalQuestionsAnswered < totalNoOfQuestions) {
+      console.info("TRUE - program still in progress.", totalQuestionsAnswered, "/", totalNoOfQuestions);
       console.groupEnd();
       return true;
     } else {
-      console.info("FALSE - no remaining questions.", savedTotalQuestionsAnswered, "/", savedTotalNoOfQuestions);
+      console.info("FALSE - no remaining questions.", totalQuestionsAnswered, "/", totalNoOfQuestions);
       console.groupEnd();
       return false;
     }
@@ -173,9 +195,6 @@ export function statusManager(globals, utilsManager) {
     increaseQuestionCount,
     printQuestionStatus,
     resetCumulativeVariables,
-    //calCumulativeAverage,
-    //increaseTotalCorrectAnswers,
-    //increaseTotalQuestionsAnswered,
     updateCumulativeAverage,
     stillInProgress,
     get goodToResume() { return getGoodToResume(); },
