@@ -217,9 +217,9 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
 
     let selectedArray = vocabMapping[selectors.readaChoiceInput];
     console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
+    
     let tempAnsArray = [];
-
-    tempAnsArray[0] = appState.correctAns; // add correct answer in index. 0
+    tempAnsArray[0] = appState.correctAns;         // add correct answer at index no. 0
 
     if ((appState.qMode !== "fresh") && !selectedArray) {
       console.error(`No vocab array found for choice: ${selectors.aChoice.value}`);
@@ -230,19 +230,19 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
       console.error(`The vocab array is empty for choice: ${selectors.aChoice.value}`);
       return;
     }
-    //let choiceInput = selectors.readNoOfAns;
+
     let choiceInput = appState.noOfAnswers;
     //console.info("choiceInput = appState.noOfAnswers: ", choiceInput);
+
     let noOfChoice = Math.min(choiceInput, selectedArray.length); // [le5]
     //console.info("noOfChoice: ", noOfChoice);
 
     /* Infinite loop check is moved inside loader() with errorInstance.showError() */
-
     for (let i = 1; i < noOfChoice; i++) {
       let randomIndex;
       let randomAnswer;
 
-      do { // [le3] Loop to ensure no duplicates are added 
+      do {                                           // [le3] Loop to ensure no duplicates are added 
         randomIndex = helpers.randomNo(0, selectedArray.length - 1);
         randomAnswer = selectedArray[randomIndex];
       } while (tempAnsArray.includes(randomAnswer) || randomAnswer === ""); // Check for duplicates and empty
@@ -250,7 +250,8 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
       tempAnsArray[i] = randomAnswer;
     }
 
-    tempAnsArray = helpers.shuffleArray(tempAnsArray);
+    tempAnsArray = helpers.shuffleArray(tempAnsArray);// shuffle `tempAnsArray` and assign back to `tempAnsArray`
+
     console.groupEnd();
     return tempAnsArray;
   }
