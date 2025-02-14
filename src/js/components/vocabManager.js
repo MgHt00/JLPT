@@ -8,11 +8,6 @@ export function vocabManager(globals, utilsManager, loaderMgr, questionMgr) {
 
     if (appData.vocabArray.length >= 1) {
       appData.vocabArray.splice(i, 1);
-      //console.log(`currentQIndex ${i} is removed. vocabArray.length: ${appData.vocabArray.length}`);
-      //console.log("Inside removeSpecifiedQuestion(): After deletion; ", appData.vocabArray);
-    } else {
-      //console.log(`vocabArray.length: ${appData.vocabArray.length}; reach the end.`);
-      // !!!​CHECK!!  Is it really ok without anything in this else block?????????
     }
 
     console.groupEnd();
@@ -63,6 +58,7 @@ export function vocabManager(globals, utilsManager, loaderMgr, questionMgr) {
 
     let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
     console.info("storedObjects ", storedObjects);
+    
     let storedLength = storedObjects.length;
     console.info("storedLength:", storedLength);
     
