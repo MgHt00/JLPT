@@ -16,14 +16,14 @@ const {
 } = componentManager;
 const { displayUtils } = utilsManager;
 
-const listenerMgr = listenerManager(globals, utilsManager, null, null, null, null, null);
+const listenerMgr = listenerManager(globals, utilsManager, null, null, null, null, null, null);
 const loaderMgr = loaderManager(globals, utilsManager, listenerMgr, null, null, null, null, null);
 const controlMgr = controlManger(globals, utilsManager);
 
 const questionMgr = questionManager(globals, utilsManager, null, null, null);
-const answerMgr = answerManager(globals, utilsManager, questionMgr, loaderMgr, null);
+const answerMgr = answerManager(globals, utilsManager, questionMgr, loaderMgr, null, null);
 const vocabMgr =  vocabManager(globals, utilsManager, loaderMgr, questionMgr);
-const answerListenersMgr = answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr);
+const answerListenersMgr = answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr, answerMgr);
 const errMgr = errorManager(globals, utilsManager, answerMgr);
 const statusMgr = statusManager(globals, utilsManager);
 
@@ -37,11 +37,11 @@ const statusMgr = statusManager(globals, utilsManager);
  * - `loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errMgr, statusMgr)`: Sets up the Loader Manager with control, question, vocabulary, error, and status managers for managing application flow and state.
  * - `listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr)`: Establishes connections for the Listener Manager, enabling it to coordinate interactions between the loader, control, question, and answer managers.
  */
-answerMgr.setInstances(answerListenersMgr);
+answerMgr.setInstances(answerListenersMgr, vocabMgr);
 questionMgr.setInstances(answerMgr, statusMgr, vocabMgr);
 
 loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errMgr, statusMgr);
-listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, statusMgr);
+listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, errMgr, statusMgr);
 
 
 (async function initialize() {

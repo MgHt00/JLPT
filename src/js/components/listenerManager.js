@@ -1,12 +1,13 @@
-export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, questionMgr, answerMgr, statusMgr) {
-  const { appState, selectors } = globals;
+export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, questionMgr, answerMgr, errorMgr, statusMgr) {
+  const { appState, selectors, currentStatus } = globals;
   const { domUtils, displayUtils } = utilsManager;
 
-  function setInstances(loaderInstance, controlInstance, questionInstance, answerInstance, statusInstance){
+  function setInstances(loaderInstance, controlInstance, questionInstance, answerInstance, errorInstance, statusInstance){
     loaderMgr = loaderInstance;
     controlMgr = controlInstance;
     questionMgr = questionInstance;
     answerMgr = answerInstance;
+    errorMgr = errorInstance;
     statusMgr = statusInstance;
   }
 
@@ -19,7 +20,6 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     selectors.switchRandomYesNo.addEventListener('change', randomToggleChanges);
     selectors.switchFlashYesNo.addEventListener('change', flashModeToggleChanges); // to handle toggle switch
     selectors.settingFlashYesNo.addEventListener('change', flashModeChanges); // to show answer options and check runtime error 
-    //selectors.fieldsetSyllable.addEventListener('change', syllableChanges);
     selectors.fieldsetSyllable.addEventListener('change', syllableChangesImprovedVer);
     selectors.qChoice.addEventListener('change', buildAnswerOptions);
     selectors.settingSource.addEventListener('change', questionModeChanges);
@@ -77,18 +77,13 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     console.groupEnd();
   }
   
-  // to handle when syllable checkboxs are changed
+  // UNUSED FUNCTION to handle when syllable checkboxs are changed
   function syllableChanges(event) { // [le4]
     const allCheckbox = document.getElementById('syllableAll');
     const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
       .filter(checkbox => checkbox !== allCheckbox);
 
-    if (domUtils.checkNode({ idName: 'syllable-error' })) {
-      domUtils.clearNode({
-        parent: selectors.fieldsetSyllable,
-        children: Array.from(document.querySelectorAll('div[id^="syllable-error"]'))
-      });
-    }
+    if (domUtils.checkNode({ id: 'syllable-error' })) removeSyllableError();
 
     if (event.target === allCheckbox) {
       if (allCheckbox.checked) {
@@ -116,87 +111,67 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   // to handle when syllable checkboxs are changed
   function syllableChangesImprovedVer(event) { // [le4]
     console.groupCollapsed("syllableChangesImprovedVer()");
-    const allCheckbox = document.getElementById('syllableAll');
-    const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
-      .filter(checkbox => checkbox !== allCheckbox);
 
-    if (domUtils.checkNode({ idName: 'syllable-error' })) {
+    const { allCheckbox, otherCheckboxes } = getCheckboxes();
+    if (domUtils.checkNode({ id: 'syllable-error' })) removeSyllableError();
+
+    if (event.target === allCheckbox) {       // Check whether event is `allCheckbox`
+      otherCheckboxes.forEach(checkbox => checkbox.checked = allCheckbox.checked);
+      // [le9] If allCheckbox.checked === true, all individual checkboxes are checked.
+      //       If allCheckbox.checked === false, all individual checkboxes are unchecked.
+      console.groupEnd();
+      return;
+    } 
+
+    allCheckbox.checked = otherCheckboxes.every(checkbox => checkbox.checked);
+    console.groupEnd();
+
+    // utility functions private to the module
+    function getCheckboxes() {
+      const allCheckbox = document.getElementById('syllableAll');
+      const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
+        .filter(checkbox => checkbox !== allCheckbox);
+
+      return { allCheckbox, otherCheckboxes };
+    }
+
+    function removeSyllableError() {
       domUtils.clearNode({
         parent: selectors.fieldsetSyllable,
         children: Array.from(document.querySelectorAll('div[id^="syllable-error"]'))
       });
     }
-
-    if (event.target === allCheckbox) { // Check whether event is `allCheckbox`
-      if (allCheckbox.checked) { // If "all" is checked
-        otherCheckboxes.forEach(checkbox => {
-          checkbox.checked = true; // Make every other checkbox checked.
-        });
-      } else { // If "all" is unchecked
-        otherCheckboxes.forEach(checkbox => {
-          checkbox.checked = false;
-        });
-      }
-    } 
-    
-    else { // If the event is NOT `allCheckbox`
-      if (event.target.checked) { //[sn8] // if individual syllable is checked
-        const allAreChecked = otherCheckboxes.every(checkbox => checkbox.checked); // Check if **all** other checkboxes are checked
-
-        if (allAreChecked) { 
-          allCheckbox.checked = true; // If all individual syllables are checked, check "All"
-        } else {
-          allCheckbox.checked = false; // If not all are checked, uncheck "All"
-        }
-      } 
-      else { // If individual syllable is unchecked
-        allCheckbox.checked = false; 
-      }
-    }
-    console.groupEnd();
   }
 
   // to handle when program question mode (fresh / stored) is changed
   function questionModeChanges(e) {
-    loaderMgr.removeErrBlks();
-    let selectedMode = selectors.readQuestionMode;
-    if (selectedMode === "fresh") {
-      displayUtils.toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
+    toggleSettingSyllable();
+    errorMgr.clearError();
 
-      if (document.querySelector("[id|='memory-empty-error']")) {
-        // if there is an error under Memory Status Fieldset -> clean it
-        const child = document.querySelector("[id|='memory-empty-error']");
-        domUtils.clearNode({
-          parent: selectors.settingRepractice,
-          children: [child],
-        });
-      }
+    let selectedMode = selectors.readQuestionMode;
+
+    if (selectedMode === "fresh") {
       questionMgr.setQuestionMode("fresh");
       answerMgr.setRanOnce(false);
     } 
     
     else if (selectedMode === "stored") {
-      displayUtils.toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
-      
-      if (document.querySelector("[id|='syllable-error']")) {
-        // if there is an error under Syllable Fieldset -> clean it
-        const child = document.querySelector("[id|='syllable-error']");
-        domUtils.clearNode({
-          parent: selectors.settingSyllable,
-          children: [child],
-        });
-      }
       questionMgr.setQuestionMode("stored");
       answerMgr.setRanOnce(true);
+    }
+
+    // private functions
+    function toggleSettingSyllable() {
+      displayUtils.toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
     }
   }
    
   // to build options for the setting's answer language
   function buildAnswerOptions() {
     const ansMapping = { // [sn11]
-      ka: { parent: selectors.aChoice, child: 'option', content: 'Kanji', childValues: 'ka', idName: 'a-ka'},
-      hi: { parent: selectors.aChoice, child: 'option', content: 'Hiragana', childValues: 'hi', idName: 'a-hi'},
-      en: { parent: selectors.aChoice, child: 'option', content: 'English', childValues:'en', idName: 'a-en'},
+      ka: { parent: selectors.aChoice, child: 'option', content: 'Kanji', childValues: 'ka', id: 'a-ka'},
+      hi: { parent: selectors.aChoice, child: 'option', content: 'Hiragana', childValues: 'hi', id: 'a-hi'},
+      en: { parent: selectors.aChoice, child: 'option', content: 'English', childValues:'en', id: 'a-en'},
     };
   
     domUtils.clearNode({ parent: selectors.aChoice, children: Array.from(selectors.aChoiceOptionAll) }); 
@@ -213,7 +188,17 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   
   // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
   function handlebringBackBtn(event) {
-    controlMgr.floatingBtnsHideAll().toggleFormDisplay().hideBackShowResume();
+    controlMgr
+      .floatingBtnsHideAll()
+      .toggleFormDisplay()
+      .hideBackShowResume();
+
+    if(currentStatus.mistakeListActive) {
+      controlMgr.toggleShadesOnTop();
+      toggleMistakeListActive();
+      console.info("Shades on the top - removed");
+    }
+    
     event.stopPropagation(); // Prevent event from bubbling up
     debouncedMoveForm(event); // Pass the event to the debounced function
     loaderMgr.rePrintMemory();
@@ -227,14 +212,18 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
 
     if (statusMgr.goodToResume) { // if the program is still in progress,
       console.info("statusMgr.goodToResume: FALSE");
-      controlMgr.toggleFormDisplay().hideResumeShowBack();
+      controlMgr
+        .toggleFormDisplay()
+        .hideResumeShowBack();
       moveForm();
       statusMgr.goodToResume = false;
       loaderMgr.resumeProgram();
     }
     else {
       console.info("Normal resume procedures.");
-      controlMgr.toggleFormDisplay().hideResumeShowBack();
+      controlMgr
+        .toggleFormDisplay()
+        .hideResumeShowBack();
       debouncedMoveForm(event);
     }
 
@@ -245,14 +234,27 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   function handleListMistakeBtn() {
     console.groupCollapsed("handleListMistakeBtn()");
 
-    controlMgr.floatingBtnsHideAll()
-                   .hideResumeShowBack()
-                   .toggleFormDisplay('shift-sections-to-top-center');
+    toggleMistakeListActive();  // flag = true to show shades on the top.
 
-    domUtils.clearScreen([selectors.sectionStatus, selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer], "fast");
+    controlMgr.floatingBtnsHideAll()
+              .hideResumeShowBack()
+              .toggleShadesOnTop()
+              .toggleFormDisplay('shift-sections-to-top-center');
+
+    domUtils.clearScreen([
+      selectors.sectionStatus, 
+      selectors.sectionQuestion, 
+      selectors.sectionMessage, 
+      selectors.sectionAnswer
+    ], "fast");
+
     loaderMgr.listMistakes();
 
     console.groupEnd();
+  }
+
+  function toggleMistakeListActive() {
+    currentStatus.mistakeListActive = !currentStatus.mistakeListActive;
   }
   
   // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
@@ -274,8 +276,6 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
 
     // Set the flag to prevent further calls
     isMoving = true;
-
-    //domUtils.clearScreen([selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
 
     // Add an event listener for the transition end to reset the flag
     selectors.settingForm.addEventListener('transitionend', () => {

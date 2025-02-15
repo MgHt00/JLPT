@@ -165,7 +165,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   async function start(e) {  
     e.preventDefault();                 // Prevent form from submitting the usual way
     validateAndSetInputData(e);         // validate and set defaults to the input data.
-    removeErrBlks();                    // Remove error messages
+    errorMgr.clearError();                    // Remove error messages
     if (appState.qMode === "stored") {
       if(!validateStoredMemory()) {     // To validate whether memory is empty or not
         errorMgr.runtimeError("mem0");
@@ -219,7 +219,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
     questionMgr.newQuestion();
     
-    removeErrBlks();                            // To remove error messages
+    errorMgr.clearError();                            // To remove error messages
   }
 
   // to validate input data and set defaults if necessary
@@ -360,7 +360,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         buildMemoryStatus(`${storedLength} word to repractice.`);
         break;
       default:
-        buildMemoryStatus(`There are ${storedLength} words to repractice.`);
+        buildMemoryStatus(`${storedLength} words to repractice.`);
         break;
     }
     
@@ -377,7 +377,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         child: 'div',
         content: content,
         className: 'memory-info',
-        idName: 'memory-info',
+        id: 'memory-info',
       });
     }
 
@@ -410,7 +410,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         child: 'div',
         content: icon,
         className: className,
-        idName: id,
+        id: id,
         eventFunction: handler,
       });
     }
@@ -568,8 +568,9 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   function restart() {
     domUtils.clearScreen(selectors.sectionStatus);
     
-    displayUtils.toggleClass('overlay-message', selectors.sectionMessage)
-                .toggleClass('fade-hide', selectors.sectionMessage);
+    /*displayUtils
+      .toggleClass('overlay-message', selectors.sectionMessage)
+      .toggleClass('fade-hide', selectors.sectionMessage);*/
 
     controlMgr.toggleFormDisplay();
     listenerMgr.debouncedMoveForm();
@@ -589,7 +590,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       child: 'div',
       content: '',
       className: 'mistake-list-container', // New class for the container
-      idName: 'mistake-list-div',
+      id: 'mistake-list-div',
     });
   
     // Select the mistake-list-container created
@@ -604,7 +605,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       child: 'div',
       content: '', // Empty content, as we'll append children later
       className: 'mistakes-row-header', 
-      idName: 'mistakes-heading',
+      id: 'mistakes-heading',
     });
   
     // Select the newly created header div
@@ -629,7 +630,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         child: 'div',
         content: '',
         className: 'mistakes-row', // Styling class for row
-        idName: `mistakeList-row-${index}`, // Unique ID for each row
+        id: `mistakeList-row-${index}`, // Unique ID for each row
       });
 
       // Now, select the newly created mistake-row
@@ -674,24 +675,6 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     return this;
   }
 
-  // To remove error messages after "Start New" is clicked
-  function removeErrBlks() {
-    console.groupCollapsed("removeErrBlks()");
-
-    const errBlocks = [
-      document.querySelector("[id|='syllable-error']"), 
-      document.querySelector("[id|='runtime-error']")
-    ];
-
-    errBlocks.forEach((blk) => {  // check whether there is an error message on screen
-      if (blk){
-        console.info("Error block found");
-        blk.remove();
-      }
-    });
-    console.groupEnd();
-  }
-
   // To show 'loading...' while preloading all jsons
   function showLoadingMsg() {
     console.groupCollapsed("showLoadingMsg()");
@@ -707,7 +690,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         child: 'div',
         content: msg,
         className: 'poppins-regular',
-        idName: 'preload-info',
+        id: 'preload-info',
       });
 
       const loadingMsg = document.querySelector("#preload-info-0"); 
@@ -769,7 +752,6 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     listMistakes,
     resumeProgram,
     resetAfterFlushingMistakes,
-    removeErrBlks,
     showLoadingMsg,
     checkPreLoadState,
   }

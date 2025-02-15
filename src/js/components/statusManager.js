@@ -58,20 +58,22 @@ export function statusManager(globals, utilsManager) {
     domUtils.clearScreen(selectors.sectionStatus);
 
     setTimeout(() => {
-      if (currentStatus.totalQuestionsAnswered >= 1) { // show cumulative average only it is not the first question shown
-        domUtils.buildNode({
-          parent: selectors.sectionStatus,
-          child: "div",
-          content: `Average Correct Rate: ${currentStatus.averageScore}%`,
-        });
+      if (currentStatus.totalQuestionsAnswered >= 1) printSectionStatus("questionCount"); // show cumulative average only it is not the first question shown
+      printSectionStatus("averagescore");
+    }, 350);
+
+    // private functions
+    function printSectionStatus(key) {
+      const CONFIG = {
+        questionCount : `${readQuestionCount()} / ${currentStatus.totalNoOfQuestions}`,
+        averagescore : `Average Correct Rate: ${currentStatus.averageScore}%`
       }
-  
       domUtils.buildNode({
         parent: selectors.sectionStatus,
         child: "div",
-        content: `${readQuestionCount()} / ${currentStatus.totalNoOfQuestions}`,
+        content: CONFIG[key],
       });
-    }, 350);
+    }
   }
 
   // to reset all variables concerning with calculating the cumulative average
@@ -120,17 +122,46 @@ export function statusManager(globals, utilsManager) {
   function stillInProgress() {
     console.groupCollapsed("stillInProgress()");
 
-    const savedCurrentStatus = JSON.parse(localStorage.getItem("currentStatus")); // Parse JSON
-    const savedTotalQuestionsAnswered = savedCurrentStatus.totalQuestionsAnswered;
-    const savedTotalNoOfQuestions = savedCurrentStatus.totalNoOfQuestions;
+    // Get and safely parse localStorage item
+    let savedCurrentStatus = localStorage.getItem("currentStatus");
 
-    //if (savedCurrentStatus && (savedCurrentStatus.questionCount >= 1)) {
-    if (savedCurrentStatus && (savedTotalQuestionsAnswered < savedTotalNoOfQuestions)) {
-      console.info("TRUE - program still in progress.  ", savedTotalQuestionsAnswered, "/", savedTotalNoOfQuestions);
+    // Handle cases where localStorage item is "null", empty, or invalid
+    if (!savedCurrentStatus || savedCurrentStatus === "null") { 
+      console.info("FALSE - No saved progress found.");
+      console.groupEnd();
+      return false;
+    }
+
+    try {
+      savedCurrentStatus = JSON.parse(savedCurrentStatus); // Now safe to parse
+    } catch (error) {
+      console.warn("Invalid JSON in localStorage:", error);
+      console.groupEnd();
+      return false;
+    }
+
+    console.info("savedCurrentStatus:", savedCurrentStatus);
+
+    // Ensure the parsed object contains the required properties
+    if (
+      typeof savedCurrentStatus !== "object" ||
+      savedCurrentStatus === null ||
+      !("totalQuestionsAnswered" in savedCurrentStatus) ||
+      !("totalNoOfQuestions" in savedCurrentStatus)
+    ) {
+      console.warn("Invalid saved progress format:", savedCurrentStatus);
+      console.groupEnd();
+      return false;
+    }
+
+    const { totalQuestionsAnswered, totalNoOfQuestions } = savedCurrentStatus;
+
+    if (totalQuestionsAnswered < totalNoOfQuestions) {
+      console.info("TRUE - program still in progress.", totalQuestionsAnswered, "/", totalNoOfQuestions);
       console.groupEnd();
       return true;
     } else {
-      console.info("FALSE - no remaining questions.", savedTotalQuestionsAnswered, "/", savedTotalNoOfQuestions);
+      console.info("FALSE - no remaining questions.", totalQuestionsAnswered, "/", totalNoOfQuestions);
       console.groupEnd();
       return false;
     }
@@ -164,9 +195,6 @@ export function statusManager(globals, utilsManager) {
     increaseQuestionCount,
     printQuestionStatus,
     resetCumulativeVariables,
-    //calCumulativeAverage,
-    //increaseTotalCorrectAnswers,
-    //increaseTotalQuestionsAnswered,
     updateCumulativeAverage,
     stillInProgress,
     get goodToResume() { return getGoodToResume(); },

@@ -8,6 +8,8 @@ export const displayUtils = {
         node.classList.toggle(className); // Toggle the class
       }
     });
+
+    return this;
   },
 
   // to remove class name
@@ -19,6 +21,8 @@ export const displayUtils = {
         node.classList.remove(className); // remove the class
       }
     });
+
+    return this;
   },
 
   // to add class names
@@ -30,6 +34,8 @@ export const displayUtils = {
         node.classList.add(className); // add the class
       }
     });
+
+    return this;
   },
 
   checkClass(className = "", node) {

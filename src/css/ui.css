@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: flex-start;
   padding: 30px;
-  gap: 12px;
+  gap: 8px;
 
   /*width: 375px;
   height: 667px;*/
@@ -130,7 +130,7 @@
 }
 
 #settings-repractice #fieldset-repractice {
-  min-height: 143px;
+  min-height: 118px;
   flex-direction: column;
   gap: 5px;
 }
@@ -248,13 +248,16 @@ input:checked + .slider:before {
 }
 
 #bring-back-btn-container {
-  background: rgb(0,0,0);
-  background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(34,34,34,0.8) 70%);
   position: fixed;
   top: 0%;
   width: 100%;
-  height: 70px;
+  height: 60px;
   z-index: 999;
+}
+
+.shades-on-top {
+  background: rgb(0,0,0);
+  background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(34,34,34,0.1) 70%);
 }
 
 .bring-back-setting-btn,

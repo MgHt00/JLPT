@@ -20,8 +20,8 @@ export function errorManager(globals, utilsManager, answerMgr) {
       "infiniteloop": () => {
         const {selectedArray, noOfChoice} = fetchInputData();
 
-        if (!appState.flashYesNo && selectedArray.length <= noOfChoice) {         // If flashYesNo is true → The entire condition is false, // ... and selectedArray.length <= noOfChoice is not evaluated.                                                                                        
-          if (!errorAlreadyExists(errcode)) showError("iLoop");                // if error is not already shown  
+        if (!appState.flashYesNo && selectedArray.length < noOfChoice) {             // If flashYesNo is true → The entire condition is false, // ... and selectedArray.length <= noOfChoice is not evaluated.                                                                                        
+          if (!domUtils.checkNode({ id: codeMapping[errcode] })) showError("iLoop"); // if error is not already shown  
           console.groupEnd();
           return false;                        // Return false when there is an error
         } else {
@@ -31,12 +31,12 @@ export function errorManager(globals, utilsManager, answerMgr) {
       },
       
       "syllable-error": () => {
-        if (!errorAlreadyExists(errcode)) showError("noSL");                   // if error is not already shown
+        if (!domUtils.checkNode({ id: codeMapping[errcode] })) showError("noSL");   // if error is not already shown
         return false;                          // Return false for syllable error case
       },
 
       "memory-empty-error": () => {
-        if (!errorAlreadyExists(errcode)) showError("mem0");                   // if error is not already shown
+        if (!domUtils.checkNode({ id: codeMapping[errcode] })) showError("mem0");   // if error is not already shown
       },
     }
 
@@ -66,7 +66,7 @@ export function errorManager(globals, utilsManager, answerMgr) {
     const ERROR_CONFIG = {
       iLoop: {
         parentName: selectors.settingNoOfAns,
-        id: "runtime-error",
+        id: "infiniteloop",
         errorMessage : "Not enough unique answers available. Please reduce the number of answer choices.",
         consoleMessage: "Runtime error: Not enough unique answers to generate.",
       },
@@ -96,16 +96,34 @@ export function errorManager(globals, utilsManager, answerMgr) {
       child: 'div',
       content: config.errorMessage,
       className: "setting-error",
-      idName: config.id,
+      id: config.id,
     });
     console.warn(config.consoleMessage);
 
     console.groupEnd();
     return this;
   }
+
+  function clearError() {
+    console.groupCollapsed("clearError()");
+
+    const errBlocks = [
+      document.querySelector("[id|='infiniteloop']"), 
+      document.querySelector("[id|='syllable-error']"), 
+    ];
+
+    errBlocks.forEach((blk) => {  // check whether there is an error message on screen
+      if (blk){
+        console.info("Error block found");
+        blk.remove();
+      }
+    });
+    console.groupEnd();
+  }
   
   return {  
     runtimeError,
     showError,
+    clearError,
   }
 }

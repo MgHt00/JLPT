@@ -1,12 +1,12 @@
-export function questionManager(globals, utilsManager, answerMgr, statusInstance, vocabMgr) {
+export function questionManager(globals, utilsManager, answerMgr, statusMgr, vocabMgr) {
   const { appState, appData, selectors } = globals;
   const { helpers, domUtils } = utilsManager;
 
   let questionObj = {};
 
-  function setInstances(answerInstance, statusMgr, vocabInstance) {
+  function setInstances(answerInstance, statusInstance, vocabInstance) {
     answerMgr = answerInstance;
-    statusInstance = statusMgr;
+    statusMgr = statusInstance;
     vocabMgr = vocabInstance;
   }
 
@@ -22,9 +22,8 @@ export function questionManager(globals, utilsManager, answerMgr, statusInstance
     }
 
     domUtils.clearScreen([selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
-    //domUtils.clearScreen([selectors.sectionQuestion, selectors.sectionAnswer]);
 
-    statusInstance.printQuestionStatus() // show current status
+    statusMgr.printQuestionStatus() // show current status
 
     setTimeout(() => {
       if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
@@ -33,14 +32,11 @@ export function questionManager(globals, utilsManager, answerMgr, statusInstance
         do {
           questionObj = fetchOneQuestion(); // Fetch a new question
         } while (!isThereAnAnswer(questionObj)); // Keep fetching until a valid answer is found
-                                                 // (need to check for the situation where answer choice is Kanji and it is empty.)
   
         // Once a valid question is found, store the correct answer
         appState.correctAns = questionObj[selectors.aChoice.value].toLowerCase().trim(); // Store correct answer
         
-        statusInstance.increaseQuestionCount(); // increse question count for status bar
-        //statusInstance.printQuestionStatus() // show current status
-  
+        statusMgr.increaseQuestionCount(); // increse question count for status bar  
         //console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
         
         domUtils.buildNode({ 
@@ -96,7 +92,7 @@ export function questionManager(globals, utilsManager, answerMgr, statusInstance
   function finalizeQuestionAndProceed(state) {
     //console.groupCollapsed("questionManager() - finalizeQuestionAndProceed()");
     
-    statusInstance.updateCumulativeAverage(state);
+    statusMgr.updateCumulativeAverage(state);
 
     if (appState.flashYesNo) { // flashcard mode
       vocabMgr.removeSpecifiedQuestion(fetchOneQuestion.index);
