@@ -101,12 +101,22 @@ export function controlManger(globals, utilsManager) {
     const selector = selectors.bringBackBtnContainer;
 
     displayUtils.checkClass(className, selector)
-      ? displayUtils.removeClass(className, selector)
-      : displayUtils.addClass(className, selector);
-    console.info("shades on the top!");
-
+      ? removeShades()
+      : addShades();
+    
     console.groupEnd();
     return this;
+
+    // helper functions
+    function removeShades() {
+      displayUtils.removeClass(className, selector)
+      console.info("Shades removed.");
+    }
+
+    function addShades() {
+      displayUtils.addClass(className, selector);
+      console.info("Shades added.");
+    }
   }
 
   return {
