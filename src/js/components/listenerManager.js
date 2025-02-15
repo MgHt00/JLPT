@@ -196,7 +196,6 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     if(currentStatus.mistakeListActive) {
       controlMgr.toggleShadesOnTop();
       toggleMistakeListActive();
-      console.info("Shades on the top - removed");
     }
     
     event.stopPropagation(); // Prevent event from bubbling up
@@ -254,7 +253,12 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   }
 
   function toggleMistakeListActive() {
+    console.groupCollapsed("toggleMistakeListActive()");
+
     currentStatus.mistakeListActive = !currentStatus.mistakeListActive;
+    console.info("mistakeListActive flag:",currentStatus.mistakeListActive);
+
+    console.groupEnd();
   }
   
   // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.

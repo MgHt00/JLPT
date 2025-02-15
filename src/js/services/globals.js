@@ -39,6 +39,7 @@ const currentStatus = {
   totalCorrectAnswers : 0,
   totalQuestionsAnswered : 0,
   averageScore : 0,
+  mistakeListActive: false,
 }
 
 export const globals = {
