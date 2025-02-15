@@ -22,7 +22,7 @@ body {
 
 form#settingsForm {
   /*max-width: 280px;*/
-  font-size: 15px;
+  font-size: 14px;
 }
 
 #settingsForm > * {
