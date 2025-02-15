@@ -43,13 +43,13 @@ Ensure you have the following installed on your machine:
    git clone https://github.com/MgHt00/JLPT.git
    ```
 
-2. Open `n5-vocab.html` in your browser to run the application locally.
+2. Open `index.html` in your browser to run the application locally.
 
 ---
 
 ## Usage
 
-1. Launch the application by opening `n5-vacab.html` in a web browser.
+1. Launch the application by opening `index.html` in a web browser.
 2. Select the desired quiz mode (`fresh` or `stored`).
 3. Input the necessary settings, such as the number of answers and syllables.
 4. Start the quiz and answer the questions.
@@ -60,17 +60,41 @@ Ensure you have the following installed on your machine:
 ## File Structure
 
 ```
-/vocabulary-quiz
-|-- /css
-|   |-- styles.css         # Application styles
-|-- /js
-|   |-- globals.js         # Global variables and constants
-|   |-- main.js            # Main logic and event handlers
-|   |-- vocab.js           # Vocabulary management and quiz logic
+/JLPT
 |-- /assets
-|   |-- ...                # Images, fonts, or other assets
-|-- index.html             # Main HTML file
-|-- README.md              # Project documentation
+|   |-- data          # JSON, and raw CSV files
+|-- /docs
+|   |-- l-n           # Logic explanations, and notes
+|-- /src
+|   |-- /css          
+|   |   |-- base.css    
+|   |   |-- dynamic-classes.css     
+|   |   |-- fonts.css
+|   |   |-- index.css
+|   |   |-- ui.css
+|   |-- /js
+|   |   |-- /components
+|   |   |   |-- answerListenerManager.js 
+|   |   |   |-- answerManager.js
+|   |   |   |-- componentsManager.js
+|   |   |   |-- controlManager.js
+|   |   |   |-- errorManager.js
+|   |   |   |-- listenerManager.js
+|   |   |   |-- loaderManager.js
+|   |   |   |-- questionManager.js
+|   |   |   |-- satusManager.js
+|   |   |   |-- vocabManager.js
+|   |   |-- /services
+|   |   |   |-- globals.js
+|   |   |   |-- selectors.js
+|   |   |-- /utils
+|   |   |   |-- displayUtils.js
+|   |   |   |-- domUtils.js
+|   |   |   |-- hlepers.js
+|   |   |   |-- utilsManager.js
+|   |   |-- index.js
+|-- index.html        # Main HTML file
+|-- README.md         
 ```
 
 ## Contributing
