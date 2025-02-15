@@ -1,5 +1,5 @@
 export function controlManger(globals, utilsManager) {
-  const { selectors } = globals;
+  const { selectors, currentStatus } = globals;
   const { displayUtils, domUtils } = utilsManager;
 
   // To hide both bringBack and resumePracticeBtn
@@ -20,6 +20,7 @@ export function controlManger(globals, utilsManager) {
 
   // To hide resumePracticeBtn; show bringBackBtn
   function hideResumeShowBack() {
+    console.groupCollapsed("hideResumeShowBack()");
     displayUtils.removeClass('hide', // remove 'hide' class
       selectors.bringBackBtn,
       selectors.resumePracticeBtn,
@@ -27,6 +28,7 @@ export function controlManger(globals, utilsManager) {
     displayUtils.addClass('hide', // add 'hide' class
       selectors.resumePracticeBtn,
     );
+    console.groupEnd();
     return this;
   }
 
@@ -92,11 +94,27 @@ export function controlManger(globals, utilsManager) {
     document.querySelector("#source-fresh").checked = true; // Set the 'source-fresh' radio input to checked
   }
 
+  function toggleShadesOnTop() {
+    console.groupCollapsed("toggleShadesOnTop()");
+    
+    const className = "shades-on-top";
+    const selector = selectors.bringBackBtnContainer;
+
+    displayUtils.checkClass(className, selector)
+      ? displayUtils.removeClass(className, selector)
+      : displayUtils.addClass(className, selector);
+    console.info("shades on the top!");
+
+    console.groupEnd();
+    return this;
+  }
+
   return {
     floatingBtnsHideAll,
     hideResumeShowBack,
     hideBackShowResume,
     toggleFormDisplay,
     resetQuestionMode,
+    toggleShadesOnTop,
   }
 }

@@ -28,6 +28,7 @@ export const selectors = {
   allSetting : document.querySelectorAll("[id|='settings']"),
   bringBackBtn : document.querySelector("#bring-back-btn"),
   resumePracticeBtn : document.querySelector("#resume-practice-btn"),
+  bringBackBtnContainer : document.querySelector("#bring-back-btn-container"),
 
   get readNoOfAns() { //[sn19]
     //if it is not a getter, use this; outside of "get"

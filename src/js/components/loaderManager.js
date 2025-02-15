@@ -360,7 +360,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
         buildMemoryStatus(`${storedLength} word to repractice.`);
         break;
       default:
-        buildMemoryStatus(`There are ${storedLength} words to repractice.`);
+        buildMemoryStatus(`${storedLength} words to repractice.`);
         break;
     }
     

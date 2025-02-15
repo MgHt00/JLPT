@@ -1,5 +1,5 @@
 export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, questionMgr, answerMgr, errorMgr, statusMgr) {
-  const { appState, selectors } = globals;
+  const { appState, selectors, currentStatus } = globals;
   const { domUtils, displayUtils } = utilsManager;
 
   function setInstances(loaderInstance, controlInstance, questionInstance, answerInstance, errorInstance, statusInstance){
@@ -192,6 +192,13 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
       .floatingBtnsHideAll()
       .toggleFormDisplay()
       .hideBackShowResume();
+
+    if(currentStatus.mistakeListActive) {
+      controlMgr.toggleShadesOnTop();
+      toggleMistakeListActive();
+      console.info("Shades on the top - removed");
+    }
+    
     event.stopPropagation(); // Prevent event from bubbling up
     debouncedMoveForm(event); // Pass the event to the debounced function
     loaderMgr.rePrintMemory();
@@ -227,8 +234,11 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   function handleListMistakeBtn() {
     console.groupCollapsed("handleListMistakeBtn()");
 
+    toggleMistakeListActive();  // flag = true to show shades on the top.
+
     controlMgr.floatingBtnsHideAll()
               .hideResumeShowBack()
+              .toggleShadesOnTop()
               .toggleFormDisplay('shift-sections-to-top-center');
 
     domUtils.clearScreen([
@@ -241,6 +251,10 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
     loaderMgr.listMistakes();
 
     console.groupEnd();
+  }
+
+  function toggleMistakeListActive() {
+    currentStatus.mistakeListActive = !currentStatus.mistakeListActive;
   }
   
   // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
