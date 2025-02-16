@@ -19,78 +19,81 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     statusMgr = statusInstance;
   }
 
+  const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+  const basePath = isLocal ? "./assets/data/" : "https://MgHt00.github.io/JLPT/assets/data/";
+
   const vowels = {
     //db: "N5/vocab/assets/data/n5-vocab-debug.json",
-    a: "/assets/data/n5-vocab-a.json",
-    i: "/assets/data/n5-vocab-i.json",
-    u: "/assets/data/n5-vocab-u.json",
-    e: "/assets/data/n5-vocab-e.json",
-    o: "/assets/data/n5-vocab-o.json",
+    a: `${basePath}n5-vocab-a.json`,
+    i: `${basePath}n5-vocab-i.json`,
+    u: `${basePath}n5-vocab-u.json`,
+    e: `${basePath}n5-vocab-e.json`,
+    o: `${basePath}n5-vocab-o.json`,
   }
 
   const k = {
-    ka: "/assets/data/n5-vocab-ka.json",
-    ki: "/assets/data/n5-vocab-ki.json",
-    ku: "/assets/data/n5-vocab-ku.json",
-    ke: "/assets/data/n5-vocab-ke.json",
-    ko: "/assets/data/n5-vocab-ko.json",
+    ka: `${basePath}n5-vocab-ka.json`,
+    ki: `${basePath}n5-vocab-ki.json`,
+    ku: `${basePath}n5-vocab-ku.json`,
+    ke: `${basePath}n5-vocab-ke.json`,
+    ko: `${basePath}n5-vocab-ko.json`,
   } 
 
   const s = {
-    sa: "/assets/data/n5-vocab-sa.json",
-    shi: "/assets/data/n5-vocab-shi.json",
-    su: "/assets/data/n5-vocab-su.json",
-    se: "/assets/data/n5-vocab-se.json",
-    so: "/assets/data/n5-vocab-so.json",
+    sa: `${basePath}n5-vocab-sa.json`,
+    shi: `${basePath}n5-vocab-shi.json`,
+    su: `${basePath}n5-vocab-su.json`,
+    se: `${basePath}n5-vocab-se.json`,
+    so: `${basePath}n5-vocab-so.json`,
   }
 
   const t = {
-    ta: "/assets/data/n5-vocab-ta.json",
-    chi: "/assets/data/n5-vocab-chi.json",
-    tsu: "/assets/data/n5-vocab-tsu.json",
-    te: "/assets/data/n5-vocab-te.json",
-    to: "/assets/data/n5-vocab-to.json",
+    ta: `${basePath}n5-vocab-ta.json`,
+    chi: `${basePath}n5-vocab-chi.json`,
+    tsu: `${basePath}n5-vocab-tsu.json`,
+    te: `${basePath}n5-vocab-te.json`,
+    to: `${basePath}n5-vocab-to.json`,
   }
 
   const n = {
-    na: "/assets/data/n5-vocab-na.json",
-    ni: "/assets/data/n5-vocab-ni.json",
-    nu: "/assets/data/n5-vocab-nu.json",
-    ne: "/assets/data/n5-vocab-ne.json",
-    no: "/assets/data/n5-vocab-no.json",
+    na: `${basePath}n5-vocab-na.json`,
+    ni: `${basePath}n5-vocab-ni.json`,
+    nu: `${basePath}n5-vocab-nu.json`,
+    ne: `${basePath}n5-vocab-ne.json`,
+    no: `${basePath}n5-vocab-no.json`,
   }
 
   const h = {
-    ha: "/assets/data/n5-vocab-ha.json",
-    hi: "/assets/data/n5-vocab-hi.json",
-    fu: "/assets/data/n5-vocab-fu.json",
-    he: "/assets/data/n5-vocab-he.json",
-    ho: "/assets/data/n5-vocab-ho.json",
+    ha: `${basePath}n5-vocab-ha.json`,
+    hi: `${basePath}n5-vocab-hi.json`,
+    fu: `${basePath}n5-vocab-fu.json`,
+    he: `${basePath}n5-vocab-he.json`,
+    ho: `${basePath}n5-vocab-ho.json`,
   }
 
   const m = {
-    ma: "/assets/data/n5-vocab-ma.json",
-    mi: "/assets/data/n5-vocab-mi.json",
-    mu: "/assets/data/n5-vocab-mu.json",
-    me: "/assets/data/n5-vocab-me.json",
-    mo: "/assets/data/n5-vocab-mo.json",
+    ma: `${basePath}n5-vocab-ma.json`,
+    mi: `${basePath}n5-vocab-mi.json`,
+    mu: `${basePath}n5-vocab-mu.json`,
+    me: `${basePath}n5-vocab-me.json`,
+    mo: `${basePath}n5-vocab-mo.json`,
   }
 
   const y = {
-    ya: "/assets/data/n5-vocab-ya.json",
-    yu: "/assets/data/n5-vocab-yu.json",
-    yo: "/assets/data/n5-vocab-yo.json",
+    ya: `${basePath}n5-vocab-ya.json`,
+    yu: `${basePath}n5-vocab-yu.json`,
+    yo: `${basePath}n5-vocab-yo.json`,
   }
 
   const r = {
-    ra: "/assets/data/n5-vocab-ra.json",
-    ri: "/assets/data/n5-vocab-ri.json",
-    re: "/assets/data/n5-vocab-re.json",
-    ro: "/assets/data/n5-vocab-ro.json",
+    ra: `${basePath}n5-vocab-ra.json`,
+    ri: `${basePath}n5-vocab-ri.json`,
+    re: `${basePath}n5-vocab-re.json`,
+    ro: `${basePath}n5-vocab-ro.json`,
   }
 
   const wa = {
-    wa: "/assets/data/n5-vocab-wa.json",
+    wa: `${basePath}n5-vocab-wa.json`,
   }
 
   let isPreLoadSuccessful = true;
