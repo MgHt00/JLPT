@@ -4,8 +4,11 @@ export function questionManager(globals, utilsManager, answerMgr, statusMgr, voc
 
   let questionObj = {};
 
-  function setInstances(answerInstance, statusInstance, vocabInstance) {
-    answerMgr = answerInstance;
+  let _renderAnswers, _noMoreQuestion;
+
+  function setInstances(renderAnswers, noMoreQuestion, statusInstance, vocabInstance) {
+    _renderAnswers = renderAnswers;
+    _noMoreQuestion = noMoreQuestion;
     statusMgr = statusInstance;
     vocabMgr = vocabInstance;
   }
@@ -44,9 +47,9 @@ export function questionManager(globals, utilsManager, answerMgr, statusMgr, voc
           child: 'div', 
           content: questionObj[appState.qChoiceInput],
         });
-        answerMgr.renderAnswers();  
+         _renderAnswers();  
       } else { // if there is no more question left to show
-        answerMgr.noMoreQuestion();
+         _noMoreQuestion();
       }      
     }, 350); // Matches the transition duration
 

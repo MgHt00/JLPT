@@ -15,21 +15,29 @@ import { utilsManager } from "./utils/utilsManager.js";
 const { appData, selectors } = globals;
 const { displayUtils } = utilsManager;
 
+// Control Manager
 const controlMgr = controlManger(globals, utilsManager);
 const {floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlMgr;
 
+// Listener Manager
 const listenerMgr = listenerManager(
   globals,
   { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop },
   utilsManager, null, null, null, null, null, null);
 
+// Loader Manager
 const loaderMgr = loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, null, null, null, null, null);
 
 const questionMgr = questionManager(globals, utilsManager, null, null, null);
+
+// Answer Manager
 const answerMgr = answerManager(globals, utilsManager, questionMgr, loaderMgr, null, null);
+const { vocabMapping, setAnswerManagerCallbacks, renderAnswers, noMoreQuestion, setRanOnce } = answerMgr;
+
+
 const vocabMgr =  vocabManager(globals, utilsManager, loaderMgr, questionMgr);
 const answerListenersMgr = answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr, answerMgr);
-const errMgr = errorManager(globals, utilsManager, answerMgr);
+const errMgr = errorManager(globals, utilsManager, vocabMapping);
 const statusMgr = statusManager(globals, utilsManager);
 
 /**
@@ -42,8 +50,8 @@ const statusMgr = statusManager(globals, utilsManager);
  * - `loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errMgr, statusMgr)`: Sets up the Loader Manager with control, question, vocabulary, error, and status managers for managing application flow and state.
  * - `listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr)`: Establishes connections for the Listener Manager, enabling it to coordinate interactions between the loader, control, question, and answer managers.
  */
-answerMgr.setInstances(answerListenersMgr, vocabMgr);
-questionMgr.setInstances(answerMgr, statusMgr, vocabMgr);
+setAnswerManagerCallbacks(answerListenersMgr, vocabMgr);
+questionMgr.setInstances(renderAnswers, noMoreQuestion, statusMgr, vocabMgr);
 
 loaderMgr.setInstances(questionMgr, vocabMgr, errMgr, statusMgr);
 listenerMgr.setInstances(loaderMgr, questionMgr, answerMgr, errMgr, statusMgr);

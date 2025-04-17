@@ -1,4 +1,4 @@
-export function errorManager(globals, utilsManager, answerMgr) {
+export function errorManager(globals, utilsManager, vocabMapping) {
   const { appState, selectors } = globals;
   const { domUtils } = utilsManager;
 
@@ -45,7 +45,7 @@ export function errorManager(globals, utilsManager, answerMgr) {
 
     // utility functions private to the module
     function fetchInputData() {
-      const selectedArray = answerMgr.vocabMapping[selectors.aChoice.value];
+      const selectedArray = vocabMapping[selectors.aChoice.value];
       const choiceInput = parseInt(appState.noOfAnswers, 10);
       const noOfChoice = Math.min(choiceInput, selectedArray.length);
 

@@ -8,7 +8,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
     en: appData.enVocab,
   };
 
-  function setInstances(answerListenerInstance, vocabInstance) {
+  function setAnswerManagerCallbacks(answerListenerInstance, vocabInstance) {
     answerListenersMgr = answerListenerInstance;
     vocabMgr = vocabInstance;
   }
@@ -266,7 +266,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
 
   return {
     vocabMapping,
-    setInstances,
+    setAnswerManagerCallbacks,
     renderAnswers,
     noMoreQuestion,
     setRanOnce,
