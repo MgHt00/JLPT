@@ -4,13 +4,14 @@ export function questionManager(globals, utilsManager, answerMgr, statusMgr, voc
 
   let questionObj = {};
 
-  let _renderAnswers, _noMoreQuestion;
+  let _renderAnswers, _noMoreQuestion, _removeSpecifiedQuestion, _saveState;
 
-  function setInstances(renderAnswers, noMoreQuestion, statusInstance, vocabInstance) {
+  function setQuestionManagerCallbacks(renderAnswers, noMoreQuestion, statusInstance, removeSpecifiedQuestion, saveState) {
     _renderAnswers = renderAnswers;
     _noMoreQuestion = noMoreQuestion;
     statusMgr = statusInstance;
-    vocabMgr = vocabInstance;
+    _removeSpecifiedQuestion = removeSpecifiedQuestion;
+    _saveState = saveState;
   }
 
   // to start a new question
@@ -53,7 +54,7 @@ export function questionManager(globals, utilsManager, answerMgr, statusMgr, voc
       }      
     }, 350); // Matches the transition duration
 
-    vocabMgr.saveState(); // Save the current state to localStorage
+    _saveState(); // Save the current state to localStorage
     console.groupEnd();
   }
 
@@ -98,12 +99,12 @@ export function questionManager(globals, utilsManager, answerMgr, statusMgr, voc
     statusMgr.updateCumulativeAverage(state);
 
     if (appState.flashYesNo) { // flashcard mode
-      vocabMgr.removeSpecifiedQuestion(fetchOneQuestion.index);
+      _removeSpecifiedQuestion(fetchOneQuestion.index);
       newQuestion();
     }
     else { // multiple-choice mode
       if (state) { // if correct answer is clicked
-        vocabMgr.removeSpecifiedQuestion(fetchOneQuestion.index);
+        _removeSpecifiedQuestion(fetchOneQuestion.index);
         newQuestion();
       }
     }
@@ -120,7 +121,7 @@ export function questionManager(globals, utilsManager, answerMgr, statusMgr, voc
   }
 
   return {
-    setInstances,
+    setQuestionManagerCallbacks,
     newQuestion,
     finalizeQuestionAndProceed,
     setQuestionMode,

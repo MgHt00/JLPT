@@ -55,7 +55,7 @@ const statusMgr = statusManager(globals, utilsManager);
  * - `listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr)`: Establishes connections for the Listener Manager, enabling it to coordinate interactions between the loader, control, question, and answer managers.
  */
 setAnswerManagerCallbacks(answerListenersMgr, readStoredLength);
-questionMgr.setInstances(renderAnswers, noMoreQuestion, statusMgr, vocabMgr);
+questionMgr.setQuestionManagerCallbacks(renderAnswers, noMoreQuestion, statusMgr, removeSpecifiedQuestion, saveState);
 
 loaderMgr.setInstances(questionMgr, vocabMgr, errMgr, statusMgr);
 listenerMgr.setInstances(loaderMgr, questionMgr, setRanOnce, errMgr, statusMgr);
