@@ -2,6 +2,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
   
+  let _flushMistakeBank, _loadMistakesFromMistakeBank, _loadState, _readStoredLength;
   /**
    * Sets the instances of the control, question, vocabulary, error, and status managers.
    * 
@@ -11,9 +12,12 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
    * @param {object} errMgr - The error manager instance handling runtime errors.
    * @param {object} statusMgr - The status manager instance tracking quiz progress and stats.
   */
-  function setInstances(questionInstance, vocabInstance, errorInstance, statusInstance) {
+  function setLoaderManagerCallbacks(questionInstance, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, errorInstance, statusInstance) {
     questionMgr = questionInstance;
-    vocabMgr = vocabInstance;
+    _flushMistakeBank = flushMistakeBank;
+    _loadMistakesFromMistakeBank = loadMistakesFromMistakeBank;
+    _loadState = loadState;
+    _readStoredLength = readStoredLength;
     errorMgr = errorInstance;
     statusMgr = statusInstance;
   }
@@ -197,7 +201,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
 
   // To validate whether memory is empty or not
   function validateStoredMemory() {
-    let storedLength = vocabMgr.readStoredLength;
+    let storedLength = _readStoredLength;
     if (storedLength === 0) {
       return false;
     } else {
@@ -298,7 +302,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
 
     questionMgr.setQuestionMode("stored");                        // Set program's question mode to 'stored'
     
-    const storedData = vocabMgr.loadMistakesFromMistakeBank();
+    const storedData = _loadMistakesFromMistakeBank();
     if (!Array.isArray(storedData)) {                             // Ensure loadMistakesFromMistakeBank returns an array
         console.error("Error: Stored data is not an array! Check your loadMistakesFromMistakeBank function.");
         return;
@@ -323,7 +327,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   function resumeProgram() {
     console.groupCollapsed("resumeProgram()");
 
-    vocabMgr.loadState();
+    _loadState();
     console.log("loadState: ", appState, appData, currentStatus);
 
     populateVocabProperties(); // Fetch the relevant categories
@@ -351,7 +355,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   function loadMemoryData() {
     console.groupCollapsed("loadMemoryData");
 
-    let storedLength = vocabMgr.readStoredLength;
+    let storedLength = _readStoredLength;
     console.info("storedLength:", storedLength);
 
     switch (storedLength) {     // build 'mistake status' on home screen
@@ -389,7 +393,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
           icon: '<i class="fa-solid fa-trash-can"></i>',
           className: 'flush-memory-setting-btn',
           id: 'flush-memory-btn',
-          handler: vocabMgr.flushMistakeBank,
+          handler: _flushMistakeBank,
         },
     
         list: {
@@ -554,7 +558,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   async function continuetoStoredData() {
     console.groupCollapsed("continuetoStoredData()");
 
-    if (vocabMgr.readStoredLength <= 3) {
+    if (_readStoredLength <= 3) {
       appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
       console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
     }
@@ -584,7 +588,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   function listMistakes() {
     console.groupCollapsed("listMistakes()");
 
-    const mistakeArray = vocabMgr.loadMistakesFromMistakeBank(); // Load mistakes from localStorage
+    const mistakeArray = _loadMistakesFromMistakeBank(); // Load mistakes from localStorage
     
     // Container to display the mistakes
     domUtils.buildNode({                  
@@ -742,7 +746,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   }
 
   return {
-    setInstances,
+    setLoaderManagerCallbacks,
     preloadVocabData,
     start,
     loadMemoryData,

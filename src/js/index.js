@@ -57,7 +57,8 @@ const statusMgr = statusManager(globals, utilsManager);
 setAnswerManagerCallbacks(answerListenersMgr, readStoredLength);
 questionMgr.setQuestionManagerCallbacks(renderAnswers, noMoreQuestion, statusMgr, removeSpecifiedQuestion, saveState);
 
-loaderMgr.setInstances(questionMgr, vocabMgr, errMgr, statusMgr);
+loaderMgr.setLoaderManagerCallbacks(questionMgr, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, errMgr, statusMgr);
+
 listenerMgr.setInstances(loaderMgr, questionMgr, setRanOnce, errMgr, statusMgr);
 
 
