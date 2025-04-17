@@ -3,10 +3,11 @@ export function listenerManager(globals, controlManager, utilsManager, loaderMgr
   const { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlManager;
   const { domUtils, displayUtils } = utilsManager;
 
-  function setInstances(loaderInstance, questionInstance, answerInstance, errorInstance, statusInstance){
+  let _setRanOnce;
+  function setInstances(loaderInstance, questionInstance, setRanOnce, errorInstance, statusInstance){
     loaderMgr = loaderInstance;
     questionMgr = questionInstance;
-    answerMgr = answerInstance;
+    _setRanOnce = setRanOnce;
     errorMgr = errorInstance;
     statusMgr = statusInstance;
   }
@@ -152,12 +153,12 @@ export function listenerManager(globals, controlManager, utilsManager, loaderMgr
 
     if (selectedMode === "fresh") {
       questionMgr.setQuestionMode("fresh");
-      answerMgr.setRanOnce(false);
+       _setRanOnce(false);
     } 
     
     else if (selectedMode === "stored") {
       questionMgr.setQuestionMode("stored");
-      answerMgr.setRanOnce(true);
+       _setRanOnce(true);
     }
 
     // private functions
