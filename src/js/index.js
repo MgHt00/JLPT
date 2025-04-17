@@ -34,12 +34,12 @@ const questionMgr = questionManager(globals, utilsManager, null, null, null);
 const answerMgr = answerManager(globals, utilsManager, questionMgr, loaderMgr, null, null);
 const { vocabMapping, setAnswerManagerCallbacks, renderAnswers, noMoreQuestion, setRanOnce } = answerMgr;
 
-
+// Vocab Manager
 const vocabMgr =  vocabManager(globals, utilsManager, loaderMgr, questionMgr);
+const { removeSpecifiedQuestion, storeToMistakeBank, removeFromMistakeBank, flushMistakeBank, loadMistakesFromMistakeBank, saveState, loadState, clearState, readStoredLength } = vocabMgr;
 
 // Answer Listeners Manager
-const answerListenersMgr = answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr, setRanOnce);
-
+const answerListenersMgr = answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, storeToMistakeBank, removeFromMistakeBank, setRanOnce);
 
 const errMgr = errorManager(globals, utilsManager, vocabMapping);
 const statusMgr = statusManager(globals, utilsManager);

@@ -1,4 +1,4 @@
-export function answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr, setRanOnce) {
+export function answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, storeToMistakeBank, removeFromMistakeBank, answerMgr) {
   const { appState, selectors } = globals;
   const { domUtils, displayUtils } = utilsManager;
 
@@ -93,7 +93,7 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
     
     else {                                  // If the answer is INCORRECT
         questionMgr.finalizeQuestionAndProceed(false);
-        vocabMgr.storeToMistakeBank(questionMgr); // add wrongly selected word to localstorage
+        storeToMistakeBank(questionMgr); // add wrongly selected word to localstorage
         domUtils.clearScreen(selectors.sectionMessage);
 
         setTimeout(() => {
@@ -165,7 +165,7 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
     
     else if (btnID === "choice-btn-1") {
       if (questionMgr.readQuestionMode !== "stored") {
-        vocabMgr.storeToMistakeBank(); // add wrongly selected word to localstorage
+        storeToMistakeBank(); // add wrongly selected word to localstorage
       } 
 
       questionMgr.finalizeQuestionAndProceed(false);
@@ -185,13 +185,13 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
     if (btnID === "continueYes-0") {
       console.info("Clicked Yes");
       questionMgr.setQuestionMode("stored");
-      setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
+      answerMgr.setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       loaderMgr.continuetoStoredData();
     } 
     
     else if (btnID === "continueNo-0") {
       console.info("Clicked No");
-      setRanOnce(false);
+      answerMgr.setRanOnce(false);
       loaderMgr.restart();
     }
     console.groupEnd();
@@ -205,7 +205,7 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
 
     if (currentQuestionMode === "stored") { // if current q mode is stored and answer is right
       console.info("currentQuestionMode: ", currentQuestionMode, ".  removeFromMistakeBank() is called.");
-      vocabMgr.removeFromMistakeBank();
+      removeFromMistakeBank();
     } else {
       console.info("currentQuestionMode: ", currentQuestionMode, ".  No need to remove mistakes");
     }
