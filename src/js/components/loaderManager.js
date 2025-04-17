@@ -2,7 +2,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
   
-  let _flushMistakeBank, _loadMistakesFromMistakeBank, _loadState, _readStoredLength;
+  let _flushMistakeBank, _loadMistakesFromMistakeBank, _loadState, _readStoredLength, _runtimeError, _clearError;
   /**
    * Sets the instances of the control, question, vocabulary, error, and status managers.
    * 
@@ -12,13 +12,14 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
    * @param {object} errMgr - The error manager instance handling runtime errors.
    * @param {object} statusMgr - The status manager instance tracking quiz progress and stats.
   */
-  function setLoaderManagerCallbacks(questionInstance, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, errorInstance, statusInstance) {
+  function setLoaderManagerCallbacks(questionInstance, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, runtimeError, clearError, statusInstance) {
     questionMgr = questionInstance;
     _flushMistakeBank = flushMistakeBank;
     _loadMistakesFromMistakeBank = loadMistakesFromMistakeBank;
     _loadState = loadState;
     _readStoredLength = readStoredLength;
-    errorMgr = errorInstance;
+    _runtimeError = runtimeError;
+    _clearError = clearError;
     statusMgr = statusInstance;
   }
 
@@ -171,10 +172,10 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   async function start(e) {  
     e.preventDefault();                 // Prevent form from submitting the usual way
     validateAndSetInputData(e);         // validate and set defaults to the input data.
-    errorMgr.clearError();                    // Remove error messages
+    _clearError();                    // Remove error messages
     if (appState.qMode === "stored") {
       if(!validateStoredMemory()) {     // To validate whether memory is empty or not
-        errorMgr.runtimeError("mem0");
+        _runtimeError("mem0");
         return;
       }
       await loadStoredJSON();           // Continue if there is no runtime error. (Wait for loadStoredJSON to complete)
@@ -187,7 +188,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
 
         // Only check the runtime error if validateSyllable() returns true ...
         // ... Otherwise program shows infinite loop error without necessary.
-        const hasSufficientAnswers = errorMgr.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
+        const hasSufficientAnswers = _runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
         if (!hasSufficientAnswers) {    // Now checks if there is NOT a runtime error
           console.error("Program failed at loaderManager()");
           return;                       // Exit if there is an infinite loop error
@@ -225,7 +226,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
 
     questionMgr.newQuestion();
     
-    errorMgr.clearError();                            // To remove error messages
+    _clearError();                              // To remove error messages
   }
 
   // to validate input data and set defaults if necessary
@@ -483,7 +484,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
     // Validate syllable choices and show an error if none are selected
     appData.syllableChoice = helpers.convertCheckedValuesToArray('input[name="syllableChoice"]:checked');
     if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
-      errorMgr.runtimeError("noSL");
+      _runtimeError("noSL");
       console.groupEnd();
       return false; // Signal that inputData validation failed
     }

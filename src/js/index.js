@@ -41,26 +41,25 @@ const { removeSpecifiedQuestion, storeToMistakeBank, removeFromMistakeBank, flus
 // Answer Listeners Manager
 const answerListenersMgr = answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, storeToMistakeBank, removeFromMistakeBank, setRanOnce);
 
+// Error Manager
 const errMgr = errorManager(globals, utilsManager, vocabMapping);
+const { runtimeError, showError, clearError } = errMgr;
+
+// Status Manager
+
 const statusMgr = statusManager(globals, utilsManager);
 
 /**
  * Initializes and sets up dependencies for various manager instances.
  * Each instance is provided with the required dependencies to enable
- * communication and functionality across different components of the application.
- * 
- * - `answerMgr.setInstances(answerListenersMgr)`: Links the Answer Manager with the Answer Listeners Manager to handle user input and answer validation.
- * - `questionMgr.setInstances(answerMgr, statusMgr, vocabMgr)`: Configures the Question Manager with dependencies for managing answers, status tracking, and vocabulary data.
- * - `loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errMgr, statusMgr)`: Sets up the Loader Manager with control, question, vocabulary, error, and status managers for managing application flow and state.
- * - `listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr)`: Establishes connections for the Listener Manager, enabling it to coordinate interactions between the loader, control, question, and answer managers.
+ * communication and functionality across different components of the application. 
  */
 setAnswerManagerCallbacks(answerListenersMgr, readStoredLength);
 questionMgr.setQuestionManagerCallbacks(renderAnswers, noMoreQuestion, statusMgr, removeSpecifiedQuestion, saveState);
 
-loaderMgr.setLoaderManagerCallbacks(questionMgr, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, errMgr, statusMgr);
+loaderMgr.setLoaderManagerCallbacks(questionMgr, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, runtimeError, clearError, statusMgr);
 
 listenerMgr.setInstances(loaderMgr, questionMgr, setRanOnce, errMgr, statusMgr);
-
 
 (async function initialize() {
   console.groupCollapsed("initialize()");
