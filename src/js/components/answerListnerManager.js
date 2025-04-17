@@ -1,4 +1,4 @@
-export function answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr, answerMgr) {
+export function answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr, setRanOnce) {
   const { appState, selectors } = globals;
   const { domUtils, displayUtils } = utilsManager;
 
@@ -185,13 +185,13 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
     if (btnID === "continueYes-0") {
       console.info("Clicked Yes");
       questionMgr.setQuestionMode("stored");
-      answerMgr.setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
+      setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       loaderMgr.continuetoStoredData();
     } 
     
     else if (btnID === "continueNo-0") {
       console.info("Clicked No");
-      answerMgr.setRanOnce(false);
+      setRanOnce(false);
       loaderMgr.restart();
     }
     console.groupEnd();

@@ -38,7 +38,7 @@ const { vocabMapping, setAnswerManagerCallbacks, renderAnswers, noMoreQuestion, 
 const vocabMgr =  vocabManager(globals, utilsManager, loaderMgr, questionMgr);
 
 // Answer Listeners Manager
-const answerListenersMgr = answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr, answerMgr);
+const answerListenersMgr = answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr, setRanOnce);
 
 
 const errMgr = errorManager(globals, utilsManager, vocabMapping);
@@ -59,7 +59,6 @@ questionMgr.setInstances(renderAnswers, noMoreQuestion, statusMgr, vocabMgr);
 
 loaderMgr.setInstances(questionMgr, vocabMgr, errMgr, statusMgr);
 listenerMgr.setInstances(loaderMgr, questionMgr, setRanOnce, errMgr, statusMgr);
-
 
 
 (async function initialize() {
