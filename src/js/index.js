@@ -15,9 +15,11 @@ import { utilsManager } from "./utils/utilsManager.js";
 const { appData, selectors } = globals;
 const { displayUtils } = utilsManager;
 
-const listenerMgr = listenerManager(globals, utilsManager, null, null, null, null, null, null);
-const loaderMgr = loaderManager(globals, utilsManager, listenerMgr, null, null, null, null, null);
 const controlMgr = controlManger(globals, utilsManager);
+const {floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlMgr;
+
+const listenerMgr = listenerManager(globals, utilsManager, null, null, null, null, null, null);
+const loaderMgr = loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, null, null, null, null, null);
 
 const questionMgr = questionManager(globals, utilsManager, null, null, null);
 const answerMgr = answerManager(globals, utilsManager, questionMgr, loaderMgr, null, null);
@@ -39,7 +41,7 @@ const statusMgr = statusManager(globals, utilsManager);
 answerMgr.setInstances(answerListenersMgr, vocabMgr);
 questionMgr.setInstances(answerMgr, statusMgr, vocabMgr);
 
-loaderMgr.setInstances(controlMgr, questionMgr, vocabMgr, errMgr, statusMgr);
+loaderMgr.setInstances(questionMgr, vocabMgr, errMgr, statusMgr);
 listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, errMgr, statusMgr);
 
 

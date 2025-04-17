@@ -1,4 +1,4 @@
-export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, questionMgr, vocabMgr, errorMgr, statusMgr) {
+export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, controlMgr, questionMgr, vocabMgr, errorMgr, statusMgr) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
   
@@ -11,8 +11,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
    * @param {object} errMgr - The error manager instance handling runtime errors.
    * @param {object} statusMgr - The status manager instance tracking quiz progress and stats.
   */
-  function setInstances(controlInstance, questionInstance, vocabInstance, errorInstance, statusInstance) {
-    controlMgr = controlInstance;
+  function setInstances(questionInstance, vocabInstance, errorInstance, statusInstance) {
     questionMgr = questionInstance;
     vocabMgr = vocabInstance;
     errorMgr = errorInstance;
@@ -210,9 +209,9 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   function initializeQuiz() {
     listenerMgr.moveForm();
     
-    controlMgr.floatingBtnsHideAll()
-              .toggleFormDisplay()
-              .hideResumeShowBack();
+    floatingBtnsHideAll();
+    toggleFormDisplay();
+    hideResumeShowBack();
 
     statusMgr .resetQuestionCount()
               .resetTotalNoOfQuestion()
