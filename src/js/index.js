@@ -18,7 +18,11 @@ const { displayUtils } = utilsManager;
 const controlMgr = controlManger(globals, utilsManager);
 const {floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlMgr;
 
-const listenerMgr = listenerManager(globals, utilsManager, null, null, null, null, null, null);
+const listenerMgr = listenerManager(
+  globals,
+  { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop },
+  utilsManager, null, null, null, null, null, null);
+
 const loaderMgr = loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, null, null, null, null, null);
 
 const questionMgr = questionManager(globals, utilsManager, null, null, null);
@@ -42,7 +46,7 @@ answerMgr.setInstances(answerListenersMgr, vocabMgr);
 questionMgr.setInstances(answerMgr, statusMgr, vocabMgr);
 
 loaderMgr.setInstances(questionMgr, vocabMgr, errMgr, statusMgr);
-listenerMgr.setInstances(loaderMgr, controlMgr, questionMgr, answerMgr, errMgr, statusMgr);
+listenerMgr.setInstances(loaderMgr, questionMgr, answerMgr, errMgr, statusMgr);
 
 
 (async function initialize() {

@@ -1,10 +1,10 @@
-export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, questionMgr, answerMgr, errorMgr, statusMgr) {
+export function listenerManager(globals, controlManager, utilsManager, loaderMgr, controlMgr, questionMgr, answerMgr, errorMgr, statusMgr) {
   const { appState, selectors, currentStatus } = globals;
+  const { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlManager;
   const { domUtils, displayUtils } = utilsManager;
 
-  function setInstances(loaderInstance, controlInstance, questionInstance, answerInstance, errorInstance, statusInstance){
+  function setInstances(loaderInstance, questionInstance, answerInstance, errorInstance, statusInstance){
     loaderMgr = loaderInstance;
-    controlMgr = controlInstance;
     questionMgr = questionInstance;
     answerMgr = answerInstance;
     errorMgr = errorInstance;
@@ -62,7 +62,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   // to handle when flash mode toogle (previously radio buttons are) is changed
   function flashModeChanges(e) {
     console.groupCollapsed("flashModeChanges()");
-    controlMgr.resetQuestionMode();
+    resetQuestionMode();
     displayUtils.toggleClass('disabled', ...selectors.noOfAnsAll);
     
     // set noOfAns to 2 to bypass runtime error if flashcard mode is selected
@@ -188,13 +188,12 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   
   // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
   function handlebringBackBtn(event) {
-    controlMgr
-      .floatingBtnsHideAll()
-      .toggleFormDisplay()
-      .hideBackShowResume();
+    floatingBtnsHideAll();
+    toggleFormDisplay();
+    hideBackShowResume();
 
     if(currentStatus.mistakeListActive) {
-      controlMgr.toggleShadesOnTop();
+      toggleShadesOnTop();
       toggleMistakeListActive();
     }
     
@@ -207,22 +206,20 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   function handleResumePracticeBtn(event) {
     console.groupCollapsed("handleResumePracticeBtn()");
 
-    controlMgr.floatingBtnsHideAll();
+    floatingBtnsHideAll();
 
     if (statusMgr.goodToResume) { // if the program is still in progress,
       console.info("statusMgr.goodToResume: FALSE");
-      controlMgr
-        .toggleFormDisplay()
-        .hideResumeShowBack();
+      toggleFormDisplay();
+      hideResumeShowBack();
       moveForm();
       statusMgr.goodToResume = false;
       loaderMgr.resumeProgram();
     }
     else {
       console.info("Normal resume procedures.");
-      controlMgr
-        .toggleFormDisplay()
-        .hideResumeShowBack();
+      toggleFormDisplay();
+      hideResumeShowBack();
       debouncedMoveForm(event);
     }
 
@@ -235,10 +232,10 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
 
     toggleMistakeListActive();  // flag = true to show shades on the top.
 
-    controlMgr.floatingBtnsHideAll()
-              .hideResumeShowBack()
-              .toggleShadesOnTop()
-              .toggleFormDisplay('shift-sections-to-top-center');
+    floatingBtnsHideAll();
+    hideResumeShowBack();
+    toggleShadesOnTop();
+    toggleFormDisplay('shift-sections-to-top-center');
 
     domUtils.clearScreen([
       selectors.sectionStatus, 

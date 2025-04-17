@@ -574,7 +574,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
       .toggleClass('overlay-message', selectors.sectionMessage)
       .toggleClass('fade-hide', selectors.sectionMessage);*/
 
-    controlMgr.toggleFormDisplay();
+    toggleFormDisplay();
     listenerMgr.debouncedMoveForm();
     
     rePrintMemory();
