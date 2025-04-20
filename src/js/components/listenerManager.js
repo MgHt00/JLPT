@@ -1,17 +1,19 @@
-export function listenerManager(globals, controlManager, utilsManager, questionMgr) {
+export function listenerManager(globals, controlManager, utilsManager) {
   const { appState, selectors, currentStatus } = globals;
   const { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlManager;
   const { domUtils, displayUtils } = utilsManager;
 
   let _setRanOnce, _clearError, _goodToResume; 
   let _start, _validateAndSetAnswerCount, _rePrintMemory, _listMistakes, _resumeProgram;
-  function setListenerManagerCallbacks(start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram, questionInstance, setRanOnce, clearError, goodToResume){
+  let _setQuestionMode;
+
+  function setListenerManagerCallbacks(start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram, setQuestionMode, setRanOnce, clearError, goodToResume){
     _start = start;
     _validateAndSetAnswerCount = validateAndSetAnswerCount;
     _rePrintMemory = rePrintMemory;
     _listMistakes = listMistakes;
     _resumeProgram = resumeProgram;
-    questionMgr = questionInstance;
+    _setQuestionMode = setQuestionMode;
     _setRanOnce = setRanOnce;
     _clearError = clearError;
     _goodToResume = goodToResume;
@@ -157,12 +159,12 @@ export function listenerManager(globals, controlManager, utilsManager, questionM
     let selectedMode = selectors.readQuestionMode;
 
     if (selectedMode === "fresh") {
-      questionMgr.setQuestionMode("fresh");
+      _setQuestionMode("fresh");
        _setRanOnce(false);
     } 
     
     else if (selectedMode === "stored") {
-      questionMgr.setQuestionMode("stored");
+      _setQuestionMode("stored");
        _setRanOnce(true);
     }
 

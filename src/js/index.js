@@ -34,7 +34,7 @@ const listenerMgr = listenerManager(
     toggleFormDisplay, 
     resetQuestionMode, 
     toggleShadesOnTop },
-  utilsManager, null);
+    utilsManager);
 const {
   setListenerManagerCallbacks,
   generalListeners,
@@ -176,7 +176,7 @@ setLoaderManagerCallbacks(
 
 setListenerManagerCallbacks(
   start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram,
-  questionMgr, 
+  setQuestionMode, 
   setRanOnce, 
   clearError, 
   goodToResume);
