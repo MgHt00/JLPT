@@ -34,7 +34,7 @@ const listenerMgr = listenerManager(
     toggleFormDisplay, 
     resetQuestionMode, 
     toggleShadesOnTop },
-  utilsManager, null, null, null, null);
+  utilsManager, null, null, null);
 
 // Loader Manager
 const loaderMgr = loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, null);
@@ -128,11 +128,11 @@ loaderMgr.setLoaderManagerCallbacks(
   getTotalNoOfQuestions,
   resetCumulativeVariables);
 
-listenerMgr.setInstances(
+listenerMgr.setListenerManagerCallbacks(
   loaderMgr, 
   questionMgr, 
   setRanOnce, 
-  errMgr, 
+  clearError, 
   statusMgr);
 
 (async function initialize() {

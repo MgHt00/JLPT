@@ -1,14 +1,14 @@
-export function listenerManager(globals, controlManager, utilsManager, loaderMgr, questionMgr, errorMgr, statusMgr) {
+export function listenerManager(globals, controlManager, utilsManager, loaderMgr, questionMgr, statusMgr) {
   const { appState, selectors, currentStatus } = globals;
   const { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlManager;
   const { domUtils, displayUtils } = utilsManager;
 
-  let _setRanOnce;
-  function setInstances(loaderInstance, questionInstance, setRanOnce, errorInstance, statusInstance){
+  let _setRanOnce, _clearError;
+  function setListenerManagerCallbacks(loaderInstance, questionInstance, setRanOnce, clearError, statusInstance){
     loaderMgr = loaderInstance;
     questionMgr = questionInstance;
     _setRanOnce = setRanOnce;
-    errorMgr = errorInstance;
+    _clearError = clearError;
     statusMgr = statusInstance;
   }
 
@@ -147,7 +147,7 @@ export function listenerManager(globals, controlManager, utilsManager, loaderMgr
   // to handle when program question mode (fresh / stored) is changed
   function questionModeChanges(e) {
     toggleSettingSyllable();
-    errorMgr.clearError();
+    _clearError();
 
     let selectedMode = selectors.readQuestionMode;
 
@@ -286,7 +286,7 @@ export function listenerManager(globals, controlManager, utilsManager, loaderMgr
   }
   
   return {
-    setInstances,
+    setListenerManagerCallbacks,
     generalListeners,
     moveForm,
     //handlebringBackBtn,
