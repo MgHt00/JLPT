@@ -3,11 +3,11 @@ export function listenerManager(globals, controlManager, utilsManager) {
   const { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlManager;
   const { domUtils, displayUtils } = utilsManager;
 
-  let _setRanOnce, _clearError, _goodToResume; 
+  let _setRanOnce, _clearError, _getGoodToResume, _setGoodToResume; 
   let _start, _validateAndSetAnswerCount, _rePrintMemory, _listMistakes, _resumeProgram;
   let _setQuestionMode;
 
-  function setListenerManagerCallbacks(start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram, setQuestionMode, setRanOnce, clearError, goodToResume){
+  function setListenerManagerCallbacks(start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram, setQuestionMode, setRanOnce, clearError, getGoodToResume, setGoodToResume){
     _start = start;
     _validateAndSetAnswerCount = validateAndSetAnswerCount;
     _rePrintMemory = rePrintMemory;
@@ -16,7 +16,8 @@ export function listenerManager(globals, controlManager, utilsManager) {
     _setQuestionMode = setQuestionMode;
     _setRanOnce = setRanOnce;
     _clearError = clearError;
-    _goodToResume = goodToResume;
+    _getGoodToResume = getGoodToResume;
+    _setGoodToResume = setGoodToResume;
   }
 
   // Wrap the moveForm function with debounce
@@ -216,12 +217,12 @@ export function listenerManager(globals, controlManager, utilsManager) {
 
     floatingBtnsHideAll();
 
-    if (_goodToResume) { // if the program is still in progress,
+    if (_getGoodToResume()) { // if the program is still in progress,
       console.info("statusMgr.goodToResume: FALSE");
       toggleFormDisplay();
       hideResumeShowBack();
       moveForm();
-      _goodToResume = false;
+      _setGoodToResume(false);
       _resumeProgram();
     }
     else {

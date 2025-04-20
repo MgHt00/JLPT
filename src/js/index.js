@@ -110,7 +110,8 @@ const {
   resetCumulativeVariables,
   updateCumulativeAverage,
   stillInProgress,
-  goodToResume } = statusMgr;
+  getGoodToResume,
+  setGoodToResume } = statusMgr;
 
 // Loader Manager
 const loaderMgr = loaderManager(
@@ -180,7 +181,8 @@ setListenerManagerCallbacks(
   setQuestionMode, 
   setRanOnce, 
   clearError, 
-  goodToResume);
+  getGoodToResume,
+  setGoodToResume);
 
 setAnswerListnerManagerCallbacks(
   continuetoStoredData, restart
@@ -220,8 +222,9 @@ setAnswerListnerManagerCallbacks(
 
   // If the program is still in progress, load data from local storage to global objects
   function checkInProgress() {
+    //console.warn(stillInProgress());
     if (stillInProgress()) {
-      goodToResume =  true;
+      setGoodToResume(true);
       hideBackShowResume();
     }
   }

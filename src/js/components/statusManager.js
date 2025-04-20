@@ -197,7 +197,7 @@ export function statusManager(globals, utilsManager) {
     resetCumulativeVariables,
     updateCumulativeAverage,
     stillInProgress,
-    get goodToResume() { return getGoodToResume(); },
-    set goodToResume(value) { setGoodToResume(value); },
+    getGoodToResume,
+    setGoodToResume,
   }
 }
