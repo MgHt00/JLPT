@@ -34,7 +34,7 @@ const listenerMgr = listenerManager(
     toggleFormDisplay, 
     resetQuestionMode, 
     toggleShadesOnTop },
-  utilsManager, null, null, null);
+  utilsManager, null, null);
 
 // Loader Manager
 const loaderMgr = loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, null);
@@ -133,7 +133,7 @@ listenerMgr.setListenerManagerCallbacks(
   questionMgr, 
   setRanOnce, 
   clearError, 
-  statusMgr);
+  goodToResume);
 
 (async function initialize() {
   console.groupCollapsed("initialize()");

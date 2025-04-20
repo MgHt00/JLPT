@@ -1,15 +1,15 @@
-export function listenerManager(globals, controlManager, utilsManager, loaderMgr, questionMgr, statusMgr) {
+export function listenerManager(globals, controlManager, utilsManager, loaderMgr, questionMgr) {
   const { appState, selectors, currentStatus } = globals;
   const { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlManager;
   const { domUtils, displayUtils } = utilsManager;
 
-  let _setRanOnce, _clearError;
-  function setListenerManagerCallbacks(loaderInstance, questionInstance, setRanOnce, clearError, statusInstance){
+  let _setRanOnce, _clearError, _goodToResume;
+  function setListenerManagerCallbacks(loaderInstance, questionInstance, setRanOnce, clearError, goodToResume){
     loaderMgr = loaderInstance;
     questionMgr = questionInstance;
     _setRanOnce = setRanOnce;
     _clearError = clearError;
-    statusMgr = statusInstance;
+    _goodToResume = goodToResume;
   }
 
   // Wrap the moveForm function with debounce
@@ -209,12 +209,12 @@ export function listenerManager(globals, controlManager, utilsManager, loaderMgr
 
     floatingBtnsHideAll();
 
-    if (statusMgr.goodToResume) { // if the program is still in progress,
+    if (_goodToResume) { // if the program is still in progress,
       console.info("statusMgr.goodToResume: FALSE");
       toggleFormDisplay();
       hideResumeShowBack();
       moveForm();
-      statusMgr.goodToResume = false;
+      _goodToResume = false;
       loaderMgr.resumeProgram();
     }
     else {
