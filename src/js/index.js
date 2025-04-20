@@ -12,7 +12,7 @@ import { statusManager } from "./components/statusManager.js";
 
 import { utilsManager } from "./utils/utilsManager.js";
 
-const { appData, selectors } = globals;
+const { selectors } = globals;
 const { displayUtils } = utilsManager;
 
 // Control Manager
@@ -55,7 +55,6 @@ const {
   preloadVocabData,
   start,
   loadMemoryData,
-  loadStoredJSON,
   validateAndSetAnswerCount,
   rePrintMemory,
   continuetoStoredData,
@@ -63,7 +62,6 @@ const {
   listMistakes,
   resumeProgram,
   resetAfterFlushingMistakes,
-  showLoadingMsg,
   checkPreLoadState,
 } = loaderMgr;
 
@@ -104,7 +102,6 @@ const {
   loadMistakesFromMistakeBank, 
   saveState, 
   loadState, 
-  clearState, 
   readStoredLength } = vocabMgr;
 
 // Answer Listeners Manager
@@ -119,7 +116,6 @@ const answerListenersMgr = answerListnerManager(
 const {
   handleFlashcardFlip,
   handleMultipleChoiceAnswer,
-  handleFlashCardYesNoAnswer,
   handleContinueToStoredData,
 } = answerListenersMgr;
 
@@ -133,7 +129,6 @@ const {
   resetQuestionCount,
   resetTotalNoOfQuestion,
   getTotalNoOfQuestions,
-  readQuestionCount,
   increaseQuestionCount,
   printQuestionStatus,
   resetCumulativeVariables,
