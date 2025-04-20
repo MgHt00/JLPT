@@ -49,8 +49,7 @@ const loaderMgr = loaderManager(
   hideResumeShowBack, 
   toggleFormDisplay, 
   utilsManager, 
-  moveForm, handleListMistakeBtn, debouncedMoveForm, 
-  null);
+  moveForm, handleListMistakeBtn, debouncedMoveForm);
 const {
   setLoaderManagerCallbacks,
   preloadVocabData,
@@ -163,7 +162,7 @@ setQuestionManagerCallbacks(
   saveState);
 
 setLoaderManagerCallbacks(
-  questionMgr, 
+  newQuestion, setQuestionMode, 
   flushMistakeBank, 
   loadMistakesFromMistakeBank, 
   loadState, 

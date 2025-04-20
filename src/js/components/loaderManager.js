@@ -1,12 +1,14 @@
-export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, moveForm, handleListMistakeBtn, debouncedMoveForm, questionMgr) {
+export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, moveForm, handleListMistakeBtn, debouncedMoveForm) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
   
   let _flushMistakeBank, _loadMistakesFromMistakeBank, _loadState, _readStoredLength, _runtimeError, _clearError;
   let _resetQuestionCount, _resetTotalNoOfQuestion, _getTotalNoOfQuestions, _resetCumulativeVariables;
+  let _newQuestion, _setQuestionMode;
 
-  function setLoaderManagerCallbacks(questionInstance, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, runtimeError, clearError, resetQuestionCount, resetTotalNoOfQuestion, getTotalNoOfQuestions, resetCumulativeVariables) {
-    questionMgr = questionInstance;
+  function setLoaderManagerCallbacks(newQuestion, setQuestionMode, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, runtimeError, clearError, resetQuestionCount, resetTotalNoOfQuestion, getTotalNoOfQuestions, resetCumulativeVariables) {
+    _newQuestion = newQuestion;
+    _setQuestionMode = setQuestionMode;
     _flushMistakeBank = flushMistakeBank;
     _loadMistakesFromMistakeBank = loadMistakesFromMistakeBank;
     _loadState = loadState;
@@ -220,7 +222,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
               
     _resetCumulativeVariables();       // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
 
-    questionMgr.newQuestion();
+    _newQuestion();
     
     _clearError();                              // To remove error messages
   }
@@ -253,7 +255,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
     console.groupCollapsed("loadFreshJSON()");
     console.info("appData.preloadedVocab:", appData.preloadedVocab);
 
-    questionMgr.setQuestionMode("fresh");
+    _setQuestionMode("fresh");
   
     if (appData.syllableChoice.includes("all")) {     // If "all" is selected
       appData.syllableChoice = mergeVocabKeys();      //[sn9] This replaces syllableChoice with all syllables
@@ -297,7 +299,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   async function loadStoredJSON() {
     console.groupCollapsed("loadStoredJSON()");
 
-    questionMgr.setQuestionMode("stored");                        // Set program's question mode to 'stored'
+    _setQuestionMode("stored");                        // Set program's question mode to 'stored'
     
     const storedData = _loadMistakesFromMistakeBank();
     if (!Array.isArray(storedData)) {                             // Ensure loadMistakesFromMistakeBank returns an array
@@ -330,7 +332,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
     populateVocabProperties(); // Fetch the relevant categories
     assignLanguageBySelection();
 
-    questionMgr.newQuestion();
+    _newQuestion();
 
     console.groupEnd();
   }
@@ -562,7 +564,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
     await loadStoredJSON();   // Wait for loadStoredJSON to complete
 
     _getTotalNoOfQuestions("stored");
-    questionMgr.newQuestion();
+    _newQuestion();
 
     console.groupEnd();
   }
