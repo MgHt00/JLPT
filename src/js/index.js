@@ -150,7 +150,7 @@ listenerMgr.setListenerManagerCallbacks(
     
     loaderMgr.loadMemoryData();
     listenerMgr.generalListeners();
-    controlMgr.floatingBtnsHideAll();
+    floatingBtnsHideAll();
     
     defaultStateClassChanges();
     checkInProgress();
@@ -169,9 +169,9 @@ listenerMgr.setListenerManagerCallbacks(
 
   // If the program is still in progress, load data from local storage to global objects
   function checkInProgress() {
-    if (statusMgr.stillInProgress()) {
-      statusMgr.goodToResume =  true;
-      controlMgr.hideBackShowResume();
+    if (stillInProgress()) {
+      goodToResume =  true;
+      hideBackShowResume();
     }
   }
 })();
