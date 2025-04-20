@@ -1,4 +1,4 @@
-export function vocabManager(globals, utilsManager, loaderMgr, questionMgr) {
+export function vocabManager(globals, utilsManager, loadMemoryData, resetAfterFlushingMistakes, questionMgr) {
   const { appState, appData, currentStatus, selectors } = globals;
   const { domUtils } = utilsManager;
   
@@ -81,7 +81,8 @@ export function vocabManager(globals, utilsManager, loaderMgr, questionMgr) {
       children: selectors.readMemoryBtns,
     });
 
-    loaderMgr.loadMemoryData().resetAfterFlushingMistakes();
+    loadMemoryData();
+    resetAfterFlushingMistakes();
     console.groupEnd();
   }
 

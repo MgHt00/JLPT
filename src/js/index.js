@@ -82,7 +82,7 @@ const {
 const vocabMgr =  vocabManager(
   globals, 
   utilsManager, 
-  loaderMgr, 
+  loadMemoryData, resetAfterFlushingMistakes,
   questionMgr);
 const { 
   removeSpecifiedQuestion, 
