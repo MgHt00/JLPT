@@ -1,4 +1,4 @@
-export function answerManager(globals, utilsManager, questionMgr, loaderInstance, answerListenersMgr, vocabMgr) {
+export function answerManager(globals, utilsManager, questionMgr, loaderInstance, vocabMgr) {
   const { appState, appData, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
 
@@ -8,9 +8,11 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
     en: appData.enVocab,
   };
 
-  let _readStoredLength;
-  function setAnswerManagerCallbacks(answerListenerInstance, readStoredLength) {
-    answerListenersMgr = answerListenerInstance;
+  let _readStoredLength, _handleFlashcardFlip, _handleMultipleChoiceAnswer, _handleContinueToStoredData;
+  function setAnswerManagerCallbacks(handleFlashcardFlip, handleMultipleChoiceAnswer, handleContinueToStoredData, readStoredLength) {
+    _handleFlashcardFlip = handleFlashcardFlip;
+    _handleMultipleChoiceAnswer = handleMultipleChoiceAnswer;
+    _handleContinueToStoredData = handleContinueToStoredData;
     _readStoredLength = readStoredLength;
   }
 
@@ -43,7 +45,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
           content: '',
           className: ['answer-btn', 'check-flash-mode-answer'], 
           id: 'answer-btn', 
-          eventFunction: answerListenersMgr.handleFlashcardFlip,
+          eventFunction: _handleFlashcardFlip,
         },
         flipText: {
           content: 'Flip', 
@@ -53,7 +55,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
         ansArray: {
           content: ansArray, 
           className: 'answer-btn', 
-          eventFunction: answerListenersMgr.handleMultipleChoiceAnswer 
+          eventFunction: _handleMultipleChoiceAnswer 
         },
       }
     }
@@ -169,7 +171,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
         content: contentConfig.content,
         className: isVC ? "vocabs-complete" : "answer-btn",
         id: key,
-        eventFunction: isVC ? null : answerListenersMgr.handleContinueToStoredData,
+        eventFunction: isVC ? null : _handleContinueToStoredData,
       });
     }
   }

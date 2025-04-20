@@ -39,6 +39,7 @@ const listenerMgr = listenerManager(
 // Loader Manager
 const loaderMgr = loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, null);
 
+// Question Manager
 const questionMgr = questionManager(globals, utilsManager, null, null);
 
 // Answer Manager
@@ -46,7 +47,7 @@ const answerMgr = answerManager(
   globals, 
   utilsManager, 
   questionMgr, 
-  loaderMgr, null, null);
+  loaderMgr, null);
 const { 
   vocabMapping, 
   setAnswerManagerCallbacks, 
@@ -80,6 +81,12 @@ const answerListenersMgr = answerListnerManager(
   storeToMistakeBank, 
   removeFromMistakeBank, 
   setRanOnce);
+const {
+  handleFlashcardFlip,
+  handleMultipleChoiceAnswer,
+  handleFlashCardYesNoAnswer,
+  handleContinueToStoredData,
+} = answerListenersMgr;
 
 // Error Manager
 const errMgr = errorManager(globals, utilsManager, vocabMapping);
@@ -104,7 +111,11 @@ const {
  * Each instance is provided with the required dependencies to enable
  * communication and functionality across different components of the application. 
  */
-setAnswerManagerCallbacks(answerListenersMgr, readStoredLength);
+setAnswerManagerCallbacks(
+  handleFlashcardFlip,
+  handleMultipleChoiceAnswer,
+  handleContinueToStoredData, 
+  readStoredLength);
 
 questionMgr.setQuestionManagerCallbacks(
   renderAnswers, 
