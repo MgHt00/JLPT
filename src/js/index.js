@@ -100,7 +100,7 @@ const answerListenersMgr = answerListnerManager(
   globals, 
   utilsManager, 
   questionMgr, 
-  loaderMgr, 
+  continuetoStoredData, restart,
   storeToMistakeBank, 
   removeFromMistakeBank, 
   setRanOnce);
