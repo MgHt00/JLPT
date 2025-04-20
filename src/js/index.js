@@ -28,7 +28,7 @@ const listenerMgr = listenerManager(
 // Loader Manager
 const loaderMgr = loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, null, null, null, null, null);
 
-const questionMgr = questionManager(globals, utilsManager, null, null, null);
+const questionMgr = questionManager(globals, utilsManager, null, null);
 
 // Answer Manager
 const answerMgr = answerManager(globals, utilsManager, questionMgr, loaderMgr, null, null);
@@ -46,8 +46,18 @@ const errMgr = errorManager(globals, utilsManager, vocabMapping);
 const { runtimeError, showError, clearError } = errMgr;
 
 // Status Manager
-
 const statusMgr = statusManager(globals, utilsManager);
+const {
+  resetQuestionCount,
+  resetTotalNoOfQuestion,
+  getTotalNoOfQuestions,
+  readQuestionCount,
+  increaseQuestionCount,
+  printQuestionStatus,
+  resetCumulativeVariables,
+  updateCumulativeAverage,
+  stillInProgress,
+  goodToResume } = statusMgr;
 
 /**
  * Initializes and sets up dependencies for various manager instances.
@@ -55,7 +65,7 @@ const statusMgr = statusManager(globals, utilsManager);
  * communication and functionality across different components of the application. 
  */
 setAnswerManagerCallbacks(answerListenersMgr, readStoredLength);
-questionMgr.setQuestionManagerCallbacks(renderAnswers, noMoreQuestion, statusMgr, removeSpecifiedQuestion, saveState);
+questionMgr.setQuestionManagerCallbacks(renderAnswers, noMoreQuestion, increaseQuestionCount, printQuestionStatus, updateCumulativeAverage, removeSpecifiedQuestion, saveState);
 
 loaderMgr.setLoaderManagerCallbacks(questionMgr, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, runtimeError, clearError, statusMgr);
 
