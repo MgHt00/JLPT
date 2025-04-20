@@ -112,7 +112,7 @@ const {
 const answerListenersMgr = answerListnerManager(
   globals, 
   utilsManager, 
-  questionMgr, 
+  finalizeQuestionAndProceed, setQuestionMode, readQuestionMode, 
   continuetoStoredData, restart,
   storeToMistakeBank, 
   removeFromMistakeBank, 
