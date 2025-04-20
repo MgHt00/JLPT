@@ -35,6 +35,12 @@ const listenerMgr = listenerManager(
     resetQuestionMode, 
     toggleShadesOnTop },
   utilsManager, null);
+const {
+  setListenerManagerCallbacks,
+  generalListeners,
+  moveForm,
+  handleListMistakeBtn,
+  debouncedMoveForm } = listenerMgr;
 
 // Loader Manager
 const loaderMgr = loaderManager(
@@ -43,7 +49,7 @@ const loaderMgr = loaderManager(
   hideResumeShowBack, 
   toggleFormDisplay, 
   utilsManager, 
-  listenerMgr, 
+  moveForm, handleListMistakeBtn, debouncedMoveForm, 
   null);
 const {
   setLoaderManagerCallbacks,
@@ -162,7 +168,7 @@ setLoaderManagerCallbacks(
   getTotalNoOfQuestions,
   resetCumulativeVariables);
 
-listenerMgr.setListenerManagerCallbacks(
+setListenerManagerCallbacks(
   start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram,
   questionMgr, 
   setRanOnce, 
@@ -183,7 +189,7 @@ listenerMgr.setListenerManagerCallbacks(
     console.groupCollapsed("onPreloadComplete()");
     
     loadMemoryData();
-    listenerMgr.generalListeners();
+    generalListeners();
     floatingBtnsHideAll();
     
     defaultStateClassChanges();

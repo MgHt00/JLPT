@@ -1,4 +1,4 @@
-export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, questionMgr) {
+export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, moveForm, handleListMistakeBtn, debouncedMoveForm, questionMgr) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
   
@@ -208,7 +208,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
 
   // Function to initialize quiz settings and UI setup
   function initializeQuiz() {
-    listenerMgr.moveForm();
+    moveForm();
     
     floatingBtnsHideAll();
     toggleFormDisplay();
@@ -397,7 +397,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
           icon: '<i class="fa-solid fa-rectangle-list"></i>',
           className:'list-memory-setting-btn',
           id: 'list-memory-btn',
-          handler: listenerMgr.handleListMistakeBtn,
+          handler: handleListMistakeBtn,
         }
       }  
       
@@ -576,7 +576,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
       .toggleClass('fade-hide', selectors.sectionMessage);*/
 
     toggleFormDisplay();
-    listenerMgr.debouncedMoveForm();
+    debouncedMoveForm();
     
     rePrintMemory();
   }
