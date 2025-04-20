@@ -1,18 +1,11 @@
-export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, controlMgr, questionMgr, vocabMgr, errorMgr, statusMgr) {
+export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, questionMgr) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
   
   let _flushMistakeBank, _loadMistakesFromMistakeBank, _loadState, _readStoredLength, _runtimeError, _clearError;
-  /**
-   * Sets the instances of the control, question, vocabulary, error, and status managers.
-   * 
-   * @param {object} controlMgr - The control manager instance responsible for UI control actions.
-   * @param {object} questionInstance - The question manager instance handling question logic.
-   * @param {object} vocabInstance - The vocabulary manager instance managing vocabulary data.
-   * @param {object} errMgr - The error manager instance handling runtime errors.
-   * @param {object} statusMgr - The status manager instance tracking quiz progress and stats.
-  */
-  function setLoaderManagerCallbacks(questionInstance, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, runtimeError, clearError, statusInstance) {
+  let _resetQuestionCount, _resetTotalNoOfQuestion, _getTotalNoOfQuestions, _resetCumulativeVariables;
+
+  function setLoaderManagerCallbacks(questionInstance, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, runtimeError, clearError, resetQuestionCount, resetTotalNoOfQuestion, getTotalNoOfQuestions, resetCumulativeVariables) {
     questionMgr = questionInstance;
     _flushMistakeBank = flushMistakeBank;
     _loadMistakesFromMistakeBank = loadMistakesFromMistakeBank;
@@ -20,7 +13,10 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
     _readStoredLength = readStoredLength;
     _runtimeError = runtimeError;
     _clearError = clearError;
-    statusMgr = statusInstance;
+    _resetQuestionCount = resetQuestionCount;
+    _resetTotalNoOfQuestion = resetTotalNoOfQuestion;
+    _getTotalNoOfQuestions = getTotalNoOfQuestions;
+    _resetCumulativeVariables = resetCumulativeVariables;
   }
 
   const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
@@ -218,11 +214,11 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
     toggleFormDisplay();
     hideResumeShowBack();
 
-    statusMgr .resetQuestionCount()
-              .resetTotalNoOfQuestion()
-              .getTotalNoOfQuestions("fresh");  // for status bar, reset and set No. of Question
+    _resetQuestionCount()
+    _resetTotalNoOfQuestion()
+    _getTotalNoOfQuestions("fresh");  // for status bar, reset and set No. of Question
               
-    statusMgr.resetCumulativeVariables();       // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
+    _resetCumulativeVariables();       // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
 
     questionMgr.newQuestion();
     
@@ -565,7 +561,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
     }
     await loadStoredJSON();   // Wait for loadStoredJSON to complete
 
-    statusMgr.getTotalNoOfQuestions("stored");
+    _getTotalNoOfQuestions("stored");
     questionMgr.newQuestion();
 
     console.groupEnd();

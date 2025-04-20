@@ -37,7 +37,7 @@ const listenerMgr = listenerManager(
   utilsManager, null, null, null, null);
 
 // Loader Manager
-const loaderMgr = loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, null, null, null, null, null);
+const loaderMgr = loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, null);
 
 const questionMgr = questionManager(globals, utilsManager, null, null);
 
@@ -123,7 +123,10 @@ loaderMgr.setLoaderManagerCallbacks(
   readStoredLength, 
   runtimeError, 
   clearError, 
-  statusMgr);
+  resetQuestionCount,
+  resetTotalNoOfQuestion,
+  getTotalNoOfQuestions,
+  resetCumulativeVariables);
 
 listenerMgr.setInstances(
   loaderMgr, 

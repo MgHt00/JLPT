@@ -1,4 +1,4 @@
-export function listenerManager(globals, controlManager, utilsManager, loaderMgr, controlMgr, questionMgr, answerMgr, errorMgr, statusMgr) {
+export function listenerManager(globals, controlManager, utilsManager, loaderMgr, questionMgr, errorMgr, statusMgr) {
   const { appState, selectors, currentStatus } = globals;
   const { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlManager;
   const { domUtils, displayUtils } = utilsManager;
