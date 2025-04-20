@@ -37,7 +37,30 @@ const listenerMgr = listenerManager(
   utilsManager, null, null);
 
 // Loader Manager
-const loaderMgr = loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, null);
+const loaderMgr = loaderManager(
+  globals, 
+  floatingBtnsHideAll, 
+  hideResumeShowBack, 
+  toggleFormDisplay, 
+  utilsManager, 
+  listenerMgr, 
+  null);
+const {
+  setLoaderManagerCallbacks,
+  preloadVocabData,
+  start,
+  loadMemoryData,
+  loadStoredJSON,
+  validateAndSetAnswerCount,
+  rePrintMemory,
+  continuetoStoredData,
+  restart,
+  listMistakes,
+  resumeProgram,
+  resetAfterFlushingMistakes,
+  showLoadingMsg,
+  checkPreLoadState,
+} = loaderMgr;
 
 // Question Manager
 const questionMgr = questionManager(globals, utilsManager, null, null);
@@ -47,7 +70,7 @@ const answerMgr = answerManager(
   globals, 
   utilsManager, 
   questionMgr, 
-  loaderMgr, null);
+  restart);
 const { 
   vocabMapping, 
   setAnswerManagerCallbacks, 

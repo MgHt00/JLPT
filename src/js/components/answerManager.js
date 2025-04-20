@@ -1,4 +1,4 @@
-export function answerManager(globals, utilsManager, questionMgr, loaderInstance, vocabMgr) {
+export function answerManager(globals, utilsManager, questionMgr, restart) {
   const { appState, appData, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
 
@@ -196,7 +196,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
           parent: selectors.sectionAnswer,
           content: 'Let\'s Restart!',
           className: 'answer-btn',
-          eventFunction: loaderInstance.restart,
+          eventFunction: restart,
         },
       }
     }
@@ -209,7 +209,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
         content: config.content, 
         className: config.className, 
         id: config.id ?? 'answer-btn', 
-        eventFunction: config.eventFunction ?? loaderInstance.restart,
+        eventFunction: config.eventFunction ?? restart,
       });
     }
   }
