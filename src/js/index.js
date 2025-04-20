@@ -17,13 +17,24 @@ const { displayUtils } = utilsManager;
 
 // Control Manager
 const controlMgr = controlManger(globals, utilsManager);
-const {floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlMgr;
+const {
+  floatingBtnsHideAll, 
+  hideResumeShowBack, 
+  hideBackShowResume, 
+  toggleFormDisplay, 
+  resetQuestionMode, 
+  toggleShadesOnTop } = controlMgr;
 
 // Listener Manager
 const listenerMgr = listenerManager(
   globals,
-  { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop },
-  utilsManager, null, null, null, null, null, null);
+  { floatingBtnsHideAll, 
+    hideResumeShowBack, 
+    hideBackShowResume, 
+    toggleFormDisplay, 
+    resetQuestionMode, 
+    toggleShadesOnTop },
+  utilsManager, null, null, null, null);
 
 // Loader Manager
 const loaderMgr = loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, listenerMgr, null, null, null, null, null);
@@ -31,15 +42,44 @@ const loaderMgr = loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack
 const questionMgr = questionManager(globals, utilsManager, null, null);
 
 // Answer Manager
-const answerMgr = answerManager(globals, utilsManager, questionMgr, loaderMgr, null, null);
-const { vocabMapping, setAnswerManagerCallbacks, renderAnswers, noMoreQuestion, setRanOnce } = answerMgr;
+const answerMgr = answerManager(
+  globals, 
+  utilsManager, 
+  questionMgr, 
+  loaderMgr, null, null);
+const { 
+  vocabMapping, 
+  setAnswerManagerCallbacks, 
+  renderAnswers, 
+  noMoreQuestion, 
+  setRanOnce } = answerMgr;
 
 // Vocab Manager
-const vocabMgr =  vocabManager(globals, utilsManager, loaderMgr, questionMgr);
-const { removeSpecifiedQuestion, storeToMistakeBank, removeFromMistakeBank, flushMistakeBank, loadMistakesFromMistakeBank, saveState, loadState, clearState, readStoredLength } = vocabMgr;
+const vocabMgr =  vocabManager(
+  globals, 
+  utilsManager, 
+  loaderMgr, 
+  questionMgr);
+const { 
+  removeSpecifiedQuestion, 
+  storeToMistakeBank, 
+  removeFromMistakeBank, 
+  flushMistakeBank, 
+  loadMistakesFromMistakeBank, 
+  saveState, 
+  loadState, 
+  clearState, 
+  readStoredLength } = vocabMgr;
 
 // Answer Listeners Manager
-const answerListenersMgr = answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, storeToMistakeBank, removeFromMistakeBank, setRanOnce);
+const answerListenersMgr = answerListnerManager(
+  globals, 
+  utilsManager, 
+  questionMgr, 
+  loaderMgr, 
+  storeToMistakeBank, 
+  removeFromMistakeBank, 
+  setRanOnce);
 
 // Error Manager
 const errMgr = errorManager(globals, utilsManager, vocabMapping);
@@ -65,11 +105,32 @@ const {
  * communication and functionality across different components of the application. 
  */
 setAnswerManagerCallbacks(answerListenersMgr, readStoredLength);
-questionMgr.setQuestionManagerCallbacks(renderAnswers, noMoreQuestion, increaseQuestionCount, printQuestionStatus, updateCumulativeAverage, removeSpecifiedQuestion, saveState);
 
-loaderMgr.setLoaderManagerCallbacks(questionMgr, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, runtimeError, clearError, statusMgr);
+questionMgr.setQuestionManagerCallbacks(
+  renderAnswers, 
+  noMoreQuestion, 
+  increaseQuestionCount, 
+  printQuestionStatus, 
+  updateCumulativeAverage, 
+  removeSpecifiedQuestion, 
+  saveState);
 
-listenerMgr.setInstances(loaderMgr, questionMgr, setRanOnce, errMgr, statusMgr);
+loaderMgr.setLoaderManagerCallbacks(
+  questionMgr, 
+  flushMistakeBank, 
+  loadMistakesFromMistakeBank, 
+  loadState, 
+  readStoredLength, 
+  runtimeError, 
+  clearError, 
+  statusMgr);
+
+listenerMgr.setInstances(
+  loaderMgr, 
+  questionMgr, 
+  setRanOnce, 
+  errMgr, 
+  statusMgr);
 
 (async function initialize() {
   console.groupCollapsed("initialize()");
