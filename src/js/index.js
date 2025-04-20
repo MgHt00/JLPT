@@ -172,8 +172,8 @@ listenerMgr.setListenerManagerCallbacks(
 (async function initialize() {
   console.groupCollapsed("initialize()");
 
-  await loaderMgr.preloadVocabData();            // ensures that the function fully completes before moving on 
-  await loaderMgr.checkPreLoadState();
+  await preloadVocabData();            // ensures that the function fully completes before moving on 
+  await checkPreLoadState();
   onPreloadComplete();
 
   console.groupEnd();
@@ -182,7 +182,7 @@ listenerMgr.setListenerManagerCallbacks(
   function onPreloadComplete() {
     console.groupCollapsed("onPreloadComplete()");
     
-    loaderMgr.loadMemoryData();
+    loadMemoryData();
     listenerMgr.generalListeners();
     floatingBtnsHideAll();
     
