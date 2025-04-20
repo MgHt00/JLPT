@@ -1,4 +1,4 @@
-export function answerManager(globals, utilsManager, setQuestionMode, readQuestionObj, readQuestionMode, restart) {
+export function answerManager(globals, utilsManager, setQuestionMode, readQuestionObj, readQuestionMode) {
   const { appState, appData, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
 
@@ -8,8 +8,9 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
     en: appData.enVocab,
   };
 
-  let _readStoredLength, _handleFlashcardFlip, _handleMultipleChoiceAnswer, _handleContinueToStoredData;
-  function setAnswerManagerCallbacks(handleFlashcardFlip, handleMultipleChoiceAnswer, handleContinueToStoredData, readStoredLength) {
+  let _restart, _readStoredLength, _handleFlashcardFlip, _handleMultipleChoiceAnswer, _handleContinueToStoredData;
+  function setAnswerManagerCallbacks(restart, handleFlashcardFlip, handleMultipleChoiceAnswer, handleContinueToStoredData, readStoredLength) {
+    _restart = restart;
     _handleFlashcardFlip = handleFlashcardFlip;
     _handleMultipleChoiceAnswer = handleMultipleChoiceAnswer;
     _handleContinueToStoredData = handleContinueToStoredData;
@@ -196,7 +197,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
           parent: selectors.sectionAnswer,
           content: 'Let\'s Restart!',
           className: 'answer-btn',
-          eventFunction: restart,
+          eventFunction: _restart,
         },
       }
     }
@@ -209,7 +210,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
         content: config.content, 
         className: config.className, 
         id: config.id ?? 'answer-btn', 
-        eventFunction: config.eventFunction ?? restart,
+        eventFunction: config.eventFunction ?? _restart,
       });
     }
   }

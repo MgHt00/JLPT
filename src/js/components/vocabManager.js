@@ -1,6 +1,12 @@
-export function vocabManager(globals, utilsManager, loadMemoryData, resetAfterFlushingMistakes, readQuestionObj) {
+export function vocabManager(globals, utilsManager, readQuestionObj) {
   const { appState, appData, currentStatus, selectors } = globals;
   const { domUtils } = utilsManager;
+
+  let _loadMemoryData, _resetAfterFlushingMistakes;
+  function setVocabManagerCallbacks(loadMemoryData, resetAfterFlushingMistakes) {
+    _loadMemoryData = loadMemoryData;
+    _resetAfterFlushingMistakes = resetAfterFlushingMistakes;
+  }
   
   // to remove passed question number from the array
   function removeSpecifiedQuestion(i) {
@@ -81,8 +87,8 @@ export function vocabManager(globals, utilsManager, loadMemoryData, resetAfterFl
       children: selectors.readMemoryBtns,
     });
 
-    loadMemoryData();
-    resetAfterFlushingMistakes();
+    _loadMemoryData();
+    _resetAfterFlushingMistakes();
     console.groupEnd();
   }
 
@@ -131,6 +137,7 @@ export function vocabManager(globals, utilsManager, loadMemoryData, resetAfterFl
   }
 
   return {
+    setVocabManagerCallbacks,
     removeSpecifiedQuestion,
     storeToMistakeBank,
     removeFromMistakeBank,

@@ -42,6 +42,76 @@ const {
   handleListMistakeBtn,
   debouncedMoveForm } = listenerMgr;
 
+// Question Manager
+const questionMgr = questionManager(globals, utilsManager, null, null);
+const {
+  setQuestionManagerCallbacks,
+  newQuestion,
+  finalizeQuestionAndProceed,
+  setQuestionMode,
+  readQuestionObj,
+  readQuestionMode } = questionMgr;
+
+// Answer Manager
+const answerMgr = answerManager(
+  globals, 
+  utilsManager, 
+  setQuestionMode, readQuestionObj, readQuestionMode);
+const { 
+  vocabMapping, 
+  setAnswerManagerCallbacks, 
+  renderAnswers, 
+  noMoreQuestion, 
+  setRanOnce } = answerMgr;
+
+// Vocab Manager
+const vocabMgr =  vocabManager(
+  globals, 
+  utilsManager,
+  readQuestionObj);
+const { 
+  setVocabManagerCallbacks,
+  removeSpecifiedQuestion, 
+  storeToMistakeBank, 
+  removeFromMistakeBank, 
+  flushMistakeBank, 
+  loadMistakesFromMistakeBank, 
+  saveState, 
+  loadState, 
+  readStoredLength } = vocabMgr;
+
+// Answer Listeners Manager
+const answerListenersMgr = answerListnerManager(
+  globals, 
+  utilsManager, 
+  finalizeQuestionAndProceed, setQuestionMode, readQuestionMode, 
+  storeToMistakeBank, 
+  removeFromMistakeBank, 
+  setRanOnce);
+const {
+  setAnswerListnerManagerCallbacks,
+  handleFlashcardFlip,
+  handleMultipleChoiceAnswer,
+  handleContinueToStoredData,
+} = answerListenersMgr;
+
+// Error Manager
+const errMgr = errorManager(globals, utilsManager, vocabMapping);
+const { runtimeError, showError, clearError } = errMgr;
+
+// Status Manager
+const statusMgr = statusManager(globals, utilsManager);
+const {
+  resetQuestionCount,
+  resetTotalNoOfQuestion,
+  getTotalNoOfQuestions,
+  increaseQuestionCount,
+  printQuestionStatus,
+  resetCumulativeVariables,
+  updateCumulativeAverage,
+  stillInProgress,
+  goodToResume } = statusMgr;
+
 // Loader Manager
 const loaderMgr = loaderManager(
   globals, 
@@ -65,76 +135,7 @@ const {
   checkPreLoadState,
 } = loaderMgr;
 
-// Question Manager
-const questionMgr = questionManager(globals, utilsManager, null, null);
-const {
-  setQuestionManagerCallbacks,
-  newQuestion,
-  finalizeQuestionAndProceed,
-  setQuestionMode,
-  readQuestionObj,
-  readQuestionMode } = questionMgr;
-
-// Answer Manager
-const answerMgr = answerManager(
-  globals, 
-  utilsManager, 
-  setQuestionMode, readQuestionObj, readQuestionMode, 
-  restart);
-const { 
-  vocabMapping, 
-  setAnswerManagerCallbacks, 
-  renderAnswers, 
-  noMoreQuestion, 
-  setRanOnce } = answerMgr;
-
-// Vocab Manager
-const vocabMgr =  vocabManager(
-  globals, 
-  utilsManager, 
-  loadMemoryData, resetAfterFlushingMistakes,
-  readQuestionObj);
-const { 
-  removeSpecifiedQuestion, 
-  storeToMistakeBank, 
-  removeFromMistakeBank, 
-  flushMistakeBank, 
-  loadMistakesFromMistakeBank, 
-  saveState, 
-  loadState, 
-  readStoredLength } = vocabMgr;
-
-// Answer Listeners Manager
-const answerListenersMgr = answerListnerManager(
-  globals, 
-  utilsManager, 
-  finalizeQuestionAndProceed, setQuestionMode, readQuestionMode, 
-  continuetoStoredData, restart,
-  storeToMistakeBank, 
-  removeFromMistakeBank, 
-  setRanOnce);
-const {
-  handleFlashcardFlip,
-  handleMultipleChoiceAnswer,
-  handleContinueToStoredData,
-} = answerListenersMgr;
-
-// Error Manager
-const errMgr = errorManager(globals, utilsManager, vocabMapping);
-const { runtimeError, showError, clearError } = errMgr;
-
-// Status Manager
-const statusMgr = statusManager(globals, utilsManager);
-const {
-  resetQuestionCount,
-  resetTotalNoOfQuestion,
-  getTotalNoOfQuestions,
-  increaseQuestionCount,
-  printQuestionStatus,
-  resetCumulativeVariables,
-  updateCumulativeAverage,
-  stillInProgress,
-  goodToResume } = statusMgr;
+loadMemoryData, resetAfterFlushingMistakes,
 
 /**
  * Initializes and sets up dependencies for various manager instances.
@@ -142,10 +143,15 @@ const {
  * communication and functionality across different components of the application. 
  */
 setAnswerManagerCallbacks(
+  restart,
   handleFlashcardFlip,
   handleMultipleChoiceAnswer,
   handleContinueToStoredData, 
   readStoredLength);
+
+setVocabManagerCallbacks(
+  loadMemoryData, resetAfterFlushingMistakes
+);
 
 setQuestionManagerCallbacks(
   renderAnswers, 
@@ -175,6 +181,10 @@ setListenerManagerCallbacks(
   setRanOnce, 
   clearError, 
   goodToResume);
+
+setAnswerListnerManagerCallbacks(
+  continuetoStoredData, restart
+);
 
 (async function initialize() {
   console.groupCollapsed("initialize()");
