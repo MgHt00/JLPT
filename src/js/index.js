@@ -70,12 +70,19 @@ const {
 
 // Question Manager
 const questionMgr = questionManager(globals, utilsManager, null, null);
+const {
+  setQuestionManagerCallbacks,
+  newQuestion,
+  finalizeQuestionAndProceed,
+  setQuestionMode,
+  readQuestionObj,
+  readQuestionMode } = questionMgr;
 
 // Answer Manager
 const answerMgr = answerManager(
   globals, 
   utilsManager, 
-  questionMgr, 
+  setQuestionMode, readQuestionObj, readQuestionMode, 
   restart);
 const { 
   vocabMapping, 
@@ -146,7 +153,7 @@ setAnswerManagerCallbacks(
   handleContinueToStoredData, 
   readStoredLength);
 
-questionMgr.setQuestionManagerCallbacks(
+setQuestionManagerCallbacks(
   renderAnswers, 
   noMoreQuestion, 
   increaseQuestionCount, 
