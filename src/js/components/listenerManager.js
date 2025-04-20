@@ -1,11 +1,16 @@
-export function listenerManager(globals, controlManager, utilsManager, loaderMgr, questionMgr) {
+export function listenerManager(globals, controlManager, utilsManager, questionMgr) {
   const { appState, selectors, currentStatus } = globals;
   const { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlManager;
   const { domUtils, displayUtils } = utilsManager;
 
-  let _setRanOnce, _clearError, _goodToResume;
-  function setListenerManagerCallbacks(loaderInstance, questionInstance, setRanOnce, clearError, goodToResume){
-    loaderMgr = loaderInstance;
+  let _setRanOnce, _clearError, _goodToResume; 
+  let _start, _validateAndSetAnswerCount, _rePrintMemory, _listMistakes, _resumeProgram;
+  function setListenerManagerCallbacks(start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram, questionInstance, setRanOnce, clearError, goodToResume){
+    _start = start;
+    _validateAndSetAnswerCount = validateAndSetAnswerCount;
+    _rePrintMemory = rePrintMemory;
+    _listMistakes = listMistakes;
+    _resumeProgram = resumeProgram;
     questionMgr = questionInstance;
     _setRanOnce = setRanOnce;
     _clearError = clearError;
@@ -17,7 +22,7 @@ export function listenerManager(globals, controlManager, utilsManager, loaderMgr
 
   // All event Listeners
   function generalListeners() {
-    selectors.settingForm.addEventListener('submit', loaderMgr.start); // [sn17]
+    selectors.settingForm.addEventListener('submit', _start); // [sn17]
     selectors.switchRandomYesNo.addEventListener('change', randomToggleChanges);
     selectors.switchFlashYesNo.addEventListener('change', flashModeToggleChanges); // to handle toggle switch
     selectors.settingFlashYesNo.addEventListener('change', flashModeChanges); // to show answer options and check runtime error 
@@ -73,7 +78,7 @@ export function listenerManager(globals, controlManager, utilsManager, loaderMgr
       appState.noOfAnswers = 2;
     } else {
       // Validate number of answers and set default if invalid
-      loaderMgr.validateAndSetAnswerCount();
+      _validateAndSetAnswerCount();
     }
     console.groupEnd();
   }
@@ -200,7 +205,7 @@ export function listenerManager(globals, controlManager, utilsManager, loaderMgr
     
     event.stopPropagation(); // Prevent event from bubbling up
     debouncedMoveForm(event); // Pass the event to the debounced function
-    loaderMgr.rePrintMemory();
+    _rePrintMemory();
   }
 
   // When resumePracticeBtn is clicked
@@ -215,7 +220,7 @@ export function listenerManager(globals, controlManager, utilsManager, loaderMgr
       hideResumeShowBack();
       moveForm();
       _goodToResume = false;
-      loaderMgr.resumeProgram();
+      _resumeProgram();
     }
     else {
       console.info("Normal resume procedures.");
@@ -245,7 +250,7 @@ export function listenerManager(globals, controlManager, utilsManager, loaderMgr
       selectors.sectionAnswer
     ], "fast");
 
-    loaderMgr.listMistakes();
+    _listMistakes();
 
     console.groupEnd();
   }

@@ -34,7 +34,7 @@ const listenerMgr = listenerManager(
     toggleFormDisplay, 
     resetQuestionMode, 
     toggleShadesOnTop },
-  utilsManager, null, null);
+  utilsManager, null);
 
 // Loader Manager
 const loaderMgr = loaderManager(
@@ -149,7 +149,7 @@ questionMgr.setQuestionManagerCallbacks(
   removeSpecifiedQuestion, 
   saveState);
 
-loaderMgr.setLoaderManagerCallbacks(
+setLoaderManagerCallbacks(
   questionMgr, 
   flushMistakeBank, 
   loadMistakesFromMistakeBank, 
@@ -163,7 +163,7 @@ loaderMgr.setLoaderManagerCallbacks(
   resetCumulativeVariables);
 
 listenerMgr.setListenerManagerCallbacks(
-  loaderMgr, 
+  start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram,
   questionMgr, 
   setRanOnce, 
   clearError, 
