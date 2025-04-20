@@ -5,7 +5,7 @@ import { loaderManager } from "./components/loaderManager.js";
 import { controlManger } from "./components/controlManager.js";
 import { questionManager } from "./components/questionManager.js";
 import { answerManager } from "./components/answerManager.js";
-import { answerListnerManager } from "./components/answerListnerManager.js";
+import { answerListnerManager } from "./components/answerListenerManager.js";
 import { vocabManager } from "./components/vocabManager.js";
 import { errorManager } from "./components/errorManager.js";
 import { statusManager } from "./components/statusManager.js";
