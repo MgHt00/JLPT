@@ -96,7 +96,7 @@ const vocabMgr =  vocabManager(
   globals, 
   utilsManager, 
   loadMemoryData, resetAfterFlushingMistakes,
-  questionMgr);
+  readQuestionObj);
 const { 
   removeSpecifiedQuestion, 
   storeToMistakeBank, 
