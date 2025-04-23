@@ -1,11 +1,12 @@
-export function vocabManager(globals, utilsManager, readQuestionObj) {
+export function vocabManager(globals, utilsManager) {
   const { appState, appData, currentStatus, selectors } = globals;
   const { domUtils } = utilsManager;
 
-  let _loadMemoryData, _resetAfterFlushingMistakes;
-  function setVocabManagerCallbacks(loadMemoryData, resetAfterFlushingMistakes) {
+  let _loadMemoryData, _resetAfterFlushingMistakes, _readQuestionObj;
+  function setVocabManagerCallbacks(loadMemoryData, resetAfterFlushingMistakes, readQuestionObj) {
     _loadMemoryData = loadMemoryData;
     _resetAfterFlushingMistakes = resetAfterFlushingMistakes;
+    _readQuestionObj = readQuestionObj;
   }
   
   // to remove passed question number from the array
@@ -26,14 +27,14 @@ export function vocabManager(globals, utilsManager, readQuestionObj) {
 
     // [sn6] Check if the object already exists in the array
     let exists = incorrectSets.some(answer =>
-      answer.ka === readQuestionObj().ka &&
-      answer.hi === readQuestionObj().hi &&
-      answer.en === readQuestionObj().en
+      answer.ka === _readQuestionObj().ka &&
+      answer.hi === _readQuestionObj().hi &&
+      answer.en === _readQuestionObj().en
     );
 
     // If it doesn't exist, add it to the array
     if (!exists) {
-      incorrectSets.push(readQuestionObj());
+      incorrectSets.push(_readQuestionObj());
       console.info("New word pushed to localstorage.");
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
     } else {
@@ -49,7 +50,7 @@ export function vocabManager(globals, utilsManager, readQuestionObj) {
     let incorrectSets = loadMistakesFromMistakeBank();
 
     console.info("incorrectSets Before popping: ", incorrectSets);
-    incorrectSets.pop(readQuestionObj());
+    incorrectSets.pop(_readQuestionObj());
     console.info("incorrectSets AFTER popping: ", incorrectSets);
 
     localStorage.setItem("toPractice", JSON.stringify(incorrectSets));

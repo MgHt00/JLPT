@@ -1,20 +1,16 @@
-export function questionManager(globals, utilsManager, answerMgr, vocabMgr) {
+export function questionManager(globals, utilsManager, statusFns, vocabFns) {
   const { appState, appData, selectors } = globals;
   const { helpers, domUtils } = utilsManager;
+  const { increaseQuestionCount, printQuestionStatus, updateCumulativeAverage } = statusFns;
+  const { removeSpecifiedQuestion, saveState } = vocabFns
 
   let questionObj = {};
 
-  let _renderAnswers, _noMoreQuestion, _removeSpecifiedQuestion, _saveState;
-  let _increaseQuestionCount, _printQuestionStatus, _updateCumulativeAverage;
+  let _renderAnswers, _noMoreQuestion;
 
-  function setQuestionManagerCallbacks(renderAnswers, noMoreQuestion, increaseQuestionCount, printQuestionStatus, updateCumulativeAverage, removeSpecifiedQuestion, saveState) {
+  function setQuestionManagerCallbacks(renderAnswers, noMoreQuestion) {
     _renderAnswers = renderAnswers;
     _noMoreQuestion = noMoreQuestion;
-    _increaseQuestionCount = increaseQuestionCount;
-    _printQuestionStatus = printQuestionStatus;
-    _updateCumulativeAverage = updateCumulativeAverage;
-    _removeSpecifiedQuestion = removeSpecifiedQuestion;
-    _saveState = saveState;
   }
 
   // to start a new question
@@ -30,7 +26,7 @@ export function questionManager(globals, utilsManager, answerMgr, vocabMgr) {
 
     domUtils.clearScreen([selectors.sectionQuestion, selectors.sectionMessage, selectors.sectionAnswer]);
 
-    _printQuestionStatus() // show current status
+    printQuestionStatus() // show current status
 
     setTimeout(() => {
       if (appData.vocabArray.length >= 1) { // check if there are still questions left to show.
@@ -43,7 +39,7 @@ export function questionManager(globals, utilsManager, answerMgr, vocabMgr) {
         // Once a valid question is found, store the correct answer
         appState.correctAns = questionObj[selectors.aChoice.value].toLowerCase().trim(); // Store correct answer
         
-        _increaseQuestionCount(); // increse question count for status bar  
+        increaseQuestionCount(); // increse question count for status bar  
         //console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
         
         domUtils.buildNode({ 
@@ -57,7 +53,7 @@ export function questionManager(globals, utilsManager, answerMgr, vocabMgr) {
       }      
     }, 350); // Matches the transition duration
 
-    _saveState(); // Save the current state to localStorage
+    saveState(); // Save the current state to localStorage
     console.groupEnd();
   }
 
@@ -99,15 +95,15 @@ export function questionManager(globals, utilsManager, answerMgr, vocabMgr) {
   function finalizeQuestionAndProceed(state) {
     //console.groupCollapsed("questionManager() - finalizeQuestionAndProceed()");
     
-    _updateCumulativeAverage(state);
+    updateCumulativeAverage(state);
 
     if (appState.flashYesNo) { // flashcard mode
-      _removeSpecifiedQuestion(fetchOneQuestion.index);
+      removeSpecifiedQuestion(fetchOneQuestion.index);
       newQuestion();
     }
     else { // multiple-choice mode
       if (state) { // if correct answer is clicked
-        _removeSpecifiedQuestion(fetchOneQuestion.index);
+        removeSpecifiedQuestion(fetchOneQuestion.index);
         newQuestion();
       }
     }

@@ -1,10 +1,13 @@
-export function answerListnerManager(globals, utilsManager, finalizeQuestionAndProceed, setQuestionMode, readQuestionMode, storeToMistakeBank, removeFromMistakeBank, answerMgr) {
+export function answerListnerManager(globals, utilsManager, storeToMistakeBank, removeFromMistakeBank, answerMgr) {
   const { appState, selectors } = globals;
   const { domUtils, displayUtils } = utilsManager;
 
-  let _continuetoStoredData, _restart, _setRanOnce;
+  let _finalizeQuestionAndProceed, _setQuestionMode, _readQuestionMode, _continuetoStoredData, _restart, _setRanOnce;
 
-  function setAnswerListnerManagerCallbacks(continuetoStoredData, restart, setRanOnce) {
+  function setAnswerListnerManagerCallbacks(finalizeQuestionAndProceed, setQuestionMode, readQuestionMode, continuetoStoredData, restart, setRanOnce) {
+    _finalizeQuestionAndProceed = finalizeQuestionAndProceed;
+    _setQuestionMode = setQuestionMode;
+    _readQuestionMode = readQuestionMode;
     _continuetoStoredData = continuetoStoredData;
     _restart = restart;
     _setRanOnce = setRanOnce;
@@ -95,12 +98,12 @@ export function answerListnerManager(globals, utilsManager, finalizeQuestionAndP
         toggleFadeAndDim("fadeAndDim");     // Hide fully
         clearScreen("deep");
         checkModeAndRemoveVocab();
-        finalizeQuestionAndProceed(true);
+        _finalizeQuestionAndProceed(true);
       }, 1200);                             // Add delay equal to the fade-out transition duration
     } 
     
     else {                                  // If the answer is INCORRECT
-        finalizeQuestionAndProceed(false);
+        _finalizeQuestionAndProceed(false);
         storeToMistakeBank(questionMgr); // add wrongly selected word to localstorage
         domUtils.clearScreen(selectors.sectionMessage);
 
@@ -168,15 +171,15 @@ export function answerListnerManager(globals, utilsManager, finalizeQuestionAndP
 
     if (btnID === "choice-btn-0") {
       checkModeAndRemoveVocab();
-      finalizeQuestionAndProceed(true);
+      _finalizeQuestionAndProceed(true);
     } 
     
     else if (btnID === "choice-btn-1") {
-      if (readQuestionMode() !== "stored") {
+      if (_readQuestionMode() !== "stored") {
         storeToMistakeBank(); // add wrongly selected word to localstorage
       } 
 
-      finalizeQuestionAndProceed(false);
+      _finalizeQuestionAndProceed(false);
     }
 
     console.groupEnd();
@@ -192,7 +195,7 @@ export function answerListnerManager(globals, utilsManager, finalizeQuestionAndP
 
     if (btnID === "continueYes-0") {
       console.info("Clicked Yes");
-      setQuestionMode("stored");
+      _setQuestionMode("stored");
       _setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       _continuetoStoredData();
     } 
@@ -209,7 +212,7 @@ export function answerListnerManager(globals, utilsManager, finalizeQuestionAndP
   function checkModeAndRemoveVocab() {
     console.groupCollapsed("checkModeAndRemoveVocab()");
     
-    const currentQuestionMode = readQuestionMode();
+    const currentQuestionMode = _readQuestionMode();
 
     if (currentQuestionMode === "stored") { // if current q mode is stored and answer is right
       console.info("currentQuestionMode: ", currentQuestionMode, ".  removeFromMistakeBank() is called.");
