@@ -1,12 +1,18 @@
-  export function loaderManager(globals, utilsManager, controlFns, listenerFns, questionFns, vocabFns, errorFns, statusFns) {
+  export function loaderManager(globals, utilsManager, controlFns, questionFns, vocabFns, errorFns, statusFns) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
   const { floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay } = controlFns
-  const { moveForm, handleListMistakeBtn, debouncedMoveForm } = listenerFns;
   const { newQuestion, setQuestionMode } = questionFns;
   const { flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength } = vocabFns;
   const { runtimeError, clearError } = errorFns;
   const { resetQuestionCount, resetTotalNoOfQuestion, getTotalNoOfQuestions, resetCumulativeVariables } = statusFns;
+
+  let _moveForm, _handleListMistakeBtn, _debouncedMoveForm
+  function setLoaderManagerCallbacks(moveForm, handleListMistakeBtn, debouncedMoveForm) {
+    _moveForm = moveForm;
+    _handleListMistakeBtn = handleListMistakeBtn;
+    _debouncedMoveForm = debouncedMoveForm;
+  }
   
   const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
   const basePath = isLocal ? "./assets/data/" : "https://MgHt00.github.io/JLPT/assets/data/";
@@ -197,7 +203,7 @@
 
   // Function to initialize quiz settings and UI setup
   function initializeQuiz() {
-    moveForm();
+    _moveForm();
     
     floatingBtnsHideAll();
     toggleFormDisplay();
@@ -386,7 +392,7 @@
           icon: '<i class="fa-solid fa-rectangle-list"></i>',
           className:'list-memory-setting-btn',
           id: 'list-memory-btn',
-          handler: handleListMistakeBtn,
+          handler: _handleListMistakeBtn,
         }
       }  
       
@@ -565,7 +571,7 @@
       .toggleClass('fade-hide', selectors.sectionMessage);*/
 
     toggleFormDisplay();
-    debouncedMoveForm();
+    _debouncedMoveForm();
     
     rePrintMemory();
   }
@@ -732,6 +738,7 @@
   }
 
   return {
+    setLoaderManagerCallbacks,
     preloadVocabData,
     start,
     loadMemoryData,

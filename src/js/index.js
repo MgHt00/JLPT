@@ -25,23 +25,6 @@ const {
   resetQuestionMode, 
   toggleShadesOnTop } = controlMgr;
 
-// Listener Manager
-const listenerMgr = listenerManager(
-  globals,
-  { floatingBtnsHideAll, 
-    hideResumeShowBack, 
-    hideBackShowResume, 
-    toggleFormDisplay, 
-    resetQuestionMode, 
-    toggleShadesOnTop },
-    utilsManager);
-const {
-  setListenerManagerCallbacks,
-  generalListeners,
-  moveForm,
-  handleListMistakeBtn,
-  debouncedMoveForm } = listenerMgr;
-
 // Vocab Manager
 const vocabMgr =  vocabManager(
   globals, 
@@ -107,13 +90,13 @@ const loaderMgr = loaderManager(
   globals, 
   utilsManager, 
   { floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay }, // controlFns
-  { moveForm, handleListMistakeBtn, debouncedMoveForm }, // listenerFns
   { newQuestion, setQuestionMode }, // questionFns
   { flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength }, // vocabFns
   { runtimeError, clearError }, // errorFns
   { resetQuestionCount, resetTotalNoOfQuestion, getTotalNoOfQuestions, resetCumulativeVariables } // statusFns
 ); 
 const {
+  setLoaderManagerCallbacks,
   preloadVocabData,
   start,
   loadMemoryData,
@@ -127,6 +110,23 @@ const {
   checkPreLoadState,
 } = loaderMgr;
 
+// Listener Manager
+const listenerMgr = listenerManager(
+  globals, 
+  utilsManager,
+  setQuestionMode, 
+  clearError, 
+  { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop }, // controlManager
+  { start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram }, // loaderFns
+  { getGoodToResume, setGoodToResume }, // statusFns
+);
+const {
+  setListenerManagerCallbacks,
+  generalListeners,
+  moveForm,
+  handleListMistakeBtn,
+  debouncedMoveForm } = listenerMgr;
+
 // Answer Manager
 const answerMgr = answerManager(
   globals, 
@@ -135,7 +135,6 @@ const answerMgr = answerManager(
   readStoredLength,
   { setQuestionMode, readQuestionObj, readQuestionMode }, //questionFns
   { handleFlashcardFlip, handleMultipleChoiceAnswer, handleContinueToStoredData }, // answerListenerFns
-  
 );
 const { 
   vocabMapping, 
@@ -150,18 +149,10 @@ const {
  */
 
 setQuestionManagerCallbacks(renderAnswers, noMoreQuestion)
-
 setVocabManagerCallbacks(loadMemoryData, resetAfterFlushingMistakes, readQuestionObj);
-
 setErrorManagerCallbacks(vocabMapping);
-
-setListenerManagerCallbacks(
-  start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram,
-  setQuestionMode, 
-  setRanOnce, 
-  clearError, 
-  getGoodToResume,
-  setGoodToResume);
+setLoaderManagerCallbacks(moveForm, handleListMistakeBtn, debouncedMoveForm);
+setListenerManagerCallbacks(setRanOnce);
 
 setAnswerListnerManagerCallbacks(
   finalizeQuestionAndProceed, 

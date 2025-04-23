@@ -1,23 +1,14 @@
-export function listenerManager(globals, controlManager, utilsManager) {
+export function listenerManager(globals, utilsManager, setQuestionMode, clearError, controlManager, loaderFns, statusFns) {
   const { appState, selectors, currentStatus } = globals;
-  const { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlManager;
   const { domUtils, displayUtils } = utilsManager;
+  const { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlManager;
+  const { start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram } = loaderFns;
+  const { getGoodToResume, setGoodToResume } = statusFns;
 
-  let _setRanOnce, _clearError, _getGoodToResume, _setGoodToResume; 
-  let _start, _validateAndSetAnswerCount, _rePrintMemory, _listMistakes, _resumeProgram;
-  let _setQuestionMode;
+  let _setRanOnce;
 
-  function setListenerManagerCallbacks(start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram, setQuestionMode, setRanOnce, clearError, getGoodToResume, setGoodToResume){
-    _start = start;
-    _validateAndSetAnswerCount = validateAndSetAnswerCount;
-    _rePrintMemory = rePrintMemory;
-    _listMistakes = listMistakes;
-    _resumeProgram = resumeProgram;
-    _setQuestionMode = setQuestionMode;
+  function setListenerManagerCallbacks(setRanOnce){
     _setRanOnce = setRanOnce;
-    _clearError = clearError;
-    _getGoodToResume = getGoodToResume;
-    _setGoodToResume = setGoodToResume;
   }
 
   // Wrap the moveForm function with debounce
@@ -25,7 +16,7 @@ export function listenerManager(globals, controlManager, utilsManager) {
 
   // All event Listeners
   function generalListeners() {
-    selectors.settingForm.addEventListener('submit', _start); // [sn17]
+    selectors.settingForm.addEventListener('submit', start); // [sn17]
     selectors.switchRandomYesNo.addEventListener('change', randomToggleChanges);
     selectors.switchFlashYesNo.addEventListener('change', flashModeToggleChanges); // to handle toggle switch
     selectors.settingFlashYesNo.addEventListener('change', flashModeChanges); // to show answer options and check runtime error 
@@ -81,7 +72,7 @@ export function listenerManager(globals, controlManager, utilsManager) {
       appState.noOfAnswers = 2;
     } else {
       // Validate number of answers and set default if invalid
-      _validateAndSetAnswerCount();
+      validateAndSetAnswerCount();
     }
     console.groupEnd();
   }
@@ -155,17 +146,17 @@ export function listenerManager(globals, controlManager, utilsManager) {
   // to handle when program question mode (fresh / stored) is changed
   function questionModeChanges(e) {
     toggleSettingSyllable();
-    _clearError();
+    clearError();
 
     let selectedMode = selectors.readQuestionMode;
 
     if (selectedMode === "fresh") {
-      _setQuestionMode("fresh");
+      setQuestionMode("fresh");
        _setRanOnce(false);
     } 
     
     else if (selectedMode === "stored") {
-      _setQuestionMode("stored");
+      setQuestionMode("stored");
        _setRanOnce(true);
     }
 
@@ -208,7 +199,7 @@ export function listenerManager(globals, controlManager, utilsManager) {
     
     event.stopPropagation(); // Prevent event from bubbling up
     debouncedMoveForm(event); // Pass the event to the debounced function
-    _rePrintMemory();
+    rePrintMemory();
   }
 
   // When resumePracticeBtn is clicked
@@ -217,13 +208,13 @@ export function listenerManager(globals, controlManager, utilsManager) {
 
     floatingBtnsHideAll();
 
-    if (_getGoodToResume()) { // if the program is still in progress,
+    if (getGoodToResume()) { // if the program is still in progress,
       console.info("statusMgr.goodToResume: FALSE");
       toggleFormDisplay();
       hideResumeShowBack();
       moveForm();
-      _setGoodToResume(false);
-      _resumeProgram();
+      setGoodToResume(false);
+      resumeProgram();
     }
     else {
       console.info("Normal resume procedures.");
@@ -253,7 +244,7 @@ export function listenerManager(globals, controlManager, utilsManager) {
       selectors.sectionAnswer
     ], "fast");
 
-    _listMistakes();
+    listMistakes();
 
     console.groupEnd();
   }
