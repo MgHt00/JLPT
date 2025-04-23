@@ -123,12 +123,15 @@ export function questionManager(globals, utilsManager, answerMgr, vocabMgr) {
     } else return true;
   }
 
+  function readQuestionObj() {return questionObj;}
+  function readQuestionMode() {return newQuestion.mode;}
+
   return {
     setQuestionManagerCallbacks,
     newQuestion,
     finalizeQuestionAndProceed,
     setQuestionMode,
-    get readQuestionObj() {return questionObj;},
-    get readQuestionMode() {return newQuestion.mode},
+    readQuestionObj,
+    readQuestionMode,
   }
 }

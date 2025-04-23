@@ -26,14 +26,14 @@ export function vocabManager(globals, utilsManager, readQuestionObj) {
 
     // [sn6] Check if the object already exists in the array
     let exists = incorrectSets.some(answer =>
-      answer.ka === readQuestionObj.ka &&
-      answer.hi === readQuestionObj.hi &&
-      answer.en === readQuestionObj.en
+      answer.ka === readQuestionObj().ka &&
+      answer.hi === readQuestionObj().hi &&
+      answer.en === readQuestionObj().en
     );
 
     // If it doesn't exist, add it to the array
     if (!exists) {
-      incorrectSets.push(readQuestionObj);
+      incorrectSets.push(readQuestionObj());
       console.info("New word pushed to localstorage.");
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
     } else {
@@ -49,7 +49,7 @@ export function vocabManager(globals, utilsManager, readQuestionObj) {
     let incorrectSets = loadMistakesFromMistakeBank();
 
     console.info("incorrectSets Before popping: ", incorrectSets);
-    incorrectSets.pop(readQuestionObj);
+    incorrectSets.pop(readQuestionObj());
     console.info("incorrectSets AFTER popping: ", incorrectSets);
 
     localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
@@ -152,9 +152,5 @@ export function vocabManager(globals, utilsManager, readQuestionObj) {
     loadState,
     clearState,
     readStoredLength,
-    /*get readStoredLength() { 
-      let mistakeFromStorage = loadMistakesFromMistakeBank();
-      return mistakeFromStorage.length;
-    },*/
   }
 }

@@ -88,21 +88,21 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
         console.info("noMoreQuestion.ranOnce initialized.");
     }
 
-    if (readQuestionMode === "fresh") { // if currently showing data from JSON
+    if (readQuestionMode() === "fresh") { // if currently showing data from JSON
       setQuestionMode("stored");
       if (_readStoredLength() <= 2) { 
         // If there is no store vocab in local storage
         // (less than 2 vocab in local storage will lead to infinite loop; so that it needs to be <=2)
-        //readQuestionMode = "stored";
+        //readQuestionMode() = "stored";
         completeAndRestart();
       } 
       else {
-        //readQuestionMode = "stored";
+        //readQuestionMode() = "stored";
         toLocalStorageYesNo();
       }
     }
     
-    else if (readQuestionMode === "stored") { // if currently showing data from localstorage
+    else if (readQuestionMode() === "stored") { // if currently showing data from localstorage
         if (noMoreQuestion.ranOnce) { // checked whether localstorage has been ran once.
           console.info("mistake bank as been ran once. ", noMoreQuestion.ranOnce);
           completeAndRestart();
@@ -264,8 +264,8 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
 
   function practiceAgain() {
     //const questionInstance = questionMgr;
-    console.log("Inside showQuestionAgain(); questionObj: ", readQuestionObj);
-    rePractice.push(readQuestionObj);
+    console.log("Inside showQuestionAgain(); questionObj: ", readQuestionObj());
+    rePractice.push(readQuestionObj());
   }
 
   return {

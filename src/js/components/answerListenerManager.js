@@ -171,7 +171,7 @@ export function answerListnerManager(globals, utilsManager, finalizeQuestionAndP
     } 
     
     else if (btnID === "choice-btn-1") {
-      if (readQuestionMode !== "stored") {
+      if (readQuestionMode() !== "stored") {
         storeToMistakeBank(); // add wrongly selected word to localstorage
       } 
 
@@ -208,7 +208,7 @@ export function answerListnerManager(globals, utilsManager, finalizeQuestionAndP
   function checkModeAndRemoveVocab() {
     console.groupCollapsed("checkModeAndRemoveVocab()");
     
-    const currentQuestionMode = readQuestionMode;
+    const currentQuestionMode = readQuestionMode();
 
     if (currentQuestionMode === "stored") { // if current q mode is stored and answer is right
       console.info("currentQuestionMode: ", currentQuestionMode, ".  removeFromMistakeBank() is called.");
