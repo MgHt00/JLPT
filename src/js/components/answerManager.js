@@ -1,17 +1,15 @@
-export function answerManager(globals, utilsManager, questionMgr, loaderInstance, answerListenersMgr, vocabMgr) {
+//export function answerManager(globals, utilsManager, setQuestionMode, readQuestionObj, readQuestionMode) {
+export function answerManager(globals, utilsManager, restart, readStoredLength, questionFns, answerListenerFns) {
   const { appState, appData, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
+  const { setQuestionMode, readQuestionObj, readQuestionMode } = questionFns;
+  const { handleFlashcardFlip, handleMultipleChoiceAnswer, handleContinueToStoredData } = answerListenerFns;
 
   const vocabMapping = {
     ka: appData.kaVocab,
     hi: appData.hiVocab,
     en: appData.enVocab,
   };
-
-  function setInstances(answerListenerInstance, vocabInstance) {
-    answerListenersMgr = answerListenerInstance;
-    vocabMgr = vocabInstance;
-  }
 
   // to prepare all the answers
   function renderAnswers() {
@@ -42,7 +40,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
           content: '',
           className: ['answer-btn', 'check-flash-mode-answer'], 
           id: 'answer-btn', 
-          eventFunction: answerListenersMgr.handleFlashcardFlip,
+          eventFunction: handleFlashcardFlip,
         },
         flipText: {
           content: 'Flip', 
@@ -52,7 +50,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
         ansArray: {
           content: ansArray, 
           className: 'answer-btn', 
-          eventFunction: answerListenersMgr.handleMultipleChoiceAnswer 
+          eventFunction: handleMultipleChoiceAnswer 
         },
       }
     }
@@ -84,26 +82,26 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
         console.info("noMoreQuestion.ranOnce initialized.");
     }
 
-    if (questionMgr.readQuestionMode === "fresh") { // if currently showing data from JSON
-      questionMgr.setQuestionMode("stored");
-      if (vocabMgr.readStoredLength <= 2) { 
+    if (readQuestionMode() === "fresh") { // if currently showing data from JSON
+      setQuestionMode("stored");
+      if (readStoredLength() <= 2) { 
         // If there is no store vocab in local storage
         // (less than 2 vocab in local storage will lead to infinite loop; so that it needs to be <=2)
-        //questionMgr.readQuestionMode = "stored";
+        //readQuestionMode() = "stored";
         completeAndRestart();
       } 
       else {
-        //questionMgr.readQuestionMode = "stored";
+        //readQuestionMode() = "stored";
         toLocalStorageYesNo();
       }
     }
     
-    else if (questionMgr.readQuestionMode === "stored") { // if currently showing data from localstorage
+    else if (readQuestionMode() === "stored") { // if currently showing data from localstorage
         if (noMoreQuestion.ranOnce) { // checked whether localstorage has been ran once.
           console.info("mistake bank as been ran once. ", noMoreQuestion.ranOnce);
           completeAndRestart();
         }
-        else if (vocabMgr.readStoredLength <= 2) { 
+        else if (readStoredLength() <= 2) { 
           // Even though local storage is zero when the program starts, 
           // check whether new words have been added during the program runtime.
           
@@ -152,7 +150,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
     // private helper functions
     function getContent() {
       return {
-        vocabsComplete: { content: `There are ${vocabMgr.readStoredLength} words in mistake bank.  Would you like to practice those?` },
+        vocabsComplete: { content: `There are ${readStoredLength()} words in mistake bank.  Would you like to practice those?` },
         continueYes: { content: 'Yes' },
         continueNo: { content: 'No' },
       }
@@ -168,7 +166,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
         content: contentConfig.content,
         className: isVC ? "vocabs-complete" : "answer-btn",
         id: key,
-        eventFunction: isVC ? null : answerListenersMgr.handleContinueToStoredData,
+        eventFunction: isVC ? null : handleContinueToStoredData,
       });
     }
   }
@@ -193,7 +191,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
           parent: selectors.sectionAnswer,
           content: 'Let\'s Restart!',
           className: 'answer-btn',
-          eventFunction: loaderInstance.restart,
+          eventFunction: restart,
         },
       }
     }
@@ -206,7 +204,7 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
         content: config.content, 
         className: config.className, 
         id: config.id ?? 'answer-btn', 
-        eventFunction: config.eventFunction ?? loaderInstance.restart,
+        eventFunction: config.eventFunction ?? restart,
       });
     }
   }
@@ -260,13 +258,12 @@ export function answerManager(globals, utilsManager, questionMgr, loaderInstance
 
   function practiceAgain() {
     //const questionInstance = questionMgr;
-    console.log("Inside showQuestionAgain(); questionObj: ", questionMgr.readQuestionObj);
-    rePractice.push(questionMgr.readQuestionObj);
+    console.log("Inside showQuestionAgain(); questionObj: ", readQuestionObj());
+    rePractice.push(readQuestionObj());
   }
 
   return {
     vocabMapping,
-    setInstances,
     renderAnswers,
     noMoreQuestion,
     setRanOnce,

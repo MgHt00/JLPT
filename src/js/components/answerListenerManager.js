@@ -1,6 +1,15 @@
-export function answerListnerManager(globals, utilsManager, questionMgr, loaderMgr, vocabMgr, answerMgr) {
+export function answerListnerManager(globals, utilsManager, vocabFns, questionFns, loaderFns) {
   const { appState, selectors } = globals;
   const { domUtils, displayUtils } = utilsManager;
+  const { storeToMistakeBank, removeFromMistakeBank } = vocabFns;
+  const { finalizeQuestionAndProceed, setQuestionMode, readQuestionMode } = questionFns;
+  const { continuetoStoredData, restart } = loaderFns;
+
+  let _setRanOnce;
+
+  function setAnswerListnerManagerCallbacks(setRanOnce) {
+    _setRanOnce = setRanOnce;
+  }
 
   // Event handler for flashcard mode
   function handleFlashcardFlip() {
@@ -87,13 +96,13 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
         toggleFadeAndDim("fadeAndDim");     // Hide fully
         clearScreen("deep");
         checkModeAndRemoveVocab();
-        questionMgr.finalizeQuestionAndProceed(true);
+        finalizeQuestionAndProceed(true);
       }, 1200);                             // Add delay equal to the fade-out transition duration
     } 
     
     else {                                  // If the answer is INCORRECT
-        questionMgr.finalizeQuestionAndProceed(false);
-        vocabMgr.storeToMistakeBank(questionMgr); // add wrongly selected word to localstorage
+        finalizeQuestionAndProceed(false);
+        storeToMistakeBank(questionMgr); // add wrongly selected word to localstorage
         domUtils.clearScreen(selectors.sectionMessage);
 
         setTimeout(() => {
@@ -160,15 +169,15 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
 
     if (btnID === "choice-btn-0") {
       checkModeAndRemoveVocab();
-      questionMgr.finalizeQuestionAndProceed(true);
+      finalizeQuestionAndProceed(true);
     } 
     
     else if (btnID === "choice-btn-1") {
-      if (questionMgr.readQuestionMode !== "stored") {
-        vocabMgr.storeToMistakeBank(); // add wrongly selected word to localstorage
+      if (readQuestionMode() !== "stored") {
+        storeToMistakeBank(); // add wrongly selected word to localstorage
       } 
 
-      questionMgr.finalizeQuestionAndProceed(false);
+      finalizeQuestionAndProceed(false);
     }
 
     console.groupEnd();
@@ -184,15 +193,15 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
 
     if (btnID === "continueYes-0") {
       console.info("Clicked Yes");
-      questionMgr.setQuestionMode("stored");
-      answerMgr.setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
-      loaderMgr.continuetoStoredData();
+      setQuestionMode("stored");
+      _setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
+      continuetoStoredData();
     } 
     
     else if (btnID === "continueNo-0") {
       console.info("Clicked No");
-      answerMgr.setRanOnce(false);
-      loaderMgr.restart();
+      _setRanOnce(false);
+      restart();
     }
     console.groupEnd();
   }
@@ -201,11 +210,11 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
   function checkModeAndRemoveVocab() {
     console.groupCollapsed("checkModeAndRemoveVocab()");
     
-    const currentQuestionMode = questionMgr.readQuestionMode;
+    const currentQuestionMode = readQuestionMode();
 
     if (currentQuestionMode === "stored") { // if current q mode is stored and answer is right
       console.info("currentQuestionMode: ", currentQuestionMode, ".  removeFromMistakeBank() is called.");
-      vocabMgr.removeFromMistakeBank();
+      removeFromMistakeBank();
     } else {
       console.info("currentQuestionMode: ", currentQuestionMode, ".  No need to remove mistakes");
     }
@@ -239,6 +248,7 @@ export function answerListnerManager(globals, utilsManager, questionMgr, loaderM
   }
 
   return {
+    setAnswerListnerManagerCallbacks,
     handleFlashcardFlip,
     handleMultipleChoiceAnswer,
     handleFlashCardYesNoAnswer,

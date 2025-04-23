@@ -1,24 +1,19 @@
-export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, questionMgr, vocabMgr, errorMgr, statusMgr) {
+  export function loaderManager(globals, utilsManager, controlFns, questionFns, vocabFns, errorFns, statusFns) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
-  
-  /**
-   * Sets the instances of the control, question, vocabulary, error, and status managers.
-   * 
-   * @param {object} controlMgr - The control manager instance responsible for UI control actions.
-   * @param {object} questionInstance - The question manager instance handling question logic.
-   * @param {object} vocabInstance - The vocabulary manager instance managing vocabulary data.
-   * @param {object} errMgr - The error manager instance handling runtime errors.
-   * @param {object} statusMgr - The status manager instance tracking quiz progress and stats.
-  */
-  function setInstances(controlInstance, questionInstance, vocabInstance, errorInstance, statusInstance) {
-    controlMgr = controlInstance;
-    questionMgr = questionInstance;
-    vocabMgr = vocabInstance;
-    errorMgr = errorInstance;
-    statusMgr = statusInstance;
-  }
+  const { floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay } = controlFns
+  const { newQuestion, setQuestionMode } = questionFns;
+  const { flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength } = vocabFns;
+  const { runtimeError, clearError } = errorFns;
+  const { resetQuestionCount, resetTotalNoOfQuestion, getTotalNoOfQuestions, resetCumulativeVariables } = statusFns;
 
+  let _moveForm, _handleListMistakeBtn, _debouncedMoveForm
+  function setLoaderManagerCallbacks(moveForm, handleListMistakeBtn, debouncedMoveForm) {
+    _moveForm = moveForm;
+    _handleListMistakeBtn = handleListMistakeBtn;
+    _debouncedMoveForm = debouncedMoveForm;
+  }
+  
   const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
   const basePath = isLocal ? "./assets/data/" : "https://MgHt00.github.io/JLPT/assets/data/";
 
@@ -168,10 +163,10 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   async function start(e) {  
     e.preventDefault();                 // Prevent form from submitting the usual way
     validateAndSetInputData(e);         // validate and set defaults to the input data.
-    errorMgr.clearError();                    // Remove error messages
+    clearError();                    // Remove error messages
     if (appState.qMode === "stored") {
       if(!validateStoredMemory()) {     // To validate whether memory is empty or not
-        errorMgr.runtimeError("mem0");
+        runtimeError("mem0");
         return;
       }
       await loadStoredJSON();           // Continue if there is no runtime error. (Wait for loadStoredJSON to complete)
@@ -184,7 +179,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
         // Only check the runtime error if validateSyllable() returns true ...
         // ... Otherwise program shows infinite loop error without necessary.
-        const hasSufficientAnswers = errorMgr.runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
+        const hasSufficientAnswers = runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
         if (!hasSufficientAnswers) {    // Now checks if there is NOT a runtime error
           console.error("Program failed at loaderManager()");
           return;                       // Exit if there is an infinite loop error
@@ -198,7 +193,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
   // To validate whether memory is empty or not
   function validateStoredMemory() {
-    let storedLength = vocabMgr.readStoredLength;
+    let storedLength = readStoredLength();
     if (storedLength === 0) {
       return false;
     } else {
@@ -208,21 +203,21 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
 
   // Function to initialize quiz settings and UI setup
   function initializeQuiz() {
-    listenerMgr.moveForm();
+    _moveForm();
     
-    controlMgr.floatingBtnsHideAll()
-              .toggleFormDisplay()
-              .hideResumeShowBack();
+    floatingBtnsHideAll();
+    toggleFormDisplay();
+    hideResumeShowBack();
 
-    statusMgr .resetQuestionCount()
-              .resetTotalNoOfQuestion()
-              .getTotalNoOfQuestions("fresh");  // for status bar, reset and set No. of Question
+    resetQuestionCount()
+    resetTotalNoOfQuestion()
+    getTotalNoOfQuestions("fresh");  // for status bar, reset and set No. of Question
               
-    statusMgr.resetCumulativeVariables();       // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
+    resetCumulativeVariables();       // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
 
-    questionMgr.newQuestion();
+    newQuestion();
     
-    errorMgr.clearError();                            // To remove error messages
+    clearError();                              // To remove error messages
   }
 
   // to validate input data and set defaults if necessary
@@ -253,7 +248,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     console.groupCollapsed("loadFreshJSON()");
     console.info("appData.preloadedVocab:", appData.preloadedVocab);
 
-    questionMgr.setQuestionMode("fresh");
+    setQuestionMode("fresh");
   
     if (appData.syllableChoice.includes("all")) {     // If "all" is selected
       appData.syllableChoice = mergeVocabKeys();      //[sn9] This replaces syllableChoice with all syllables
@@ -297,9 +292,9 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   async function loadStoredJSON() {
     console.groupCollapsed("loadStoredJSON()");
 
-    questionMgr.setQuestionMode("stored");                        // Set program's question mode to 'stored'
+    setQuestionMode("stored");                        // Set program's question mode to 'stored'
     
-    const storedData = vocabMgr.loadMistakesFromMistakeBank();
+    const storedData = loadMistakesFromMistakeBank();
     if (!Array.isArray(storedData)) {                             // Ensure loadMistakesFromMistakeBank returns an array
         console.error("Error: Stored data is not an array! Check your loadMistakesFromMistakeBank function.");
         return;
@@ -324,13 +319,13 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   function resumeProgram() {
     console.groupCollapsed("resumeProgram()");
 
-    vocabMgr.loadState();
+    loadState();
     console.log("loadState: ", appState, appData, currentStatus);
 
     populateVocabProperties(); // Fetch the relevant categories
     assignLanguageBySelection();
 
-    questionMgr.newQuestion();
+    newQuestion();
 
     console.groupEnd();
   }
@@ -352,7 +347,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   function loadMemoryData() {
     console.groupCollapsed("loadMemoryData");
 
-    let storedLength = vocabMgr.readStoredLength;
+    let storedLength = readStoredLength();
     console.info("storedLength:", storedLength);
 
     switch (storedLength) {     // build 'mistake status' on home screen
@@ -390,14 +385,14 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
           icon: '<i class="fa-solid fa-trash-can"></i>',
           className: 'flush-memory-setting-btn',
           id: 'flush-memory-btn',
-          handler: vocabMgr.flushMistakeBank,
+          handler: flushMistakeBank,
         },
     
         list: {
           icon: '<i class="fa-solid fa-rectangle-list"></i>',
           className:'list-memory-setting-btn',
           id: 'list-memory-btn',
-          handler: listenerMgr.handleListMistakeBtn,
+          handler: _handleListMistakeBtn,
         }
       }  
       
@@ -480,7 +475,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
     // Validate syllable choices and show an error if none are selected
     appData.syllableChoice = helpers.convertCheckedValuesToArray('input[name="syllableChoice"]:checked');
     if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
-      errorMgr.runtimeError("noSL");
+      runtimeError("noSL");
       console.groupEnd();
       return false; // Signal that inputData validation failed
     }
@@ -555,14 +550,14 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   async function continuetoStoredData() {
     console.groupCollapsed("continuetoStoredData()");
 
-    if (vocabMgr.readStoredLength <= 3) {
+    if (readStoredLength() <= 3) {
       appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
       console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
     }
     await loadStoredJSON();   // Wait for loadStoredJSON to complete
 
-    statusMgr.getTotalNoOfQuestions("stored");
-    questionMgr.newQuestion();
+    getTotalNoOfQuestions("stored");
+    newQuestion();
 
     console.groupEnd();
   }
@@ -575,8 +570,8 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
       .toggleClass('overlay-message', selectors.sectionMessage)
       .toggleClass('fade-hide', selectors.sectionMessage);*/
 
-    controlMgr.toggleFormDisplay();
-    listenerMgr.debouncedMoveForm();
+    toggleFormDisplay();
+    _debouncedMoveForm();
     
     rePrintMemory();
   }
@@ -585,7 +580,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   function listMistakes() {
     console.groupCollapsed("listMistakes()");
 
-    const mistakeArray = vocabMgr.loadMistakesFromMistakeBank(); // Load mistakes from localStorage
+    const mistakeArray = loadMistakesFromMistakeBank(); // Load mistakes from localStorage
     
     // Container to display the mistakes
     domUtils.buildNode({                  
@@ -743,7 +738,7 @@ export function loaderManager(globals, utilsManager, listenerMgr, controlMgr, qu
   }
 
   return {
-    setInstances,
+    setLoaderManagerCallbacks,
     preloadVocabData,
     start,
     loadMemoryData,
