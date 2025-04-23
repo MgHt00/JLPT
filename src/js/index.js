@@ -97,7 +97,7 @@ const {
 
 // Error Manager
 const errMgr = errorManager(globals, utilsManager, vocabMapping);
-const { runtimeError, showError, clearError } = errMgr;
+const { runtimeError, clearError } = errMgr;
 
 // Status Manager
 const statusMgr = statusManager(globals, utilsManager);
@@ -137,8 +137,6 @@ const {
   resetAfterFlushingMistakes,
   checkPreLoadState,
 } = loaderMgr;
-
-loadMemoryData, resetAfterFlushingMistakes,
 
 /**
  * Initializes and sets up dependencies for various manager instances.
