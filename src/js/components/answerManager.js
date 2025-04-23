@@ -1,21 +1,15 @@
-export function answerManager(globals, utilsManager, setQuestionMode, readQuestionObj, readQuestionMode) {
+//export function answerManager(globals, utilsManager, setQuestionMode, readQuestionObj, readQuestionMode) {
+export function answerManager(globals, utilsManager, restart, readStoredLength, questionFns, answerListenerFns) {
   const { appState, appData, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
+  const { setQuestionMode, readQuestionObj, readQuestionMode } = questionFns;
+  const { handleFlashcardFlip, handleMultipleChoiceAnswer, handleContinueToStoredData } = answerListenerFns;
 
   const vocabMapping = {
     ka: appData.kaVocab,
     hi: appData.hiVocab,
     en: appData.enVocab,
   };
-
-  let _restart, _readStoredLength, _handleFlashcardFlip, _handleMultipleChoiceAnswer, _handleContinueToStoredData;
-  function setAnswerManagerCallbacks(restart, handleFlashcardFlip, handleMultipleChoiceAnswer, handleContinueToStoredData, readStoredLength) {
-    _restart = restart;
-    _handleFlashcardFlip = handleFlashcardFlip;
-    _handleMultipleChoiceAnswer = handleMultipleChoiceAnswer;
-    _handleContinueToStoredData = handleContinueToStoredData;
-    _readStoredLength = readStoredLength;
-  }
 
   // to prepare all the answers
   function renderAnswers() {
@@ -46,7 +40,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
           content: '',
           className: ['answer-btn', 'check-flash-mode-answer'], 
           id: 'answer-btn', 
-          eventFunction: _handleFlashcardFlip,
+          eventFunction: handleFlashcardFlip,
         },
         flipText: {
           content: 'Flip', 
@@ -56,7 +50,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
         ansArray: {
           content: ansArray, 
           className: 'answer-btn', 
-          eventFunction: _handleMultipleChoiceAnswer 
+          eventFunction: handleMultipleChoiceAnswer 
         },
       }
     }
@@ -90,7 +84,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
 
     if (readQuestionMode() === "fresh") { // if currently showing data from JSON
       setQuestionMode("stored");
-      if (_readStoredLength() <= 2) { 
+      if (readStoredLength() <= 2) { 
         // If there is no store vocab in local storage
         // (less than 2 vocab in local storage will lead to infinite loop; so that it needs to be <=2)
         //readQuestionMode() = "stored";
@@ -107,7 +101,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
           console.info("mistake bank as been ran once. ", noMoreQuestion.ranOnce);
           completeAndRestart();
         }
-        else if (_readStoredLength() <= 2) { 
+        else if (readStoredLength() <= 2) { 
           // Even though local storage is zero when the program starts, 
           // check whether new words have been added during the program runtime.
           
@@ -156,7 +150,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
     // private helper functions
     function getContent() {
       return {
-        vocabsComplete: { content: `There are ${_readStoredLength()} words in mistake bank.  Would you like to practice those?` },
+        vocabsComplete: { content: `There are ${readStoredLength()} words in mistake bank.  Would you like to practice those?` },
         continueYes: { content: 'Yes' },
         continueNo: { content: 'No' },
       }
@@ -172,7 +166,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
         content: contentConfig.content,
         className: isVC ? "vocabs-complete" : "answer-btn",
         id: key,
-        eventFunction: isVC ? null : _handleContinueToStoredData,
+        eventFunction: isVC ? null : handleContinueToStoredData,
       });
     }
   }
@@ -197,7 +191,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
           parent: selectors.sectionAnswer,
           content: 'Let\'s Restart!',
           className: 'answer-btn',
-          eventFunction: _restart,
+          eventFunction: restart,
         },
       }
     }
@@ -210,7 +204,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
         content: config.content, 
         className: config.className, 
         id: config.id ?? 'answer-btn', 
-        eventFunction: config.eventFunction ?? _restart,
+        eventFunction: config.eventFunction ?? restart,
       });
     }
   }
@@ -270,7 +264,6 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
 
   return {
     vocabMapping,
-    setAnswerManagerCallbacks,
     renderAnswers,
     noMoreQuestion,
     setRanOnce,

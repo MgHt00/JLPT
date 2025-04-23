@@ -52,18 +52,6 @@ const {
   readQuestionObj,
   readQuestionMode } = questionMgr;
 
-// Answer Manager
-const answerMgr = answerManager(
-  globals, 
-  utilsManager, 
-  setQuestionMode, readQuestionObj, readQuestionMode);
-const { 
-  vocabMapping, 
-  setAnswerManagerCallbacks, 
-  renderAnswers, 
-  noMoreQuestion, 
-  setRanOnce } = answerMgr;
-
 // Vocab Manager
 const vocabMgr =  vocabManager(
   globals, 
@@ -86,8 +74,7 @@ const answerListenersMgr = answerListnerManager(
   utilsManager, 
   finalizeQuestionAndProceed, setQuestionMode, readQuestionMode, 
   storeToMistakeBank, 
-  removeFromMistakeBank, 
-  setRanOnce);
+  removeFromMistakeBank);
 const {
   setAnswerListnerManagerCallbacks,
   handleFlashcardFlip,
@@ -138,17 +125,27 @@ const {
   checkPreLoadState,
 } = loaderMgr;
 
+// Answer Manager
+const answerMgr = answerManager(
+  globals, 
+  utilsManager, 
+  restart,
+  readStoredLength,
+  { setQuestionMode, readQuestionObj, readQuestionMode }, //questionFns
+  { handleFlashcardFlip, handleMultipleChoiceAnswer, handleContinueToStoredData }, // answerListenerFns
+  
+);
+const { 
+  vocabMapping, 
+  renderAnswers, 
+  noMoreQuestion, 
+  setRanOnce } = answerMgr;
+
 /**
  * Initializes and sets up dependencies for various manager instances.
  * Each instance is provided with the required dependencies to enable
  * communication and functionality across different components of the application. 
  */
-setAnswerManagerCallbacks(
-  restart,
-  handleFlashcardFlip,
-  handleMultipleChoiceAnswer,
-  handleContinueToStoredData, 
-  readStoredLength);
 
 setVocabManagerCallbacks(
   loadMemoryData, resetAfterFlushingMistakes
@@ -172,8 +169,7 @@ setListenerManagerCallbacks(
   setGoodToResume);
 
 setAnswerListnerManagerCallbacks(
-  continuetoStoredData, restart
-);
+  continuetoStoredData, restart, setRanOnce);
 
 (async function initialize() {
   console.groupCollapsed("initialize()");

@@ -2,11 +2,12 @@ export function answerListnerManager(globals, utilsManager, finalizeQuestionAndP
   const { appState, selectors } = globals;
   const { domUtils, displayUtils } = utilsManager;
 
-  let _continuetoStoredData, _restart;
+  let _continuetoStoredData, _restart, _setRanOnce;
 
-  function setAnswerListnerManagerCallbacks(continuetoStoredData, restart) {
+  function setAnswerListnerManagerCallbacks(continuetoStoredData, restart, setRanOnce) {
     _continuetoStoredData = continuetoStoredData;
     _restart = restart;
+    _setRanOnce = setRanOnce;
   }
 
   // Event handler for flashcard mode
@@ -192,13 +193,13 @@ export function answerListnerManager(globals, utilsManager, finalizeQuestionAndP
     if (btnID === "continueYes-0") {
       console.info("Clicked Yes");
       setQuestionMode("stored");
-      answerMgr.setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
+      _setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       _continuetoStoredData();
     } 
     
     else if (btnID === "continueNo-0") {
       console.info("Clicked No");
-      answerMgr.setRanOnce(false);
+      _setRanOnce(false);
       _restart();
     }
     console.groupEnd();
