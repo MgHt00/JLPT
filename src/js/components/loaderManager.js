@@ -1,26 +1,13 @@
-export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay, utilsManager, moveForm, handleListMistakeBtn, debouncedMoveForm) {
+  export function loaderManager(globals, utilsManager, controlFns, listenerFns, questionFns, vocabFns, errorFns, statusFns) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
+  const { floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay } = controlFns
+  const { moveForm, handleListMistakeBtn, debouncedMoveForm } = listenerFns;
+  const { newQuestion, setQuestionMode } = questionFns;
+  const { flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength } = vocabFns;
+  const { runtimeError, clearError } = errorFns;
+  const { resetQuestionCount, resetTotalNoOfQuestion, getTotalNoOfQuestions, resetCumulativeVariables } = statusFns;
   
-  let _flushMistakeBank, _loadMistakesFromMistakeBank, _loadState, _readStoredLength, _runtimeError, _clearError;
-  let _resetQuestionCount, _resetTotalNoOfQuestion, _getTotalNoOfQuestions, _resetCumulativeVariables;
-  let _newQuestion, _setQuestionMode;
-
-  function setLoaderManagerCallbacks(newQuestion, setQuestionMode, flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength, runtimeError, clearError, resetQuestionCount, resetTotalNoOfQuestion, getTotalNoOfQuestions, resetCumulativeVariables) {
-    _newQuestion = newQuestion;
-    _setQuestionMode = setQuestionMode;
-    _flushMistakeBank = flushMistakeBank;
-    _loadMistakesFromMistakeBank = loadMistakesFromMistakeBank;
-    _loadState = loadState;
-    _readStoredLength = readStoredLength;
-    _runtimeError = runtimeError;
-    _clearError = clearError;
-    _resetQuestionCount = resetQuestionCount;
-    _resetTotalNoOfQuestion = resetTotalNoOfQuestion;
-    _getTotalNoOfQuestions = getTotalNoOfQuestions;
-    _resetCumulativeVariables = resetCumulativeVariables;
-  }
-
   const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
   const basePath = isLocal ? "./assets/data/" : "https://MgHt00.github.io/JLPT/assets/data/";
 
@@ -170,10 +157,10 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   async function start(e) {  
     e.preventDefault();                 // Prevent form from submitting the usual way
     validateAndSetInputData(e);         // validate and set defaults to the input data.
-    _clearError();                    // Remove error messages
+    clearError();                    // Remove error messages
     if (appState.qMode === "stored") {
       if(!validateStoredMemory()) {     // To validate whether memory is empty or not
-        _runtimeError("mem0");
+        runtimeError("mem0");
         return;
       }
       await loadStoredJSON();           // Continue if there is no runtime error. (Wait for loadStoredJSON to complete)
@@ -186,7 +173,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
 
         // Only check the runtime error if validateSyllable() returns true ...
         // ... Otherwise program shows infinite loop error without necessary.
-        const hasSufficientAnswers = _runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
+        const hasSufficientAnswers = runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
         if (!hasSufficientAnswers) {    // Now checks if there is NOT a runtime error
           console.error("Program failed at loaderManager()");
           return;                       // Exit if there is an infinite loop error
@@ -200,7 +187,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
 
   // To validate whether memory is empty or not
   function validateStoredMemory() {
-    let storedLength = _readStoredLength;
+    let storedLength = readStoredLength;
     if (storedLength === 0) {
       return false;
     } else {
@@ -216,15 +203,15 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
     toggleFormDisplay();
     hideResumeShowBack();
 
-    _resetQuestionCount()
-    _resetTotalNoOfQuestion()
-    _getTotalNoOfQuestions("fresh");  // for status bar, reset and set No. of Question
+    resetQuestionCount()
+    resetTotalNoOfQuestion()
+    getTotalNoOfQuestions("fresh");  // for status bar, reset and set No. of Question
               
-    _resetCumulativeVariables();       // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
+    resetCumulativeVariables();       // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
 
-    _newQuestion();
+    newQuestion();
     
-    _clearError();                              // To remove error messages
+    clearError();                              // To remove error messages
   }
 
   // to validate input data and set defaults if necessary
@@ -255,7 +242,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
     console.groupCollapsed("loadFreshJSON()");
     console.info("appData.preloadedVocab:", appData.preloadedVocab);
 
-    _setQuestionMode("fresh");
+    setQuestionMode("fresh");
   
     if (appData.syllableChoice.includes("all")) {     // If "all" is selected
       appData.syllableChoice = mergeVocabKeys();      //[sn9] This replaces syllableChoice with all syllables
@@ -299,9 +286,9 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   async function loadStoredJSON() {
     console.groupCollapsed("loadStoredJSON()");
 
-    _setQuestionMode("stored");                        // Set program's question mode to 'stored'
+    setQuestionMode("stored");                        // Set program's question mode to 'stored'
     
-    const storedData = _loadMistakesFromMistakeBank();
+    const storedData = loadMistakesFromMistakeBank();
     if (!Array.isArray(storedData)) {                             // Ensure loadMistakesFromMistakeBank returns an array
         console.error("Error: Stored data is not an array! Check your loadMistakesFromMistakeBank function.");
         return;
@@ -326,13 +313,13 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   function resumeProgram() {
     console.groupCollapsed("resumeProgram()");
 
-    _loadState();
+    loadState();
     console.log("loadState: ", appState, appData, currentStatus);
 
     populateVocabProperties(); // Fetch the relevant categories
     assignLanguageBySelection();
 
-    _newQuestion();
+    newQuestion();
 
     console.groupEnd();
   }
@@ -354,7 +341,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   function loadMemoryData() {
     console.groupCollapsed("loadMemoryData");
 
-    let storedLength = _readStoredLength;
+    let storedLength = readStoredLength;
     console.info("storedLength:", storedLength);
 
     switch (storedLength) {     // build 'mistake status' on home screen
@@ -392,7 +379,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
           icon: '<i class="fa-solid fa-trash-can"></i>',
           className: 'flush-memory-setting-btn',
           id: 'flush-memory-btn',
-          handler: _flushMistakeBank,
+          handler: flushMistakeBank,
         },
     
         list: {
@@ -482,7 +469,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
     // Validate syllable choices and show an error if none are selected
     appData.syllableChoice = helpers.convertCheckedValuesToArray('input[name="syllableChoice"]:checked');
     if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
-      _runtimeError("noSL");
+      runtimeError("noSL");
       console.groupEnd();
       return false; // Signal that inputData validation failed
     }
@@ -557,14 +544,14 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   async function continuetoStoredData() {
     console.groupCollapsed("continuetoStoredData()");
 
-    if (_readStoredLength <= 3) {
+    if (readStoredLength <= 3) {
       appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
       console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
     }
     await loadStoredJSON();   // Wait for loadStoredJSON to complete
 
-    _getTotalNoOfQuestions("stored");
-    _newQuestion();
+    getTotalNoOfQuestions("stored");
+    newQuestion();
 
     console.groupEnd();
   }
@@ -587,7 +574,7 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   function listMistakes() {
     console.groupCollapsed("listMistakes()");
 
-    const mistakeArray = _loadMistakesFromMistakeBank(); // Load mistakes from localStorage
+    const mistakeArray = loadMistakesFromMistakeBank(); // Load mistakes from localStorage
     
     // Container to display the mistakes
     domUtils.buildNode({                  
@@ -745,7 +732,6 @@ export function loaderManager(globals, floatingBtnsHideAll, hideResumeShowBack, 
   }
 
   return {
-    setLoaderManagerCallbacks,
     preloadVocabData,
     start,
     loadMemoryData,

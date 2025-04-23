@@ -116,13 +116,15 @@ const {
 // Loader Manager
 const loaderMgr = loaderManager(
   globals, 
-  floatingBtnsHideAll, 
-  hideResumeShowBack, 
-  toggleFormDisplay, 
   utilsManager, 
-  moveForm, handleListMistakeBtn, debouncedMoveForm);
+  { floatingBtnsHideAll, hideResumeShowBack, toggleFormDisplay }, // controlFns
+  { moveForm, handleListMistakeBtn, debouncedMoveForm }, // listenerFns
+  { newQuestion, setQuestionMode }, // questionFns
+  { flushMistakeBank, loadMistakesFromMistakeBank, loadState, readStoredLength }, // vocabFns
+  { runtimeError, clearError }, // errorFns
+  { resetQuestionCount, resetTotalNoOfQuestion, getTotalNoOfQuestions, resetCumulativeVariables } // statusFns
+); 
 const {
-  setLoaderManagerCallbacks,
   preloadVocabData,
   start,
   loadMemoryData,
@@ -162,19 +164,6 @@ setQuestionManagerCallbacks(
   updateCumulativeAverage, 
   removeSpecifiedQuestion, 
   saveState);
-
-setLoaderManagerCallbacks(
-  newQuestion, setQuestionMode, 
-  flushMistakeBank, 
-  loadMistakesFromMistakeBank, 
-  loadState, 
-  readStoredLength, 
-  runtimeError, 
-  clearError, 
-  resetQuestionCount,
-  resetTotalNoOfQuestion,
-  getTotalNoOfQuestions,
-  resetCumulativeVariables);
 
 setListenerManagerCallbacks(
   start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram,
