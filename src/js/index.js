@@ -26,9 +26,7 @@ const {
   toggleShadesOnTop } = controlMgr;
 
 // Vocab Manager
-const vocabMgr =  vocabManager(
-  globals, 
-  utilsManager);
+const vocabMgr =  vocabManager(globals, utilsManager);
 const { 
   setVocabManagerCallbacks,
   removeSpecifiedQuestion, 
@@ -39,19 +37,6 @@ const {
   saveState, 
   loadState, 
   readStoredLength } = vocabMgr;
-
-// Answer Listeners Manager
-const answerListenersMgr = answerListnerManager(
-  globals, 
-  utilsManager, 
-  storeToMistakeBank, 
-  removeFromMistakeBank);
-const {
-  setAnswerListnerManagerCallbacks,
-  handleFlashcardFlip,
-  handleMultipleChoiceAnswer,
-  handleContinueToStoredData,
-} = answerListenersMgr;
 
 // Error Manager
 const errMgr = errorManager(globals, utilsManager);
@@ -127,6 +112,21 @@ const {
   handleListMistakeBtn,
   debouncedMoveForm } = listenerMgr;
 
+// Answer Listeners Manager
+const answerListenersMgr = answerListnerManager(
+  globals, 
+  utilsManager, 
+  { storeToMistakeBank, removeFromMistakeBank }, // vocabFns
+  { finalizeQuestionAndProceed, setQuestionMode, readQuestionMode }, // questionFns
+  { continuetoStoredData, restart }, // loaderFns
+);
+const {
+  setAnswerListnerManagerCallbacks,
+  handleFlashcardFlip,
+  handleMultipleChoiceAnswer,
+  handleContinueToStoredData,
+} = answerListenersMgr;
+
 // Answer Manager
 const answerMgr = answerManager(
   globals, 
@@ -144,21 +144,13 @@ const {
 
 /**
  * Initializes and sets up dependencies for various manager instances.
- * Each instance is provided with the required dependencies to enable
- * communication and functionality across different components of the application. 
- */
-
+*/
 setQuestionManagerCallbacks(renderAnswers, noMoreQuestion)
 setVocabManagerCallbacks(loadMemoryData, resetAfterFlushingMistakes, readQuestionObj);
 setErrorManagerCallbacks(vocabMapping);
 setLoaderManagerCallbacks(moveForm, handleListMistakeBtn, debouncedMoveForm);
 setListenerManagerCallbacks(setRanOnce);
-
-setAnswerListnerManagerCallbacks(
-  finalizeQuestionAndProceed, 
-  setQuestionMode, readQuestionMode, 
-  continuetoStoredData, restart, 
-  setRanOnce);
+setAnswerListnerManagerCallbacks(setRanOnce);
 
 (async function initialize() {
   console.groupCollapsed("initialize()");
