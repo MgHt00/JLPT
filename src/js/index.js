@@ -142,9 +142,7 @@ const {
   noMoreQuestion, 
   setRanOnce } = answerMgr;
 
-/**
- * Initializes and sets up dependencies for various manager instances.
-*/
+/* Initializes and sets up dependencies for various manager instances. */
 setQuestionManagerCallbacks(renderAnswers, noMoreQuestion)
 setVocabManagerCallbacks(loadMemoryData, resetAfterFlushingMistakes, readQuestionObj);
 setErrorManagerCallbacks(vocabMapping);
@@ -152,30 +150,31 @@ setLoaderManagerCallbacks(moveForm, handleListMistakeBtn, debouncedMoveForm);
 setListenerManagerCallbacks(setRanOnce);
 setAnswerListnerManagerCallbacks(setRanOnce);
 
+// Initialize
 (async function initialize() {
   console.groupCollapsed("initialize()");
 
   await preloadVocabData();            // ensures that the function fully completes before moving on 
   await checkPreLoadState();
-  onPreloadComplete();
+  _onPreloadComplete();
 
   console.groupEnd();
  
   // Utility functions private to the module
-  function onPreloadComplete() {
-    console.groupCollapsed("onPreloadComplete()");
+  function _onPreloadComplete() {
+    console.groupCollapsed("_onPreloadComplete()");
     
     loadMemoryData();
     generalListeners();
     floatingBtnsHideAll();
     
-    defaultStateClassChanges();
-    checkInProgress();
+    _defaultStateClassChanges();
+    _checkInProgress();
     
     console.groupEnd();
   }
 
-  function defaultStateClassChanges() {
+  function _defaultStateClassChanges() {
     displayUtils.toggleClass('disabled', ...selectors.noOfAnsAll); // [sn14]
     displayUtils.toggleClass('overlay-message', selectors.sectionMessage);
     displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
@@ -185,7 +184,7 @@ setAnswerListnerManagerCallbacks(setRanOnce);
   }
 
   // If the program is still in progress, load data from local storage to global objects
-  function checkInProgress() {
+  function _checkInProgress() {
     //console.warn(stillInProgress());
     if (stillInProgress()) {
       setGoodToResume(true);
