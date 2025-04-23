@@ -1,6 +1,12 @@
-export function errorManager(globals, utilsManager, vocabMapping) {
+export function errorManager(globals, utilsManager) {
   const { appState, selectors } = globals;
   const { domUtils } = utilsManager;
+
+  let _vocabMapping;
+
+  function setErrorManagerCallbacks(vocabMapping) {
+    _vocabMapping = vocabMapping;
+  }
 
   const codeMapping = {
     iLoop: "infiniteloop",
@@ -45,7 +51,7 @@ export function errorManager(globals, utilsManager, vocabMapping) {
 
     // utility functions private to the module
     function fetchInputData() {
-      const selectedArray = vocabMapping[selectors.aChoice.value];
+      const selectedArray = _vocabMapping[selectors.aChoice.value];
       const choiceInput = parseInt(appState.noOfAnswers, 10);
       const noOfChoice = Math.min(choiceInput, selectedArray.length);
 
@@ -122,6 +128,7 @@ export function errorManager(globals, utilsManager, vocabMapping) {
   }
   
   return {  
+    setErrorManagerCallbacks,
     runtimeError,
     showError,
     clearError,

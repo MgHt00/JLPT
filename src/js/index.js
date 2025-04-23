@@ -83,8 +83,8 @@ const {
 } = answerListenersMgr;
 
 // Error Manager
-const errMgr = errorManager(globals, utilsManager, vocabMapping);
-const { runtimeError, clearError } = errMgr;
+const errMgr = errorManager(globals, utilsManager);
+const { setErrorManagerCallbacks, runtimeError, clearError } = errMgr;
 
 // Status Manager
 const statusMgr = statusManager(globals, utilsManager);
@@ -150,6 +150,8 @@ const {
 setVocabManagerCallbacks(
   loadMemoryData, resetAfterFlushingMistakes
 );
+
+setErrorManagerCallbacks(vocabMapping);
 
 setQuestionManagerCallbacks(
   renderAnswers, 
