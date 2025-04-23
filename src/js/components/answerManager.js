@@ -90,7 +90,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
 
     if (readQuestionMode === "fresh") { // if currently showing data from JSON
       setQuestionMode("stored");
-      if (_readStoredLength <= 2) { 
+      if (_readStoredLength() <= 2) { 
         // If there is no store vocab in local storage
         // (less than 2 vocab in local storage will lead to infinite loop; so that it needs to be <=2)
         //readQuestionMode = "stored";
@@ -107,7 +107,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
           console.info("mistake bank as been ran once. ", noMoreQuestion.ranOnce);
           completeAndRestart();
         }
-        else if (_readStoredLength <= 2) { 
+        else if (_readStoredLength() <= 2) { 
           // Even though local storage is zero when the program starts, 
           // check whether new words have been added during the program runtime.
           
@@ -156,7 +156,7 @@ export function answerManager(globals, utilsManager, setQuestionMode, readQuesti
     // private helper functions
     function getContent() {
       return {
-        vocabsComplete: { content: `There are ${_readStoredLength} words in mistake bank.  Would you like to practice those?` },
+        vocabsComplete: { content: `There are ${_readStoredLength()} words in mistake bank.  Would you like to practice those?` },
         continueYes: { content: 'Yes' },
         continueNo: { content: 'No' },
       }

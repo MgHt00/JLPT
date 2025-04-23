@@ -136,6 +136,11 @@ export function vocabManager(globals, utilsManager, readQuestionObj) {
     console.groupEnd();
   }
 
+  function readStoredLength() {
+    let mistakeFromStorage = loadMistakesFromMistakeBank();
+    return mistakeFromStorage.length;
+  }
+
   return {
     setVocabManagerCallbacks,
     removeSpecifiedQuestion,
@@ -146,9 +151,10 @@ export function vocabManager(globals, utilsManager, readQuestionObj) {
     saveState,
     loadState,
     clearState,
-    get readStoredLength() { 
+    readStoredLength,
+    /*get readStoredLength() { 
       let mistakeFromStorage = loadMistakesFromMistakeBank();
       return mistakeFromStorage.length;
-    },
+    },*/
   }
 }

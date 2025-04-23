@@ -187,7 +187,7 @@
 
   // To validate whether memory is empty or not
   function validateStoredMemory() {
-    let storedLength = readStoredLength;
+    let storedLength = readStoredLength();
     if (storedLength === 0) {
       return false;
     } else {
@@ -341,7 +341,7 @@
   function loadMemoryData() {
     console.groupCollapsed("loadMemoryData");
 
-    let storedLength = readStoredLength;
+    let storedLength = readStoredLength();
     console.info("storedLength:", storedLength);
 
     switch (storedLength) {     // build 'mistake status' on home screen
@@ -544,7 +544,7 @@
   async function continuetoStoredData() {
     console.groupCollapsed("continuetoStoredData()");
 
-    if (readStoredLength <= 3) {
+    if (readStoredLength() <= 3) {
       appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
       console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
     }
