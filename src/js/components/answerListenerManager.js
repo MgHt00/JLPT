@@ -83,6 +83,9 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
   function handleMultipleChoiceAnswer(event) {
     //console.groupCollapsed("answerManager() - handleMultipleChoiceAnswer()");
 
+    displayUtils.addClass('fade-hide', selectors.sectionMessage)
+                .addClass('overlay-message', selectors.sectionMessage);
+
     const btnText = event.currentTarget.textContent;
     if (appState.correctAns === btnText) {  // If the answer is CORRECT
       clearScreen("light");
@@ -102,7 +105,8 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
     
     else {                                  // If the answer is INCORRECT
         finalizeQuestionAndProceed(false);
-        storeToMistakeBank(questionMgr); // add wrongly selected word to localstorage
+        storeToMistakeBank(); // add wrongly selected word to localstorage
+
         domUtils.clearScreen(selectors.sectionMessage);
 
         setTimeout(() => {
