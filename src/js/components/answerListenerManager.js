@@ -102,7 +102,8 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
     
     else {                                  // If the answer is INCORRECT
         finalizeQuestionAndProceed(false);
-        storeToMistakeBank(questionMgr); // add wrongly selected word to localstorage
+        storeToMistakeBank(); // add wrongly selected word to localstorage
+
         domUtils.clearScreen(selectors.sectionMessage);
 
         setTimeout(() => {
