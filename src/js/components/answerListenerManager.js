@@ -83,6 +83,9 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
   function handleMultipleChoiceAnswer(event) {
     //console.groupCollapsed("answerManager() - handleMultipleChoiceAnswer()");
 
+    displayUtils.addClass('fade-hide', selectors.sectionMessage)
+                .addClass('overlay-message', selectors.sectionMessage);
+
     const btnText = event.currentTarget.textContent;
     if (appState.correctAns === btnText) {  // If the answer is CORRECT
       clearScreen("light");
