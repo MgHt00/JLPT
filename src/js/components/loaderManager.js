@@ -1,3 +1,5 @@
+  import { LOCAL_PATH, WEB_PATH, JSON_PATHS } from "../constants/filePath.js";
+  
   export function loaderManager(globals, utilsManager, controlFns, questionFns, vocabFns, errorFns, statusFns) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
@@ -15,80 +17,80 @@
   }
   
   const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
-  const basePath = isLocal ? "./assets/data/" : "https://MgHt00.github.io/JLPT/assets/data/";
+  const basePath = isLocal ? LOCAL_PATH : WEB_PATH;
 
   const vowels = {
     //db: "N5/vocab/assets/data/n5-vocab-debug.json",
-    a: `${basePath}n5-vocab-a.json`,
-    i: `${basePath}n5-vocab-i.json`,
-    u: `${basePath}n5-vocab-u.json`,
-    e: `${basePath}n5-vocab-e.json`,
-    o: `${basePath}n5-vocab-o.json`,
+    a: `${basePath}${JSON_PATHS.A}`,
+    i: `${basePath}${JSON_PATHS.I}`,
+    u: `${basePath}${JSON_PATHS.U}`,
+    e: `${basePath}${JSON_PATHS.E}`,
+    o: `${basePath}${JSON_PATHS.O}`,
   }
 
   const k = {
-    ka: `${basePath}n5-vocab-ka.json`,
-    ki: `${basePath}n5-vocab-ki.json`,
-    ku: `${basePath}n5-vocab-ku.json`,
-    ke: `${basePath}n5-vocab-ke.json`,
-    ko: `${basePath}n5-vocab-ko.json`,
+    ka: `${basePath}${JSON_PATHS.KA}`,
+    ki: `${basePath}${JSON_PATHS.KI}`,
+    ku: `${basePath}${JSON_PATHS.KU}`,
+    ke: `${basePath}${JSON_PATHS.KE}`,
+    ko: `${basePath}${JSON_PATHS.KO}`,
   } 
 
   const s = {
-    sa: `${basePath}n5-vocab-sa.json`,
-    shi: `${basePath}n5-vocab-shi.json`,
-    su: `${basePath}n5-vocab-su.json`,
-    se: `${basePath}n5-vocab-se.json`,
-    so: `${basePath}n5-vocab-so.json`,
+    sa: `${basePath}${JSON_PATHS.SA}`,
+    shi: `${basePath}${JSON_PATHS.SHI}`,
+    su: `${basePath}${JSON_PATHS.SU}`,
+    se: `${basePath}${JSON_PATHS.SE}`,
+    so: `${basePath}${JSON_PATHS.SO}`,
   }
 
   const t = {
-    ta: `${basePath}n5-vocab-ta.json`,
-    chi: `${basePath}n5-vocab-chi.json`,
-    tsu: `${basePath}n5-vocab-tsu.json`,
-    te: `${basePath}n5-vocab-te.json`,
-    to: `${basePath}n5-vocab-to.json`,
+    ta: `${basePath}${JSON_PATHS.TA}`,
+    chi: `${basePath}${JSON_PATHS.CHI}`,
+    tsu: `${basePath}${JSON_PATHS.TSU}`,
+    te: `${basePath}${JSON_PATHS.TE}`,
+    to: `${basePath}${JSON_PATHS.TO}`,
   }
 
   const n = {
-    na: `${basePath}n5-vocab-na.json`,
-    ni: `${basePath}n5-vocab-ni.json`,
-    nu: `${basePath}n5-vocab-nu.json`,
-    ne: `${basePath}n5-vocab-ne.json`,
-    no: `${basePath}n5-vocab-no.json`,
+    na: `${basePath}${JSON_PATHS.NA}`,
+    ni: `${basePath}${JSON_PATHS.NI}`,
+    nu: `${basePath}${JSON_PATHS.NU}`,
+    ne: `${basePath}${JSON_PATHS.NE}`,
+    no: `${basePath}${JSON_PATHS.NO}`,
   }
 
   const h = {
-    ha: `${basePath}n5-vocab-ha.json`,
-    hi: `${basePath}n5-vocab-hi.json`,
-    fu: `${basePath}n5-vocab-fu.json`,
-    he: `${basePath}n5-vocab-he.json`,
-    ho: `${basePath}n5-vocab-ho.json`,
+    ha: `${basePath}${JSON_PATHS.HA}`,
+    hi: `${basePath}${JSON_PATHS.HI}`,
+    fu: `${basePath}${JSON_PATHS.FU}`,
+    he: `${basePath}${JSON_PATHS.HE}`,
+    ho: `${basePath}${JSON_PATHS.HO}`,
   }
 
   const m = {
-    ma: `${basePath}n5-vocab-ma.json`,
-    mi: `${basePath}n5-vocab-mi.json`,
-    mu: `${basePath}n5-vocab-mu.json`,
-    me: `${basePath}n5-vocab-me.json`,
-    mo: `${basePath}n5-vocab-mo.json`,
+    ma: `${basePath}${JSON_PATHS.MA}`,
+    mi: `${basePath}${JSON_PATHS.MI}`,
+    mu: `${basePath}${JSON_PATHS.MU}`,
+    me: `${basePath}${JSON_PATHS.ME}`,
+    mo: `${basePath}${JSON_PATHS.MO}`,
   }
 
   const y = {
-    ya: `${basePath}n5-vocab-ya.json`,
-    yu: `${basePath}n5-vocab-yu.json`,
-    yo: `${basePath}n5-vocab-yo.json`,
+    ya: `${basePath}${JSON_PATHS.YA}`,
+    yu: `${basePath}${JSON_PATHS.YU}`,
+    yo: `${basePath}${JSON_PATHS.YO}`,
   }
 
   const r = {
-    ra: `${basePath}n5-vocab-ra.json`,
-    ri: `${basePath}n5-vocab-ri.json`,
-    re: `${basePath}n5-vocab-re.json`,
-    ro: `${basePath}n5-vocab-ro.json`,
+    ra: `${basePath}${JSON_PATHS.RA}`,
+    ri: `${basePath}${JSON_PATHS.RI}`,
+    re: `${basePath}${JSON_PATHS.RE}`,
+    ro: `${basePath}${JSON_PATHS.RO}`,
   }
 
   const wa = {
-    wa: `${basePath}n5-vocab-wa.json`,
+    wa: `${basePath}${JSON_PATHS.WA}`,
   }
 
   let isPreLoadSuccessful = true;
