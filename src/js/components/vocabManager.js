@@ -1,6 +1,13 @@
-export function vocabManager(globals, utilsManager, loaderMgr, questionMgr) {
+export function vocabManager(globals, utilsManager) {
   const { appState, appData, currentStatus, selectors } = globals;
   const { domUtils } = utilsManager;
+
+  let _loadMemoryData, _resetAfterFlushingMistakes, _readQuestionObj;
+  function setVocabManagerCallbacks(loadMemoryData, resetAfterFlushingMistakes, readQuestionObj) {
+    _loadMemoryData = loadMemoryData;
+    _resetAfterFlushingMistakes = resetAfterFlushingMistakes;
+    _readQuestionObj = readQuestionObj;
+  }
   
   // to remove passed question number from the array
   function removeSpecifiedQuestion(i) {
@@ -20,14 +27,14 @@ export function vocabManager(globals, utilsManager, loaderMgr, questionMgr) {
 
     // [sn6] Check if the object already exists in the array
     let exists = incorrectSets.some(answer =>
-      answer.ka === questionMgr.readQuestionObj.ka &&
-      answer.hi === questionMgr.readQuestionObj.hi &&
-      answer.en === questionMgr.readQuestionObj.en
+      answer.ka === _readQuestionObj().ka &&
+      answer.hi === _readQuestionObj().hi &&
+      answer.en === _readQuestionObj().en
     );
 
     // If it doesn't exist, add it to the array
     if (!exists) {
-      incorrectSets.push(questionMgr.readQuestionObj);
+      incorrectSets.push(_readQuestionObj());
       console.info("New word pushed to localstorage.");
       localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
     } else {
@@ -43,7 +50,7 @@ export function vocabManager(globals, utilsManager, loaderMgr, questionMgr) {
     let incorrectSets = loadMistakesFromMistakeBank();
 
     console.info("incorrectSets Before popping: ", incorrectSets);
-    incorrectSets.pop(questionMgr.readQuestionObj);
+    incorrectSets.pop(_readQuestionObj());
     console.info("incorrectSets AFTER popping: ", incorrectSets);
 
     localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
@@ -81,7 +88,8 @@ export function vocabManager(globals, utilsManager, loaderMgr, questionMgr) {
       children: selectors.readMemoryBtns,
     });
 
-    loaderMgr.loadMemoryData().resetAfterFlushingMistakes();
+    _loadMemoryData();
+    _resetAfterFlushingMistakes();
     console.groupEnd();
   }
 
@@ -129,7 +137,13 @@ export function vocabManager(globals, utilsManager, loaderMgr, questionMgr) {
     console.groupEnd();
   }
 
+  function readStoredLength() {
+    let mistakeFromStorage = loadMistakesFromMistakeBank();
+    return mistakeFromStorage.length;
+  }
+
   return {
+    setVocabManagerCallbacks,
     removeSpecifiedQuestion,
     storeToMistakeBank,
     removeFromMistakeBank,
@@ -138,9 +152,6 @@ export function vocabManager(globals, utilsManager, loaderMgr, questionMgr) {
     saveState,
     loadState,
     clearState,
-    get readStoredLength() { 
-      let mistakeFromStorage = loadMistakesFromMistakeBank();
-      return mistakeFromStorage.length;
-    },
+    readStoredLength,
   }
 }

@@ -1,14 +1,14 @@
-export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, questionMgr, answerMgr, errorMgr, statusMgr) {
+export function listenerManager(globals, utilsManager, setQuestionMode, clearError, controlManager, loaderFns, statusFns) {
   const { appState, selectors, currentStatus } = globals;
   const { domUtils, displayUtils } = utilsManager;
+  const { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlManager;
+  const { start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram } = loaderFns;
+  const { getGoodToResume, setGoodToResume } = statusFns;
 
-  function setInstances(loaderInstance, controlInstance, questionInstance, answerInstance, errorInstance, statusInstance){
-    loaderMgr = loaderInstance;
-    controlMgr = controlInstance;
-    questionMgr = questionInstance;
-    answerMgr = answerInstance;
-    errorMgr = errorInstance;
-    statusMgr = statusInstance;
+  let _setRanOnce;
+
+  function setListenerManagerCallbacks(setRanOnce){
+    _setRanOnce = setRanOnce;
   }
 
   // Wrap the moveForm function with debounce
@@ -16,7 +16,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
 
   // All event Listeners
   function generalListeners() {
-    selectors.settingForm.addEventListener('submit', loaderMgr.start); // [sn17]
+    selectors.settingForm.addEventListener('submit', start); // [sn17]
     selectors.switchRandomYesNo.addEventListener('change', randomToggleChanges);
     selectors.switchFlashYesNo.addEventListener('change', flashModeToggleChanges); // to handle toggle switch
     selectors.settingFlashYesNo.addEventListener('change', flashModeChanges); // to show answer options and check runtime error 
@@ -62,7 +62,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   // to handle when flash mode toogle (previously radio buttons are) is changed
   function flashModeChanges(e) {
     console.groupCollapsed("flashModeChanges()");
-    controlMgr.resetQuestionMode();
+    resetQuestionMode();
     displayUtils.toggleClass('disabled', ...selectors.noOfAnsAll);
     
     // set noOfAns to 2 to bypass runtime error if flashcard mode is selected
@@ -72,7 +72,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
       appState.noOfAnswers = 2;
     } else {
       // Validate number of answers and set default if invalid
-      loaderMgr.validateAndSetAnswerCount();
+      validateAndSetAnswerCount();
     }
     console.groupEnd();
   }
@@ -146,18 +146,18 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   // to handle when program question mode (fresh / stored) is changed
   function questionModeChanges(e) {
     toggleSettingSyllable();
-    errorMgr.clearError();
+    clearError();
 
     let selectedMode = selectors.readQuestionMode;
 
     if (selectedMode === "fresh") {
-      questionMgr.setQuestionMode("fresh");
-      answerMgr.setRanOnce(false);
+      setQuestionMode("fresh");
+       _setRanOnce(false);
     } 
     
     else if (selectedMode === "stored") {
-      questionMgr.setQuestionMode("stored");
-      answerMgr.setRanOnce(true);
+      setQuestionMode("stored");
+       _setRanOnce(true);
     }
 
     // private functions
@@ -188,41 +188,38 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   
   // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
   function handlebringBackBtn(event) {
-    controlMgr
-      .floatingBtnsHideAll()
-      .toggleFormDisplay()
-      .hideBackShowResume();
+    floatingBtnsHideAll();
+    toggleFormDisplay();
+    hideBackShowResume();
 
     if(currentStatus.mistakeListActive) {
-      controlMgr.toggleShadesOnTop();
+      toggleShadesOnTop();
       toggleMistakeListActive();
     }
     
     event.stopPropagation(); // Prevent event from bubbling up
     debouncedMoveForm(event); // Pass the event to the debounced function
-    loaderMgr.rePrintMemory();
+    rePrintMemory();
   }
 
   // When resumePracticeBtn is clicked
   function handleResumePracticeBtn(event) {
     console.groupCollapsed("handleResumePracticeBtn()");
 
-    controlMgr.floatingBtnsHideAll();
+    floatingBtnsHideAll();
 
-    if (statusMgr.goodToResume) { // if the program is still in progress,
+    if (getGoodToResume()) { // if the program is still in progress,
       console.info("statusMgr.goodToResume: FALSE");
-      controlMgr
-        .toggleFormDisplay()
-        .hideResumeShowBack();
+      toggleFormDisplay();
+      hideResumeShowBack();
       moveForm();
-      statusMgr.goodToResume = false;
-      loaderMgr.resumeProgram();
+      setGoodToResume(false);
+      resumeProgram();
     }
     else {
       console.info("Normal resume procedures.");
-      controlMgr
-        .toggleFormDisplay()
-        .hideResumeShowBack();
+      toggleFormDisplay();
+      hideResumeShowBack();
       debouncedMoveForm(event);
     }
 
@@ -235,10 +232,10 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
 
     toggleMistakeListActive();  // flag = true to show shades on the top.
 
-    controlMgr.floatingBtnsHideAll()
-              .hideResumeShowBack()
-              .toggleShadesOnTop()
-              .toggleFormDisplay('shift-sections-to-top-center');
+    floatingBtnsHideAll();
+    hideResumeShowBack();
+    toggleShadesOnTop();
+    toggleFormDisplay('shift-sections-to-top-center');
 
     domUtils.clearScreen([
       selectors.sectionStatus, 
@@ -247,7 +244,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
       selectors.sectionAnswer
     ], "fast");
 
-    loaderMgr.listMistakes();
+    listMistakes();
 
     console.groupEnd();
   }
@@ -288,7 +285,7 @@ export function listenerManager(globals, utilsManager, loaderMgr, controlMgr, qu
   }
   
   return {
-    setInstances,
+    setListenerManagerCallbacks,
     generalListeners,
     moveForm,
     //handlebringBackBtn,
