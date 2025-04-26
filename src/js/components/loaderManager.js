@@ -16,95 +16,95 @@
     _debouncedMoveForm = debouncedMoveForm;
   }
   
-  const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
-  const basePath = isLocal ? LOCAL_PATH : WEB_PATH;
+  const _isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+  const _basePath = _isLocal ? LOCAL_PATH : WEB_PATH;
 
   const vowels = {
     //db: "N5/vocab/assets/data/n5-vocab-debug.json",
-    a: `${basePath}${JSON_PATHS.A}`,
-    i: `${basePath}${JSON_PATHS.I}`,
-    u: `${basePath}${JSON_PATHS.U}`,
-    e: `${basePath}${JSON_PATHS.E}`,
-    o: `${basePath}${JSON_PATHS.O}`,
+    a: `${_basePath}${JSON_PATHS.A}`,
+    i: `${_basePath}${JSON_PATHS.I}`,
+    u: `${_basePath}${JSON_PATHS.U}`,
+    e: `${_basePath}${JSON_PATHS.E}`,
+    o: `${_basePath}${JSON_PATHS.O}`,
   }
 
   const k = {
-    ka: `${basePath}${JSON_PATHS.KA}`,
-    ki: `${basePath}${JSON_PATHS.KI}`,
-    ku: `${basePath}${JSON_PATHS.KU}`,
-    ke: `${basePath}${JSON_PATHS.KE}`,
-    ko: `${basePath}${JSON_PATHS.KO}`,
+    ka: `${_basePath}${JSON_PATHS.KA}`,
+    ki: `${_basePath}${JSON_PATHS.KI}`,
+    ku: `${_basePath}${JSON_PATHS.KU}`,
+    ke: `${_basePath}${JSON_PATHS.KE}`,
+    ko: `${_basePath}${JSON_PATHS.KO}`,
   } 
 
   const s = {
-    sa: `${basePath}${JSON_PATHS.SA}`,
-    shi: `${basePath}${JSON_PATHS.SHI}`,
-    su: `${basePath}${JSON_PATHS.SU}`,
-    se: `${basePath}${JSON_PATHS.SE}`,
-    so: `${basePath}${JSON_PATHS.SO}`,
+    sa: `${_basePath}${JSON_PATHS.SA}`,
+    shi: `${_basePath}${JSON_PATHS.SHI}`,
+    su: `${_basePath}${JSON_PATHS.SU}`,
+    se: `${_basePath}${JSON_PATHS.SE}`,
+    so: `${_basePath}${JSON_PATHS.SO}`,
   }
 
   const t = {
-    ta: `${basePath}${JSON_PATHS.TA}`,
-    chi: `${basePath}${JSON_PATHS.CHI}`,
-    tsu: `${basePath}${JSON_PATHS.TSU}`,
-    te: `${basePath}${JSON_PATHS.TE}`,
-    to: `${basePath}${JSON_PATHS.TO}`,
+    ta: `${_basePath}${JSON_PATHS.TA}`,
+    chi: `${_basePath}${JSON_PATHS.CHI}`,
+    tsu: `${_basePath}${JSON_PATHS.TSU}`,
+    te: `${_basePath}${JSON_PATHS.TE}`,
+    to: `${_basePath}${JSON_PATHS.TO}`,
   }
 
   const n = {
-    na: `${basePath}${JSON_PATHS.NA}`,
-    ni: `${basePath}${JSON_PATHS.NI}`,
-    nu: `${basePath}${JSON_PATHS.NU}`,
-    ne: `${basePath}${JSON_PATHS.NE}`,
-    no: `${basePath}${JSON_PATHS.NO}`,
+    na: `${_basePath}${JSON_PATHS.NA}`,
+    ni: `${_basePath}${JSON_PATHS.NI}`,
+    nu: `${_basePath}${JSON_PATHS.NU}`,
+    ne: `${_basePath}${JSON_PATHS.NE}`,
+    no: `${_basePath}${JSON_PATHS.NO}`,
   }
 
   const h = {
-    ha: `${basePath}${JSON_PATHS.HA}`,
-    hi: `${basePath}${JSON_PATHS.HI}`,
-    fu: `${basePath}${JSON_PATHS.FU}`,
-    he: `${basePath}${JSON_PATHS.HE}`,
-    ho: `${basePath}${JSON_PATHS.HO}`,
+    ha: `${_basePath}${JSON_PATHS.HA}`,
+    hi: `${_basePath}${JSON_PATHS.HI}`,
+    fu: `${_basePath}${JSON_PATHS.FU}`,
+    he: `${_basePath}${JSON_PATHS.HE}`,
+    ho: `${_basePath}${JSON_PATHS.HO}`,
   }
 
   const m = {
-    ma: `${basePath}${JSON_PATHS.MA}`,
-    mi: `${basePath}${JSON_PATHS.MI}`,
-    mu: `${basePath}${JSON_PATHS.MU}`,
-    me: `${basePath}${JSON_PATHS.ME}`,
-    mo: `${basePath}${JSON_PATHS.MO}`,
+    ma: `${_basePath}${JSON_PATHS.MA}`,
+    mi: `${_basePath}${JSON_PATHS.MI}`,
+    mu: `${_basePath}${JSON_PATHS.MU}`,
+    me: `${_basePath}${JSON_PATHS.ME}`,
+    mo: `${_basePath}${JSON_PATHS.MO}`,
   }
 
   const y = {
-    ya: `${basePath}${JSON_PATHS.YA}`,
-    yu: `${basePath}${JSON_PATHS.YU}`,
-    yo: `${basePath}${JSON_PATHS.YO}`,
+    ya: `${_basePath}${JSON_PATHS.YA}`,
+    yu: `${_basePath}${JSON_PATHS.YU}`,
+    yo: `${_basePath}${JSON_PATHS.YO}`,
   }
 
   const r = {
-    ra: `${basePath}${JSON_PATHS.RA}`,
-    ri: `${basePath}${JSON_PATHS.RI}`,
-    re: `${basePath}${JSON_PATHS.RE}`,
-    ro: `${basePath}${JSON_PATHS.RO}`,
+    ra: `${_basePath}${JSON_PATHS.RA}`,
+    ri: `${_basePath}${JSON_PATHS.RI}`,
+    re: `${_basePath}${JSON_PATHS.RE}`,
+    ro: `${_basePath}${JSON_PATHS.RO}`,
   }
 
   const wa = {
-    wa: `${basePath}${JSON_PATHS.WA}`,
+    wa: `${_basePath}${JSON_PATHS.WA}`,
   }
 
-  let isPreLoadSuccessful = true;
+  let _isPreLoadSuccessful = true;
 
   async function preloadVocabData() {           // [LE7] [LE8]
     console.group("preloadVocabData()");
     console.info("Preloading vocab JSON files...");
 
-    showLoadingMsg();
+    _showLoadingMsg();
     
-    const allKeys = mergeVocabKeys();           // Combine all syllable keys into one array
+    const allKeys = _mergeVocabKeys();           // Combine all syllable keys into one array
 
     const promises = allKeys.map(key => {
-      const jsonPath = getJSONPath(key);        // Finds the file path
+      const jsonPath = _getJSONPath(key);        // Finds the file path
 
       return jsonPath ? fetch(jsonPath)
           .then(response => {
@@ -117,13 +117,13 @@
 
             return response.json();             // If everything's ok, convert response to JSON
           })    
-          .then(data => ({ key, data }))        // Wraps data with key { key: "a", data: [...data from n5-vocab-a.json...]}                
+          .then(vocabList => ({ key, vocabList }))        // Wraps data with key { key: "a", data: [...data from n5-vocab-a.json...]}                
           .catch(error => {
             console.warn(`Failed to load ${key}:`, error);
-            isPreLoadSuccessful = false;        // Set flag 
-            return { key, data: [] };           // Store empty array on failure (Ensure structure remains consistent)
+            _isPreLoadSuccessful = false;          // Set the flag 
+            return { key, vocabList: [] };         // Store empty array on failure (Ensure structure remains consistent)
           })
-        : Promise.resolve({ key, data: [] });   // Handle missing keys gracefully
+        : Promise.resolve({ key, vocabList: [] }); // Handle missing keys gracefully
     });
 
     // Wait for all JSON files to load
@@ -132,12 +132,12 @@
     // Convert results 'array' into an 'object' and store in appData.preloadedVocab
     appData.preloadedVocab = Object.fromEntries(results.map( ({ key, data }) => [key, data] )); // [sn23] Object.fromEntries => {a: [], i: []}
     
-    console.info("Preloading completed.", isPreLoadSuccessful, appData.preloadedVocab);
+    console.info("Preloading completed.", _isPreLoadSuccessful, appData.preloadedVocab);
     console.groupEnd();
   }
 
   // To combine all keys dynamically from vowels, k, s, etc.
-  function mergeVocabKeys() {
+  function _mergeVocabKeys() {
     return [
       ...Object.keys(vowels),  
       ...Object.keys(k),
@@ -153,7 +153,7 @@
   }
 
   // To find JSON path depending on the key given
-  function getJSONPath(key) { 
+  function _getJSONPath(key) { 
     const groups = [vowels, k, s, t, n, h, m, y, r, wa];
     for (const group of groups) {
       if (group[key]) return group[key];
@@ -253,7 +253,7 @@
     setQuestionMode("fresh");
   
     if (appData.syllableChoice.includes("all")) {     // If "all" is selected
-      appData.syllableChoice = mergeVocabKeys();      //[sn9] This replaces syllableChoice with all syllables
+      appData.syllableChoice = _mergeVocabKeys();      //[sn9] This replaces syllableChoice with all syllables
     }
 
     // Create an array of Promises dynamically resolving the key's group
@@ -263,7 +263,7 @@
       if (appData.preloadedVocab[key]) { 
         return Promise.resolve(appData.preloadedVocab[key]); // Use preloaded data
       } else {
-        let jsonPath = getJSONPath(key);
+        let jsonPath = _getJSONPath(key);
         return jsonPath 
           ? fetch(jsonPath)                     // [sn21] Fetch the JSON file
             .then(response => response.json())  // Processes the response by converting it into a JavaScript object.
@@ -676,8 +676,8 @@
   }
 
   // To show 'loading...' while preloading all jsons
-  function showLoadingMsg() {
-    console.groupCollapsed("showLoadingMsg()");
+  function _showLoadingMsg() {
+    console.groupCollapsed("_showLoadingMsg()");
     
     addLoadingMsg('Loading...');
     
@@ -698,13 +698,13 @@
     }
   }
 
-  // Depending on the `isPreLoadSuccessful` flag, cleans up 'loading...' message or adds 'fail' on screen
+  // Depending on the `_isPreLoadSuccessful` flag, cleans up 'loading...' message or adds 'fail' on screen
   async function checkPreLoadState() {
     console.groupCollapsed("checkPreLoadState()");
     
-    console.info("isPreLoadSuccessful:", isPreLoadSuccessful);
+    console.info("_isPreLoadSuccessful:", _isPreLoadSuccessful);
 
-    if (isPreLoadSuccessful) preloadSuccess();
+    if (_isPreLoadSuccessful) preloadSuccess();
     else preloadFail();
 
     console.groupEnd();
@@ -752,7 +752,6 @@
     listMistakes,
     resumeProgram,
     resetAfterFlushingMistakes,
-    showLoadingMsg,
     checkPreLoadState,
   }
 }
