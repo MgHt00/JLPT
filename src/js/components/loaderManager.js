@@ -19,7 +19,7 @@
   const _isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
   const _basePath = _isLocal ? LOCAL_PATH : WEB_PATH;
 
-  const vowels = {
+  const _vowels = {
     //db: "N5/vocab/assets/data/n5-vocab-debug.json",
     a: `${_basePath}${JSON_PATHS.A}`,
     i: `${_basePath}${JSON_PATHS.I}`,
@@ -28,7 +28,7 @@
     o: `${_basePath}${JSON_PATHS.O}`,
   }
 
-  const k = {
+  const _k = {
     ka: `${_basePath}${JSON_PATHS.KA}`,
     ki: `${_basePath}${JSON_PATHS.KI}`,
     ku: `${_basePath}${JSON_PATHS.KU}`,
@@ -36,7 +36,7 @@
     ko: `${_basePath}${JSON_PATHS.KO}`,
   } 
 
-  const s = {
+  const _s = {
     sa: `${_basePath}${JSON_PATHS.SA}`,
     shi: `${_basePath}${JSON_PATHS.SHI}`,
     su: `${_basePath}${JSON_PATHS.SU}`,
@@ -44,7 +44,7 @@
     so: `${_basePath}${JSON_PATHS.SO}`,
   }
 
-  const t = {
+  const _t = {
     ta: `${_basePath}${JSON_PATHS.TA}`,
     chi: `${_basePath}${JSON_PATHS.CHI}`,
     tsu: `${_basePath}${JSON_PATHS.TSU}`,
@@ -52,7 +52,7 @@
     to: `${_basePath}${JSON_PATHS.TO}`,
   }
 
-  const n = {
+  const _n = {
     na: `${_basePath}${JSON_PATHS.NA}`,
     ni: `${_basePath}${JSON_PATHS.NI}`,
     nu: `${_basePath}${JSON_PATHS.NU}`,
@@ -60,7 +60,7 @@
     no: `${_basePath}${JSON_PATHS.NO}`,
   }
 
-  const h = {
+  const _h = {
     ha: `${_basePath}${JSON_PATHS.HA}`,
     hi: `${_basePath}${JSON_PATHS.HI}`,
     fu: `${_basePath}${JSON_PATHS.FU}`,
@@ -68,7 +68,7 @@
     ho: `${_basePath}${JSON_PATHS.HO}`,
   }
 
-  const m = {
+  const _m = {
     ma: `${_basePath}${JSON_PATHS.MA}`,
     mi: `${_basePath}${JSON_PATHS.MI}`,
     mu: `${_basePath}${JSON_PATHS.MU}`,
@@ -76,20 +76,20 @@
     mo: `${_basePath}${JSON_PATHS.MO}`,
   }
 
-  const y = {
+  const _y = {
     ya: `${_basePath}${JSON_PATHS.YA}`,
     yu: `${_basePath}${JSON_PATHS.YU}`,
     yo: `${_basePath}${JSON_PATHS.YO}`,
   }
 
-  const r = {
+  const _r = {
     ra: `${_basePath}${JSON_PATHS.RA}`,
     ri: `${_basePath}${JSON_PATHS.RI}`,
     re: `${_basePath}${JSON_PATHS.RE}`,
     ro: `${_basePath}${JSON_PATHS.RO}`,
   }
 
-  const wa = {
+  const _wa = {
     wa: `${_basePath}${JSON_PATHS.WA}`,
   }
 
@@ -136,25 +136,25 @@
     console.groupEnd();
   }
 
-  // To combine all keys dynamically from vowels, k, s, etc.
+  // To combine all keys dynamically from _vowels, _k, s, etc.
   function _mergeVocabKeys() {
     return [
-      ...Object.keys(vowels),  
-      ...Object.keys(k),
-      ...Object.keys(s),
-      ...Object.keys(t),
-      ...Object.keys(n),
-      ...Object.keys(h),
-      ...Object.keys(m),
-      ...Object.keys(y),
-      ...Object.keys(r),
-      ...Object.keys(wa),
+      ...Object.keys(_vowels),  
+      ...Object.keys(_k),
+      ...Object.keys(_s),
+      ...Object.keys(_t),
+      ...Object.keys(_n),
+      ...Object.keys(_h),
+      ...Object.keys(_m),
+      ...Object.keys(_y),
+      ...Object.keys(_r),
+      ...Object.keys(_wa),
     ]
   }
 
   // To find JSON path depending on the key given
   function _getJSONPath(key) { 
-    const groups = [vowels, k, s, t, n, h, m, y, r, wa];
+    const groups = [_vowels, _k, _s, _t, _n, _h, _m, _y, _r, _wa];
     for (const group of groups) {
       if (group[key]) return group[key];
     }
@@ -164,22 +164,22 @@
   // when user click submit(start) button of the setting form
   async function start(e) {  
     e.preventDefault();                 // Prevent form from submitting the usual way
-    validateAndSetInputData(e);         // validate and set defaults to the input data.
+    _validateAndSetInputData(e);         // validate and set defaults to the input data.
     clearError();                    // Remove error messages
     if (appState.qMode === "stored") {
-      if(!validateStoredMemory()) {     // To validate whether memory is empty or not
+      if(!_validateStoredMemory()) {     // To validate whether memory is empty or not
         runtimeError("mem0");
         return;
       }
-      await loadStoredJSON();           // Continue if there is no runtime error. (Wait for loadStoredJSON to complete)
-      initializeQuiz();
+      await _loadStoredJSON();           // Continue if there is no runtime error. (Wait for _loadStoredJSON to complete)
+      _initializeQuiz();
     }
        
     if (appState.qMode === "fresh") {
-      if (validateSyllable()) {
-        await loadFreshJSON();          // Wait for loadFreshJSON to complete
+      if (_validateSyllable()) {
+        await _loadFreshJSON();          // Wait for _loadFreshJSON to complete
 
-        // Only check the runtime error if validateSyllable() returns true ...
+        // Only check the runtime error if _validateSyllable() returns true ...
         // ... Otherwise program shows infinite loop error without necessary.
         const hasSufficientAnswers = runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
         if (!hasSufficientAnswers) {    // Now checks if there is NOT a runtime error
@@ -188,13 +188,13 @@
         }
         
         // Continue if there is no runtime error.
-        initializeQuiz();
+        _initializeQuiz();
       }
     } 
   }
 
   // To validate whether memory is empty or not
-  function validateStoredMemory() {
+  function _validateStoredMemory() {
     let storedLength = readStoredLength();
     if (storedLength === 0) {
       return false;
@@ -204,15 +204,15 @@
   }
 
   // Function to initialize quiz settings and UI setup
-  function initializeQuiz() {
+  function _initializeQuiz() {
     _moveForm();
     
     floatingBtnsHideAll();
     toggleFormDisplay();
     hideResumeShowBack();
 
-    resetQuestionCount()
-    resetTotalNoOfQuestion()
+    resetQuestionCount();
+    resetTotalNoOfQuestion();
     getTotalNoOfQuestions("fresh");  // for status bar, reset and set No. of Question
               
     resetCumulativeVariables();       // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
@@ -223,10 +223,10 @@
   }
 
   // to validate input data and set defaults if necessary
-  function validateAndSetInputData(e) {
-    console.groupCollapsed("validateAndSetInputData()");
+  function _validateAndSetInputData(e) {
+    console.groupCollapsed("_validateAndSetInputData()");
 
-    validateToggleSwitch(['randomYesNo', 'flashYesNo']);
+    _validateToggleSwitch(['randomYesNo', 'flashYesNo']);
     validateAndSetAnswerCount();      // Validate number of answers and set default if invalid
     validateAndSetQuestionMode();     // Validate question mode and set default
     
@@ -246,8 +246,8 @@
   }
   
   // to load user selected sylable-json when program mode is "fresh"
-  async function loadFreshJSON() {
-    console.groupCollapsed("loadFreshJSON()");
+  async function _loadFreshJSON() {
+    console.groupCollapsed("_loadFreshJSON()");
     console.info("appData.preloadedVocab:", appData.preloadedVocab);
 
     setQuestionMode("fresh");
@@ -291,8 +291,8 @@
   }
 
   // To load local storage json when program mode is "stored"
-  async function loadStoredJSON() {
-    console.groupCollapsed("loadStoredJSON()");
+  async function _loadStoredJSON() {
+    console.groupCollapsed("_loadStoredJSON()");
 
     setQuestionMode("stored");                        // Set program's question mode to 'stored'
     
@@ -307,7 +307,7 @@
     console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
     
     if (appData.vocabArray.length === 0) {  
-        console.log("Inside loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length);
+        console.log("Inside _loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length);
         console.error("Error: vocabArray is empty after loading stored data!");
         return;
     }
@@ -472,8 +472,8 @@
   }
 
   // Validate syllable choices and show error if necessary
-  function validateSyllable() {
-    console.groupCollapsed("validateSyllable()");
+  function _validateSyllable() {
+    console.groupCollapsed("_validateSyllable()");
     // Validate syllable choices and show an error if none are selected
     appData.syllableChoice = helpers.convertCheckedValuesToArray('input[name="syllableChoice"]:checked');
     if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
@@ -516,8 +516,8 @@
   }
 
   // To validate toggle switch data
-  function validateToggleSwitch(selectorNames) {
-    console.groupCollapsed("validateToggleSwitch()");
+  function _validateToggleSwitch(selectorNames) {
+    console.groupCollapsed("_validateToggleSwitch()");
 
     console.info("Parameters: ", selectorNames);
 
@@ -556,7 +556,7 @@
       appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
       console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
     }
-    await loadStoredJSON();   // Wait for loadStoredJSON to complete
+    await _loadStoredJSON();   // Wait for _loadStoredJSON to complete
 
     getTotalNoOfQuestions("stored");
     newQuestion();
@@ -704,39 +704,38 @@
     
     console.info("_isPreLoadSuccessful:", _isPreLoadSuccessful);
 
-    if (_isPreLoadSuccessful) preloadSuccess();
-    else preloadFail();
+    if (_isPreLoadSuccessful) _preloadSuccess();
+    else _preloadFail();
 
     console.groupEnd();
+  }
 
-    // Utility functions private to the module
-    function preloadSuccess() {
-      console.info("Preload successful");
-      const loadingMsg = document.querySelector("#preload-info-0");  
-      removeLoadingMsg(loadingMsg);                               // remove 'loading...' from screen
-      displayUtils.toggleClass('disabled', selectors.settingForm);  // release the form from 'so-dim' state
-      return true;
-    }
+  function _preloadSuccess() {
+    console.info("Preload successful");
+    const loadingMsg = document.querySelector("#preload-info-0");
+    _removeLoadingMsg(loadingMsg);                               // remove 'loading...' from screen
+    displayUtils.toggleClass('disabled', selectors.settingForm);  // release the form from 'so-dim' state
+    return true;
+  }
 
-    function preloadFail() {
-      console.info("Preload fail");
-      const loadingMsg = document.querySelector("#preload-info-0"); 
-      if (loadingMsg) {
-        loadingMsg.textContent = 'Loading fail!';
-      } else {
-        console.error("Preload message element not found.");
-      }
-      return false;
+  function _preloadFail() {
+    console.info("Preload fail");
+    const loadingMsg = document.querySelector("#preload-info-0");
+    if (loadingMsg) {
+    loadingMsg.textContent = 'Loading fail!';
+    } else {
+      console.error("Preload message element not found.");
     }
+    return false;
+  }
 
-    // To remove the loading message from `body`
-    function removeLoadingMsg(msg) {
-      domUtils.clearNode({
-        parent: selectors.body,
-        children: msg,
-      });
-      console.info("removed preload message from screen:", msg);
-    }
+  // To remove the loading message from `body`
+  function _removeLoadingMsg(msg) {
+    domUtils.clearNode({
+      parent: selectors.body,
+      children: msg,
+    });
+    console.info("removed preload message from screen:", msg);
   }
 
   return {
@@ -744,7 +743,6 @@
     preloadVocabData,
     start,
     loadMemoryData,
-    loadStoredJSON,
     validateAndSetAnswerCount,
     rePrintMemory,
     continuetoStoredData,
