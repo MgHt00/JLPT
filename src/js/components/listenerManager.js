@@ -1,3 +1,5 @@
+import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+
 export function listenerManager(globals, utilsManager, setQuestionMode, clearError, controlManager, loaderFns, statusFns) {
   const { appState, selectors, currentStatus } = globals;
   const { domUtils, displayUtils } = utilsManager;
@@ -11,25 +13,25 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
     _setRanOnce = setRanOnce;
   }
 
-  // Wrap the moveForm function with debounce
-  const debouncedMoveForm = debounce(moveForm, 300); // 300ms delay
+  // Wrap the moveForm function with _debounce
+  const debouncedMoveForm = _debounce(moveForm, 300); // 300ms delay
 
   // All event Listeners
   function generalListeners() {
     selectors.settingForm.addEventListener('submit', start); // [sn17]
-    selectors.switchRandomYesNo.addEventListener('change', randomToggleChanges);
-    selectors.switchFlashYesNo.addEventListener('change', flashModeToggleChanges); // to handle toggle switch
-    selectors.settingFlashYesNo.addEventListener('change', flashModeChanges); // to show answer options and check runtime error 
-    selectors.fieldsetSyllable.addEventListener('change', syllableChangesImprovedVer);
-    selectors.qChoice.addEventListener('change', buildAnswerOptions);
-    selectors.settingSource.addEventListener('change', questionModeChanges);
-    selectors.bringBackBtn.addEventListener('click', handlebringBackBtn);
-    selectors.resumePracticeBtn.addEventListener('click', handleResumePracticeBtn);
+    selectors.switchRandomYesNo.addEventListener('change', _randomToggleChanges);
+    selectors.switchFlashYesNo.addEventListener('change', _flashModeToggleChanges); // to handle toggle switch
+    selectors.settingFlashYesNo.addEventListener('change', _flashModeChanges); // to show answer options and check runtime error 
+    selectors.fieldsetSyllable.addEventListener('change', _syllableChangesImprovedVer);
+    selectors.qChoice.addEventListener('change', _buildAnswerOptions);
+    selectors.settingSource.addEventListener('change', _questionModeChanges);
+    selectors.bringBackBtn.addEventListener('click', _handlebringBackBtn);
+    selectors.resumePracticeBtn.addEventListener('click', _handleResumePracticeBtn);
   }
 
   // to handle settingRandomYesNo toggle switch
-  function randomToggleChanges(e) {
-    console.groupCollapsed("randomToggleChanges()");
+  function _randomToggleChanges(e) {
+    console.groupCollapsed("_randomToggleChanges()");
     const randomLabel = document.querySelector("#random-label");
     const sequentialLabel = document.querySelector("#sequential-label");
 
@@ -44,8 +46,8 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   }
 
   // to handle settingFlashYesNo toggle switch
-  function flashModeToggleChanges(e) {
-    console.groupCollapsed("flashModeToggleChanges()");
+  function _flashModeToggleChanges(e) {
+    console.groupCollapsed("_flashModeToggleChanges()");
     const flashLabel = document.querySelector("#flashcard-label");
     const multiLabel = document.querySelector("#multiple-choice-label");
 
@@ -60,8 +62,8 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   }
 
   // to handle when flash mode toogle (previously radio buttons are) is changed
-  function flashModeChanges(e) {
-    console.groupCollapsed("flashModeChanges()");
+  function _flashModeChanges(e) {
+    console.groupCollapsed("_flashModeChanges()");
     resetQuestionMode();
     displayUtils.toggleClass('disabled', ...selectors.noOfAnsAll);
     
@@ -83,7 +85,7 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
     const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
       .filter(checkbox => checkbox !== allCheckbox);
 
-    if (domUtils.checkNode({ id: 'syllable-error' })) removeSyllableError();
+    if (domUtils.checkNode({ id: 'syllable-error' })) _removeSyllableError();
 
     if (event.target === allCheckbox) {
       if (allCheckbox.checked) {
@@ -109,11 +111,11 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   }
 
   // to handle when syllable checkboxs are changed
-  function syllableChangesImprovedVer(event) { // [le4]
-    console.groupCollapsed("syllableChangesImprovedVer()");
+  function _syllableChangesImprovedVer(event) { // [le4]
+    console.groupCollapsed("_syllableChangesImprovedVer()");
 
-    const { allCheckbox, otherCheckboxes } = getCheckboxes();
-    if (domUtils.checkNode({ id: 'syllable-error' })) removeSyllableError();
+    const { allCheckbox, otherCheckboxes } = _getSyllableCheckboxes();
+    if (domUtils.checkNode({ id: 'syllable-error' })) _removeSyllableError();
 
     if (event.target === allCheckbox) {       // Check whether event is `allCheckbox`
       otherCheckboxes.forEach(checkbox => checkbox.checked = allCheckbox.checked);
@@ -125,27 +127,30 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
 
     allCheckbox.checked = otherCheckboxes.every(checkbox => checkbox.checked);
     console.groupEnd();
+  }
 
-    // utility functions private to the module
-    function getCheckboxes() {
-      const allCheckbox = document.getElementById('syllableAll');
-      const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
-        .filter(checkbox => checkbox !== allCheckbox);
+  function _getSyllableCheckboxes() {
+    const allCheckbox = document.getElementById('syllableAll');
+    const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
+      .filter(checkbox => checkbox !== allCheckbox);
 
-      return { allCheckbox, otherCheckboxes };
-    }
+    return { allCheckbox, otherCheckboxes };
+  }
 
-    function removeSyllableError() {
-      domUtils.clearNode({
-        parent: selectors.fieldsetSyllable,
-        children: Array.from(document.querySelectorAll('div[id^="syllable-error"]'))
-      });
-    }
+  function _removeSyllableError() {
+    domUtils.clearNode({
+      parent: selectors.fieldsetSyllable,
+      children: Array.from(document.querySelectorAll('div[id^="syllable-error"]'))
+    });
+  }
+
+  function _toggleSettingSyllable() {
+    displayUtils.toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
   }
 
   // to handle when program question mode (fresh / stored) is changed
-  function questionModeChanges(e) {
-    toggleSettingSyllable();
+  function _questionModeChanges(e) {
+    _toggleSettingSyllable();
     clearError();
 
     let selectedMode = selectors.readQuestionMode;
@@ -159,15 +164,10 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
       setQuestionMode("stored");
        _setRanOnce(true);
     }
-
-    // private functions
-    function toggleSettingSyllable() {
-      displayUtils.toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
-    }
   }
    
   // to build options for the setting's answer language
-  function buildAnswerOptions() {
+  function _buildAnswerOptions() {
     const ansMapping = { // [sn11]
       ka: { parent: selectors.aChoice, child: 'option', content: 'Kanji', childValues: 'ka', id: 'a-ka'},
       hi: { parent: selectors.aChoice, child: 'option', content: 'Hiragana', childValues: 'hi', id: 'a-hi'},
@@ -187,14 +187,14 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   }
   
   // When bringBackBtn is clicked (to move the setting form upward and reprint stored data info)
-  function handlebringBackBtn(event) {
+  function _handlebringBackBtn(event) {
     floatingBtnsHideAll();
     toggleFormDisplay();
     hideBackShowResume();
 
     if(currentStatus.mistakeListActive) {
       toggleShadesOnTop();
-      toggleMistakeListActive();
+      _toggleMistakeListActive();
     }
     
     event.stopPropagation(); // Prevent event from bubbling up
@@ -203,8 +203,8 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   }
 
   // When resumePracticeBtn is clicked
-  function handleResumePracticeBtn(event) {
-    console.groupCollapsed("handleResumePracticeBtn()");
+  function _handleResumePracticeBtn(event) {
+    console.groupCollapsed("_handleResumePracticeBtn()");
 
     floatingBtnsHideAll();
 
@@ -230,12 +230,12 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   function handleListMistakeBtn() {
     console.groupCollapsed("handleListMistakeBtn()");
 
-    toggleMistakeListActive();  // flag = true to show shades on the top.
+    _toggleMistakeListActive();  // flag = true to show shades on the top.
 
     floatingBtnsHideAll();
     hideResumeShowBack();
     toggleShadesOnTop();
-    toggleFormDisplay('shift-sections-to-top-center');
+    toggleFormDisplay(CSS_CLASS_NAMES.SHIFT_SECTIONS_TOP_CENTER);
 
     domUtils.clearScreen([
       selectors.sectionStatus, 
@@ -249,8 +249,8 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
     console.groupEnd();
   }
 
-  function toggleMistakeListActive() {
-    console.groupCollapsed("toggleMistakeListActive()");
+  function _toggleMistakeListActive() {
+    console.groupCollapsed("_toggleMistakeListActive()");
 
     currentStatus.mistakeListActive = !currentStatus.mistakeListActive;
     console.info("mistakeListActive flag:",currentStatus.mistakeListActive);
@@ -258,8 +258,8 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
     console.groupEnd();
   }
   
-  // The debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
-  function debounce(func, delay) {
+  // The _debounce function ensures that moveForm is only called after a specified delay (300 milliseconds in this example) has passed since the last click event. This prevents the function from being called too frequently.
+  function _debounce(func, delay) {
     let timeoutId;
     return function (event, ...args) {
       clearTimeout(timeoutId);
@@ -269,18 +269,18 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
     };
   }
 
-  let isMoving = false; // Flag to prevent multiple movements
+  let _isMoving = false; // Flag to prevent multiple movements
   
   // to move settings form upward
   function moveForm() {
-    if (isMoving) return; // If the form is already moving, exit the function
+    if (_isMoving) return; // If the form is already moving, exit the function
 
     // Set the flag to prevent further calls
-    isMoving = true;
+    _isMoving = true;
 
     // Add an event listener for the transition end to reset the flag
     selectors.settingForm.addEventListener('transitionend', () => {
-      isMoving = false; // Allow future movement after the transition completes
+      _isMoving = false; // Allow future movement after the transition completes
     }, { once: true }); // Ensure the event listener is called only once per transition
   }
   
@@ -288,7 +288,6 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
     setListenerManagerCallbacks,
     generalListeners,
     moveForm,
-    //handlebringBackBtn,
     handleListMistakeBtn,
     debouncedMoveForm,
   }
