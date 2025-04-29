@@ -32,6 +32,13 @@ export const selectors = {
   resumePracticeBtn : document.querySelector(ELEMENTIDS.RESUME_PRACTICE_BTN),
   bringBackBtnContainer : document.querySelector(ELEMENTIDS.BRING_BACK_BTN_CONTAINER),
 
+  labelRandom : document.querySelector(ELEMENTIDS.LABEL_RANDOM),
+  labelSequential : document.querySelector(ELEMENTIDS.LABEL_SEQUENTIAL),
+  labelFlashCard: document.querySelector(ELEMENTIDS.LABEL_FLASH_CARD),
+  labelMCQ: document.querySelector(ELEMENTIDS.LABEL_MCQ),
+
+  checkboxSyllableAll: document.querySelector(`#${ELEMENTIDS.CHECKBOX_SYLLABLE_ALL}`),
+
   get readNoOfAns() { //[sn19]
     //if it is not a getter, use this; outside of "get"
     return document.querySelector(ELEMENTIDS.NO_OF_ANSWER_CHECKED).value;

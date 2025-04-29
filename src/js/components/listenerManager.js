@@ -1,4 +1,5 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+import { ELEMENTIDS, GENERATED_DOM } from "../constants/elementIDs.js";
 
 export function listenerManager(globals, utilsManager, setQuestionMode, clearError, controlManager, loaderFns, statusFns) {
   const { appState, selectors, currentStatus } = globals;
@@ -32,8 +33,8 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   // to handle settingRandomYesNo toggle switch
   function _randomToggleChanges(e) {
     console.groupCollapsed("_randomToggleChanges()");
-    const randomLabel = document.querySelector("#random-label");
-    const sequentialLabel = document.querySelector("#sequential-label");
+    const randomLabel = selectors.labelRandom;
+    const sequentialLabel = selectors.labelSequential;
 
     if (selectors.switchRandomYesNo.checked) { // random is selected on the front end
       appState.randomYesNo = true;
@@ -48,8 +49,8 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   // to handle settingFlashYesNo toggle switch
   function _flashModeToggleChanges(e) {
     console.groupCollapsed("_flashModeToggleChanges()");
-    const flashLabel = document.querySelector("#flashcard-label");
-    const multiLabel = document.querySelector("#multiple-choice-label");
+    const flashLabel = selectors.labelFlashCard;
+    const multiLabel = selectors.labelMCQ;
 
     if (selectors.switchFlashYesNo.checked) { // multi-choice is selected on the front end
       appState.flashYesNo = false; 
@@ -85,7 +86,7 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
     const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
       .filter(checkbox => checkbox !== allCheckbox);
 
-    if (domUtils.checkNode({ id: 'syllable-error' })) _removeSyllableError();
+    if (domUtils.checkNode({ id: GENERATED_DOM.SYLLABLE_ERROR })) _removeSyllableError();
 
     if (event.target === allCheckbox) {
       if (allCheckbox.checked) {
@@ -110,12 +111,28 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
     }
   }
 
+  // Gets the "all" checkbox and individual syllable checkboxes.
+  function _getSyllableCheckboxes() {
+    const allCheckbox = selectors.checkboxSyllableAll;
+    const otherCheckboxes = Array
+                            .from(document.querySelectorAll(`input[name=${ELEMENTIDS.SYLLABLE_CHOICE_NAME}]`))
+                            .filter(checkbox => checkbox !== allCheckbox);
+    return { allCheckbox, otherCheckboxes };
+  }
+
+  function _removeSyllableError() {
+    domUtils.clearNode({
+      parent: selectors.fieldsetSyllable,
+      children: Array.from(document.querySelectorAll(`div[id^=${GENERATED_DOM.SYLLABLE_ERROR}]`))
+    });
+  }
+
   // to handle when syllable checkboxs are changed
   function _syllableChangesImprovedVer(event) { // [le4]
     console.groupCollapsed("_syllableChangesImprovedVer()");
 
     const { allCheckbox, otherCheckboxes } = _getSyllableCheckboxes();
-    if (domUtils.checkNode({ id: 'syllable-error' })) _removeSyllableError();
+    if (domUtils.checkNode({ id: GENERATED_DOM.SYLLABLE_ERROR })) _removeSyllableError();
 
     if (event.target === allCheckbox) {       // Check whether event is `allCheckbox`
       otherCheckboxes.forEach(checkbox => checkbox.checked = allCheckbox.checked);
@@ -127,21 +144,6 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
 
     allCheckbox.checked = otherCheckboxes.every(checkbox => checkbox.checked);
     console.groupEnd();
-  }
-
-  function _getSyllableCheckboxes() {
-    const allCheckbox = document.getElementById('syllableAll');
-    const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
-      .filter(checkbox => checkbox !== allCheckbox);
-
-    return { allCheckbox, otherCheckboxes };
-  }
-
-  function _removeSyllableError() {
-    domUtils.clearNode({
-      parent: selectors.fieldsetSyllable,
-      children: Array.from(document.querySelectorAll('div[id^="syllable-error"]'))
-    });
   }
 
   function _toggleSettingSyllable() {

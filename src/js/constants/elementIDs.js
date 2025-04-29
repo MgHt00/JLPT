@@ -38,4 +38,17 @@ export const ELEMENTIDS = {
   MEMORY_INFO_ZERO: "#memory-info-0",
   FLUSH_MEMORY_BTN_ZERO: "#flush-memory-btn-0",
   LIST_MEMORY_BTN_ZERO: "#list-memory-btn-0",
+
+  LABEL_RANDOM: "#random-label",
+  LABEL_SEQUENTIAL : "#sequential-label",
+  LABEL_FLASH_CARD : "#flashcard-label",
+  LABEL_MCQ : "#multiple-choice-label",
+
+  SYLLABLE_CHOICE_NAME: 'syllableChoice',
+
+  CHECKBOX_SYLLABLE_ALL: 'syllableALL',
+}
+
+export const GENERATED_DOM = {
+  SYLLABLE_ERROR: 'syllable-error',
 }
