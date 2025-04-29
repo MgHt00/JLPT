@@ -1,5 +1,7 @@
   import { LOCAL_PATH, WEB_PATH, JSON_PATHS } from "../constants/filePath.js";
-  
+  import { LANG_CLASS_NAMES, CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+  import { ELEMENTIDS, GENERATED_DOM } from "../constants/elementIDs.js";
+
   export function loaderManager(globals, utilsManager, controlFns, questionFns, vocabFns, errorFns, statusFns) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
@@ -345,6 +347,53 @@
     return updatedArr; // Return the updated array
   }
 
+  // Displays a message about the memory status (e.g., "Memory is empty.").
+  function _buildMemoryStatus(content) {
+    domUtils.buildNode({
+      parent: selectors.memoryInfo,
+      child: 'div',
+      content: content,
+      className: CSS_CLASS_NAMES.MEMORY_INFO,
+      id: CSS_CLASS_NAMES.MEMORY_INFO,
+    });
+  }
+
+  // Creates and displays memory-related buttons (e.g., "Flush," "List").
+  function _buildMemoryBtns(key) {
+    const memoryButtonConfig = {
+      flush: {
+        icon: GENERATED_DOM.MEMORY_BTN_FLUSH.ICON,
+        className: GENERATED_DOM.MEMORY_BTN_FLUSH.CSS_CLASS,
+        id: GENERATED_DOM.MEMORY_BTN_FLUSH.ELEMENT_ID,
+        handler: flushMistakeBank,
+      },
+  
+      list: {
+        icon: GENERATED_DOM.MEMORY_BTN_LIST.ICON,
+        className: GENERATED_DOM.MEMORY_BTN_LIST.CSS_CLASS,
+        id: GENERATED_DOM.MEMORY_BTN_LIST.ELEMENT_ID,
+        handler: _handleListMistakeBtn,
+      }
+    }  
+    
+    if (!memoryButtonConfig[key]) {
+      console.error(`Invalid key "${key}" passed to _buildMemoryBtns`);
+      return;
+    }
+    
+    const { icon, className, id, handler } = memoryButtonConfig[key];
+
+    domUtils.buildNode({
+      parent: selectors.memoryBtns,
+      child: 'div',
+      content: icon,
+      className: className,
+      id: id,
+      eventFunction: handler,
+    });
+  }
+
+
   // To load stored data from local storage and show info at the settings
   function loadMemoryData() {
     console.groupCollapsed("loadMemoryData");
@@ -354,66 +403,21 @@
 
     switch (storedLength) {     // build 'mistake status' on home screen
       case 0:
-        buildMemoryStatus('Memory is empty.');
+        _buildMemoryStatus('Memory is empty.');
         break;
       case 1:
-        buildMemoryStatus(`${storedLength} word to repractice.`);
+        _buildMemoryStatus(`${storedLength} word to repractice.`);
         break;
       default:
-        buildMemoryStatus(`${storedLength} words to repractice.`);
+        _buildMemoryStatus(`${storedLength} words to repractice.`);
         break;
     }
     
-    buildMemoryBtns("flush");   // build 'flush' and 'list' buttons on screen
-    buildMemoryBtns("list");
+    _buildMemoryBtns("flush");   // build 'flush' and 'list' buttons on screen
+    _buildMemoryBtns("list");
     
     console.groupEnd();
     return this;
-
-    // Utility functions private to the module
-    function buildMemoryStatus(content) {
-      domUtils.buildNode({
-        parent: selectors.memoryInfo,
-        child: 'div',
-        content: content,
-        className: 'memory-info',
-        id: 'memory-info',
-      });
-    }
-
-    function buildMemoryBtns(key) {
-      const MEMORY_BUTTON_CONFIG = {
-        flush: {
-          icon: '<i class="fa-solid fa-trash-can"></i>',
-          className: 'flush-memory-setting-btn',
-          id: 'flush-memory-btn',
-          handler: flushMistakeBank,
-        },
-    
-        list: {
-          icon: '<i class="fa-solid fa-rectangle-list"></i>',
-          className:'list-memory-setting-btn',
-          id: 'list-memory-btn',
-          handler: _handleListMistakeBtn,
-        }
-      }  
-      
-      if (!MEMORY_BUTTON_CONFIG[key]) {
-        console.error(`Invalid key "${key}" passed to buildMemoryBtns`);
-        return;
-      }
-      
-      const { icon, className, id, handler } = MEMORY_BUTTON_CONFIG[key];
-
-      domUtils.buildNode({
-        parent: selectors.memoryBtns,
-        child: 'div',
-        content: icon,
-        className: className,
-        id: id,
-        eventFunction: handler,
-      });
-    }
   }
 
   // Validate (setting's) number of answers and set default if invalid
@@ -475,7 +479,7 @@
   function _validateSyllable() {
     console.groupCollapsed("_validateSyllable()");
     // Validate syllable choices and show an error if none are selected
-    appData.syllableChoice = helpers.convertCheckedValuesToArray('input[name="syllableChoice"]:checked');
+    appData.syllableChoice = helpers.convertCheckedValuesToArray(`input[name=${ELEMENTIDS.SYLLABLE_CHOICE_NAME}]:checked`);
     if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
       runtimeError("noSL");
       console.groupEnd();
@@ -486,7 +490,7 @@
     return true;
   }
 
-  // Convert the string values "true"/"false" to boolean values
+  // UNUSED: Convert the string values "true"/"false" to boolean values
   function convertToBoolean(selectorNames) {
     console.groupCollapsed("convertToBoolean()");
     
@@ -589,12 +593,12 @@
       parent: selectors.sectionQuestion,
       child: 'div',
       content: '',
-      className: 'mistake-list-container', // New class for the container
-      id: 'mistake-list-div',
+      className: GENERATED_DOM.MISTAKE_LIST.CONTAINER_CLASS, // New class for the container
+      id: GENERATED_DOM.MISTAKE_LIST.CONTAINER_ID, 
     });
   
     // Select the mistake-list-container created
-    const mistakeListContainer = document.querySelector("#mistake-list-div-0");
+    const mistakeListContainer = document.querySelector(`#${GENERATED_DOM.MISTAKE_LIST.CONTAINER_ID}-0`);
   
     // Header for the mistake list (4 columns: #, Kanji, Hiragana, English)
     const headerContent = ['#', 'Kanji', 'Hiragana', 'English'];
@@ -604,12 +608,12 @@
       parent: mistakeListContainer,
       child: 'div',
       content: '', // Empty content, as we'll append children later
-      className: 'mistakes-row-header', 
-      id: 'mistakes-heading',
+      className: GENERATED_DOM.MISTAKE_LIST.HEADER_CLASS,
+      id: GENERATED_DOM.MISTAKE_LIST.HEADER_ID, 
     });
   
     // Select the newly created header div
-    const mistakeHeading = document.querySelector("#mistakes-heading-0");
+    const mistakeHeading = document.querySelector(`#${GENERATED_DOM.MISTAKE_LIST.HEADER_ID}-0`);
     
     // Append header columns inside the header div
     headerContent.forEach((content) => {
@@ -617,8 +621,8 @@
         parent: mistakeHeading, // Append to the header div
         child: 'div',
         content: content, // Assign each header title
-        className: ['mistakes-column-header', 'en'], // Class for header columns
-        id: 'mistake-column-header',
+        className: [GENERATED_DOM.MISTAKE_LIST.HEADER_COLUMN_CLASS, LANG_CLASS_NAMES.ENGLISH], // Class for header columns
+        id: GENERATED_DOM.MISTAKE_LIST.HEADER_COLUMN_ID,
       });
     });
 
@@ -629,13 +633,12 @@
         parent: mistakeListContainer,
         child: 'div',
         content: '',
-        className: 'mistakes-row', // Styling class for row
-        id: `mistakeList-row-${index}`, // Unique ID for each row
+        className: GENERATED_DOM.MISTAKE_LIST.ROW_CLASS, // Styling class for row
+        id: `${GENERATED_DOM.MISTAKE_LIST.ROW_ID}-${index}`, // Unique ID for each row
       });
 
       // Now, select the newly created mistake-row
-      //const mistakeListRow = document.querySelector("[id^='mistakeList-row']");
-      const mistakeListRow = document.querySelector(`#mistakeList-row-${index}-0`);
+      const mistakeListRow = document.querySelector(`#${GENERATED_DOM.MISTAKE_LIST.ROW_ID}-${index}-0`);
       
       // Prepare contents for each row
       const rowContent = [index + 1, mistake.ka, mistake.hi, mistake.en];
@@ -646,10 +649,10 @@
         let classNameByIndex;
         switch (index) {
           case 3:
-            classNameByIndex = 'en';
+            classNameByIndex = LANG_CLASS_NAMES.ENGLISH;
             break;
           default:
-            classNameByIndex = 'jp';
+            classNameByIndex = LANG_CLASS_NAMES.JAPANESE;
             break;
         }
 
@@ -657,7 +660,7 @@
           parent: mistakeListRow,
           child: 'div',
           content: content, // Assign content to each column
-          className: ['mistakes-column', classNameByIndex], // Class for each column
+          className: [GENERATED_DOM.MISTAKE_LIST.COLUMN_CLASS, classNameByIndex], // Class for each column
         });
       });
     });
@@ -671,7 +674,7 @@
       selectors.settingRepractice, 
       selectors.settingSyllable
     );
-    document.querySelector("#source-fresh").checked = true; // Set the 'source-fresh' radio input to checked
+    selectors.sourceFresh.checked = true; // Set the 'source-fresh' radio input to checked
     return this;
   }
 
@@ -689,12 +692,12 @@
         parent: selectors.body,
         child: 'div',
         content: msg,
-        className: 'poppins-regular',
-        id: 'preload-info',
+        className: GENERATED_DOM.LOADING.FONT,
+        id: GENERATED_DOM.LOADING.ELEMENT_ID,
       });
 
-      const loadingMsg = document.querySelector("#preload-info-0"); 
-      displayUtils.addClass('show', loadingMsg);
+      const loadingMsgContainer = document.querySelector(ELEMENTIDS.PRELOAD_INFO); 
+      displayUtils.addClass(CSS_CLASS_NAMES.SHOW, loadingMsgContainer);
     }
   }
 
@@ -710,19 +713,23 @@
     console.groupEnd();
   }
 
+  function _getLoadingMsg() {
+    return document.querySelector(`#${GENERATED_DOM.LOADING.ELEMENT_ID}-0`);
+  }
+
   function _preloadSuccess() {
     console.info("Preload successful");
-    const loadingMsg = document.querySelector("#preload-info-0");
-    _removeLoadingMsg(loadingMsg);                               // remove 'loading...' from screen
+    const loadingMsgContainer = _getLoadingMsg();
+    _removeLoadingMsg(loadingMsgContainer);                       // remove 'loading...' from screen
     displayUtils.toggleClass('disabled', selectors.settingForm);  // release the form from 'so-dim' state
     return true;
   }
 
   function _preloadFail() {
     console.info("Preload fail");
-    const loadingMsg = document.querySelector("#preload-info-0");
-    if (loadingMsg) {
-    loadingMsg.textContent = 'Loading fail!';
+    const loadingMsgContainer = _getLoadingMsg();
+    if (loadingMsgContainer) {
+    loadingMsgContainer.textContent = 'Loading fail!';
     } else {
       console.error("Preload message element not found.");
     }

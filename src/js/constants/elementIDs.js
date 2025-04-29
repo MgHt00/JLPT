@@ -1,4 +1,6 @@
 export const ELEMENTIDS = {
+  PRELOAD_INFO: "#preload-info-0",
+
   SECTION_QUESTION: "#section-question",
   SECTION_MESSAGE: "#section-message",
   SECTION_ANSWER: "#section-answer",
@@ -34,6 +36,7 @@ export const ELEMENTIDS = {
   RANDOM_YES_NO_CHECKED: 'input[name="randomYesNo"]:checked',
   FLASH_YES_NO_CHECKED: 'input[name="flashYesNo"]:checked',
   SOURCE_CHECKED: 'input[name="source"]:checked',
+  SOURCE_FRESH: '#source-fresh',
 
   MEMORY_INFO_ZERO: "#memory-info-0",
   FLUSH_MEMORY_BTN_ZERO: "#flush-memory-btn-0",
@@ -51,4 +54,37 @@ export const ELEMENTIDS = {
 
 export const GENERATED_DOM = {
   SYLLABLE_ERROR: 'syllable-error',
+
+  MEMORY_BTN_FLUSH: {
+    ICON: '<i class="fa-solid fa-trash-can"></i>',
+    CSS_CLASS: 'flush-memory-setting-btn',
+    ELEMENT_ID: 'flush-memory-btn',
+  },
+
+  MEMORY_BTN_LIST: {
+    ICON: '<i class="fa-solid fa-rectangle-list"></i>',
+    CSS_CLASS: 'list-memory-setting-btn',
+    ELEMENT_ID: 'list-memory-btn',
+  },
+
+  MISTAKE_LIST: {
+    CONTAINER_CLASS: 'mistake-list-container',
+    CONTAINER_ID: 'mistake-list-div',
+
+    HEADER_CLASS: 'mistakes-row-header',
+    HEADER_ID: 'mistakes-heading',
+
+    HEADER_COLUMN_CLASS: 'mistakes-column-header',
+    HEADER_COLUMN_ID: 'mistake-column-header',
+
+    ROW_CLASS: 'mistakes-row',
+    ROW_ID: 'mistakeList-row',
+
+    COLUMN_CLASS: 'mistakes-column',
+  },
+
+  LOADING: {
+    FONT: 'poppins-regular',
+    ELEMENT_ID: 'preload-info',
+  },
 }

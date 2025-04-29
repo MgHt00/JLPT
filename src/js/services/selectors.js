@@ -26,6 +26,7 @@ export const selectors = {
   aChoiceOptionAll : document.querySelector(ELEMENTIDS.ANSWER_CHOICE_OPTION_ALL).options,
   aDefaultChoice : document.querySelector(ELEMENTIDS.ANSWER_DEFAULT_CHOICE).options[1],
   noOfAnsAll : document.querySelectorAll(ELEMENTIDS.NO_OF_ANSWER_ALL),
+  sourceFresh: document.querySelector(ELEMENTIDS.SOURCE_FRESH),
   submitBtn : document.querySelector(ELEMENTIDS.SUBMIT_BTN),
   allSetting : document.querySelectorAll(ELEMENTIDS.ALL_SETTING),
   bringBackBtn : document.querySelector(ELEMENTIDS.BRING_BACK_BTN),
