@@ -119,13 +119,13 @@
 
             return response.json();             // If everything's ok, convert response to JSON
           })    
-          .then(vocabList => ({ key, vocabList }))        // Wraps data with key { key: "a", data: [...data from n5-vocab-a.json...]}                
+          .then(data => ({ key, data }))        // Wraps data with key { key: "a", data: [...data from n5-vocab-a.json...]}                
           .catch(error => {
             console.warn(`Failed to load ${key}:`, error);
-            _isPreLoadSuccessful = false;          // Set the flag 
-            return { key, vocabList: [] };         // Store empty array on failure (Ensure structure remains consistent)
+            _isPreLoadSuccessful = false;       // Set flag 
+            return { key, data: [] };           // Store empty array on failure (Ensure structure remains consistent)
           })
-        : Promise.resolve({ key, vocabList: [] }); // Handle missing keys gracefully
+        : Promise.resolve({ key, data: [] });   // Handle missing keys gracefully
     });
 
     // Wait for all JSON files to load
