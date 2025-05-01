@@ -1,6 +1,6 @@
   import { LOCAL_PATH, WEB_PATH, JSON_PATHS } from "../constants/filePath.js";
   import { LANG_CLASS_NAMES, CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-  import { ELEMENTIDS, GENERATED_DOM } from "../constants/elementIDs.js";
+  import { ELEMENT_NAMES, GENERATED_DOM } from "../constants/elementIDs.js";
 
   export function loaderManager(globals, utilsManager, controlFns, questionFns, vocabFns, errorFns, statusFns) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
@@ -479,7 +479,7 @@
   function _validateSyllable() {
     console.groupCollapsed("_validateSyllable()");
     // Validate syllable choices and show an error if none are selected
-    appData.syllableChoice = helpers.convertCheckedValuesToArray(`input[name=${ELEMENTIDS.SYLLABLE_CHOICE_NAME}]:checked`);
+    appData.syllableChoice = helpers.convertCheckedValuesToArray(`input[name=${ELEMENT_NAMES.SYLLABLE_CHOICE}]:checked`);
     if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
       runtimeError("noSL");
       console.groupEnd();
@@ -696,7 +696,7 @@
         id: GENERATED_DOM.LOADING.ELEMENT_ID,
       });
 
-      const loadingMsgContainer = document.querySelector(ELEMENTIDS.PRELOAD_INFO); 
+      const loadingMsgContainer = _getLoadingMsg(); 
       displayUtils.addClass(CSS_CLASS_NAMES.SHOW, loadingMsgContainer);
     }
   }

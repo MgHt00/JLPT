@@ -1,6 +1,4 @@
 export const ELEMENTIDS = {
-  PRELOAD_INFO: "#preload-info-0",
-
   SECTION_QUESTION: "#section-question",
   SECTION_MESSAGE: "#section-message",
   SECTION_ANSWER: "#section-answer",
