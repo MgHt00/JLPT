@@ -1,5 +1,5 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-import { ELEMENTIDS, GENERATED_DOM } from "../constants/elementIDs.js";
+import { ELEMENTIDS, ELEMENT_NAMES, GENERATED_DOM } from "../constants/elementIDs.js";
 
 export function listenerManager(globals, utilsManager, setQuestionMode, clearError, controlManager, loaderFns, statusFns) {
   const { appState, selectors, currentStatus } = globals;
@@ -115,7 +115,7 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   function _getSyllableCheckboxes() {
     const allCheckbox = selectors.checkboxSyllableAll;
     const otherCheckboxes = Array
-                            .from(document.querySelectorAll(`input[name=${ELEMENTIDS.SYLLABLE_CHOICE_NAME}]`))
+                            .from(document.querySelectorAll(`input[name=${ELEMENT_NAMES.SYLLABLE_CHOICE}]`))
                             .filter(checkbox => checkbox !== allCheckbox);
     return { allCheckbox, otherCheckboxes };
   }

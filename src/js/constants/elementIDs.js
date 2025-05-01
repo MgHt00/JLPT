@@ -47,9 +47,11 @@ export const ELEMENTIDS = {
   LABEL_FLASH_CARD : "#flashcard-label",
   LABEL_MCQ : "#multiple-choice-label",
 
-  SYLLABLE_CHOICE_NAME: 'syllableChoice',
-
   CHECKBOX_SYLLABLE_ALL: 'syllableALL',
+}
+
+export const ELEMENT_NAMES = {
+  SYLLABLE_CHOICE: 'syllableChoice',
 }
 
 export const GENERATED_DOM = {
