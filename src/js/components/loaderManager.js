@@ -237,8 +237,8 @@
       defaultConfig.enLang
     ); 
 
-    appState.qChoiceInput = selectors.readqChoiceInput ?? "hi"; // read user's question choice and assign it to global variable
-    appState.aChoiceInput = selectors.readaChoiceInput ?? "en"; 
+    appState.qChoiceInput = selectors.readqChoiceInput ?? LANG_CLASS_NAMES.HIRAGANA; // read user's question choice and assign it to global variable
+    appState.aChoiceInput = selectors.readaChoiceInput ?? LANG_CLASS_NAMES.ENGLISH; 
 
     assignLanguageBySelection();      // Validate and assign the correct language for the question and answer sections
 
@@ -456,7 +456,7 @@
 
   // Validate and assign the correct language for the (HTML's) question and answer sections
   function assignLanguageBySelection() {
-    const jpLanguages = ["hi", "ka"];
+    const jpLanguages = [LANG_CLASS_NAMES.HIRAGANA, LANG_CLASS_NAMES.KANJI];
 
     if(jpLanguages.includes(appState.qChoiceInput)) {
       helpers.assignLanguage(selectors.sectionQuestion, defaultConfig.jpLang);

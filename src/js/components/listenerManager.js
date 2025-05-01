@@ -1,4 +1,4 @@
-import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+import { LANG_CLASS_NAMES, CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
 import { GENERATED_DOM } from "../constants/elementIDs.js";
 
 export function listenerManager(globals, utilsManager, setQuestionMode, clearError, controlManager, loaderFns, statusFns) {
@@ -170,9 +170,9 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   // to build options for the setting's answer language
   function _buildAnswerOptions() {
     const ansMapping = { // [sn11]
-      ka: { parent: selectors.aChoice, child: 'option', content: 'Kanji', childValues: 'ka', id: 'a-ka'},
-      hi: { parent: selectors.aChoice, child: 'option', content: 'Hiragana', childValues: 'hi', id: 'a-hi'},
-      en: { parent: selectors.aChoice, child: 'option', content: 'English', childValues:'en', id: 'a-en'},
+      ka: { parent: selectors.aChoice, child: 'option', content: 'Kanji', childValues: LANG_CLASS_NAMES.KANJI, id: 'a-ka'},
+      hi: { parent: selectors.aChoice, child: 'option', content: 'Hiragana', childValues: LANG_CLASS_NAMES.HIRAGANA, id: 'a-hi'},
+      en: { parent: selectors.aChoice, child: 'option', content: 'English', childValues: LANG_CLASS_NAMES.ENGLISH, id: 'a-en'},
     };
   
     domUtils.clearNode({ parent: selectors.aChoice, children: Array.from(selectors.aChoiceOptionAll) }); 
