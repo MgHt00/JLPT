@@ -1,5 +1,5 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-import { ELEMENT_NAMES, GENERATED_DOM } from "../constants/elementIDs.js";
+import { GENERATED_DOM } from "../constants/elementIDs.js";
 
 export function listenerManager(globals, utilsManager, setQuestionMode, clearError, controlManager, loaderFns, statusFns) {
   const { appState, selectors, currentStatus } = globals;
@@ -114,16 +114,15 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   // Gets the "all" checkbox and individual syllable checkboxes.
   function _getSyllableCheckboxes() {
     const allCheckbox = selectors.checkboxSyllableAll;
-    const otherCheckboxes = Array
-                            .from(document.querySelectorAll(`input[name=${ELEMENT_NAMES.SYLLABLE_CHOICE}]`))
-                            .filter(checkbox => checkbox !== allCheckbox);
+    const otherCheckboxes = Array.from(selectors.individualSyllableChoiceCheckboxes)
+                                 .filter(checkbox => checkbox !== allCheckbox);
     return { allCheckbox, otherCheckboxes };
   }
 
   function _removeSyllableError() {
     domUtils.clearNode({
       parent: selectors.fieldsetSyllable,
-      children: Array.from(document.querySelectorAll(`div[id^=${GENERATED_DOM.SYLLABLE_ERROR}]`))
+      children: Array.from(selectors.syllableErrorContainer),
     });
   }
 
