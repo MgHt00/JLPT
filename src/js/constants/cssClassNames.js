@@ -6,8 +6,9 @@ export const LANG_CLASS_NAMES = {
 };
 
 export const CSS_CLASS_NAMES = {
-  SHIFT_SECTIONS_TOP_CENTER: 'shift-sections-top-center',
+  SHIFT_TO_TOP_CENTER: 'shift-sections-to-top-center',
 
   MEMORY_INFO: 'memory-info',
   SHOW: 'show',
+  HIDE: 'hide',
 };

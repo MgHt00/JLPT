@@ -236,7 +236,7 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
     floatingBtnsHideAll();
     hideResumeShowBack();
     toggleShadesOnTop();
-    toggleFormDisplay(CSS_CLASS_NAMES.SHIFT_SECTIONS_TOP_CENTER);
+    toggleFormDisplay(CSS_CLASS_NAMES.SHIFT_TO_TOP_CENTER);
 
     domUtils.clearScreen([
       selectors.sectionStatus, 
