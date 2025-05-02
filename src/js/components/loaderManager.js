@@ -1,6 +1,12 @@
   import { LOCAL_PATH, WEB_PATH, JSON_PATHS } from "../constants/filePath.js";
   import { LANG_CLASS_NAMES, CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-  import { ELEMENT_NAMES, GENERATED_DOM } from "../constants/elementIDs.js";
+  import { ELEMENTIDS, ELEMENT_NAMES, GENERATED_DOM } from "../constants/elementIDs.js";
+  import { 
+    QUESTION_MODE_FRESH, QUESTION_MODE_STORED, 
+    MEMORY_BTN_NAMES, MEMORY_STATUS, 
+    RUNTIME_ERROR_CODES, MCQ_DEFAULTS, DATA_POOL_DEFAULTS,
+    SYLLABLE_CHOICE_CHECKBOX_VALUES, 
+    LANGUAGE_OPTIONS, PLAIN_TEXT_STRINGS, } from "../constants/appConstants.js";
 
   export function loaderManager(globals, utilsManager, controlFns, questionFns, vocabFns, errorFns, statusFns) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
@@ -168,22 +174,22 @@
     e.preventDefault();                 // Prevent form from submitting the usual way
     _validateAndSetInputData(e);         // validate and set defaults to the input data.
     clearError();                    // Remove error messages
-    if (appState.qMode === "stored") {
+    if (appState.qMode === QUESTION_MODE_STORED) {
       if(!_validateStoredMemory()) {     // To validate whether memory is empty or not
-        runtimeError("mem0");
+        runtimeError(RUNTIME_ERROR_CODES.MEMORY_EMPTY);
         return;
       }
       await _loadStoredJSON();           // Continue if there is no runtime error. (Wait for _loadStoredJSON to complete)
       _initializeQuiz();
     }
        
-    if (appState.qMode === "fresh") {
+    if (appState.qMode === QUESTION_MODE_FRESH) {
       if (_validateSyllable()) {
         await _loadFreshJSON();          // Wait for _loadFreshJSON to complete
 
         // Only check the runtime error if _validateSyllable() returns true ...
         // ... Otherwise program shows infinite loop error without necessary.
-        const hasSufficientAnswers = runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
+        const hasSufficientAnswers = runtimeError(RUNTIME_ERROR_CODES.INFINITE_LOOP); // If vocab pool is too small that it is causing the infinite loop    
         if (!hasSufficientAnswers) {    // Now checks if there is NOT a runtime error
           console.error("Program failed at loaderManager()");
           return;                       // Exit if there is an infinite loop error
@@ -215,7 +221,7 @@
 
     resetQuestionCount();
     resetTotalNoOfQuestion();
-    getTotalNoOfQuestions("fresh");  // for status bar, reset and set No. of Question
+    getTotalNoOfQuestions(QUESTION_MODE_FRESH);  // for status bar, reset and set No. of Question
               
     resetCumulativeVariables();       // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
 
@@ -228,7 +234,8 @@
   function _validateAndSetInputData(e) {
     console.groupCollapsed("_validateAndSetInputData()");
 
-    _validateToggleSwitch(['randomYesNo', 'flashYesNo']);
+    //_validateToggleSwitch(['randomYesNo', 'flashYesNo']);
+    _validateToggleSwitch([ELEMENTIDS.SWITCH_RANDOM_YES_NO, ELEMENTIDS.SWITCH_FLASH_YES_NO]);
     validateAndSetAnswerCount();      // Validate number of answers and set default if invalid
     validateAndSetQuestionMode();     // Validate question mode and set default
     
@@ -252,9 +259,9 @@
     console.groupCollapsed("_loadFreshJSON()");
     console.info("appData.preloadedVocab:", appData.preloadedVocab);
 
-    setQuestionMode("fresh");
+    setQuestionMode(QUESTION_MODE_FRESH);
   
-    if (appData.syllableChoice.includes("all")) {     // If "all" is selected
+    if (appData.syllableChoice.includes(SYLLABLE_CHOICE_CHECKBOX_VALUES.ALL)) {     // If "all" is selected
       appData.syllableChoice = _mergeVocabKeys();      //[sn9] This replaces syllableChoice with all syllables
     }
 
@@ -296,7 +303,7 @@
   async function _loadStoredJSON() {
     console.groupCollapsed("_loadStoredJSON()");
 
-    setQuestionMode("stored");                        // Set program's question mode to 'stored'
+    setQuestionMode(QUESTION_MODE_STORED);                        // Set program's question mode to 'stored'
     
     const storedData = loadMistakesFromMistakeBank();
     if (!Array.isArray(storedData)) {                             // Ensure loadMistakesFromMistakeBank returns an array
@@ -403,18 +410,18 @@
 
     switch (storedLength) {     // build 'mistake status' on home screen
       case 0:
-        _buildMemoryStatus('Memory is empty.');
+        _buildMemoryStatus(MEMORY_STATUS.EMPTY);
         break;
       case 1:
-        _buildMemoryStatus(`${storedLength} word to repractice.`);
+        _buildMemoryStatus(`${storedLength} ${MEMORY_STATUS.ONE}`);
         break;
       default:
-        _buildMemoryStatus(`${storedLength} words to repractice.`);
+        _buildMemoryStatus(`${storedLength} ${MEMORY_STATUS.MANY}`);
         break;
     }
     
-    _buildMemoryBtns("flush");   // build 'flush' and 'list' buttons on screen
-    _buildMemoryBtns("list");
+    _buildMemoryBtns(MEMORY_BTN_NAMES.FLUSH);   // build 'flush' and 'list' buttons on screen
+    _buildMemoryBtns(MEMORY_BTN_NAMES.LIST);
     
     console.groupEnd();
     return this;
@@ -425,8 +432,8 @@
     console.groupCollapsed("validateAndSetAnswerCount()");
   
     const noOfAnswers = parseInt(selectors.readNoOfAns, 10);
-    if (isNaN(noOfAnswers) || noOfAnswers < 2 || noOfAnswers > 4) {
-      appState.noOfAnswers = 2; // Default to 2 answers
+    if (isNaN(noOfAnswers) || noOfAnswers < MCQ_DEFAULTS.MIN_ANSWER_COUNT || noOfAnswers > MCQ_DEFAULTS.MAX_ANSWER_COUNT) {
+      appState.noOfAnswers = MCQ_DEFAULTS.MIN_ANSWER_COUNT; // Default to 2 answers
       console.warn("Invalid number of answers. Setting default to 2.");
     } else {
       appState.noOfAnswers = noOfAnswers;
@@ -442,9 +449,9 @@
 
     appState.qMode = selectors.readQuestionMode;
 
-    const validModes = ["fresh", "stored"];
+    const validModes = [QUESTION_MODE_FRESH, QUESTION_MODE_STORED];
     if (!validModes.includes(selectors.readQuestionMode)) {
-      appState.qMode = "fresh"; // Default to 'fresh'
+      appState.qMode = QUESTION_MODE_FRESH; // Default to 'fresh'
       console.warn("Invalid question mode. Defaulting to 'fresh'.");
     } else {
       appState.qMode = selectors.readQuestionMode;
@@ -480,8 +487,8 @@
     console.groupCollapsed("_validateSyllable()");
     // Validate syllable choices and show an error if none are selected
     appData.syllableChoice = helpers.convertCheckedValuesToArray(`input[name=${ELEMENT_NAMES.SYLLABLE_CHOICE}]:checked`);
-    if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
-      runtimeError("noSL");
+    if (appState.qMode === QUESTION_MODE_FRESH && appData.syllableChoice.length === 0) {
+      runtimeError(RUNTIME_ERROR_CODES.NO_SYLLABLE_SELECTED);
       console.groupEnd();
       return false; // Signal that inputData validation failed
     }
@@ -556,13 +563,13 @@
   async function continuetoStoredData() {
     console.groupCollapsed("continuetoStoredData()");
 
-    if (readStoredLength() <= 3) {
-      appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
+    if (readStoredLength() <= DATA_POOL_DEFAULTS.MIN_POOL_SIZE) {
+      appState.noOfAnswers =  MCQ_DEFAULTS.MIN_ANSWER_COUNT; // if stored data pool is too small, it will lead to an infinite loop.
       console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
     }
     await _loadStoredJSON();   // Wait for _loadStoredJSON to complete
 
-    getTotalNoOfQuestions("stored");
+    getTotalNoOfQuestions(QUESTION_MODE_STORED);
     newQuestion();
 
     console.groupEnd();
@@ -572,10 +579,6 @@
   function restart() {
     domUtils.clearScreen(selectors.sectionStatus);
     
-    /*displayUtils
-      .toggleClass('overlay-message', selectors.sectionMessage)
-      .toggleClass('fade-hide', selectors.sectionMessage);*/
-
     toggleFormDisplay();
     _debouncedMoveForm();
     
@@ -601,7 +604,7 @@
     const mistakeListContainer = document.querySelector(`#${GENERATED_DOM.MISTAKE_LIST.CONTAINER_ID}-0`);
   
     // Header for the mistake list (4 columns: #, Kanji, Hiragana, English)
-    const headerContent = ['#', 'Kanji', 'Hiragana', 'English'];
+    const headerContent = [LANGUAGE_OPTIONS.Number, LANGUAGE_OPTIONS.KANJI, LANGUAGE_OPTIONS.HIRAGANA, LANGUAGE_OPTIONS.ENGLISH];
   
     // Build the row for headers
     domUtils.buildNode({
@@ -670,7 +673,7 @@
 
   // Reset after flushing mistake bank
   function resetAfterFlushingMistakes() {
-    displayUtils.toggleClass('disabled', 
+    displayUtils.toggleClass(CSS_CLASS_NAMES.DISABLED, 
       selectors.settingRepractice, 
       selectors.settingSyllable
     );
@@ -682,7 +685,7 @@
   function _showLoadingMsg() {
     console.groupCollapsed("_showLoadingMsg()");
     
-    addLoadingMsg('Loading...');
+    addLoadingMsg(PLAIN_TEXT_STRINGS.LOADING);
     
     console.groupEnd();
     
@@ -721,7 +724,7 @@
     console.info("Preload successful");
     const loadingMsgContainer = _getLoadingMsg();
     _removeLoadingMsg(loadingMsgContainer);                       // remove 'loading...' from screen
-    displayUtils.toggleClass('disabled', selectors.settingForm);  // release the form from 'so-dim' state
+    displayUtils.toggleClass(CSS_CLASS_NAMES.DISABLED, selectors.settingForm);  // release the form from 'so-dim' state
     return true;
   }
 
@@ -729,7 +732,7 @@
     console.info("Preload fail");
     const loadingMsgContainer = _getLoadingMsg();
     if (loadingMsgContainer) {
-    loadingMsgContainer.textContent = 'Loading fail!';
+    loadingMsgContainer.textContent = PLAIN_TEXT_STRINGS.LOADING_FAIL;
     } else {
       console.error("Preload message element not found.");
     }

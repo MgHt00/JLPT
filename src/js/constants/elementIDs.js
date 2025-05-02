@@ -46,11 +46,17 @@ export const ELEMENTIDS = {
   LABEL_MCQ : "multiple-choice-label",
 
   CHECKBOX_SYLLABLE_ALL: 'syllableALL',
-}
+};
 
 export const ELEMENT_NAMES = {
   SYLLABLE_CHOICE: 'syllableChoice',
-}
+};
+
+export const BUILD_ANSWER_OPTIONS = {
+  KANJI: 'a-ka',
+  HIRAGANA: 'a-hi',
+  ENGLISH: 'a-en',
+};
 
 export const GENERATED_DOM = {
   SYLLABLE_ERROR: 'syllable-error',
@@ -87,4 +93,4 @@ export const GENERATED_DOM = {
     FONT: 'poppins-regular',
     ELEMENT_ID: 'preload-info',
   },
-}
+};
