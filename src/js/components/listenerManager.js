@@ -1,5 +1,6 @@
 import { LANG_CLASS_NAMES, CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-import { GENERATED_DOM } from "../constants/elementIDs.js";
+import { BUILD_ANSWER_OPTIONS, GENERATED_DOM } from "../constants/elementIDs.js";
+import { QUESTION_MODE_FRESH, QUESTION_MODE_STORED, LANGUAGE_OPTIONS } from "../constants/appConstants.js";
 
 export function listenerManager(globals, utilsManager, setQuestionMode, clearError, controlManager, loaderFns, statusFns) {
   const { appState, selectors, currentStatus } = globals;
@@ -7,6 +8,7 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   const { floatingBtnsHideAll, hideResumeShowBack, hideBackShowResume, toggleFormDisplay, resetQuestionMode, toggleShadesOnTop } = controlManager;
   const { start, validateAndSetAnswerCount, rePrintMemory, listMistakes, resumeProgram } = loaderFns;
   const { getGoodToResume, setGoodToResume } = statusFns;
+  const { DIM, DISABLED } = CSS_CLASS_NAMES;
 
   let _setRanOnce;
 
@@ -41,7 +43,7 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
     } else {
       appState.randomYesNo = false;
     }
-    displayUtils.toggleClass("dim", randomLabel, sequentialLabel);
+    displayUtils.toggleClass(DIM, randomLabel, sequentialLabel);
     console.info("appState.randomYesNo: ", appState.randomYesNo);
     console.groupEnd();
   }
@@ -57,7 +59,7 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
     } else {
       appState.flashYesNo = true;
     }
-    displayUtils.toggleClass("dim", flashLabel, multiLabel);
+    displayUtils.toggleClass(DIM, flashLabel, multiLabel);
     console.info("appState.flashYesNo: ", appState.flashYesNo);
     console.groupEnd();
   }
@@ -66,7 +68,7 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   function _flashModeChanges(e) {
     console.groupCollapsed("_flashModeChanges()");
     resetQuestionMode();
-    displayUtils.toggleClass('disabled', ...selectors.noOfAnsAll);
+    displayUtils.toggleClass(DISABLED, ...selectors.noOfAnsAll);
     
     // set noOfAns to 2 to bypass runtime error if flashcard mode is selected
     if (selectors.readFlashYesNo) {
@@ -81,7 +83,7 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   }
   
   // UNUSED FUNCTION to handle when syllable checkboxs are changed
-  function syllableChanges(event) { // [le4]
+  /*function syllableChanges(event) { // [le4]
     const allCheckbox = document.getElementById('syllableAll');
     const otherCheckboxes = Array.from(document.querySelectorAll('input[name="syllableChoice"]'))
       .filter(checkbox => checkbox !== allCheckbox);
@@ -109,7 +111,7 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
         }
       }
     }
-  }
+  }*/
 
   // Gets the "all" checkbox and individual syllable checkboxes.
   function _getSyllableCheckboxes() {
@@ -146,7 +148,7 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   }
 
   function _toggleSettingSyllable() {
-    displayUtils.toggleClass('disabled', selectors.settingRepractice, selectors.settingSyllable);
+    displayUtils.toggleClass(DISABLED, selectors.settingRepractice, selectors.settingSyllable);
   }
 
   // to handle when program question mode (fresh / stored) is changed
@@ -156,13 +158,13 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
 
     let selectedMode = selectors.readQuestionMode;
 
-    if (selectedMode === "fresh") {
-      setQuestionMode("fresh");
+    if (selectedMode === QUESTION_MODE_FRESH) {
+      setQuestionMode(QUESTION_MODE_FRESH);
        _setRanOnce(false);
     } 
     
-    else if (selectedMode === "stored") {
-      setQuestionMode("stored");
+    else if (selectedMode === QUESTION_MODE_STORED) {
+      setQuestionMode(QUESTION_MODE_STORED);
        _setRanOnce(true);
     }
   }
@@ -170,9 +172,9 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   // to build options for the setting's answer language
   function _buildAnswerOptions() {
     const ansMapping = { // [sn11]
-      ka: { parent: selectors.aChoice, child: 'option', content: 'Kanji', childValues: LANG_CLASS_NAMES.KANJI, id: 'a-ka'},
-      hi: { parent: selectors.aChoice, child: 'option', content: 'Hiragana', childValues: LANG_CLASS_NAMES.HIRAGANA, id: 'a-hi'},
-      en: { parent: selectors.aChoice, child: 'option', content: 'English', childValues: LANG_CLASS_NAMES.ENGLISH, id: 'a-en'},
+      ka: { parent: selectors.aChoice, child: 'option', content: LANGUAGE_OPTIONS.KANJI, childValues: LANG_CLASS_NAMES.KANJI, id: BUILD_ANSWER_OPTIONS.KANJI},
+      hi: { parent: selectors.aChoice, child: 'option', content: LANGUAGE_OPTIONS.HIRAGANA, childValues: LANG_CLASS_NAMES.HIRAGANA, id: BUILD_ANSWER_OPTIONS.HIRAGANA},
+      en: { parent: selectors.aChoice, child: 'option', content: LANGUAGE_OPTIONS.ENGLISH, childValues: LANG_CLASS_NAMES.ENGLISH, id: BUILD_ANSWER_OPTIONS.ENGLISH},
     };
   
     domUtils.clearNode({ parent: selectors.aChoice, children: Array.from(selectors.aChoiceOptionAll) }); 
