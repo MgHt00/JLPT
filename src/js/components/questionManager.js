@@ -1,3 +1,5 @@
+import { QUESTION_MODE_FRESH, QUESTION_MODE_STORED } from "../constants/appConstants.js"
+
 export function questionManager(globals, utilsManager, statusFns, vocabFns) {
   const { appState, appData, selectors } = globals;
   const { helpers, domUtils } = utilsManager;
@@ -19,7 +21,7 @@ export function questionManager(globals, utilsManager, statusFns, vocabFns) {
     // Initialize newQuestion's property, mode, if it’s not defined yet ...
     // ... by initializing here, it will be easier to debug
     if (newQuestion.mode === undefined) {
-      newQuestion.mode = "fresh";
+      newQuestion.mode = QUESTION_MODE_FRESH; // default to "fresh"
       console.info("newQuestion.mode initialized.");
     }
 
@@ -60,9 +62,9 @@ export function questionManager(globals, utilsManager, statusFns, vocabFns) {
   function setQuestionMode(m) {
     console.groupCollapsed("questionManager() - setQuestionMode()");
 
-    const validModes = ["fresh", "stored"];
+    const validModes = [QUESTION_MODE_FRESH, QUESTION_MODE_STORED];
     if(!validModes.includes(m)) {
-      newQuestion.mode = "fresh"; // default to `fresh`
+      newQuestion.mode = QUESTION_MODE_FRESH; // default to `fresh`
       console.warn("Invalid mode is passed. Defaulting to `fresh`.");
     } else {
       newQuestion.mode = m;
