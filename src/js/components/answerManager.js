@@ -1,9 +1,14 @@
-//export function answerManager(globals, utilsManager, setQuestionMode, readQuestionObj, readQuestionMode) {
+import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+import { LANGUAGE_MAPPINGS, PLAIN_TEXT_STRINGS } from "../constants/appConstants.js";
+import { RENDER_ANSWERS } from "../constants/elementIDs.js";
+
 export function answerManager(globals, utilsManager, restart, readStoredLength, questionFns, answerListenerFns) {
   const { appState, appData, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
   const { setQuestionMode, readQuestionObj, readQuestionMode } = questionFns;
   const { handleFlashcardFlip, handleMultipleChoiceAnswer, handleContinueToStoredData } = answerListenerFns;
+
+  const { FADE_OUT_LIGHT, ANSWER_BUTTON, CHECK_FLASH_MODE_ANSWER } = CSS_CLASS_NAMES;
 
   const vocabMapping = {
     ka: appData.kaVocab,
@@ -11,64 +16,63 @@ export function answerManager(globals, utilsManager, restart, readStoredLength, 
     en: appData.enVocab,
   };
 
-  // to prepare all the answers
+  // Returns configuration objects for different answer elements.
+  function _getAnswerElementConfig() {
+    return {
+      flipBtn: {
+        content: '',
+        className: [ANSWER_BUTTON, CHECK_FLASH_MODE_ANSWER], 
+        id: RENDER_ANSWERS.ANSWER_BUTTON, 
+        eventFunction: handleFlashcardFlip,
+      },
+      flipText: {
+        content: PLAIN_TEXT_STRINGS.FLIP_CARD, 
+        className: '', 
+        id: RENDER_ANSWERS.ANSWER_BUTTON_LABEL, 
+      },
+      ansArray: {
+        content: _createAnswerArray(),
+        className: ANSWER_BUTTON, 
+        eventFunction: handleMultipleChoiceAnswer 
+      },
+    }
+  }
+  
+  // Creates and appends an answer element to the DOM based on the provided key.
+  function _createAnswerElement(key) {
+    const config = { ..._getAnswerElementConfig()[key] };   // create a new object instead of mutating the original. [sn27]
+    config.parent = ["flipBtn", "ansArray"].includes(key) 
+      ? selectors.sectionAnswer 
+      : document.querySelector(`#${RENDER_ANSWERS.ANSWER_BUTTON}-0`);
+      
+    domUtils.buildNode({
+      parent: config.parent,
+      child: 'div',
+      content: config.content,
+      className: config.className,
+      id: config.id,                
+      eventFunction: config.eventFunction,
+    });
+  }
+
+  // Prepares and renders answer options on the screen based on the game mode.
   function renderAnswers() {
     console.groupCollapsed("answerManager() - renderAnswers()");
 
-    let ansArray = createAnswerArray();
-    //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
-
     if (appState.flashYesNo) {            // if it is a flash card game
-      helpers.assignLanguage(selectors.sectionAnswer, "en"); // if aChoice was set to Kanji or Hirigana, reset to "en"
-      displayUtils.toggleClass('fade-out-light', selectors.sectionAnswer);
+      helpers.assignLanguage(selectors.sectionAnswer, LANGUAGE_MAPPINGS.ENGLISH); // if aChoice was set to Kanji or Hirigana, reset to "en"
+      displayUtils.toggleClass(FADE_OUT_LIGHT, selectors.sectionAnswer);
       setTimeout(() => {
-        createAnswerElement("flipBtn");   // Building "Flip" button container
-        createAnswerElement("flipText");  // Building "Flip" text
-        displayUtils.toggleClass('fade-out-light', selectors.sectionAnswer);
+        _createAnswerElement("flipBtn");   // Building "Flip" button container
+        _createAnswerElement("flipText");  // Building "Flip" text
+        displayUtils.toggleClass(FADE_OUT_LIGHT, selectors.sectionAnswer);
       }, 350);
       
     } else {                              // if it is a multiple choice game
-      createAnswerElement("ansArray");
+      _createAnswerElement("ansArray");
     }
 
     console.groupEnd();
-
-    // functions private to the modules
-    function getConfig() {
-      return {
-        flipBtn: {
-          content: '',
-          className: ['answer-btn', 'check-flash-mode-answer'], 
-          id: 'answer-btn', 
-          eventFunction: handleFlashcardFlip,
-        },
-        flipText: {
-          content: 'Flip', 
-          className: '', 
-          id: 'answer-btn-text', 
-        },
-        ansArray: {
-          content: ansArray, 
-          className: 'answer-btn', 
-          eventFunction: handleMultipleChoiceAnswer 
-        },
-      }
-    }
-    function createAnswerElement(key) {
-      const config = { ...getConfig()[key] };   // create a new object instead of mutating the original. [sn27]
-      config.parent = ["flipBtn", "ansArray"].includes(key) 
-        ? selectors.sectionAnswer 
-        : document.querySelector("#answer-btn-0");
-        
-      domUtils.buildNode({
-        parent: config.parent,
-        child: 'div',
-        content: config.content,
-        className: config.className,
-        id: config.id,                
-        eventFunction: config.eventFunction,
-      });
-    }
   }
 
   // when there is no more question to shown.
@@ -190,7 +194,7 @@ export function answerManager(globals, utilsManager, restart, readStoredLength, 
         btn: {
           parent: selectors.sectionAnswer,
           content: 'Let\'s Restart!',
-          className: 'answer-btn',
+          className: ANSWER_BUTTON,
           eventFunction: restart,
         },
       }
@@ -210,8 +214,8 @@ export function answerManager(globals, utilsManager, restart, readStoredLength, 
   }
 
   // to create an array filled with answers including the correct one.
-  function createAnswerArray() {
-    console.groupCollapsed("answerManager() - createAnswerArray()");
+  function _createAnswerArray() {
+    console.groupCollapsed("answerManager() - _createAnswerArray()");
 
     let selectedArray = vocabMapping[selectors.readaChoiceInput];
     console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);

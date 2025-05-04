@@ -94,3 +94,8 @@ export const GENERATED_DOM = {
     ELEMENT_ID: 'preload-info',
   },
 };
+
+export const RENDER_ANSWERS = {
+  ANSWER_BUTTON: 'answer-btn',
+  ANSWER_BUTTON_LABEL: 'answer-btn-text',
+};

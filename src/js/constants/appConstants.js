@@ -1,4 +1,11 @@
 // src/js/constants/appConstants.js
+/*export const VOCAB_MAPPING = {
+  ka: appData.kaVocab,
+  hi: appData.hiVocab,
+  en: appData.enVocab,
+};*/
+// VOCAB_MAPPING ကို answerManger ကနေ ပြန်ပို့မယ့်အစား constant file ကနေ ပို့ဖို့ ဆက်ပြင်ရပါမယ်။
+
 export const QUESTION_MODE_FRESH = "fresh";
 export const QUESTION_MODE_STORED = "stored";
 
@@ -50,4 +57,5 @@ export const DATA_POOL_DEFAULTS = {
 export const PLAIN_TEXT_STRINGS = {
   LOADING: 'Loading...',
   LOADING_FAIL: 'Loading fail!',
+  FLIP_CARD: 'Flip',
 };
