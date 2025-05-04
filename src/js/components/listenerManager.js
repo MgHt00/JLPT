@@ -1,6 +1,6 @@
-import { LANG_CLASS_NAMES, CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
 import { BUILD_ANSWER_OPTIONS, GENERATED_DOM } from "../constants/elementIDs.js";
-import { QUESTION_MODE_FRESH, QUESTION_MODE_STORED, LANGUAGE_OPTIONS } from "../constants/appConstants.js";
+import { QUESTION_MODE_FRESH, QUESTION_MODE_STORED, LANGUAGE_OPTIONS, LANGUAGE_MAPPINGS } from "../constants/appConstants.js";
 
 export function listenerManager(globals, utilsManager, setQuestionMode, clearError, controlManager, loaderFns, statusFns) {
   const { appState, selectors, currentStatus } = globals;
@@ -172,9 +172,9 @@ export function listenerManager(globals, utilsManager, setQuestionMode, clearErr
   // to build options for the setting's answer language
   function _buildAnswerOptions() {
     const ansMapping = { // [sn11]
-      ka: { parent: selectors.aChoice, child: 'option', content: LANGUAGE_OPTIONS.KANJI, childValues: LANG_CLASS_NAMES.KANJI, id: BUILD_ANSWER_OPTIONS.KANJI},
-      hi: { parent: selectors.aChoice, child: 'option', content: LANGUAGE_OPTIONS.HIRAGANA, childValues: LANG_CLASS_NAMES.HIRAGANA, id: BUILD_ANSWER_OPTIONS.HIRAGANA},
-      en: { parent: selectors.aChoice, child: 'option', content: LANGUAGE_OPTIONS.ENGLISH, childValues: LANG_CLASS_NAMES.ENGLISH, id: BUILD_ANSWER_OPTIONS.ENGLISH},
+      ka: { parent: selectors.aChoice, child: 'option', content: LANGUAGE_OPTIONS.KANJI, childValues: LANGUAGE_MAPPINGS.KANJI, id: BUILD_ANSWER_OPTIONS.KANJI},
+      hi: { parent: selectors.aChoice, child: 'option', content: LANGUAGE_OPTIONS.HIRAGANA, childValues: LANGUAGE_MAPPINGS.HIRAGANA, id: BUILD_ANSWER_OPTIONS.HIRAGANA},
+      en: { parent: selectors.aChoice, child: 'option', content: LANGUAGE_OPTIONS.ENGLISH, childValues: LANGUAGE_MAPPINGS.ENGLISH, id: BUILD_ANSWER_OPTIONS.ENGLISH},
     };
   
     domUtils.clearNode({ parent: selectors.aChoice, children: Array.from(selectors.aChoiceOptionAll) }); 

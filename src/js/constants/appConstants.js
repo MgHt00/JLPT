@@ -10,6 +10,13 @@ export const LANGUAGE_OPTIONS = {
   KANJI: 'Kanji',
 };
 
+export const LANGUAGE_MAPPINGS = {
+  ENGLISH: 'en',
+  JAPANESE: 'jp',
+  HIRAGANA: 'hi',
+  KANJI: 'ka',
+};
+
 export const RUNTIME_ERROR_CODES = {
   INFINITE_LOOP: "iLoop",
   NO_SYLLABLE_SELECTED: "noSL",

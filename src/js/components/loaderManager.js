@@ -1,12 +1,12 @@
   import { LOCAL_PATH, WEB_PATH, JSON_PATHS } from "../constants/filePath.js";
-  import { LANG_CLASS_NAMES, CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+  import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
   import { ELEMENTIDS, ELEMENT_NAMES, GENERATED_DOM } from "../constants/elementIDs.js";
   import { 
     QUESTION_MODE_FRESH, QUESTION_MODE_STORED, 
     MEMORY_BTN_NAMES, MEMORY_STATUS, 
     RUNTIME_ERROR_CODES, MCQ_DEFAULTS, DATA_POOL_DEFAULTS,
     SYLLABLE_CHOICE_CHECKBOX_VALUES, 
-    LANGUAGE_OPTIONS, PLAIN_TEXT_STRINGS, } from "../constants/appConstants.js";
+    LANGUAGE_OPTIONS, LANGUAGE_MAPPINGS, PLAIN_TEXT_STRINGS, } from "../constants/appConstants.js";
 
   export function loaderManager(globals, utilsManager, controlFns, questionFns, vocabFns, errorFns, statusFns) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
@@ -244,8 +244,8 @@
       defaultConfig.enLang
     ); 
 
-    appState.qChoiceInput = selectors.readqChoiceInput ?? LANG_CLASS_NAMES.HIRAGANA; // read user's question choice and assign it to global variable
-    appState.aChoiceInput = selectors.readaChoiceInput ?? LANG_CLASS_NAMES.ENGLISH; 
+    appState.qChoiceInput = selectors.readqChoiceInput ?? LANGUAGE_MAPPINGS.HIRAGANA; // read user's question choice and assign it to global variable
+    appState.aChoiceInput = selectors.readaChoiceInput ?? LANGUAGE_MAPPINGS.ENGLISH; 
 
     assignLanguageBySelection();      // Validate and assign the correct language for the question and answer sections
 
@@ -463,7 +463,7 @@
 
   // Validate and assign the correct language for the (HTML's) question and answer sections
   function assignLanguageBySelection() {
-    const jpLanguages = [LANG_CLASS_NAMES.HIRAGANA, LANG_CLASS_NAMES.KANJI];
+    const jpLanguages = [LANGUAGE_MAPPINGS.HIRAGANA, LANGUAGE_MAPPINGS.KANJI];
 
     if(jpLanguages.includes(appState.qChoiceInput)) {
       helpers.assignLanguage(selectors.sectionQuestion, defaultConfig.jpLang);
@@ -624,7 +624,7 @@
         parent: mistakeHeading, // Append to the header div
         child: 'div',
         content: content, // Assign each header title
-        className: [GENERATED_DOM.MISTAKE_LIST.HEADER_COLUMN_CLASS, LANG_CLASS_NAMES.ENGLISH], // Class for header columns
+        className: [GENERATED_DOM.MISTAKE_LIST.HEADER_COLUMN_CLASS, LANGUAGE_MAPPINGS.ENGLISH], // Class for header columns
         id: GENERATED_DOM.MISTAKE_LIST.HEADER_COLUMN_ID,
       });
     });
@@ -652,10 +652,10 @@
         let classNameByIndex;
         switch (index) {
           case 3:
-            classNameByIndex = LANG_CLASS_NAMES.ENGLISH;
+            classNameByIndex = LANGUAGE_MAPPINGS.ENGLISH;
             break;
           default:
-            classNameByIndex = LANG_CLASS_NAMES.JAPANESE;
+            classNameByIndex = LANGUAGE_MAPPINGS.JAPANESE;
             break;
         }
 
