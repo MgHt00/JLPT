@@ -72,3 +72,10 @@ export const PLAIN_TEXT_STRINGS = {
   WELL_DONE: 'You have completed all the vocabs.  Well done!',
   RESTART_PROMPT: 'Let\'s Restart!',
 };
+
+export const LOCAL_STORAGE_KEYS = {
+  TO_PRACTICE: 'toPractice',
+  APP_STATE: 'appState',
+  APP_DATA: 'appData',
+  CURRENT_STATUS: 'currentStatus',
+};
