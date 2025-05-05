@@ -58,4 +58,6 @@ export const PLAIN_TEXT_STRINGS = {
   LOADING: 'Loading...',
   LOADING_FAIL: 'Loading fail!',
   FLIP_CARD: 'Flip',
+  WELL_DONE: 'You have completed all the vocabs.  Well done!',
+  RESTART_PROMPT: 'Let\'s Restart!',
 };
