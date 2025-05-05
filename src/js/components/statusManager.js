@@ -58,8 +58,10 @@ export function statusManager(globals, utilsManager) {
     domUtils.clearScreen(selectors.sectionStatus);
 
     setTimeout(() => {
-      if (currentStatus.totalQuestionsAnswered >= 1) printSectionStatus("questionCount"); // show cumulative average only it is not the first question shown
-      printSectionStatus("averagescore");
+      if (currentStatus.totalQuestionsAnswered >= 1) { // show cumulative average info only it is not the first question shown
+        printSectionStatus("questionCount"); 
+        printSectionStatus("averagescore");
+      }
     }, 350);
 
     // private functions

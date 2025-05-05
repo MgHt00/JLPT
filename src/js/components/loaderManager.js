@@ -222,12 +222,12 @@
     resetQuestionCount();
     resetTotalNoOfQuestion();
     getTotalNoOfQuestions(QUESTION_MODE_FRESH);  // for status bar, reset and set No. of Question
-              
-    resetCumulativeVariables();       // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
-
+    
+    resetCumulativeVariables(); // reset cumulative variables 
+    
     newQuestion();
     
-    clearError();                              // To remove error messages
+    clearError();  // To remove error messages (if any)
   }
 
   // to validate input data and set defaults if necessary
