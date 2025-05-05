@@ -1,10 +1,10 @@
-// src/js/constants/appConstants.js
-/*export const VOCAB_MAPPING = {
-  ka: appData.kaVocab,
-  hi: appData.hiVocab,
-  en: appData.enVocab,
-};*/
-// VOCAB_MAPPING ကို answerManger ကနေ ပြန်ပို့မယ့်အစား constant file ကနေ ပို့ဖို့ ဆက်ပြင်ရပါမယ်။
+import { globals } from "../services/globals.js";
+
+export const VOCAB_MAPPING = {
+  ka: globals.appData.kaVocab,
+  hi: globals.appData.hiVocab,
+  en: globals.appData.enVocab,
+};
 
 export const QUESTION_MODE_FRESH = "fresh";
 export const QUESTION_MODE_STORED = "stored";

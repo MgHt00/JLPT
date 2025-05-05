@@ -1,5 +1,5 @@
 import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
-import { LANGUAGE_MAPPINGS, PLAIN_TEXT_STRINGS } from "../constants/appConstants.js";
+import { VOCAB_MAPPING, LANGUAGE_MAPPINGS, PLAIN_TEXT_STRINGS } from "../constants/appConstants.js";
 import { RENDER_ANSWERS } from "../constants/elementIDs.js";
 
 export function answerManager(globals, utilsManager, restart, readStoredLength, questionFns, answerListenerFns) {
@@ -9,12 +9,6 @@ export function answerManager(globals, utilsManager, restart, readStoredLength, 
   const { handleFlashcardFlip, handleMultipleChoiceAnswer, handleContinueToStoredData } = answerListenerFns;
 
   const { FADE_OUT_LIGHT, ANSWER_BUTTON, CHECK_FLASH_MODE_ANSWER } = CSS_CLASS_NAMES;
-
-  const vocabMapping = {
-    ka: appData.kaVocab,
-    hi: appData.hiVocab,
-    en: appData.enVocab,
-  };
 
   // Returns configuration objects for different answer elements.
   function _getAnswerElementConfig() {
@@ -217,7 +211,7 @@ export function answerManager(globals, utilsManager, restart, readStoredLength, 
   function _createAnswerArray() {
     console.groupCollapsed("answerManager() - _createAnswerArray()");
 
-    let selectedArray = vocabMapping[selectors.readaChoiceInput];
+    let selectedArray = VOCAB_MAPPING[selectors.readaChoiceInput];
     console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
     
     let tempAnsArray = [];
@@ -267,7 +261,6 @@ export function answerManager(globals, utilsManager, restart, readStoredLength, 
   }
 
   return {
-    vocabMapping,
     renderAnswers,
     noMoreQuestion,
     setRanOnce,

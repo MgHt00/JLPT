@@ -40,7 +40,7 @@ const {
 
 // Error Manager
 const errMgr = errorManager(globals, utilsManager);
-const { setErrorManagerCallbacks, runtimeError, clearError } = errMgr;
+const { runtimeError, clearError } = errMgr;
 
 // Status Manager
 const statusMgr = statusManager(globals, utilsManager);
@@ -145,7 +145,6 @@ const {
 /* Initializes and sets up dependencies for various manager instances. */
 setQuestionManagerCallbacks(renderAnswers, noMoreQuestion)
 setVocabManagerCallbacks(loadMemoryData, resetAfterFlushingMistakes, readQuestionObj);
-setErrorManagerCallbacks(vocabMapping);
 setLoaderManagerCallbacks(moveForm, handleListMistakeBtn, debouncedMoveForm);
 setListenerManagerCallbacks(setRanOnce);
 setAnswerListnerManagerCallbacks(setRanOnce);
