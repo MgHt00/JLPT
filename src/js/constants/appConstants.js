@@ -54,6 +54,17 @@ export const DATA_POOL_DEFAULTS = {
   MIN_POOL_SIZE: 3, // SHOULD NOT BE LOWER THAN 3
 };
 
+export const FLASH_CARD_MODE = {
+  QUESTION: 'Did you get it right?',
+  YES: 'Yes',
+  NO: 'No',
+};
+
+export const MCQ_MODE = {
+  CORRECT_ANSWER: 'Correct',
+  WRONG_ANSWER: 'Keep Trying',
+}
+
 export const PLAIN_TEXT_STRINGS = {
   LOADING: 'Loading...',
   LOADING_FAIL: 'Loading fail!',

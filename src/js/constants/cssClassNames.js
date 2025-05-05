@@ -8,6 +8,7 @@ export const CSS_CLASS_NAMES = {
   MOVED: 'moved',
   DISABLED: 'disabled',
   DIM: 'dim',
+  VERY_DIM: 'so-dim',
   SHADES_ON_TOP: 'shades-on-top',
   OVERLAY_MESSAGE: 'overlay-message',
   FADE_OUT_LIGHT: 'fade-out-light',
@@ -15,4 +16,8 @@ export const CSS_CLASS_NAMES = {
   ANSWER_BUTTON: 'answer-btn',
   CHECK_FLASH_MODE_ANSWER: 'check-flash-mode-answer',
   VOCAB_COMPLETE: 'vocabs-complete',
+  FLASH_CARD_CORRECT: 'flash-correct-answer',
+  ANSWER_MESSAGE: 'answer-message',
+  MCQ_CORRECT_ANSWER: 'mcq-correct-answer',
+  MCQ_WRONG_ANSWER: 'wrong-answer',
 };

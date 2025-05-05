@@ -98,4 +98,9 @@ export const GENERATED_DOM = {
 export const RENDER_ANSWERS = {
   ANSWER_BUTTON: 'answer-btn',
   ANSWER_BUTTON_LABEL: 'answer-btn-text',
+  ANSWER_MESSAGE: 'answer-message',
+  CHOICE_BUTTON: 'choice-btn',
+  CORRECT_ANSWER: 'correct-answer',
+  YES_TO_CONTINUE: 'continueYes',
+  NO_TO_CONTINUE: 'continueNo',
 };

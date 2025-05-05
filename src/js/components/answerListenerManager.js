@@ -1,4 +1,8 @@
-export function answerListnerManager(globals, utilsManager, vocabFns, questionFns, loaderFns) {
+import { RENDER_ANSWERS } from "../constants/elementIDs.js";
+import { QUESTION_MODE_FRESH, QUESTION_MODE_STORED, FLASH_CARD_MODE, MCQ_MODE } from "../constants/appConstants.js";
+import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+
+export function answerListenerManager(globals, utilsManager, vocabFns, questionFns, loaderFns) {
   const { appState, selectors } = globals;
   const { domUtils, displayUtils } = utilsManager;
   const { storeToMistakeBank, removeFromMistakeBank } = vocabFns;
@@ -7,7 +11,7 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
 
   let _setRanOnce;
 
-  function setAnswerListnerManagerCallbacks(setRanOnce) {
+  function setAnswerListenerManagerCallbacks(setRanOnce) {
     _setRanOnce = setRanOnce;
   }
 
@@ -16,32 +20,32 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
     _removeExistingButtons();
     _fadeMessangeAndAnswer();
 
-    const _FLASH_CARD_CONTENT_CONFIG = { 
-      // _FLASH_CARD_CONTENT_CONFIG is defined here to ensure it uses the correct appState.correctAns.
+    const _flashCardContentConfig = { 
+      // _flashCardContentConfig is defined here to ensure it uses the correct appState.correctAns.
       // This value is set dynamically for each question, and defining the config outside would
       // capture an outdated or empty value.
       correctAns: {
         content: appState.correctAns,
-        className: 'flash-correct-answer',
-        id: 'correct-answer'
+        className: CSS_CLASS_NAMES.FLASH_CARD_CORRECT,
+        id: RENDER_ANSWERS.CORRECT_ANSWER,
       },
       message: {
-        content: 'Did you get it right?',
-        className: 'answer-message',
-        id: 'answer-message'
+        content: FLASH_CARD_MODE.QUESTION, // something like "did you get it right?"
+        className: CSS_CLASS_NAMES.ANSWER_MESSAGE,
+        id: RENDER_ANSWERS.ANSWER_MESSAGE,
       },
       yesNo: {
-        content: ['Yes', 'No'],
-        className: 'answer-btn',
-        id: 'choice-btn',
+        content: [FLASH_CARD_MODE.YES, FLASH_CARD_MODE.NO],
+        className: CSS_CLASS_NAMES.ANSWER_BUTTON,
+        id: RENDER_ANSWERS.CHOICE_BUTTON,
         eventFunction: _handleFlashCardYesNoAnswer
       },
     }
 
     setTimeout(() => {
-      _showFlashCardContent(_FLASH_CARD_CONTENT_CONFIG.correctAns); // Show correct answer
-      _showFlashCardContent(_FLASH_CARD_CONTENT_CONFIG.message);    // Show Message
-      _showFlashCardContent(_FLASH_CARD_CONTENT_CONFIG.yesNo);      // Show `Yes` `No` buttons
+      _showFlashCardContent(_flashCardContentConfig.correctAns); // Show correct answer
+      _showFlashCardContent(_flashCardContentConfig.message);    // Show Message
+      _showFlashCardContent(_flashCardContentConfig.yesNo);      // Show `Yes` `No` buttons
       _fadeMessangeAndAnswer();
     }, 350);
 
@@ -49,9 +53,9 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
   }
 
   function _removeExistingButtons() { // Remove exiting buttons
-    const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
+    const answerButtons = document.querySelectorAll(`[id^=${RENDER_ANSWERS.ANSWER_BUTTON}]`); // sn3
     answerButtons.forEach(button => {
-      displayUtils.toggleClass('fade-out-light', button);
+      displayUtils.toggleClass(CSS_CLASS_NAMES.FADE_OUT_LIGHT, button);
       setTimeout(() => {
         button.remove();
       }, 350);
@@ -59,7 +63,7 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
   }
 
   function _fadeMessangeAndAnswer() {
-    displayUtils.toggleClass('fade-out-light', selectors.sectionMessage, selectors.sectionAnswer);
+    displayUtils.toggleClass(CSS_CLASS_NAMES.FADE_OUT_LIGHT, selectors.sectionMessage, selectors.sectionAnswer);
   }
 
   function _showFlashCardContent(config) {
@@ -82,8 +86,8 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
   function handleMultipleChoiceAnswer(event) {
     //console.groupCollapsed("answerManager() - handleMultipleChoiceAnswer()");
 
-    displayUtils.addClass('fade-hide', selectors.sectionMessage)
-                .addClass('overlay-message', selectors.sectionMessage);
+    displayUtils.addClass(CSS_CLASS_NAMES.FADE_HIDE, selectors.sectionMessage)
+                .addClass(CSS_CLASS_NAMES.OVERLAY_MESSAGE, selectors.sectionMessage);
 
     const _btnText = event.currentTarget.textContent;
     if (appState.correctAns === _btnText) {  // If the answer is CORRECT
@@ -124,12 +128,12 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
   function _getMCQContentConfig() {
     return {
       correct: {
-        content: 'Correct',
-        className: 'mcq-correct-answer'
+        content: MCQ_MODE.CORRECT_ANSWER,
+        className: CSS_CLASS_NAMES.MCQ_CORRECT_ANSWER,
       },
       incorrect: {
-        content: 'Keep Trying',
-        className: 'wrong-answer'
+        content: MCQ_MODE.WRONG_ANSWER,
+        className: CSS_CLASS_NAMES.MCQ_WRONG_ANSWER,
       },
     }
   }
@@ -169,13 +173,13 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
     
     const btnID = event.currentTarget.id;
 
-    if (btnID === "choice-btn-0") {
+    if (btnID === `${RENDER_ANSWERS.CHOICE_BUTTON}-0`) {
       _checkModeAndRemoveVocab();
       finalizeQuestionAndProceed(true);
     } 
     
-    else if (btnID === "choice-btn-1") {
-      if (readQuestionMode() !== "stored") {
+    else if (btnID === `${RENDER_ANSWERS.CHOICE_BUTTON}-1`) {
+      if (readQuestionMode() !== QUESTION_MODE_STORED) {
         storeToMistakeBank(); // add wrongly selected word to localstorage
       } 
 
@@ -193,14 +197,14 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
 
     const btnID = event.currentTarget.id;
 
-    if (btnID === "continueYes-0") {
+    if (btnID === `${RENDER_ANSWERS.YES_TO_CONTINUE}-0`) {
       console.info("Clicked Yes");
-      setQuestionMode("stored");
+      setQuestionMode(QUESTION_MODE_STORED);
       _setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       continuetoStoredData();
     } 
     
-    else if (btnID === "continueNo-0") {
+    else if (btnID === `${RENDER_ANSWERS.NO_TO_CONTINUE}-0`) {
       console.info("Clicked No");
       _setRanOnce(false);
       restart();
@@ -214,7 +218,7 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
     
     const currentQuestionMode = readQuestionMode();
 
-    if (currentQuestionMode === "stored") { // if current q mode is stored and answer is right
+    if (currentQuestionMode === QUESTION_MODE_STORED) { // if current q mode is stored and answer is right
       console.info("currentQuestionMode: ", currentQuestionMode, ".  removeFromMistakeBank() is called.");
       removeFromMistakeBank();
     } else {
@@ -228,20 +232,20 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
     const shouldFade = [ "fadeOnly", "fadeAndDim", "overlay"].includes(key); 
     const shouldDim = key === "fadeAndDim";
     const shouldOverlay = key === "overlay";
-    // If key: "fadeOnly", "fadeAndDim", or "overlay" => toggle 'fade-hide'
+    // If key: "fadeOnly", "fadeAndDim", or "overlay" => toggle FADE_HIDE
     // key: "fadeAndDim" => toggle 'so-dim'
-    // key: "overlay" => toggle 'overlay-message'
+    // key: "overlay" => toggle OVERLAY_MESSAGE
     
     if (shouldFade) {
-      displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
+      displayUtils.toggleClass(CSS_CLASS_NAMES.FADE_HIDE, selectors.sectionMessage);
     }
 
     if (shouldDim) {
-      displayUtils.toggleClass('so-dim', selectors.sectionStatus, selectors.sectionAnswer);
+      displayUtils.toggleClass(CSS_CLASS_NAMES.VERY_DIM, selectors.sectionStatus, selectors.sectionAnswer);
     }
 
     if (shouldOverlay) {
-      displayUtils.toggleClass('overlay-message', selectors.sectionMessage);
+      displayUtils.toggleClass(CSS_CLASS_NAMES.OVERLAY_MESSAGE, selectors.sectionMessage);
     }
 
     if (!shouldFade && !shouldDim && !shouldOverlay) {
@@ -250,7 +254,7 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
   }
 
   return {
-    setAnswerListnerManagerCallbacks,
+    setAnswerListenerManagerCallbacks,
     handleFlashcardFlip,
     handleMultipleChoiceAnswer,
     handleContinueToStoredData,
