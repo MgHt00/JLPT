@@ -1,3 +1,5 @@
+import { LOCAL_STORAGE_KEYS } from "../constants/appConstants.js";
+
 export function vocabManager(globals, utilsManager) {
   const { appState, appData, currentStatus, selectors } = globals;
   const { domUtils } = utilsManager;
@@ -36,7 +38,7 @@ export function vocabManager(globals, utilsManager) {
     if (!exists) {
       incorrectSets.push(_readQuestionObj());
       console.info("New word pushed to localstorage.");
-      localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
+      localStorage.setItem(LOCAL_STORAGE_KEYS.TO_PRACTICE, JSON.stringify(incorrectSets));
     } else {
       console.info("Word already exit in localstorage.")
     }
@@ -53,7 +55,7 @@ export function vocabManager(globals, utilsManager) {
     incorrectSets.pop(_readQuestionObj());
     console.info("incorrectSets AFTER popping: ", incorrectSets);
 
-    localStorage.setItem("toPractice", JSON.stringify(incorrectSets));
+    localStorage.setItem(LOCAL_STORAGE_KEYS.TO_PRACTICE, JSON.stringify(incorrectSets));
     console.info("incorrectSets had been successfully pushed it back to toPractice.");
 
     console.groupEnd();
@@ -63,7 +65,7 @@ export function vocabManager(globals, utilsManager) {
   function loadMistakesFromMistakeBank() {
     console.groupCollapsed("vocabManager() - loadMistakesFromMistakeBank()");
 
-    let storedObjects = JSON.parse(localStorage.getItem("toPractice")) || [];
+    let storedObjects = JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.TO_PRACTICE)) || [];
     console.info("storedObjects ", storedObjects);
     
     let storedLength = storedObjects.length;
@@ -77,7 +79,7 @@ export function vocabManager(globals, utilsManager) {
   function flushMistakeBank() {
     console.groupCollapsed("vocabManager() - flushMistakeBank()");
 
-    localStorage.removeItem("toPractice");
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.TO_PRACTICE);
     console.log("localstorage flushed.");
     domUtils.clearNode({
       parent: selectors.memoryInfo,
@@ -97,9 +99,9 @@ export function vocabManager(globals, utilsManager) {
   function saveState() {
     console.groupCollapsed("saveState()");
 
-    localStorage.setItem("appState", JSON.stringify(appState));
-    localStorage.setItem("appData", JSON.stringify(appData));
-    localStorage.setItem("currentStatus", JSON.stringify(currentStatus));
+    localStorage.setItem(LOCAL_STORAGE_KEYS.APP_STATE, JSON.stringify(appState));
+    localStorage.setItem(LOCAL_STORAGE_KEYS.APP_DATA, JSON.stringify(appData));
+    localStorage.setItem(LOCAL_STORAGE_KEYS.CURRENT_STATUS, JSON.stringify(currentStatus));
     console.info("State saved to localStorage");
 
     console.groupEnd();
@@ -109,9 +111,9 @@ export function vocabManager(globals, utilsManager) {
   function loadState() {
     console.groupCollapsed("loadState()");
 
-    const savedAppState = localStorage.getItem("appState");
-    const savedAppData = localStorage.getItem("appData");
-    const savedCurrentStatus = localStorage.getItem("currentStatus");
+    const savedAppState = localStorage.getItem(LOCAL_STORAGE_KEYS.APP_STATE);
+    const savedAppData = localStorage.getItem(LOCAL_STORAGE_KEYS.APP_DATA);
+    const savedCurrentStatus = localStorage.getItem(LOCAL_STORAGE_KEYS.CURRENT_STATUS);
   
     if (savedAppState && savedAppData && savedCurrentStatus) {
       Object.assign(appState, JSON.parse(savedAppState));
@@ -129,9 +131,9 @@ export function vocabManager(globals, utilsManager) {
   function clearState() {
     console.groupCollapsed("clearState()");
 
-    localStorage.removeItem("appState");
-    localStorage.removeItem("appData");
-    localStorage.removeItem("currentStatus");
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.APP_STATE);
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.APP_DATA);
+    localStorage.removeItem(LOCAL_STORAGE_KEYS.CURRENT_STATUS);
     console.info("State cleared from localStorage");
 
     console.groupEnd();
@@ -151,7 +153,6 @@ export function vocabManager(globals, utilsManager) {
     loadMistakesFromMistakeBank,
     saveState,
     loadState,
-    clearState,
     readStoredLength,
   }
 }

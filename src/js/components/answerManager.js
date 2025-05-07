@@ -1,74 +1,72 @@
-//export function answerManager(globals, utilsManager, setQuestionMode, readQuestionObj, readQuestionMode) {
+import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+import { VOCAB_MAPPING, LANGUAGE_MAPPINGS, PLAIN_TEXT_STRINGS, QUESTION_MODE_FRESH, QUESTION_MODE_STORED } from "../constants/appConstants.js";
+import { RENDER_ANSWERS } from "../constants/elementIDs.js";
+
 export function answerManager(globals, utilsManager, restart, readStoredLength, questionFns, answerListenerFns) {
-  const { appState, appData, selectors } = globals;
+  const { appState, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
   const { setQuestionMode, readQuestionObj, readQuestionMode } = questionFns;
   const { handleFlashcardFlip, handleMultipleChoiceAnswer, handleContinueToStoredData } = answerListenerFns;
 
-  const vocabMapping = {
-    ka: appData.kaVocab,
-    hi: appData.hiVocab,
-    en: appData.enVocab,
-  };
+  const { FADE_OUT_LIGHT, ANSWER_BUTTON, CHECK_FLASH_MODE_ANSWER, FADE_HIDE, OVERLAY_MESSAGE, VOCAB_COMPLETE } = CSS_CLASS_NAMES;
 
-  // to prepare all the answers
+  // Returns configuration objects for different answer elements.
+  function _getAnswerElementConfig() {
+    return {
+      flipBtn: {
+        content: '',
+        className: [ANSWER_BUTTON, CHECK_FLASH_MODE_ANSWER], 
+        id: RENDER_ANSWERS.ANSWER_BUTTON, 
+        eventFunction: handleFlashcardFlip,
+      },
+      flipText: {
+        content: PLAIN_TEXT_STRINGS.FLIP_CARD, 
+        className: '', 
+        id: RENDER_ANSWERS.ANSWER_BUTTON_LABEL, 
+      },
+      ansArray: {
+        content: _createAnswerArray(),
+        className: ANSWER_BUTTON, 
+        eventFunction: handleMultipleChoiceAnswer 
+      },
+    }
+  }
+  
+  // Creates and appends an answer element to the DOM based on the provided key.
+  function _createAnswerElement(key) {
+    const config = { ..._getAnswerElementConfig()[key] };   // create a new object instead of mutating the original. [sn27]
+    config.parent = ["flipBtn", "ansArray"].includes(key) 
+      ? selectors.sectionAnswer 
+      : document.querySelector(`#${RENDER_ANSWERS.ANSWER_BUTTON}-0`);
+      
+    domUtils.buildNode({
+      parent: config.parent,
+      child: 'div',
+      content: config.content,
+      className: config.className,
+      id: config.id,                
+      eventFunction: config.eventFunction,
+    });
+  }
+
+  // Prepares and renders answer options on the screen based on the game mode.
   function renderAnswers() {
     console.groupCollapsed("answerManager() - renderAnswers()");
 
-    let ansArray = createAnswerArray();
-    //console.log("Inside renderAnswers(); ansArray: ", ansArray, "Inside renderAnswers(); flashYesNo: ", flashYesNo);
-
     if (appState.flashYesNo) {            // if it is a flash card game
-      helpers.assignLanguage(selectors.sectionAnswer, "en"); // if aChoice was set to Kanji or Hirigana, reset to "en"
-      displayUtils.toggleClass('fade-out-light', selectors.sectionAnswer);
+      helpers.assignLanguage(selectors.sectionAnswer, LANGUAGE_MAPPINGS.ENGLISH); // if aChoice was set to Kanji or Hirigana, reset to "en"
+      displayUtils.toggleClass(FADE_OUT_LIGHT, selectors.sectionAnswer);
       setTimeout(() => {
-        createAnswerElement("flipBtn");   // Building "Flip" button container
-        createAnswerElement("flipText");  // Building "Flip" text
-        displayUtils.toggleClass('fade-out-light', selectors.sectionAnswer);
+        _createAnswerElement("flipBtn");   // Building "Flip" button container
+        _createAnswerElement("flipText");  // Building "Flip" text
+        displayUtils.toggleClass(FADE_OUT_LIGHT, selectors.sectionAnswer);
       }, 350);
       
     } else {                              // if it is a multiple choice game
-      createAnswerElement("ansArray");
+      _createAnswerElement("ansArray");
     }
 
     console.groupEnd();
-
-    // functions private to the modules
-    function getConfig() {
-      return {
-        flipBtn: {
-          content: '',
-          className: ['answer-btn', 'check-flash-mode-answer'], 
-          id: 'answer-btn', 
-          eventFunction: handleFlashcardFlip,
-        },
-        flipText: {
-          content: 'Flip', 
-          className: '', 
-          id: 'answer-btn-text', 
-        },
-        ansArray: {
-          content: ansArray, 
-          className: 'answer-btn', 
-          eventFunction: handleMultipleChoiceAnswer 
-        },
-      }
-    }
-    function createAnswerElement(key) {
-      const config = { ...getConfig()[key] };   // create a new object instead of mutating the original. [sn27]
-      config.parent = ["flipBtn", "ansArray"].includes(key) 
-        ? selectors.sectionAnswer 
-        : document.querySelector("#answer-btn-0");
-        
-      domUtils.buildNode({
-        parent: config.parent,
-        child: 'div',
-        content: config.content,
-        className: config.className,
-        id: config.id,                
-        eventFunction: config.eventFunction,
-      });
-    }
   }
 
   // when there is no more question to shown.
@@ -82,24 +80,22 @@ export function answerManager(globals, utilsManager, restart, readStoredLength, 
         console.info("noMoreQuestion.ranOnce initialized.");
     }
 
-    if (readQuestionMode() === "fresh") { // if currently showing data from JSON
-      setQuestionMode("stored");
+    if (readQuestionMode() === QUESTION_MODE_FRESH) { // if currently showing data from JSON
+      setQuestionMode(QUESTION_MODE_STORED);
       if (readStoredLength() <= 2) { 
         // If there is no store vocab in local storage
         // (less than 2 vocab in local storage will lead to infinite loop; so that it needs to be <=2)
-        //readQuestionMode() = "stored";
-        completeAndRestart();
+        _completeAndRestart();
       } 
       else {
-        //readQuestionMode() = "stored";
-        toLocalStorageYesNo();
+        _toLocalStorageYesNo();
       }
     }
     
-    else if (readQuestionMode() === "stored") { // if currently showing data from localstorage
+    else if (readQuestionMode() === QUESTION_MODE_STORED) { // if currently showing data from localstorage
         if (noMoreQuestion.ranOnce) { // checked whether localstorage has been ran once.
           console.info("mistake bank as been ran once. ", noMoreQuestion.ranOnce);
-          completeAndRestart();
+          _completeAndRestart();
         }
         else if (readStoredLength() <= 2) { 
           // Even though local storage is zero when the program starts, 
@@ -107,11 +103,11 @@ export function answerManager(globals, utilsManager, restart, readStoredLength, 
           
           // Less than 2 vocab in local storage will lead to infinite loop; so the if statement is adjusted to <=2
           // console.info("too few vocabs in local storage");
-          completeAndRestart();
+          _completeAndRestart();
         } 
         else {
           noMoreQuestion.ranOnce = true;
-          toLocalStorageYesNo();
+          _toLocalStorageYesNo();
         }
     }
 
@@ -135,20 +131,20 @@ export function answerManager(globals, utilsManager, restart, readStoredLength, 
   }
 
   // to ask user whether they want to practice the vocabs from the local storage
-  function toLocalStorageYesNo() {
-    console.groupCollapsed("toLocalStorageYesNo()");
+  function _toLocalStorageYesNo() {
+    console.groupCollapsed("_toLocalStorageYesNo()");
 
-    displayUtils.removeClass('fade-hide', selectors.sectionMessage)
-                .removeClass('overlay-message', selectors.sectionMessage);
+    displayUtils.removeClass(FADE_HIDE, selectors.sectionMessage)
+                .removeClass(OVERLAY_MESSAGE, selectors.sectionMessage);
 
-    constructElement('vocabsComplete');
-    constructElement('continueYes');
-    constructElement('continueNo');
+    _constructLocalStoragePromptElement('vocabsComplete');
+    _constructLocalStoragePromptElement('continueYes');
+    _constructLocalStoragePromptElement('continueNo');
 
     console.groupEnd();
 
-    // private helper functions
-    function getContent() {
+    // private helper functions 
+    function _getLocalStoragePromptContent() {
       return {
         vocabsComplete: { content: `There are ${readStoredLength()} words in mistake bank.  Would you like to practice those?` },
         continueYes: { content: 'Yes' },
@@ -156,15 +152,15 @@ export function answerManager(globals, utilsManager, restart, readStoredLength, 
       }
     }
 
-    function constructElement(key) {
-      const contentConfig = getContent()[key];
+    function _constructLocalStoragePromptElement(key) {    
+      const contentConfig = _getLocalStoragePromptContent()[key];
       const isVC = key === "vocabsComplete";
-
+  
       domUtils.buildNode({
         parent: isVC ? selectors.sectionMessage : selectors.sectionAnswer,
         child: 'div',
         content: contentConfig.content,
-        className: isVC ? "vocabs-complete" : "answer-btn",
+        className: isVC ? VOCAB_COMPLETE : ANSWER_BUTTON,
         id: key,
         eventFunction: isVC ? null : handleContinueToStoredData,
       });
@@ -172,59 +168,59 @@ export function answerManager(globals, utilsManager, restart, readStoredLength, 
   }
 
   // when all of the user selected vocabs are shown
-  function completeAndRestart() {
-    displayUtils.removeClass('fade-hide', selectors.sectionMessage)
-                .removeClass('overlay-message', selectors.sectionMessage);
+  function _completeAndRestart() {
+    displayUtils.removeClass(FADE_HIDE, selectors.sectionMessage)
+                .removeClass(OVERLAY_MESSAGE, selectors.sectionMessage);
 
-    createElement("info");
-    createElement("btn");
+    _createFinalActionElement("info");
+    _createFinalActionElement("btn");
 
     // private helper functions 
-    function getConfig() {
+    function _getFinalActionConfig() {
       return {
         info: {
           parent: selectors.sectionMessage,
-          content: 'You have completed all the vocabs.  Well done!',
-          className: 'vocabs-complete',
+          content: PLAIN_TEXT_STRINGS.WELL_DONE,
+          className: VOCAB_COMPLETE,
         },
         btn: {
           parent: selectors.sectionAnswer,
-          content: 'Let\'s Restart!',
-          className: 'answer-btn',
+          content: PLAIN_TEXT_STRINGS.RESTART_PROMPT,
+          className: ANSWER_BUTTON,
           eventFunction: restart,
         },
       }
     }
 
-    function createElement(key) {
-      const config = getConfig()[key];
+    function _createFinalActionElement(key) {
+      const config = _getFinalActionConfig()[key];
       domUtils.buildNode({ 
         parent: config.parent, 
         child: 'div', 
         content: config.content, 
         className: config.className, 
-        id: config.id ?? 'answer-btn', 
+        id: config.id ?? RENDER_ANSWERS.ANSWER_BUTTON, 
         eventFunction: config.eventFunction ?? restart,
       });
     }
   }
 
   // to create an array filled with answers including the correct one.
-  function createAnswerArray() {
-    console.groupCollapsed("answerManager() - createAnswerArray()");
+  function _createAnswerArray() {
+    console.groupCollapsed("answerManager() - _createAnswerArray()");
 
-    let selectedArray = vocabMapping[selectors.readaChoiceInput];
+    let selectedArray = VOCAB_MAPPING[selectors.readaChoiceInput];
     console.info("selectedArray: ", selectedArray, "| selectedArray.legth: ", selectedArray.length);
     
     let tempAnsArray = [];
     tempAnsArray[0] = appState.correctAns;         // add correct answer at index no. 0
 
-    if ((appState.qMode !== "fresh") && !selectedArray) {
+    if ((appState.qMode !== QUESTION_MODE_FRESH) && !selectedArray) {
       console.error(`No vocab array found for choice: ${selectors.aChoice.value}`);
       return;
     }
 
-    if ((appState.qMode !== "fresh") && selectedArray.length === 0) {
+    if ((appState.qMode !== QUESTION_MODE_FRESH) && selectedArray.length === 0) {
       console.error(`The vocab array is empty for choice: ${selectors.aChoice.value}`);
       return;
     }
@@ -254,16 +250,7 @@ export function answerManager(globals, utilsManager, restart, readStoredLength, 
     return tempAnsArray;
   }
 
-  //let rePractice = [];
-
-  function practiceAgain() {
-    //const questionInstance = questionMgr;
-    console.log("Inside showQuestionAgain(); questionObj: ", readQuestionObj());
-    rePractice.push(readQuestionObj());
-  }
-
   return {
-    vocabMapping,
     renderAnswers,
     noMoreQuestion,
     setRanOnce,

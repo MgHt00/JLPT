@@ -1,4 +1,8 @@
-export function answerListnerManager(globals, utilsManager, vocabFns, questionFns, loaderFns) {
+import { RENDER_ANSWERS } from "../constants/elementIDs.js";
+import { QUESTION_MODE_FRESH, QUESTION_MODE_STORED, FLASH_CARD_MODE, MCQ_MODE } from "../constants/appConstants.js";
+import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+
+export function answerListenerManager(globals, utilsManager, vocabFns, questionFns, loaderFns) {
   const { appState, selectors } = globals;
   const { domUtils, displayUtils } = utilsManager;
   const { storeToMistakeBank, removeFromMistakeBank } = vocabFns;
@@ -7,98 +11,97 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
 
   let _setRanOnce;
 
-  function setAnswerListnerManagerCallbacks(setRanOnce) {
+  function setAnswerListenerManagerCallbacks(setRanOnce) {
     _setRanOnce = setRanOnce;
   }
 
   // Event handler for flashcard mode
   function handleFlashcardFlip() {
-    //console.groupCollapsed("answerManager() - handleFlashcardFlip()");
+    _removeExistingButtons();
+    _fadeMessangeAndAnswer();
 
-    removeExistingButtons();
-    fadeMessangeAndAnswer();
+    const _flashCardContentConfig = { 
+      // _flashCardContentConfig is defined here to ensure it uses the correct appState.correctAns.
+      // This value is set dynamically for each question, and defining the config outside would
+      // capture an outdated or empty value.
+      correctAns: {
+        content: appState.correctAns,
+        className: CSS_CLASS_NAMES.FLASH_CARD_CORRECT,
+        id: RENDER_ANSWERS.CORRECT_ANSWER,
+      },
+      message: {
+        content: FLASH_CARD_MODE.QUESTION, // something like "did you get it right?"
+        className: CSS_CLASS_NAMES.ANSWER_MESSAGE,
+        id: RENDER_ANSWERS.ANSWER_MESSAGE,
+      },
+      yesNo: {
+        content: [FLASH_CARD_MODE.YES, FLASH_CARD_MODE.NO],
+        className: CSS_CLASS_NAMES.ANSWER_BUTTON,
+        id: RENDER_ANSWERS.CHOICE_BUTTON,
+        eventFunction: _handleFlashCardYesNoAnswer
+      },
+    }
 
     setTimeout(() => {
-      showContent("correctAns");    // Show correct answer
-      showContent("message");       // Show Message
-      showContent("yesNo");         // Show `Yes` `No` buttons
-      fadeMessangeAndAnswer();
+      _showFlashCardContent(_flashCardContentConfig.correctAns); // Show correct answer
+      _showFlashCardContent(_flashCardContentConfig.message);    // Show Message
+      _showFlashCardContent(_flashCardContentConfig.yesNo);      // Show `Yes` `No` buttons
+      _fadeMessangeAndAnswer();
     }, 350);
 
     console.groupEnd();
+  }
 
-    // utility functions private to the module
-    function removeExistingButtons() { // Remove exiting buttons
-      const answerButtons = document.querySelectorAll('[id^="answer-btn"]'); // sn3
-      answerButtons.forEach(button => {
-        displayUtils.toggleClass('fade-out-light', button);
-        setTimeout(() => {
-          button.remove();
-        }, 350);
-      });
+  function _removeExistingButtons() { // Remove exiting buttons
+    const answerButtons = document.querySelectorAll(`[id^=${RENDER_ANSWERS.ANSWER_BUTTON}]`); // sn3
+    answerButtons.forEach(button => {
+      displayUtils.toggleClass(CSS_CLASS_NAMES.FADE_OUT_LIGHT, button);
+      setTimeout(() => {
+        button.remove();
+      }, 350);
+    });
+  }
+
+  function _fadeMessangeAndAnswer() {
+    displayUtils.toggleClass(CSS_CLASS_NAMES.FADE_OUT_LIGHT, selectors.sectionMessage, selectors.sectionAnswer);
+  }
+
+  function _showFlashCardContent(config) {
+    if (!config) {
+      console.warn(`handleFlashcardFlip() - _showFlashCardContent() - No config found.`);
+      return;
     }
 
-    function fadeMessangeAndAnswer() {
-      displayUtils.toggleClass('fade-out-light', selectors.sectionMessage, selectors.sectionAnswer);
-    }
-
-    const CONTENT_CONFIG = {
-      correctAns: {
-        content: appState.correctAns,
-        className: 'flash-correct-answer',
-        id: 'correct-answer'
-      },
-      message: {
-        content: 'Did you get it right?',
-        className: 'answer-message',
-        id: 'answer-message'
-      },
-      yesNo: {
-        content: ['Yes', 'No'],
-        className: 'answer-btn',
-        id: 'choice-btn',
-        eventFunction: handleFlashCardYesNoAnswer
-      },
-    }
-
-    function showContent(key) {
-      const config = CONTENT_CONFIG[key];
-      if (!config) {
-        console.warn(`handleFlashcardFlip() - showContent() - No config found for key: "${key}"`);
-        return;
-      }
-
-      domUtils.buildNode({
-        parent: selectors.sectionAnswer,
-        child: 'div',
-        content: config.content,
-        className: config.className,
-        id: config.id,
-        eventFunction: config.eventFunction
-      });
-    }
+    domUtils.buildNode({
+      parent: selectors.sectionAnswer,
+      child: 'div',
+      content: config.content,
+      className: config.className,
+      id: config.id,
+      eventFunction: config.eventFunction
+    });
   }
 
   // event handler for multiple choice mode
   function handleMultipleChoiceAnswer(event) {
     //console.groupCollapsed("answerManager() - handleMultipleChoiceAnswer()");
 
-    displayUtils.addClass('fade-hide', selectors.sectionMessage)
-                .addClass('overlay-message', selectors.sectionMessage);
+    displayUtils.addClass(CSS_CLASS_NAMES.FADE_HIDE, selectors.sectionMessage)
+                .addClass(CSS_CLASS_NAMES.OVERLAY_MESSAGE, selectors.sectionMessage);
 
-    const btnText = event.currentTarget.textContent;
-    if (appState.correctAns === btnText) {  // If the answer is CORRECT
-      clearScreen("light");
+    const _btnText = event.currentTarget.textContent;
+    if (appState.correctAns === _btnText) {  // If the answer is CORRECT
+      _clearScreen("light");
 
       setTimeout(() => {
-        toggleFadeAndDim("fadeAndDim");
-        showContent("correct");
+        _toggleFadeAndDim("fadeAndDim");
+        _showMCQContent("correct");
       }, 350);
 
       setTimeout(() => {
-        toggleFadeAndDim("fadeAndDim");     // Hide fully
-        clearScreen("deep");
-        checkModeAndRemoveVocab();
+        _toggleFadeAndDim("fadeAndDim");     // Hide fully
+        _clearScreen("deep");
+        _checkModeAndRemoveVocab();
         finalizeQuestionAndProceed(true);
       }, 1200);                             // Add delay equal to the fade-out transition duration
     } 
@@ -110,74 +113,73 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
         domUtils.clearScreen(selectors.sectionMessage);
 
         setTimeout(() => {
-          showContent("incorrect");         // Show overlay "wrong" message
-          toggleFadeAndDim("fadeOnly");
+          _showMCQContent("incorrect");         // Show overlay "wrong" message
+          _toggleFadeAndDim("fadeOnly");
 
           setTimeout(() => {                 // Fully hide after fade-out completes (1s from .fade-out transition)
-            toggleFadeAndDim("fadeOnly");    // Hide fully
+            _toggleFadeAndDim("fadeOnly");    // Hide fully
           }, 1000);                          // Add delay equal to the fade-out transition duration
         }, 350);
            
     }
     console.groupEnd();
+  }
 
-    // utility functions private to the module
-    function getContentConfig() {
-      return {
-        correct: {
-          content: 'Correct',
-          className: 'mcq-correct-answer'
-        },
-        incorrect: {
-          content: 'Keep Trying',
-          className: 'wrong-answer'
-        },
-      }
-    }
-
-    function showContent(key) {
-      const config = getContentConfig()[key];
-      domUtils.buildNode({ 
-        parent: selectors.sectionMessage, 
-        child: 'div', 
-        content: config.content, 
-        className: config.className 
-      });
-    }
-
-    function getClearConfig() {             // To avoide JS temporal dead zone (TDZ)
-      return {
-        light: { 
-          target: selectors.sectionMessage,
-        },
-        deep: {
-          target: [selectors.sectionStatus, 
-                  selectors.sectionQuestion, 
-                  selectors.sectionMessage, 
-                  selectors.sectionAnswer] 
-        },
-      };
-    }
-
-    function clearScreen(mode) {
-      const config = getClearConfig()[mode]; // [sn26] 
-      domUtils.clearScreen(config.target);
+  function _getMCQContentConfig() {
+    return {
+      correct: {
+        content: MCQ_MODE.CORRECT_ANSWER,
+        className: CSS_CLASS_NAMES.MCQ_CORRECT_ANSWER,
+      },
+      incorrect: {
+        content: MCQ_MODE.WRONG_ANSWER,
+        className: CSS_CLASS_NAMES.MCQ_WRONG_ANSWER,
+      },
     }
   }
 
+  function _showMCQContent(key) {
+    const config = _getMCQContentConfig()[key];
+    domUtils.buildNode({
+      parent: selectors.sectionMessage,
+      child: 'div',
+      content: config.content,
+      className: config.className
+    });
+  }
+
+  function _getClearConfig() {             // To avoide JS temporal dead zone (TDZ)
+    return {
+      light: {
+        target: selectors.sectionMessage,
+      },
+      deep: {
+        target: [selectors.sectionStatus,
+        selectors.sectionQuestion,
+        selectors.sectionMessage,
+        selectors.sectionAnswer]
+      },
+    };
+  }
+
+  function _clearScreen(mode) {
+    const config = _getClearConfig()[mode]; // [sn26] 
+    domUtils.clearScreen(config.target);
+  }
+
   // event handler for flashcard mode
-  function handleFlashCardYesNoAnswer(event) { // sn4
-    //console.groupCollapsed("answerManager() - handleFlashCardYesNoAnswer()");
+  function _handleFlashCardYesNoAnswer(event) { // sn4
+    //console.groupCollapsed("answerManager() - _handleFlashCardYesNoAnswer()");
     
     const btnID = event.currentTarget.id;
 
-    if (btnID === "choice-btn-0") {
-      checkModeAndRemoveVocab();
+    if (btnID === `${RENDER_ANSWERS.CHOICE_BUTTON}-0`) {
+      _checkModeAndRemoveVocab();
       finalizeQuestionAndProceed(true);
     } 
     
-    else if (btnID === "choice-btn-1") {
-      if (readQuestionMode() !== "stored") {
+    else if (btnID === `${RENDER_ANSWERS.CHOICE_BUTTON}-1`) {
+      if (readQuestionMode() !== QUESTION_MODE_STORED) {
         storeToMistakeBank(); // add wrongly selected word to localstorage
       } 
 
@@ -191,18 +193,18 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
   function handleContinueToStoredData(event) {
     console.groupCollapsed("answerManager() - handleContinueToStoredData()");
 
-    toggleFadeAndDim("overlay");
+    _toggleFadeAndDim("overlay");
 
     const btnID = event.currentTarget.id;
 
-    if (btnID === "continueYes-0") {
+    if (btnID === `${RENDER_ANSWERS.YES_TO_CONTINUE}-0`) {
       console.info("Clicked Yes");
-      setQuestionMode("stored");
+      setQuestionMode(QUESTION_MODE_STORED);
       _setRanOnce(true); // set true to `ranOnce` so that when storedData complete, continue to stored data will not show again.
       continuetoStoredData();
     } 
     
-    else if (btnID === "continueNo-0") {
+    else if (btnID === `${RENDER_ANSWERS.NO_TO_CONTINUE}-0`) {
       console.info("Clicked No");
       _setRanOnce(false);
       restart();
@@ -211,12 +213,12 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
   }
 
   // Check q mode and decide whether to proceed to remove from the mistake bank
-  function checkModeAndRemoveVocab() {
-    console.groupCollapsed("checkModeAndRemoveVocab()");
+  function _checkModeAndRemoveVocab() {
+    console.groupCollapsed("_checkModeAndRemoveVocab()");
     
     const currentQuestionMode = readQuestionMode();
 
-    if (currentQuestionMode === "stored") { // if current q mode is stored and answer is right
+    if (currentQuestionMode === QUESTION_MODE_STORED) { // if current q mode is stored and answer is right
       console.info("currentQuestionMode: ", currentQuestionMode, ".  removeFromMistakeBank() is called.");
       removeFromMistakeBank();
     } else {
@@ -226,36 +228,35 @@ export function answerListnerManager(globals, utilsManager, vocabFns, questionFn
     console.groupEnd();
   }
 
-  function toggleFadeAndDim(key) {
+  function _toggleFadeAndDim(key) {
     const shouldFade = [ "fadeOnly", "fadeAndDim", "overlay"].includes(key); 
     const shouldDim = key === "fadeAndDim";
     const shouldOverlay = key === "overlay";
-    // If key: "fadeOnly", "fadeAndDim", or "overlay" => toggle 'fade-hide'
+    // If key: "fadeOnly", "fadeAndDim", or "overlay" => toggle FADE_HIDE
     // key: "fadeAndDim" => toggle 'so-dim'
-    // key: "overlay" => toggle 'overlay-message'
+    // key: "overlay" => toggle OVERLAY_MESSAGE
     
     if (shouldFade) {
-      displayUtils.toggleClass('fade-hide', selectors.sectionMessage);
+      displayUtils.toggleClass(CSS_CLASS_NAMES.FADE_HIDE, selectors.sectionMessage);
     }
 
     if (shouldDim) {
-      displayUtils.toggleClass('so-dim', selectors.sectionStatus, selectors.sectionAnswer);
+      displayUtils.toggleClass(CSS_CLASS_NAMES.VERY_DIM, selectors.sectionStatus, selectors.sectionAnswer);
     }
 
     if (shouldOverlay) {
-      displayUtils.toggleClass('overlay-message', selectors.sectionMessage);
+      displayUtils.toggleClass(CSS_CLASS_NAMES.OVERLAY_MESSAGE, selectors.sectionMessage);
     }
 
     if (!shouldFade && !shouldDim && !shouldOverlay) {
-      console.warn(`handleMultipleChoiceAnswer() - toggleFadeAndDim() - invalid key: "${key}"`);
+      console.warn(`handleMultipleChoiceAnswer() - _toggleFadeAndDim() - invalid key: "${key}"`);
     }
   }
 
   return {
-    setAnswerListnerManagerCallbacks,
+    setAnswerListenerManagerCallbacks,
     handleFlashcardFlip,
     handleMultipleChoiceAnswer,
-    handleFlashCardYesNoAnswer,
     handleContinueToStoredData,
   }
 }
