@@ -60,6 +60,7 @@ export const BUILD_ANSWER_OPTIONS = {
 
 export const GENERATED_DOM = {
   SYLLABLE_ERROR: 'syllable-error',
+  INFINITE_LOOP: 'infiniteloop',
 
   MEMORY_BTN_FLUSH: {
     ICON: '<i class="fa-solid fa-trash-can"></i>',

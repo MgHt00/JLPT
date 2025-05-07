@@ -20,4 +20,5 @@ export const CSS_CLASS_NAMES = {
   ANSWER_MESSAGE: 'answer-message',
   MCQ_CORRECT_ANSWER: 'mcq-correct-answer',
   MCQ_WRONG_ANSWER: 'wrong-answer',
+  SETTING_ERROR: 'setting-error',
 };

@@ -1,4 +1,6 @@
 import { VOCAB_MAPPING } from "../constants/appConstants.js";
+import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+import { GENERATED_DOM } from "../constants/elementIDs.js";
 
 export function errorManager(globals, utilsManager) {
   const { appState, selectors } = globals;
@@ -97,7 +99,7 @@ export function errorManager(globals, utilsManager) {
       parent: config.parentName,
       child: 'div',
       content: config.errorMessage,
-      className: "setting-error",
+      className: CSS_CLASS_NAMES.SETTING_ERROR,
       id: config.id,
     });
     console.warn(config.consoleMessage);
@@ -110,8 +112,8 @@ export function errorManager(globals, utilsManager) {
     console.groupCollapsed("clearError()");
 
     const errBlocks = [
-      document.querySelector("[id|='infiniteloop']"), 
-      document.querySelector("[id|='syllable-error']"), 
+      document.querySelector(`[id|=${GENERATED_DOM.INFINITE_LOOP}]`), 
+      document.querySelector(`[id|=${GENERATED_DOM.SYLLABLE_ERROR}]`), 
     ];
 
     errBlocks.forEach((blk) => {  // check whether there is an error message on screen
