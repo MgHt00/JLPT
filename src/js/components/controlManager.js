@@ -1,16 +1,20 @@
+import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+
 export function controlManger(globals, utilsManager) {
   const { selectors } = globals;
   const { displayUtils } = utilsManager;
+
+  const { HIDE, MOVED, DISABLED, DIM, SHADES_ON_TOP, SHIFT_TO_TOP_CENTER, SHIFT_TO_CENTER } = CSS_CLASS_NAMES;
 
   // To hide both bringBack and resumePracticeBtn
   function floatingBtnsHideAll() {
     console.groupCollapsed("floatingBtnsHideAll()");
 
-    displayUtils.removeClass('hide', // remove 'hide' class
+    displayUtils.removeClass(HIDE, 
       selectors.bringBackBtn,
       selectors.resumePracticeBtn,
     );
-    displayUtils.addClass('hide', // add 'hide' class
+    displayUtils.addClass(HIDE, 
       selectors.bringBackBtn,
       selectors.resumePracticeBtn,
     );
@@ -21,11 +25,11 @@ export function controlManger(globals, utilsManager) {
   // To hide resumePracticeBtn; show bringBackBtn
   function hideResumeShowBack() {
     console.groupCollapsed("hideResumeShowBack()");
-    displayUtils.removeClass('hide', // remove 'hide' class
+    displayUtils.removeClass(HIDE, 
       selectors.bringBackBtn,
       selectors.resumePracticeBtn,
     );
-    displayUtils.addClass('hide', // add 'hide' class
+    displayUtils.addClass(HIDE, 
       selectors.resumePracticeBtn,
     );
     console.groupEnd();
@@ -34,11 +38,11 @@ export function controlManger(globals, utilsManager) {
 
   // To hide bringBackBtn; show resumePracticeBtn
   function hideBackShowResume() {
-    displayUtils.removeClass('hide', // remove 'hide' class
+    displayUtils.removeClass(HIDE, 
       selectors.bringBackBtn,
       selectors.resumePracticeBtn,
     );
-    displayUtils.addClass('hide', // add 'hide' class
+    displayUtils.addClass(HIDE, 
       selectors.bringBackBtn,
     );
     return this;
@@ -52,22 +56,19 @@ export function controlManger(globals, utilsManager) {
 
     const dynamicDOMClassList = selectors.dynamicDOM.classList;
 
-    const shiftTopCenter = 'shift-sections-to-top-center';
-    const shiftCenter = 'shift-sections-to-center';
-
     let dynamicDOMClassToToggle;
 
-    if ((specialCSSClass === shiftTopCenter) || dynamicDOMClassList.contains(shiftTopCenter)) {
-      dynamicDOMClassToToggle = shiftTopCenter;
+    if ((specialCSSClass === SHIFT_TO_TOP_CENTER) || dynamicDOMClassList.contains(SHIFT_TO_TOP_CENTER)) {
+      dynamicDOMClassToToggle = SHIFT_TO_TOP_CENTER;
     } else {
-      dynamicDOMClassToToggle = shiftCenter;
+      dynamicDOMClassToToggle = SHIFT_TO_CENTER;
     }
 
     setTimeout(() => {
       displayUtils.toggleClass(dynamicDOMClassToToggle, selectors.dynamicDOM);
     }, 400);
 
-    displayUtils.toggleClass('hide', selectors.sectionStatus);
+    displayUtils.toggleClass(HIDE, selectors.sectionStatus);
 
     console.groupEnd();
     return this;
@@ -75,29 +76,29 @@ export function controlManger(globals, utilsManager) {
     // functions private to the module
     function toggleClasses() {
       displayUtils
-        .toggleClass('moved', selectors.settingForm)
-        .toggleClass('disabled', selectors.settingForm)
-        .toggleClass('dim', ...selectors.allSetting);
+        .toggleClass(MOVED, selectors.settingForm)
+        .toggleClass(DISABLED, selectors.settingForm)
+        .toggleClass(DIM, ...selectors.allSetting);
     }
   }
 
   // To reset Question mode when something changes on the setting form
   function resetQuestionMode() {
-    displayUtils.removeClass('disabled',
+    displayUtils.removeClass(DISABLED,
       selectors.settingSyllable,
       selectors.settingRepractice, 
     );
-    displayUtils.addClass('disabled',
+    displayUtils.addClass(DISABLED,
       selectors.settingRepractice, 
     );
 
-    document.querySelector("#source-fresh").checked = true; // Set the 'source-fresh' radio input to checked
+    selectors.sourceFresh.checked = true; // Set the 'source-fresh' radio input to checked
   }
 
   function toggleShadesOnTop() {
     console.groupCollapsed("toggleShadesOnTop()");
     
-    const className = "shades-on-top";
+    const className = SHADES_ON_TOP;
     const selector = selectors.bringBackBtnContainer;
 
     displayUtils.checkClass(className, selector)

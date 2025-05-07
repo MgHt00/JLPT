@@ -1,3 +1,13 @@
+  import { LOCAL_PATH, WEB_PATH, JSON_PATHS } from "../constants/filePath.js";
+  import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+  import { ELEMENTIDS, ELEMENT_NAMES, GENERATED_DOM } from "../constants/elementIDs.js";
+  import { 
+    QUESTION_MODE_FRESH, QUESTION_MODE_STORED, 
+    MEMORY_BTN_NAMES, MEMORY_STATUS, 
+    RUNTIME_ERROR_CODES, MCQ_DEFAULTS, DATA_POOL_DEFAULTS,
+    SYLLABLE_CHOICE_CHECKBOX_VALUES, 
+    LANGUAGE_OPTIONS, LANGUAGE_MAPPINGS, PLAIN_TEXT_STRINGS, } from "../constants/appConstants.js";
+
   export function loaderManager(globals, utilsManager, controlFns, questionFns, vocabFns, errorFns, statusFns) {
   const { defaultConfig, appState, appData, currentStatus, selectors } = globals;
   const { helpers, domUtils, displayUtils } = utilsManager;
@@ -14,95 +24,95 @@
     _debouncedMoveForm = debouncedMoveForm;
   }
   
-  const isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
-  const basePath = isLocal ? "./assets/data/" : "https://MgHt00.github.io/JLPT/assets/data/";
+  const _isLocal = window.location.hostname === "127.0.0.1" || window.location.hostname === "localhost";
+  const _basePath = _isLocal ? LOCAL_PATH : WEB_PATH;
 
-  const vowels = {
+  const _vowels = {
     //db: "N5/vocab/assets/data/n5-vocab-debug.json",
-    a: `${basePath}n5-vocab-a.json`,
-    i: `${basePath}n5-vocab-i.json`,
-    u: `${basePath}n5-vocab-u.json`,
-    e: `${basePath}n5-vocab-e.json`,
-    o: `${basePath}n5-vocab-o.json`,
+    a: `${_basePath}${JSON_PATHS.A}`,
+    i: `${_basePath}${JSON_PATHS.I}`,
+    u: `${_basePath}${JSON_PATHS.U}`,
+    e: `${_basePath}${JSON_PATHS.E}`,
+    o: `${_basePath}${JSON_PATHS.O}`,
   }
 
-  const k = {
-    ka: `${basePath}n5-vocab-ka.json`,
-    ki: `${basePath}n5-vocab-ki.json`,
-    ku: `${basePath}n5-vocab-ku.json`,
-    ke: `${basePath}n5-vocab-ke.json`,
-    ko: `${basePath}n5-vocab-ko.json`,
+  const _k = {
+    ka: `${_basePath}${JSON_PATHS.KA}`,
+    ki: `${_basePath}${JSON_PATHS.KI}`,
+    ku: `${_basePath}${JSON_PATHS.KU}`,
+    ke: `${_basePath}${JSON_PATHS.KE}`,
+    ko: `${_basePath}${JSON_PATHS.KO}`,
   } 
 
-  const s = {
-    sa: `${basePath}n5-vocab-sa.json`,
-    shi: `${basePath}n5-vocab-shi.json`,
-    su: `${basePath}n5-vocab-su.json`,
-    se: `${basePath}n5-vocab-se.json`,
-    so: `${basePath}n5-vocab-so.json`,
+  const _s = {
+    sa: `${_basePath}${JSON_PATHS.SA}`,
+    shi: `${_basePath}${JSON_PATHS.SHI}`,
+    su: `${_basePath}${JSON_PATHS.SU}`,
+    se: `${_basePath}${JSON_PATHS.SE}`,
+    so: `${_basePath}${JSON_PATHS.SO}`,
   }
 
-  const t = {
-    ta: `${basePath}n5-vocab-ta.json`,
-    chi: `${basePath}n5-vocab-chi.json`,
-    tsu: `${basePath}n5-vocab-tsu.json`,
-    te: `${basePath}n5-vocab-te.json`,
-    to: `${basePath}n5-vocab-to.json`,
+  const _t = {
+    ta: `${_basePath}${JSON_PATHS.TA}`,
+    chi: `${_basePath}${JSON_PATHS.CHI}`,
+    tsu: `${_basePath}${JSON_PATHS.TSU}`,
+    te: `${_basePath}${JSON_PATHS.TE}`,
+    to: `${_basePath}${JSON_PATHS.TO}`,
   }
 
-  const n = {
-    na: `${basePath}n5-vocab-na.json`,
-    ni: `${basePath}n5-vocab-ni.json`,
-    nu: `${basePath}n5-vocab-nu.json`,
-    ne: `${basePath}n5-vocab-ne.json`,
-    no: `${basePath}n5-vocab-no.json`,
+  const _n = {
+    na: `${_basePath}${JSON_PATHS.NA}`,
+    ni: `${_basePath}${JSON_PATHS.NI}`,
+    nu: `${_basePath}${JSON_PATHS.NU}`,
+    ne: `${_basePath}${JSON_PATHS.NE}`,
+    no: `${_basePath}${JSON_PATHS.NO}`,
   }
 
-  const h = {
-    ha: `${basePath}n5-vocab-ha.json`,
-    hi: `${basePath}n5-vocab-hi.json`,
-    fu: `${basePath}n5-vocab-fu.json`,
-    he: `${basePath}n5-vocab-he.json`,
-    ho: `${basePath}n5-vocab-ho.json`,
+  const _h = {
+    ha: `${_basePath}${JSON_PATHS.HA}`,
+    hi: `${_basePath}${JSON_PATHS.HI}`,
+    fu: `${_basePath}${JSON_PATHS.FU}`,
+    he: `${_basePath}${JSON_PATHS.HE}`,
+    ho: `${_basePath}${JSON_PATHS.HO}`,
   }
 
-  const m = {
-    ma: `${basePath}n5-vocab-ma.json`,
-    mi: `${basePath}n5-vocab-mi.json`,
-    mu: `${basePath}n5-vocab-mu.json`,
-    me: `${basePath}n5-vocab-me.json`,
-    mo: `${basePath}n5-vocab-mo.json`,
+  const _m = {
+    ma: `${_basePath}${JSON_PATHS.MA}`,
+    mi: `${_basePath}${JSON_PATHS.MI}`,
+    mu: `${_basePath}${JSON_PATHS.MU}`,
+    me: `${_basePath}${JSON_PATHS.ME}`,
+    mo: `${_basePath}${JSON_PATHS.MO}`,
   }
 
-  const y = {
-    ya: `${basePath}n5-vocab-ya.json`,
-    yu: `${basePath}n5-vocab-yu.json`,
-    yo: `${basePath}n5-vocab-yo.json`,
+  const _y = {
+    ya: `${_basePath}${JSON_PATHS.YA}`,
+    yu: `${_basePath}${JSON_PATHS.YU}`,
+    yo: `${_basePath}${JSON_PATHS.YO}`,
   }
 
-  const r = {
-    ra: `${basePath}n5-vocab-ra.json`,
-    ri: `${basePath}n5-vocab-ri.json`,
-    re: `${basePath}n5-vocab-re.json`,
-    ro: `${basePath}n5-vocab-ro.json`,
+  const _r = {
+    ra: `${_basePath}${JSON_PATHS.RA}`,
+    ri: `${_basePath}${JSON_PATHS.RI}`,
+    re: `${_basePath}${JSON_PATHS.RE}`,
+    ro: `${_basePath}${JSON_PATHS.RO}`,
   }
 
-  const wa = {
-    wa: `${basePath}n5-vocab-wa.json`,
+  const _wa = {
+    wa: `${_basePath}${JSON_PATHS.WA}`,
   }
 
-  let isPreLoadSuccessful = true;
+  let _isPreLoadSuccessful = true;
 
   async function preloadVocabData() {           // [LE7] [LE8]
     console.group("preloadVocabData()");
     console.info("Preloading vocab JSON files...");
 
-    showLoadingMsg();
+    _showLoadingMsg();
     
-    const allKeys = mergeVocabKeys();           // Combine all syllable keys into one array
+    const allKeys = _mergeVocabKeys();           // Combine all syllable keys into one array
 
     const promises = allKeys.map(key => {
-      const jsonPath = getJSONPath(key);        // Finds the file path
+      const jsonPath = _getJSONPath(key);        // Finds the file path
 
       return jsonPath ? fetch(jsonPath)
           .then(response => {
@@ -118,7 +128,7 @@
           .then(data => ({ key, data }))        // Wraps data with key { key: "a", data: [...data from n5-vocab-a.json...]}                
           .catch(error => {
             console.warn(`Failed to load ${key}:`, error);
-            isPreLoadSuccessful = false;        // Set flag 
+            _isPreLoadSuccessful = false;       // Set flag 
             return { key, data: [] };           // Store empty array on failure (Ensure structure remains consistent)
           })
         : Promise.resolve({ key, data: [] });   // Handle missing keys gracefully
@@ -130,29 +140,29 @@
     // Convert results 'array' into an 'object' and store in appData.preloadedVocab
     appData.preloadedVocab = Object.fromEntries(results.map( ({ key, data }) => [key, data] )); // [sn23] Object.fromEntries => {a: [], i: []}
     
-    console.info("Preloading completed.", isPreLoadSuccessful, appData.preloadedVocab);
+    console.info("Preloading completed.", _isPreLoadSuccessful, appData.preloadedVocab);
     console.groupEnd();
   }
 
-  // To combine all keys dynamically from vowels, k, s, etc.
-  function mergeVocabKeys() {
+  // To combine all keys dynamically from _vowels, _k, s, etc.
+  function _mergeVocabKeys() {
     return [
-      ...Object.keys(vowels),  
-      ...Object.keys(k),
-      ...Object.keys(s),
-      ...Object.keys(t),
-      ...Object.keys(n),
-      ...Object.keys(h),
-      ...Object.keys(m),
-      ...Object.keys(y),
-      ...Object.keys(r),
-      ...Object.keys(wa),
+      ...Object.keys(_vowels),  
+      ...Object.keys(_k),
+      ...Object.keys(_s),
+      ...Object.keys(_t),
+      ...Object.keys(_n),
+      ...Object.keys(_h),
+      ...Object.keys(_m),
+      ...Object.keys(_y),
+      ...Object.keys(_r),
+      ...Object.keys(_wa),
     ]
   }
 
   // To find JSON path depending on the key given
-  function getJSONPath(key) { 
-    const groups = [vowels, k, s, t, n, h, m, y, r, wa];
+  function _getJSONPath(key) { 
+    const groups = [_vowels, _k, _s, _t, _n, _h, _m, _y, _r, _wa];
     for (const group of groups) {
       if (group[key]) return group[key];
     }
@@ -162,37 +172,37 @@
   // when user click submit(start) button of the setting form
   async function start(e) {  
     e.preventDefault();                 // Prevent form from submitting the usual way
-    validateAndSetInputData(e);         // validate and set defaults to the input data.
+    _validateAndSetInputData(e);         // validate and set defaults to the input data.
     clearError();                    // Remove error messages
-    if (appState.qMode === "stored") {
-      if(!validateStoredMemory()) {     // To validate whether memory is empty or not
-        runtimeError("mem0");
+    if (appState.qMode === QUESTION_MODE_STORED) {
+      if(!_validateStoredMemory()) {     // To validate whether memory is empty or not
+        runtimeError(RUNTIME_ERROR_CODES.MEMORY_EMPTY);
         return;
       }
-      await loadStoredJSON();           // Continue if there is no runtime error. (Wait for loadStoredJSON to complete)
-      initializeQuiz();
+      await _loadStoredJSON();           // Continue if there is no runtime error. (Wait for _loadStoredJSON to complete)
+      _initializeQuiz();
     }
        
-    if (appState.qMode === "fresh") {
-      if (validateSyllable()) {
-        await loadFreshJSON();          // Wait for loadFreshJSON to complete
+    if (appState.qMode === QUESTION_MODE_FRESH) {
+      if (_validateSyllable()) {
+        await _loadFreshJSON();          // Wait for _loadFreshJSON to complete
 
-        // Only check the runtime error if validateSyllable() returns true ...
+        // Only check the runtime error if _validateSyllable() returns true ...
         // ... Otherwise program shows infinite loop error without necessary.
-        const hasSufficientAnswers = runtimeError("iLoop"); // If vocab pool is too small that it is causing the infinite loop    
+        const hasSufficientAnswers = runtimeError(RUNTIME_ERROR_CODES.INFINITE_LOOP); // If vocab pool is too small that it is causing the infinite loop    
         if (!hasSufficientAnswers) {    // Now checks if there is NOT a runtime error
           console.error("Program failed at loaderManager()");
           return;                       // Exit if there is an infinite loop error
         }
         
         // Continue if there is no runtime error.
-        initializeQuiz();
+        _initializeQuiz();
       }
     } 
   }
 
   // To validate whether memory is empty or not
-  function validateStoredMemory() {
+  function _validateStoredMemory() {
     let storedLength = readStoredLength();
     if (storedLength === 0) {
       return false;
@@ -202,29 +212,30 @@
   }
 
   // Function to initialize quiz settings and UI setup
-  function initializeQuiz() {
+  function _initializeQuiz() {
     _moveForm();
     
     floatingBtnsHideAll();
     toggleFormDisplay();
     hideResumeShowBack();
 
-    resetQuestionCount()
-    resetTotalNoOfQuestion()
-    getTotalNoOfQuestions("fresh");  // for status bar, reset and set No. of Question
-              
-    resetCumulativeVariables();       // reset cumulative variables (cannot use method chaining with `getTotalNoOfQuestion()`)
-
+    resetQuestionCount();
+    resetTotalNoOfQuestion();
+    getTotalNoOfQuestions(QUESTION_MODE_FRESH);  // for status bar, reset and set No. of Question
+    
+    resetCumulativeVariables(); // reset cumulative variables 
+    
     newQuestion();
     
-    clearError();                              // To remove error messages
+    clearError();  // To remove error messages (if any)
   }
 
   // to validate input data and set defaults if necessary
-  function validateAndSetInputData(e) {
-    console.groupCollapsed("validateAndSetInputData()");
+  function _validateAndSetInputData(e) {
+    console.groupCollapsed("_validateAndSetInputData()");
 
-    validateToggleSwitch(['randomYesNo', 'flashYesNo']);
+    //_validateToggleSwitch(['randomYesNo', 'flashYesNo']);
+    _validateToggleSwitch([ELEMENTIDS.SWITCH_RANDOM_YES_NO, ELEMENTIDS.SWITCH_FLASH_YES_NO]);
     validateAndSetAnswerCount();      // Validate number of answers and set default if invalid
     validateAndSetQuestionMode();     // Validate question mode and set default
     
@@ -233,8 +244,8 @@
       defaultConfig.enLang
     ); 
 
-    appState.qChoiceInput = selectors.readqChoiceInput ?? "hi"; // read user's question choice and assign it to global variable
-    appState.aChoiceInput = selectors.readaChoiceInput ?? "en"; 
+    appState.qChoiceInput = selectors.readqChoiceInput ?? LANGUAGE_MAPPINGS.HIRAGANA; // read user's question choice and assign it to global variable
+    appState.aChoiceInput = selectors.readaChoiceInput ?? LANGUAGE_MAPPINGS.ENGLISH; 
 
     assignLanguageBySelection();      // Validate and assign the correct language for the question and answer sections
 
@@ -244,14 +255,14 @@
   }
   
   // to load user selected sylable-json when program mode is "fresh"
-  async function loadFreshJSON() {
-    console.groupCollapsed("loadFreshJSON()");
+  async function _loadFreshJSON() {
+    console.groupCollapsed("_loadFreshJSON()");
     console.info("appData.preloadedVocab:", appData.preloadedVocab);
 
-    setQuestionMode("fresh");
+    setQuestionMode(QUESTION_MODE_FRESH);
   
-    if (appData.syllableChoice.includes("all")) {     // If "all" is selected
-      appData.syllableChoice = mergeVocabKeys();      //[sn9] This replaces syllableChoice with all syllables
+    if (appData.syllableChoice.includes(SYLLABLE_CHOICE_CHECKBOX_VALUES.ALL)) {     // If "all" is selected
+      appData.syllableChoice = _mergeVocabKeys();      //[sn9] This replaces syllableChoice with all syllables
     }
 
     // Create an array of Promises dynamically resolving the key's group
@@ -261,7 +272,7 @@
       if (appData.preloadedVocab[key]) { 
         return Promise.resolve(appData.preloadedVocab[key]); // Use preloaded data
       } else {
-        let jsonPath = getJSONPath(key);
+        let jsonPath = _getJSONPath(key);
         return jsonPath 
           ? fetch(jsonPath)                     // [sn21] Fetch the JSON file
             .then(response => response.json())  // Processes the response by converting it into a JavaScript object.
@@ -289,10 +300,10 @@
   }
 
   // To load local storage json when program mode is "stored"
-  async function loadStoredJSON() {
-    console.groupCollapsed("loadStoredJSON()");
+  async function _loadStoredJSON() {
+    console.groupCollapsed("_loadStoredJSON()");
 
-    setQuestionMode("stored");                        // Set program's question mode to 'stored'
+    setQuestionMode(QUESTION_MODE_STORED);                        // Set program's question mode to 'stored'
     
     const storedData = loadMistakesFromMistakeBank();
     if (!Array.isArray(storedData)) {                             // Ensure loadMistakesFromMistakeBank returns an array
@@ -305,7 +316,7 @@
     console.log("vocabArray(after removeBlankQuestion(): ", appData.vocabArray);
     
     if (appData.vocabArray.length === 0) {  
-        console.log("Inside loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length);
+        console.log("Inside _loadStoredJSON(), vocabArray.length: ", appData.vocabArray.length);
         console.error("Error: vocabArray is empty after loading stored data!");
         return;
     }
@@ -343,6 +354,53 @@
     return updatedArr; // Return the updated array
   }
 
+  // Displays a message about the memory status (e.g., "Memory is empty.").
+  function _buildMemoryStatus(content) {
+    domUtils.buildNode({
+      parent: selectors.memoryInfo,
+      child: 'div',
+      content: content,
+      className: CSS_CLASS_NAMES.MEMORY_INFO,
+      id: CSS_CLASS_NAMES.MEMORY_INFO,
+    });
+  }
+
+  // Creates and displays memory-related buttons (e.g., "Flush," "List").
+  function _buildMemoryBtns(key) {
+    const memoryButtonConfig = {
+      flush: {
+        icon: GENERATED_DOM.MEMORY_BTN_FLUSH.ICON,
+        className: GENERATED_DOM.MEMORY_BTN_FLUSH.CSS_CLASS,
+        id: GENERATED_DOM.MEMORY_BTN_FLUSH.ELEMENT_ID,
+        handler: flushMistakeBank,
+      },
+  
+      list: {
+        icon: GENERATED_DOM.MEMORY_BTN_LIST.ICON,
+        className: GENERATED_DOM.MEMORY_BTN_LIST.CSS_CLASS,
+        id: GENERATED_DOM.MEMORY_BTN_LIST.ELEMENT_ID,
+        handler: _handleListMistakeBtn,
+      }
+    }  
+    
+    if (!memoryButtonConfig[key]) {
+      console.error(`Invalid key "${key}" passed to _buildMemoryBtns`);
+      return;
+    }
+    
+    const { icon, className, id, handler } = memoryButtonConfig[key];
+
+    domUtils.buildNode({
+      parent: selectors.memoryBtns,
+      child: 'div',
+      content: icon,
+      className: className,
+      id: id,
+      eventFunction: handler,
+    });
+  }
+
+
   // To load stored data from local storage and show info at the settings
   function loadMemoryData() {
     console.groupCollapsed("loadMemoryData");
@@ -352,66 +410,21 @@
 
     switch (storedLength) {     // build 'mistake status' on home screen
       case 0:
-        buildMemoryStatus('Memory is empty.');
+        _buildMemoryStatus(MEMORY_STATUS.EMPTY);
         break;
       case 1:
-        buildMemoryStatus(`${storedLength} word to repractice.`);
+        _buildMemoryStatus(`${storedLength} ${MEMORY_STATUS.ONE}`);
         break;
       default:
-        buildMemoryStatus(`${storedLength} words to repractice.`);
+        _buildMemoryStatus(`${storedLength} ${MEMORY_STATUS.MANY}`);
         break;
     }
     
-    buildMemoryBtns("flush");   // build 'flush' and 'list' buttons on screen
-    buildMemoryBtns("list");
+    _buildMemoryBtns(MEMORY_BTN_NAMES.FLUSH);   // build 'flush' and 'list' buttons on screen
+    _buildMemoryBtns(MEMORY_BTN_NAMES.LIST);
     
     console.groupEnd();
     return this;
-
-    // Utility functions private to the module
-    function buildMemoryStatus(content) {
-      domUtils.buildNode({
-        parent: selectors.memoryInfo,
-        child: 'div',
-        content: content,
-        className: 'memory-info',
-        id: 'memory-info',
-      });
-    }
-
-    function buildMemoryBtns(key) {
-      const MEMORY_BUTTON_CONFIG = {
-        flush: {
-          icon: '<i class="fa-solid fa-trash-can"></i>',
-          className: 'flush-memory-setting-btn',
-          id: 'flush-memory-btn',
-          handler: flushMistakeBank,
-        },
-    
-        list: {
-          icon: '<i class="fa-solid fa-rectangle-list"></i>',
-          className:'list-memory-setting-btn',
-          id: 'list-memory-btn',
-          handler: _handleListMistakeBtn,
-        }
-      }  
-      
-      if (!MEMORY_BUTTON_CONFIG[key]) {
-        console.error(`Invalid key "${key}" passed to buildMemoryBtns`);
-        return;
-      }
-      
-      const { icon, className, id, handler } = MEMORY_BUTTON_CONFIG[key];
-
-      domUtils.buildNode({
-        parent: selectors.memoryBtns,
-        child: 'div',
-        content: icon,
-        className: className,
-        id: id,
-        eventFunction: handler,
-      });
-    }
   }
 
   // Validate (setting's) number of answers and set default if invalid
@@ -419,8 +432,8 @@
     console.groupCollapsed("validateAndSetAnswerCount()");
   
     const noOfAnswers = parseInt(selectors.readNoOfAns, 10);
-    if (isNaN(noOfAnswers) || noOfAnswers < 2 || noOfAnswers > 4) {
-      appState.noOfAnswers = 2; // Default to 2 answers
+    if (isNaN(noOfAnswers) || noOfAnswers < MCQ_DEFAULTS.MIN_ANSWER_COUNT || noOfAnswers > MCQ_DEFAULTS.MAX_ANSWER_COUNT) {
+      appState.noOfAnswers = MCQ_DEFAULTS.MIN_ANSWER_COUNT; // Default to 2 answers
       console.warn("Invalid number of answers. Setting default to 2.");
     } else {
       appState.noOfAnswers = noOfAnswers;
@@ -436,9 +449,9 @@
 
     appState.qMode = selectors.readQuestionMode;
 
-    const validModes = ["fresh", "stored"];
+    const validModes = [QUESTION_MODE_FRESH, QUESTION_MODE_STORED];
     if (!validModes.includes(selectors.readQuestionMode)) {
-      appState.qMode = "fresh"; // Default to 'fresh'
+      appState.qMode = QUESTION_MODE_FRESH; // Default to 'fresh'
       console.warn("Invalid question mode. Defaulting to 'fresh'.");
     } else {
       appState.qMode = selectors.readQuestionMode;
@@ -450,7 +463,7 @@
 
   // Validate and assign the correct language for the (HTML's) question and answer sections
   function assignLanguageBySelection() {
-    const jpLanguages = ["hi", "ka"];
+    const jpLanguages = [LANGUAGE_MAPPINGS.HIRAGANA, LANGUAGE_MAPPINGS.KANJI];
 
     if(jpLanguages.includes(appState.qChoiceInput)) {
       helpers.assignLanguage(selectors.sectionQuestion, defaultConfig.jpLang);
@@ -470,12 +483,12 @@
   }
 
   // Validate syllable choices and show error if necessary
-  function validateSyllable() {
-    console.groupCollapsed("validateSyllable()");
+  function _validateSyllable() {
+    console.groupCollapsed("_validateSyllable()");
     // Validate syllable choices and show an error if none are selected
-    appData.syllableChoice = helpers.convertCheckedValuesToArray('input[name="syllableChoice"]:checked');
-    if (appState.qMode === "fresh" && appData.syllableChoice.length === 0) {
-      runtimeError("noSL");
+    appData.syllableChoice = helpers.convertCheckedValuesToArray(`input[name=${ELEMENT_NAMES.SYLLABLE_CHOICE}]:checked`);
+    if (appState.qMode === QUESTION_MODE_FRESH && appData.syllableChoice.length === 0) {
+      runtimeError(RUNTIME_ERROR_CODES.NO_SYLLABLE_SELECTED);
       console.groupEnd();
       return false; // Signal that inputData validation failed
     }
@@ -484,7 +497,7 @@
     return true;
   }
 
-  // Convert the string values "true"/"false" to boolean values
+  // UNUSED: Convert the string values "true"/"false" to boolean values
   function convertToBoolean(selectorNames) {
     console.groupCollapsed("convertToBoolean()");
     
@@ -514,8 +527,8 @@
   }
 
   // To validate toggle switch data
-  function validateToggleSwitch(selectorNames) {
-    console.groupCollapsed("validateToggleSwitch()");
+  function _validateToggleSwitch(selectorNames) {
+    console.groupCollapsed("_validateToggleSwitch()");
 
     console.info("Parameters: ", selectorNames);
 
@@ -550,13 +563,13 @@
   async function continuetoStoredData() {
     console.groupCollapsed("continuetoStoredData()");
 
-    if (readStoredLength() <= 3) {
-      appState.noOfAnswers = 2; // if stored data pool is too small, it will lead to an infinite loop.
+    if (readStoredLength() <= DATA_POOL_DEFAULTS.MIN_POOL_SIZE) {
+      appState.noOfAnswers =  MCQ_DEFAULTS.MIN_ANSWER_COUNT; // if stored data pool is too small, it will lead to an infinite loop.
       console.warn("StoredJSON pool is too small. noOfAnswer set to `2`");
     }
-    await loadStoredJSON();   // Wait for loadStoredJSON to complete
+    await _loadStoredJSON();   // Wait for _loadStoredJSON to complete
 
-    getTotalNoOfQuestions("stored");
+    getTotalNoOfQuestions(QUESTION_MODE_STORED);
     newQuestion();
 
     console.groupEnd();
@@ -566,10 +579,6 @@
   function restart() {
     domUtils.clearScreen(selectors.sectionStatus);
     
-    /*displayUtils
-      .toggleClass('overlay-message', selectors.sectionMessage)
-      .toggleClass('fade-hide', selectors.sectionMessage);*/
-
     toggleFormDisplay();
     _debouncedMoveForm();
     
@@ -587,27 +596,27 @@
       parent: selectors.sectionQuestion,
       child: 'div',
       content: '',
-      className: 'mistake-list-container', // New class for the container
-      id: 'mistake-list-div',
+      className: GENERATED_DOM.MISTAKE_LIST.CONTAINER_CLASS, // New class for the container
+      id: GENERATED_DOM.MISTAKE_LIST.CONTAINER_ID, 
     });
   
     // Select the mistake-list-container created
-    const mistakeListContainer = document.querySelector("#mistake-list-div-0");
+    const mistakeListContainer = document.querySelector(`#${GENERATED_DOM.MISTAKE_LIST.CONTAINER_ID}-0`);
   
     // Header for the mistake list (4 columns: #, Kanji, Hiragana, English)
-    const headerContent = ['#', 'Kanji', 'Hiragana', 'English'];
+    const headerContent = [LANGUAGE_OPTIONS.Number, LANGUAGE_OPTIONS.KANJI, LANGUAGE_OPTIONS.HIRAGANA, LANGUAGE_OPTIONS.ENGLISH];
   
     // Build the row for headers
     domUtils.buildNode({
       parent: mistakeListContainer,
       child: 'div',
       content: '', // Empty content, as we'll append children later
-      className: 'mistakes-row-header', 
-      id: 'mistakes-heading',
+      className: GENERATED_DOM.MISTAKE_LIST.HEADER_CLASS,
+      id: GENERATED_DOM.MISTAKE_LIST.HEADER_ID, 
     });
   
     // Select the newly created header div
-    const mistakeHeading = document.querySelector("#mistakes-heading-0");
+    const mistakeHeading = document.querySelector(`#${GENERATED_DOM.MISTAKE_LIST.HEADER_ID}-0`);
     
     // Append header columns inside the header div
     headerContent.forEach((content) => {
@@ -615,8 +624,8 @@
         parent: mistakeHeading, // Append to the header div
         child: 'div',
         content: content, // Assign each header title
-        className: ['mistakes-column-header', 'en'], // Class for header columns
-        id: 'mistake-column-header',
+        className: [GENERATED_DOM.MISTAKE_LIST.HEADER_COLUMN_CLASS, LANGUAGE_MAPPINGS.ENGLISH], // Class for header columns
+        id: GENERATED_DOM.MISTAKE_LIST.HEADER_COLUMN_ID,
       });
     });
 
@@ -627,13 +636,12 @@
         parent: mistakeListContainer,
         child: 'div',
         content: '',
-        className: 'mistakes-row', // Styling class for row
-        id: `mistakeList-row-${index}`, // Unique ID for each row
+        className: GENERATED_DOM.MISTAKE_LIST.ROW_CLASS, // Styling class for row
+        id: `${GENERATED_DOM.MISTAKE_LIST.ROW_ID}-${index}`, // Unique ID for each row
       });
 
       // Now, select the newly created mistake-row
-      //const mistakeListRow = document.querySelector("[id^='mistakeList-row']");
-      const mistakeListRow = document.querySelector(`#mistakeList-row-${index}-0`);
+      const mistakeListRow = document.querySelector(`#${GENERATED_DOM.MISTAKE_LIST.ROW_ID}-${index}-0`);
       
       // Prepare contents for each row
       const rowContent = [index + 1, mistake.ka, mistake.hi, mistake.en];
@@ -644,10 +652,10 @@
         let classNameByIndex;
         switch (index) {
           case 3:
-            classNameByIndex = 'en';
+            classNameByIndex = LANGUAGE_MAPPINGS.ENGLISH;
             break;
           default:
-            classNameByIndex = 'jp';
+            classNameByIndex = LANGUAGE_MAPPINGS.JAPANESE;
             break;
         }
 
@@ -655,7 +663,7 @@
           parent: mistakeListRow,
           child: 'div',
           content: content, // Assign content to each column
-          className: ['mistakes-column', classNameByIndex], // Class for each column
+          className: [GENERATED_DOM.MISTAKE_LIST.COLUMN_CLASS, classNameByIndex], // Class for each column
         });
       });
     });
@@ -665,19 +673,19 @@
 
   // Reset after flushing mistake bank
   function resetAfterFlushingMistakes() {
-    displayUtils.toggleClass('disabled', 
+    displayUtils.toggleClass(CSS_CLASS_NAMES.DISABLED, 
       selectors.settingRepractice, 
       selectors.settingSyllable
     );
-    document.querySelector("#source-fresh").checked = true; // Set the 'source-fresh' radio input to checked
+    selectors.sourceFresh.checked = true; // Set the 'source-fresh' radio input to checked
     return this;
   }
 
   // To show 'loading...' while preloading all jsons
-  function showLoadingMsg() {
-    console.groupCollapsed("showLoadingMsg()");
+  function _showLoadingMsg() {
+    console.groupCollapsed("_showLoadingMsg()");
     
-    addLoadingMsg('Loading...');
+    addLoadingMsg(PLAIN_TEXT_STRINGS.LOADING);
     
     console.groupEnd();
     
@@ -687,54 +695,57 @@
         parent: selectors.body,
         child: 'div',
         content: msg,
-        className: 'poppins-regular',
-        id: 'preload-info',
+        className: GENERATED_DOM.LOADING.FONT,
+        id: GENERATED_DOM.LOADING.ELEMENT_ID,
       });
 
-      const loadingMsg = document.querySelector("#preload-info-0"); 
-      displayUtils.addClass('show', loadingMsg);
+      const loadingMsgContainer = _getLoadingMsg(); 
+      displayUtils.addClass(CSS_CLASS_NAMES.SHOW, loadingMsgContainer);
     }
   }
 
-  // Depending on the `isPreLoadSuccessful` flag, cleans up 'loading...' message or adds 'fail' on screen
+  // Depending on the `_isPreLoadSuccessful` flag, cleans up 'loading...' message or adds 'fail' on screen
   async function checkPreLoadState() {
     console.groupCollapsed("checkPreLoadState()");
     
-    console.info("isPreLoadSuccessful:", isPreLoadSuccessful);
+    console.info("_isPreLoadSuccessful:", _isPreLoadSuccessful);
 
-    if (isPreLoadSuccessful) preloadSuccess();
-    else preloadFail();
+    if (_isPreLoadSuccessful) _preloadSuccess();
+    else _preloadFail();
 
     console.groupEnd();
+  }
 
-    // Utility functions private to the module
-    function preloadSuccess() {
-      console.info("Preload successful");
-      const loadingMsg = document.querySelector("#preload-info-0");  
-      removeLoadingMsg(loadingMsg);                               // remove 'loading...' from screen
-      displayUtils.toggleClass('disabled', selectors.settingForm);  // release the form from 'so-dim' state
-      return true;
-    }
+  function _getLoadingMsg() {
+    return document.querySelector(`#${GENERATED_DOM.LOADING.ELEMENT_ID}-0`);
+  }
 
-    function preloadFail() {
-      console.info("Preload fail");
-      const loadingMsg = document.querySelector("#preload-info-0"); 
-      if (loadingMsg) {
-        loadingMsg.textContent = 'Loading fail!';
-      } else {
-        console.error("Preload message element not found.");
-      }
-      return false;
-    }
+  function _preloadSuccess() {
+    console.info("Preload successful");
+    const loadingMsgContainer = _getLoadingMsg();
+    _removeLoadingMsg(loadingMsgContainer);                       // remove 'loading...' from screen
+    displayUtils.toggleClass(CSS_CLASS_NAMES.DISABLED, selectors.settingForm);  // release the form from 'so-dim' state
+    return true;
+  }
 
-    // To remove the loading message from `body`
-    function removeLoadingMsg(msg) {
-      domUtils.clearNode({
-        parent: selectors.body,
-        children: msg,
-      });
-      console.info("removed preload message from screen:", msg);
+  function _preloadFail() {
+    console.info("Preload fail");
+    const loadingMsgContainer = _getLoadingMsg();
+    if (loadingMsgContainer) {
+    loadingMsgContainer.textContent = PLAIN_TEXT_STRINGS.LOADING_FAIL;
+    } else {
+      console.error("Preload message element not found.");
     }
+    return false;
+  }
+
+  // To remove the loading message from `body`
+  function _removeLoadingMsg(msg) {
+    domUtils.clearNode({
+      parent: selectors.body,
+      children: msg,
+    });
+    console.info("removed preload message from screen:", msg);
   }
 
   return {
@@ -742,7 +753,6 @@
     preloadVocabData,
     start,
     loadMemoryData,
-    loadStoredJSON,
     validateAndSetAnswerCount,
     rePrintMemory,
     continuetoStoredData,
@@ -750,7 +760,6 @@
     listMistakes,
     resumeProgram,
     resetAfterFlushingMistakes,
-    showLoadingMsg,
     checkPreLoadState,
   }
 }

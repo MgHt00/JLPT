@@ -1,12 +1,10 @@
+import { VOCAB_MAPPING } from "../constants/appConstants.js";
+import { CSS_CLASS_NAMES } from "../constants/cssClassNames.js";
+import { GENERATED_DOM } from "../constants/elementIDs.js";
+
 export function errorManager(globals, utilsManager) {
   const { appState, selectors } = globals;
   const { domUtils } = utilsManager;
-
-  let _vocabMapping;
-
-  function setErrorManagerCallbacks(vocabMapping) {
-    _vocabMapping = vocabMapping;
-  }
 
   const codeMapping = {
     iLoop: "infiniteloop",
@@ -51,7 +49,7 @@ export function errorManager(globals, utilsManager) {
 
     // utility functions private to the module
     function fetchInputData() {
-      const selectedArray = _vocabMapping[selectors.aChoice.value];
+      const selectedArray = VOCAB_MAPPING[selectors.aChoice.value];
       const choiceInput = parseInt(appState.noOfAnswers, 10);
       const noOfChoice = Math.min(choiceInput, selectedArray.length);
 
@@ -101,7 +99,7 @@ export function errorManager(globals, utilsManager) {
       parent: config.parentName,
       child: 'div',
       content: config.errorMessage,
-      className: "setting-error",
+      className: CSS_CLASS_NAMES.SETTING_ERROR,
       id: config.id,
     });
     console.warn(config.consoleMessage);
@@ -114,8 +112,8 @@ export function errorManager(globals, utilsManager) {
     console.groupCollapsed("clearError()");
 
     const errBlocks = [
-      document.querySelector("[id|='infiniteloop']"), 
-      document.querySelector("[id|='syllable-error']"), 
+      document.querySelector(`[id|=${GENERATED_DOM.INFINITE_LOOP}]`), 
+      document.querySelector(`[id|=${GENERATED_DOM.SYLLABLE_ERROR}]`), 
     ];
 
     errBlocks.forEach((blk) => {  // check whether there is an error message on screen
@@ -128,7 +126,6 @@ export function errorManager(globals, utilsManager) {
   }
   
   return {  
-    setErrorManagerCallbacks,
     runtimeError,
     showError,
     clearError,

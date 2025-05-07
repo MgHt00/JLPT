@@ -1,11 +1,12 @@
+import { QUESTION_MODE_FRESH, QUESTION_MODE_STORED } from "../constants/appConstants.js"
+
 export function questionManager(globals, utilsManager, statusFns, vocabFns) {
   const { appState, appData, selectors } = globals;
   const { helpers, domUtils } = utilsManager;
   const { increaseQuestionCount, printQuestionStatus, updateCumulativeAverage } = statusFns;
   const { removeSpecifiedQuestion, saveState } = vocabFns
 
-  let questionObj = {};
-
+  let _questionObj = {};
   let _renderAnswers, _noMoreQuestion;
 
   function setQuestionManagerCallbacks(renderAnswers, noMoreQuestion) {
@@ -20,7 +21,7 @@ export function questionManager(globals, utilsManager, statusFns, vocabFns) {
     // Initialize newQuestion's property, mode, if it’s not defined yet ...
     // ... by initializing here, it will be easier to debug
     if (newQuestion.mode === undefined) {
-      newQuestion.mode = "fresh";
+      newQuestion.mode = QUESTION_MODE_FRESH; // default to "fresh"
       console.info("newQuestion.mode initialized.");
     }
 
@@ -33,19 +34,19 @@ export function questionManager(globals, utilsManager, statusFns, vocabFns) {
         //console.log("vocabArray ", appData.vocabArray);
   
         do {
-          questionObj = fetchOneQuestion(); // Fetch a new question
-        } while (!isThereAnAnswer(questionObj)); // Keep fetching until a valid answer is found
+          _questionObj = fetchOneQuestion(); // Fetch a new question
+        } while (!isThereAnAnswer(_questionObj)); // Keep fetching until a valid answer is found
   
         // Once a valid question is found, store the correct answer
-        appState.correctAns = questionObj[selectors.aChoice.value].toLowerCase().trim(); // Store correct answer
+        appState.correctAns = _questionObj[selectors.aChoice.value].toLowerCase().trim(); // Store correct answer
         
         increaseQuestionCount(); // increse question count for status bar  
-        //console.log("ramdomYesNo: ", appState.randomYesNo, "| questionObj: ", questionObj, "| appState.correctAns: ", appState.correctAns);
+        //console.log("ramdomYesNo: ", appState.randomYesNo, "| _questionObj: ", _questionObj, "| appState.correctAns: ", appState.correctAns);
         
         domUtils.buildNode({ 
           parent: selectors.sectionQuestion, 
           child: 'div', 
-          content: questionObj[appState.qChoiceInput],
+          content: _questionObj[appState.qChoiceInput],
         });
          _renderAnswers();  
       } else { // if there is no more question left to show
@@ -61,9 +62,9 @@ export function questionManager(globals, utilsManager, statusFns, vocabFns) {
   function setQuestionMode(m) {
     console.groupCollapsed("questionManager() - setQuestionMode()");
 
-    const validModes = ["fresh", "stored"];
+    const validModes = [QUESTION_MODE_FRESH, QUESTION_MODE_STORED];
     if(!validModes.includes(m)) {
-      newQuestion.mode = "fresh"; // default to `fresh`
+      newQuestion.mode = QUESTION_MODE_FRESH; // default to `fresh`
       console.warn("Invalid mode is passed. Defaulting to `fresh`.");
     } else {
       newQuestion.mode = m;
@@ -112,14 +113,14 @@ export function questionManager(globals, utilsManager, statusFns, vocabFns) {
 
   // to check whether the correct answer is empty;
   // necessary for the situation when the user's answer choice is Kanji and there is not Kanji equalivant answer
-  function isThereAnAnswer(questionObj) {
-    let correctAnswer = questionObj[selectors.aChoice.value];
+  function isThereAnAnswer(_questionObj) {
+    let correctAnswer = _questionObj[selectors.aChoice.value];
     if(correctAnswer === "") {
       return false;
     } else return true;
   }
 
-  function readQuestionObj() {return questionObj;}
+  function readQuestionObj() {return _questionObj;}
   function readQuestionMode() {return newQuestion.mode;}
 
   return {

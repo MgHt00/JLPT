@@ -5,7 +5,7 @@ import { loaderManager } from "./components/loaderManager.js";
 import { controlManger } from "./components/controlManager.js";
 import { questionManager } from "./components/questionManager.js";
 import { answerManager } from "./components/answerManager.js";
-import { answerListnerManager } from "./components/answerListenerManager.js";
+import { answerListenerManager } from "./components/answerListenerManager.js";
 import { vocabManager } from "./components/vocabManager.js";
 import { errorManager } from "./components/errorManager.js";
 import { statusManager } from "./components/statusManager.js";
@@ -40,7 +40,7 @@ const {
 
 // Error Manager
 const errMgr = errorManager(globals, utilsManager);
-const { setErrorManagerCallbacks, runtimeError, clearError } = errMgr;
+const { runtimeError, clearError } = errMgr;
 
 // Status Manager
 const statusMgr = statusManager(globals, utilsManager);
@@ -113,7 +113,7 @@ const {
   debouncedMoveForm } = listenerMgr;
 
 // Answer Listeners Manager
-const answerListenersMgr = answerListnerManager(
+const answerListenersMgr = answerListenerManager(
   globals, 
   utilsManager, 
   { storeToMistakeBank, removeFromMistakeBank }, // vocabFns
@@ -121,7 +121,7 @@ const answerListenersMgr = answerListnerManager(
   { continuetoStoredData, restart }, // loaderFns
 );
 const {
-  setAnswerListnerManagerCallbacks,
+  setAnswerListenerManagerCallbacks,
   handleFlashcardFlip,
   handleMultipleChoiceAnswer,
   handleContinueToStoredData,
@@ -145,10 +145,9 @@ const {
 /* Initializes and sets up dependencies for various manager instances. */
 setQuestionManagerCallbacks(renderAnswers, noMoreQuestion)
 setVocabManagerCallbacks(loadMemoryData, resetAfterFlushingMistakes, readQuestionObj);
-setErrorManagerCallbacks(vocabMapping);
 setLoaderManagerCallbacks(moveForm, handleListMistakeBtn, debouncedMoveForm);
 setListenerManagerCallbacks(setRanOnce);
-setAnswerListnerManagerCallbacks(setRanOnce);
+setAnswerListenerManagerCallbacks(setRanOnce);
 
 // Initialize
 (async function initialize() {
