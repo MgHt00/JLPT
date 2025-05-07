@@ -1,3 +1,5 @@
+import { QUESTION_MODE_FRESH, QUESTION_MODE_STORED, LOCAL_STORAGE_KEYS } from "../constants/appConstants.js";
+
 export function statusManager(globals, utilsManager) {
   const { appData, currentStatus, selectors } = globals;
   const { domUtils } = utilsManager;
@@ -8,7 +10,7 @@ export function statusManager(globals, utilsManager) {
   }
 
   // return `questionCount`
-  function readQuestionCount() {
+  function _readQuestionCount() {
     return currentStatus.questionCount;
   }
 
@@ -35,12 +37,12 @@ export function statusManager(globals, utilsManager) {
     console.groupCollapsed("getTotalNoOfQuestions()");
 
     switch (state) {
-      case "fresh":
+      case QUESTION_MODE_FRESH:
         console.info("state : ", state);
         currentStatus.totalNoOfQuestions = appData.vocabArray.length;
         break;
 
-      case "stored":
+      case QUESTION_MODE_STORED:
         console.info("state : ", state);
         currentStatus.totalNoOfQuestions += appData.vocabArray.length;
         break;
@@ -67,7 +69,7 @@ export function statusManager(globals, utilsManager) {
     // private functions
     function printSectionStatus(key) {
       const CONFIG = {
-        questionCount : `${readQuestionCount()} / ${currentStatus.totalNoOfQuestions}`,
+        questionCount : `${_readQuestionCount()} / ${currentStatus.totalNoOfQuestions}`,
         averagescore : `Average Correct Rate: ${currentStatus.averageScore}%`
       }
       domUtils.buildNode({
@@ -125,7 +127,7 @@ export function statusManager(globals, utilsManager) {
     console.groupCollapsed("stillInProgress()");
 
     // Get and safely parse localStorage item
-    let savedCurrentStatus = localStorage.getItem("currentStatus");
+    let savedCurrentStatus = localStorage.getItem(LOCAL_STORAGE_KEYS.CURRENT_STATUS);
 
     // Handle cases where localStorage item is "null", empty, or invalid
     if (!savedCurrentStatus || savedCurrentStatus === "null") { 
@@ -193,7 +195,6 @@ export function statusManager(globals, utilsManager) {
     resetQuestionCount,
     resetTotalNoOfQuestion,
     getTotalNoOfQuestions,
-    readQuestionCount,
     increaseQuestionCount,
     printQuestionStatus,
     resetCumulativeVariables,
