@@ -12,6 +12,9 @@ This repository contains a vocabulary quiz application built with JavaScript, de
 - [File Structure](#file-structure)
 - [Contributing](#contributing)
 - [License](#license)
+- [Screenshots](#screenshots)
+- [Demo](#demo)
+- [Acknowledgements](#acknowledgements)
 
 ---
 
@@ -116,6 +119,28 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 2. The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## Screenshots
+
+Here are some screenshots:
+
+### Main Screen
+![Main Screen](screenshots/1-main-screen.png)
+
+### Flashcard Mode
+![Flashcard Mode](screenshots/2-flashcard-mode.png)
+
+![Flashcard Mode - Showing Correct Answer](screenshots/3-flashcard-mode.png)
+
+### Multiple Choice Mode
+![Multiple Choice Mode](screenshots/4-multiple-choice-mode.png)
+
+### Listing Previous Mistakes
+![Listing Previous Mistakes](screenshots/5-listing-previous-mistakes.png)
+
+## Demo
+
+https://mght00.github.io/JLPT/
 
 ## Acknowledgements
 
